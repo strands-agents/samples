@@ -19,3 +19,4 @@ Examples available:
 | 11         | [Deploying your agent to an AWS Lambda Function](11-lambda-deployment)            | Lambda deployment                                                                                                              |
 | 12         | [Deploying your agent to AWS Fargate](12-fargate-deployment)                      | Fargate deployment                                                                                                             |
 | 13         | [Adding human-in-the-loop validation](13-human-in-the-loop-validation)            | SNS notifications, asynchronous updates via Lambda                                                                             |
+| 14         | [Adding memory to your agent](14-memory-agent)                                    | Personal assistant using mem0 memory and websearch tools                                                                       |
