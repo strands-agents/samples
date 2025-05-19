@@ -1,0 +1,6 @@
+strands-agents
+strands-agents-tools
+mem0ai
+boto3 
+opensearch-py
+duckduckgo-search
