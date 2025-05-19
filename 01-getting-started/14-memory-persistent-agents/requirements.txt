@@ -1,0 +1,3 @@
+strands
+strands-tools
+python-dotenv
