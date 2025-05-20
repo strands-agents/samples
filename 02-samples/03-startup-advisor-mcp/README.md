@@ -6,6 +6,8 @@ Have a new startup in mind, but haven't quite hired your marketing staff? Use th
 
 ## Prerequisites
 
-1. Create .env file with [.env.example](./.env.example). Follow guidance [here](https://docs.perplexity.ai/guides/getting-started) to get started with perplexity AI.
+1. Install [uv](https://docs.astral.sh/uv/getting-started/installation/).
 
-2. Run `uv run main.py`
+2. Create .env file with [.env.example](./.env.example). Follow guidance [here](https://docs.perplexity.ai/guides/getting-started) to get started with perplexity AI.
+
+3. Run `uv run main.py`
