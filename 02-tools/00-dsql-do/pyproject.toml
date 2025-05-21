@@ -1,0 +1,10 @@
+[project]
+name = "dsql-do"
+version = "0.1.0"
+description = "A simple tool for interacting with and managing Amazon Aurora DSQL clusters"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "strands-agents>=0.1.2",
+    "strands-agents-tools>=0.1.1",
+]
