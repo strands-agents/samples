@@ -1,11 +1,13 @@
 #!/usr/bin/env node
-import { App } from "aws-cdk-lib";
-import { AgentFargateStack } from "../lib/agent-fargate-stack";
+import { App, Aspects } from "aws-cdk-lib";
+import { AwsSolutionsChecks, NagSuppressions } from 'cdk-nag';
+import { projectName } from "./constant";
+import { StrandsLambdaStack } from './stacks/strands-lambda-stack';
 
 const app = new App();
 
 // prettier-ignore
-new AgentFargateStack(app, "AgentFargateStack", {
+new StrandsLambdaStack(app, `${projectName}LambdaStack`, {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */
@@ -20,3 +22,6 @@ new AgentFargateStack(app, "AgentFargateStack", {
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
 });
+
+
+Aspects.of(app).add(new AwsSolutionsChecks({ verbose: true }));

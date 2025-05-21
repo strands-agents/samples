@@ -4,7 +4,7 @@
   "description": "CDK TypeScript project to deploy a sample Agent Lambda function",
   "private": true,
   "bin": {
-    "cdk-app": "bin/cdk-app.js"
+    "cdk-app": "cdk/cdk-app.js"
   },
   "scripts": {
     "format": "prettier --write .",
@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "aws-cdk-lib": "2.192.0",
+    "cdk-nag": "^2.35.101",
     "constructs": "^10.2.0"
   },
   "prettier": {

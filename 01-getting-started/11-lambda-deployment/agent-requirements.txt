@@ -7,3 +7,4 @@ pyyaml
 retrying
 strands-agents
 strands-agents-tools
+pandas
