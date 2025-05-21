@@ -1,0 +1,13 @@
+import { RemovalPolicy, StackProps } from "aws-cdk-lib";
+
+const projectName = "StrandsAgent";
+
+const ssmParamKnowledgeBaseId = "restaurant-assistant-kb-id";
+const ssmParamDynamoDb = "restaurant-assistant-table-name";
+
+const s3BucketProps = {
+  autoDeleteObjects: true,
+  removalPolicy: RemovalPolicy.DESTROY,
+};
+
+export { projectName, s3BucketProps, ssmParamKnowledgeBaseId, ssmParamDynamoDb };

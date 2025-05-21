@@ -41,7 +41,7 @@ def read_yaml_file(file_path: str):
     Args:
         file_path: the path to the yaml file
     """
-    with open(file_path, 'r') as file:
+    with open(file_path, "r") as file:
         try:
             return yaml.safe_load(file)
         except yaml.YAMLError as e:
@@ -1034,40 +1034,43 @@ class KnowledgeBasesForAmazonBedrock:
         self.s3_client.delete_bucket(Bucket=bucket_name)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     kb = KnowledgeBasesForAmazonBedrock()
-    smm_client = boto3.client('ssm')
+    smm_client = boto3.client("ssm")
     current_dir = os.path.dirname(os.path.abspath(__file__))
 
     # Example usage:
-    config_path = f'{current_dir}/prereqs_config.yaml'
+    config_path = f"{current_dir}/prereqs_config.yaml"
     data = read_yaml_file(config_path)
 
     parser = argparse.ArgumentParser(description="Knowledge Base handler")
-    parser.add_argument("--mode", required=True, help="Knowledge Base helper model. One for: create or delete.")
+    parser.add_argument(
+        "--mode",
+        required=True,
+        help="Knowledge Base helper model. One for: create or delete.",
+    )
 
     args = parser.parse_args()
 
     print(data)
     if args.mode == "create":
         kb_id, ds_id = kb.create_or_retrieve_knowledge_base(
-            data['knowledge_base_name'],
-            data['knowledge_base_description']
+            data["knowledge_base_name"], data["knowledge_base_description"]
         )
         print(f"Knowledge Base ID: {kb_id}")
         print(f"Data Source ID: {ds_id}")
-        kb.upload_directory(f'{current_dir}/{data["kb_files_path"]}', kb.get_data_bucket_name())
+        kb.upload_directory(
+            f'{current_dir}/{data["kb_files_path"]}', kb.get_data_bucket_name()
+        )
         kb.synchronize_data(kb_id, ds_id)
         smm_client.put_parameter(
             Name=f"{data['knowledge_base_name']}-kb-id",
             Description=f"{data['knowledge_base_name']} kb id",
             Value=kb_id,
-            Type='String',
-            Overwrite=True
+            Type="String",
+            Overwrite=True,
         )
 
     if args.mode == "delete":
-        kb.delete_kb(data['knowledge_base_name'])
-        smm_client.delete_parameter(
-            Name=f"{data['knowledge_base_name']}-kb-id"
-        )
+        kb.delete_kb(data["knowledge_base_name"])
+        smm_client.delete_parameter(Name=f"{data['knowledge_base_name']}-kb-id")
