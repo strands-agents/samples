@@ -6,7 +6,7 @@ import argparse
 
 
 def read_yaml_file(file_path):
-    with open(file_path, 'r') as file:
+    with open(file_path, "r") as file:
         try:
             return yaml.safe_load(file)
         except yaml.YAMLError as e:
@@ -29,10 +29,12 @@ class AmazonDynamoDB:
         self._region = self._boto_session.region_name
         self._dynamodb_client = boto3.client("dynamodb", region_name=self._region)
         self._dynamodb_resource = boto3.resource("dynamodb", region_name=self._region)
-        self._smm_client = boto3.client('ssm')
+        self._smm_client = boto3.client("ssm")
         print(self._dynamodb_client, self._dynamodb_resource)
 
-    def create_dynamodb(self, kb_name: str, table_name: str, pk_item: str, sk_item: str):
+    def create_dynamodb(
+        self, kb_name: str, table_name: str, pk_item: str, sk_item: str
+    ):
         """
         Create a dynamoDB table for handling the restaurant reservations and stores table name
         in parameter store
@@ -57,24 +59,24 @@ class AmazonDynamoDB:
             )
 
             # Wait for the table to be created
-            print(f'Creating table {table_name}...')
+            print(f"Creating table {table_name}...")
             table.wait_until_exists()
-            print(f'Table {table_name} created successfully!')
+            print(f"Table {table_name} created successfully!")
             self._smm_client.put_parameter(
-                Name=f'{kb_name}-table-name',
-                Description=f'{kb_name} table name',
+                Name=f"{kb_name}-table-name",
+                Description=f"{kb_name} table name",
                 Value=table_name,
-                Type='String',
-                Overwrite=True
+                Type="String",
+                Overwrite=True,
             )
         except self._dynamodb_client.exceptions.ResourceInUseException:
             print(f"Table {table_name} already exists, skipping table creation step")
             self._smm_client.put_parameter(
-                Name=f'{kb_name}-table-name',
-                Description=f'{kb_name} table name',
+                Name=f"{kb_name}-table-name",
+                Description=f"{kb_name} table name",
                 Value=table_name,
-                Type='String',
-                Overwrite=True
+                Type="String",
+                Overwrite=True,
             )
 
     def delete_dynamodb_table(self, kb_name, table_name):
@@ -87,41 +89,40 @@ class AmazonDynamoDB:
         try:
             self._dynamodb_client.delete_table(TableName=table_name)
             print(f"Table {table_name} is being deleted...")
-            waiter = self._dynamodb_client.get_waiter('table_not_exists')
+            waiter = self._dynamodb_client.get_waiter("table_not_exists")
             waiter.wait(TableName=table_name)
             print(f"Table {table_name} has been deleted.")
-            self._smm_client.delete_parameter(
-                Name=f'{kb_name}-table-name'
-            )
+            self._smm_client.delete_parameter(Name=f"{kb_name}-table-name")
 
         except Exception as e:
             print(f"Error deleting table {table_name}: {e}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     dynamodb = AmazonDynamoDB()
     current_dir = os.path.dirname(os.path.abspath(__file__))
 
     # Example usage:
-    config_path = f'{current_dir}/prereqs_config.yaml'
+    config_path = f"{current_dir}/prereqs_config.yaml"
     data = read_yaml_file(config_path)
 
     parser = argparse.ArgumentParser(description="DynamoDB handler")
-    parser.add_argument("--mode", required=True, help="DynamoDB helper model. One for: create or delete.")
+    parser.add_argument(
+        "--mode",
+        required=True,
+        help="DynamoDB helper model. One for: create or delete.",
+    )
 
     args = parser.parse_args()
 
     print(data)
     if args.mode == "create":
         dynamodb.create_dynamodb(
-            data['knowledge_base_name'],
-            data['table_name'],
-            data['pk_item'],
-            data['sk_item'],
+            data["knowledge_base_name"],
+            data["table_name"],
+            data["pk_item"],
+            data["sk_item"],
         )
         print(f"Table Name: {data['table_name']}")
     if args.mode == "delete":
-        dynamodb.delete_dynamodb_table(
-            data['knowledge_base_name'],
-            data['table_name']
-        )
+        dynamodb.delete_dynamodb_table(data["knowledge_base_name"], data["table_name"])

@@ -5,5 +5,6 @@ opensearch-py
 requests-aws4auth
 pyyaml
 retrying
+pandas
 strands-agents
 strands-agents-tools
