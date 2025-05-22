@@ -32,6 +32,8 @@ This solution showcases the power of Amazon Bedrock and  Strands SDK for buildin
 
 ## Architecture Components
 
+![Architecture](SB-Agent-arch.png)
+
 The solution consists of several key components:
 
 1. **Agent Main Function**: Core Strands-based agent that processes user queries and generates responses
