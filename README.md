@@ -19,7 +19,7 @@
   - [Step 2: Setup Model Provider](#step-2-setup-model-provider)
   - [Step 3: Build Your First Strands Agent](#step-3-build-your-first-strands-agent)
   - [Step 4: Getting Started with the SDK](#step-4-getting-started-with-the-sdk)
-  - [Step 5: Explore More Samples](#step-5-explore-more-samples)
+  - [Step 5: Explore ready to use samples](#step-5-explore-ready-to-use-samples)
 - [🔐 Security](#-security)
 - [📄 License](#-license)
 
@@ -41,7 +41,7 @@ Follow the instructions [here](https://strandsagents.com/0.1.x/user-guide/concep
 ### Step 3: Build Your First Strands Agent
 
 > ⚠️ **DISCLAIMER**
-> This sample uses [Amazon Bedrock](https://aws.amazon.com/bedrock) as the model provider, make sure to enable model access for Anthropic Claude 3.7, follow isntructions [here](https://strandsagents.com/0.1.x/user-guide/concepts/model-providers/amazon-bedrock/).
+> This sample uses [Amazon Bedrock](https://aws.amazon.com/bedrock) as the model provider, make sure to enable model access for Anthropic Claude 3.7, follow instructions [here](https://strandsagents.com/0.1.x/user-guide/concepts/model-providers/amazon-bedrock/).
 
 ```python
 from strands import Agent, tool
@@ -76,12 +76,12 @@ agent(message)
 ### Step 4: Getting Started with the SDK
 
 Start with the [01-getting-started](./01-getting-started/) directory.
-Create your [first agent](./01-getting-started/00-first-agent/) and explore notebook-based examples covering core functionalities.
+Create your [first agent](./01-getting-started/00-first-agent/) and explore notebook-based examples covering core functionalities. Integrate agents with [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) servers, power your Strands Agents with open-source large language models running locally using [Ollama](https://ollama.com/), and so much more...
 
-### Step 5: Explore More Samples
+### Step 5: Explore ready to use samples
 
 Looking for inspiration?
-Check out more examples in the [02-samples](./02-samples/) folder for real-world use cases.
+Check out more examples in the [02-samples](./02-samples/) and [03-integrations](./03-integrations/).
 
 ---
 
