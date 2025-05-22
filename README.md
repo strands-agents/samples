@@ -1,74 +1,100 @@
-<h2 align="center">Strands Agents Samples&nbsp;</h2>
+<h2 align="center">🚀 Strands Agents Samples</h2>
 <p align="center">
-  :wave: :wave: Welcome to Strands Agents Samples repository :wave: :wave:
+  👋 Welcome to the <strong>Strands Agents Samples</strong> repository! 👋<br>
+  Explore easy-to-use examples to get started with <a href="https://www.strandsagents.com/">Strands Agents</a>.
 </p>
 
-> [!CAUTION]
-> The examples provided in this repository are for experimental and educational purposes only.
-> They demonstrate concepts and techniques but are not intended for direct use in production environments.
-> Make sure to have Amazon Bedrock Guardrails in place to protect against [prompt injection](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-injection.html).
+> ⚠️ **CAUTION**
+> The examples in this repository are for **experimental and educational purposes** only.
+> They demonstrate concepts and techniques but are **not intended for direct use in production**.
+> Be sure to implement [Amazon Bedrock Guardrails](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-injection.html) to protect against prompt injection attacks.
 
-This repository provides examples for working with the [Strands Agents](https://www.strandsagents.com/).
+---
 
-Strands Agents is an python SDK that takes a model-driven approach to building and running AI agents in just a few lines of code.
+## 📚 Table of Contents
 
-## Table of Contents
+- [📚 Table of Contents](#-table-of-contents)
+- [🏁 Getting Started](#-getting-started)
+  - [Step 1: Install Required Packages](#step-1-install-required-packages)
+  - [Step 2: Setup Model Provider](#step-2-setup-model-provider)
+  - [Step 3: Build Your First Strands Agent](#step-3-build-your-first-strands-agent)
+  - [Step 4: Getting Started with the SDK](#step-4-getting-started-with-the-sdk)
+  - [Step 5: Explore More Samples](#step-5-explore-more-samples)
+- [🔐 Security](#-security)
+- [📄 License](#-license)
 
-- [Overview](#overview)
-- [Repository Structure](#repository-structure)
-- [Getting Started](#getting-started)
-- [Strands Agents examples](#agents-examples)
-- [Best Practices](#best-practices)
-- [Related Links](#related-links-)
-- [Security](#security)
-- [License](#license)
+---
 
-## Overview
+## 🏁 Getting Started
 
-<summary>
-<h2>Repository Structure</h2>
-</summary>
+### Step 1: Install Required Packages
 
 ```bash
-├── examples/01-getting-started/
-│   ├── 00-first-agent
-|   └── ....
-├── examples/02-agents/
-│   ├── 01-restaurant-assistant/
-|   └── ....
-├── examples/03-multi-agent-collaboration/
-│   ├── 01-finance-assistant-swarm-agent/
-|   └── ....
-├── examples/04-integrations/
-│   ├── 01-nova-sonic-integration/
-|   └── ....
-```
-
-## Getting Started
-
-The easiest way to get started is via `01-getting-started` samples. In this folder you will find some
-notebook-driven samples for different functionalities of Strands Agents.
-
-Create your [first agent](01-getting-started/00-first-agent) with Strands Agents to start using the SDK.
-
-Independently of the sample used, you will need to install [Strands Agents SDK](https://github.com/strands-agents/agents-sdk-python).
-You can also install [Strands Agents Tools](https://github.com/strands-agents/agents-tools) for exploring some built-in tools
-
-To install Strands Agents and Strands Agents tools you can use pip:
-
-```commandline
 pip install strands-agents
 pip install strands-agents-tools
 ```
 
-## Security
+### Step 2: Setup Model Provider
 
-See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
+Follow the instructions [here](https://strandsagents.com/0.1.x/user-guide/concepts/model-providers/amazon-bedrock/) to configure your model provider.
 
-## License
+### Step 3: Build Your First Strands Agent
 
-This project is licensed under the Apache-2.0 License.
+> ⚠️ **DISCLAIMER**
+> This sample uses [Amazon Bedrock](https://aws.amazon.com/bedrock) as the model provider, make sure to enable model access for Anthropic Claude 3.7, follow isntructions [here](https://strandsagents.com/0.1.x/user-guide/concepts/model-providers/amazon-bedrock/).
 
-> [!IMPORTANT]
-> Examples in this repository are for demonstration purposes.
-> Ensure proper security and testing when deploying to production environments.
+```python
+from strands import Agent, tool
+from strands_tools import calculator, current_time, python_repl
+
+@tool
+def letter_counter(word: str, letter: str) -> int:
+    """
+    Count the occurrences of a specific letter in a word.
+    """
+    if not isinstance(word, str) or not isinstance(letter, str):
+        return 0
+    if len(letter) != 1:
+        raise ValueError("The 'letter' parameter must be a single character")
+    return word.lower().count(letter.lower())
+
+agent = Agent(tools=[calculator, current_time, python_repl, letter_counter])
+
+message = """
+I have 4 requests:
+
+1. What is the time right now?
+2. Calculate 3111696 / 74088
+3. Tell me how many letter R's are in the word "strawberry" 🍓
+4. Output a script that does what we just spoke about!
+   Use your python tools to confirm that the script works before outputting it
+"""
+
+agent(message)
+```
+
+### Step 4: Getting Started with the SDK
+
+Start with the [01-getting-started](./01-getting-started/) directory.
+Create your [first agent](./01-getting-started/00-first-agent/) and explore notebook-based examples covering core functionalities.
+
+### Step 5: Explore More Samples
+
+Looking for inspiration?
+Check out more examples in the [02-samples](./02-samples/) folder for real-world use cases.
+
+---
+
+## 🔐 Security
+
+See [CONTRIBUTING.md#security-issue-notifications](CONTRIBUTING.md#security-issue-notifications) for details on reporting security issues.
+
+---
+
+## 📄 License
+
+This project is licensed under the [Apache-2.0 License](LICENSE).
+
+> ⚠️ **IMPORTANT**
+> Examples are for **demonstration only**.
+> Always apply proper **security** and **testing** procedures before using in production environments.
