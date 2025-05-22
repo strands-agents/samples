@@ -42,14 +42,12 @@ The solution consists of several key components:
    - `/timeseries` - Retrieves time-series data from sensors and devices
 3. **Web Application**: Frontend interface for interacting with the agent
 4. **Authentication**: Cognito-based user authentication
-5. **Database**: PostgreSQL database for storing conversation history and agent state
 
 ## Prerequisites
 
 - AWS Account with appropriate permissions
 - Python 3.12 or higher
 - AWS CDK v2 installed
-- Node.js and npm (for the web application)
 
 ## Installation
 
@@ -66,7 +64,7 @@ The solution consists of several key components:
 
 3. Deploy the infrastructure:
    ```
-   cdk deploy
+   cdk deploy --all
    ```
 
 Note: The required dependencies for the Lambda functions (strands, boto3, requests) are automatically included in the Lambda layers and deployed as part of the CDK stack.
