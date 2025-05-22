@@ -14,16 +14,12 @@ def browser_automation_tool(starting_url:str, instr: str) -> str:
     Returns:
         str: The result of the action performed. 
     """
-    # Create a unique user data directory for each session
-    user_data_dir = "./tmp/user-data-dir"
-    
+
     with NovaAct(
-        starting_page=starting_url, 
-        #user_data_dir=user_data_dir, 
-        #clone_user_data_dir=False 
+        starting_page=starting_url
     ) as browser:
         try:
-            result = browser.act(instr, max_steps=10)
+            result = browser.act(instr, max_steps=15)
             return result.response
                 
         except Exception as e:
