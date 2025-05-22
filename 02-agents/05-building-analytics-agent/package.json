@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "cdk-nag": "^2.35.67"
+  }
+}
