@@ -180,7 +180,9 @@ export class StrandsFargateStack extends Stack {
     const dockerAsset = new ecrAssets.DockerImageAsset(this, `${projectName}-image`, {
       directory: path.join(__dirname, "../../docker"),
       file: "./Dockerfile",
-      platform: ecrAssets.Platform.LINUX_ARM64,
+      //platform: ecrAssets.Platform.LINUX_ARM64,
+      platform: ecrAssets.Platform.LINUX_AMD64,
+      networkMode: ecrAssets.NetworkMode.custom("sagemaker"),
     });
 
     // Add container to the task definition
