@@ -20,3 +20,4 @@ Examples available:
 | 12         | [Deploying your agent to AWS Fargate](12-fargate-deployment)                      | Fargate deployment                                                                                                             |
 | 13         | [Adding human-in-the-loop validation](13-human-in-the-loop-validation)            | SNS notifications, asynchronous updates via Lambda                                                                             |
 | 14         | [Adding memory to your agent](14-memory-agent)                                    | Personal assistant using mem0 memory and websearch tools                                                                       |
+| 15         |[Multi-Agent DataWarehouse Query Optimiser](https://github.com/D1EE7P2U9/AWS_STRANDS_SAMPLES/tree/main/01-getting-started/15-Multi-Agent-datawarehouse-Query-Optimiser)|Multi-Agent DataWarehouse Query Optimiser
