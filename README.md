@@ -1,15 +1,40 @@
-<h2 align="center">🚀 Strands Agents Samples</h2>
-<p align="center">
-  👋 Welcome to the <strong>Strands Agents Samples</strong> repository! 👋<br>
-  Explore easy-to-use examples to get started with <a href="https://www.strandsagents.com/">Strands Agents</a>.
-</p>
+<div align="center">
+  <div>
+    <a href="https://strandsagents.com">
+      <img src="https://strandsagents.com/latest/assets/logo.svg" alt="Strands Agents" width="55px" height="105px">
+    </a>
+  </div>
 
-> ⚠️ **CAUTION**
-> The examples in this repository are for **experimental and educational purposes** only.
-> They demonstrate concepts and techniques but are **not intended for direct use in production**.
-> Be sure to implement [Amazon Bedrock Guardrails](https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-injection.html) to protect against prompt injection attacks.
+  <h1>
+    Strands Agents Samples
+  </h1>
 
----
+  <h2>
+    A model-driven approach to building AI agents in just a few lines of code.
+  </h2>
+
+  <div align="center">
+    <a href="https://github.com/strands-agents/samples/graphs/commit-activity"><img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/strands-agents/samples"/></a>
+    <a href="https://github.com/strands-agents/samples/issues"><img alt="GitHub open issues" src="https://img.shields.io/github/issues/strands-agents/samples"/></a>
+    <a href="https://github.com/strands-agents/samples/pulls"><img alt="GitHub open pull requests" src="https://img.shields.io/github/issues-pr/strands-agents/samples"/></a>
+    <a href="https://github.com/strands-agents/samples/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/github/license/strands-agents/samples"/></a>
+  </div>
+  
+  <p>
+    <a href="https://strandsagents.com/">Documentation</a>
+    ◆ <a href="https://github.com/strands-agents/samples">Samples</a>
+    ◆ <a href="https://github.com/strands-agents/sdk-python">Python SDK</a>
+    ◆ <a href="https://github.com/strands-agents/tools">Tools</a>
+    ◆ <a href="https://github.com/strands-agents/agent-builder">Agent Builder</a>
+    ◆ <a href="https://github.com/strands-agents/mcp-server">MCP Server</a>
+  </p>
+</div>
+
+Welcome to the Strands Agents Samples repository!
+
+Explore easy-to-use examples to get started with <a href="https://strandsagents.com">Strands Agents</a>.
+
+The examples in this repository are for **demonstration and educational purposes** only. They demonstrate concepts and techniques but are **not intended for direct use in production**. Always apply proper **security** and **testing** procedures before using in production environments.
 
 ## 📚 Table of Contents
 
@@ -20,10 +45,6 @@
   - [Step 3: Build Your First Strands Agent](#step-3-build-your-first-strands-agent)
   - [Step 4: Getting Started with the SDK](#step-4-getting-started-with-the-sdk)
   - [Step 5: Explore More Samples](#step-5-explore-more-samples)
-- [🔐 Security](#-security)
-- [📄 License](#-license)
-
----
 
 ## 🏁 Getting Started
 
@@ -36,12 +57,9 @@ pip install strands-agents-tools
 
 ### Step 2: Setup Model Provider
 
-Follow the instructions [here](https://strandsagents.com/0.1.x/user-guide/concepts/model-providers/amazon-bedrock/) to configure your model provider.
+Follow the instructions [here](https://strandsagents.com/latest/user-guide/quickstart/#model-providers) to configure your model provider and model access.
 
 ### Step 3: Build Your First Strands Agent
-
-> ⚠️ **DISCLAIMER**
-> This sample uses [Amazon Bedrock](https://aws.amazon.com/bedrock) as the model provider, make sure to enable model access for Anthropic Claude 3.7, follow isntructions [here](https://strandsagents.com/0.1.x/user-guide/concepts/model-providers/amazon-bedrock/).
 
 ```python
 from strands import Agent, tool
@@ -83,18 +101,25 @@ Create your [first agent](./01-getting-started/00-first-agent/) and explore note
 Looking for inspiration?
 Check out more examples in the [02-samples](./02-samples/) folder for real-world use cases.
 
----
+## Contributing ❤️
 
-## 🔐 Security
+We welcome contributions! See our [Contributing Guide](CONTRIBUTING.md) for details on:
+- Reporting bugs & features
+- Development setup
+- Contributing via Pull Requests
+- Code of Conduct
+- Reporting of security issues
 
-See [CONTRIBUTING.md#security-issue-notifications](CONTRIBUTING.md#security-issue-notifications) for details on reporting security issues.
+## License
 
----
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
 
-## 📄 License
+## Security
 
-This project is licensed under the [Apache-2.0 License](LICENSE).
+See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
 
-> ⚠️ **IMPORTANT**
-> Examples are for **demonstration only**.
-> Always apply proper **security** and **testing** procedures before using in production environments.
+## ⚠️ Preview Status
+
+Strands Agents is currently in public preview. During this period:
+- APIs may change as we refine the SDK
+- We welcome feedback and contributions
