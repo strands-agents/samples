@@ -3,11 +3,12 @@ import { App, Aspects } from "aws-cdk-lib";
 import { AwsSolutionsChecks, NagSuppressions } from 'cdk-nag';
 import { projectName } from "./constant";
 import { StrandsLambdaStack } from './stacks/strands-lambda-stack';
+import {envName as envNameType, architecture as architectureType} from "./constant"
 
 const app = new App();
 
-const envName: "sagemaker" | "local" = app.node.tryGetContext('env') || 'sagemaker';
-const architecture: "X86_64" | "ARM_64" = app.node.tryGetContext('enableFeatureX') || 'sagemaker';
+const envName: envNameType = app.node.tryGetContext('envName') || 'sagemaker';
+const architecture: architectureType = app.node.tryGetContext('architecture') || 'X86_64';
 
 // prettier-ignore
 new StrandsLambdaStack(app, `${projectName}LambdaStack`, {
