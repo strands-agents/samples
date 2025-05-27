@@ -10,7 +10,6 @@ const s3BucketProps = {
   removalPolicy: RemovalPolicy.DESTROY,
 };
 
-type architectureType = "X86_64" | "ARM_64";
 type envNameType = "sagemaker" | "local";
 
-export { projectName, s3BucketProps, ssmParamKnowledgeBaseId, ssmParamDynamoDb, architectureType, envNameType };
+export { projectName, s3BucketProps, ssmParamKnowledgeBaseId, ssmParamDynamoDb, envNameType };

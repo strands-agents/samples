@@ -5,14 +5,13 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as path from "path";
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as ssm from 'aws-cdk-lib/aws-ssm';
-import { architectureType, envNameType, projectName, s3BucketProps, ssmParamDynamoDb, ssmParamKnowledgeBaseId } from '../constant';
+import { envNameType, projectName, s3BucketProps, ssmParamDynamoDb, ssmParamKnowledgeBaseId } from '../constant';
 import { setSecureTransport } from '../utility';
 import { NagSuppressions } from 'cdk-nag';
 import * as ecrAssets from 'aws-cdk-lib/aws-ecr-assets';
 
 interface StrandsLambdaStackProps extends StackProps {
   envName: envNameType;
-  architecture: architectureType;
 }
 
 export class StrandsLambdaStack extends Stack {
@@ -57,16 +56,13 @@ export class StrandsLambdaStack extends Stack {
     
     const restaurantFunction = new lambda.DockerImageFunction(this, `${projectName}-agent-lambda`, {
       code: lambda.DockerImageCode.fromImageAsset(path.join(__dirname, '../lambda'), {
-         ...(props.architecture === "ARM_64" && { platform: ecrAssets.Platform.LINUX_AMD64 }),
          ...(props.envName === "sagemaker" && { networkMode: ecrAssets.NetworkMode.custom("sagemaker") }),
       }),
       functionName: `${projectName}-agent-function`,
       description: "A function that deploys a restaurant agent",
       timeout: Duration.seconds(120),
       memorySize: 128,
-      architecture: props.architecture === "X86_64"
-        ? lambda.Architecture.X86_64
-        : lambda.Architecture.ARM_64,
+      architecture: lambda.Architecture.X86_64,
       environment: {
         AGENT_BUCKET: agentBucket.bucketName,
         KNOWLEDGE_BASE_ID: knowledgeBaseId.stringValue,

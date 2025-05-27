@@ -1,6 +1,6 @@
 import { Stack, StackProps, Duration, RemovalPolicy } from "aws-cdk-lib";
 import { Construct } from "constructs";
-import { envNameType, architectureType, projectName, s3BucketProps, ssmParamDynamoDb, ssmParamKnowledgeBaseId } from "../constant";
+import { envNameType, projectName, s3BucketProps, ssmParamDynamoDb, ssmParamKnowledgeBaseId } from "../constant";
 import { BlockPublicAccess, Bucket, BucketEncryption, ObjectOwnership } from "aws-cdk-lib/aws-s3";
 import { setSecureTransport } from "../utility";
 import * as ssm from "aws-cdk-lib/aws-ssm";
@@ -15,7 +15,6 @@ import { NagSuppressions } from "cdk-nag";
 
 interface StrandsFargateStackProps extends StackProps {
   envName: envNameType;
-  architecture: architectureType;
 }
 
 export class StrandsFargateStack extends Stack {
@@ -175,17 +174,12 @@ export class StrandsFargateStack extends Stack {
       cpu: 256,
       executionRole,
       taskRole,
-      runtimePlatform: {
-        cpuArchitecture: ecs.CpuArchitecture.ARM64,
-        operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
-      },
     });
 
     // This will use the Dockerfile in the docker directory
     const dockerAsset = new ecrAssets.DockerImageAsset(this, `${projectName}-image`, {
       directory: path.join(__dirname, "../../docker"),
       file: "./Dockerfile",
-      ...(props.architecture === "AMD_64" && { platform: ecrAssets.Platform.LINUX_AMD64 }),
       ...(props.envName === "sagemaker" && { networkMode: ecrAssets.NetworkMode.custom("sagemaker") }),
     });
 

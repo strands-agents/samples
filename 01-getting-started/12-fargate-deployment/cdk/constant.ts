@@ -11,7 +11,6 @@ const s3BucketProps = {
 };
 
 const agentModelId = "anthropic.claude-3-7-sonnet-20250219-v1:0";
-type architectureType = "X86_64" | "AMD_64";
 type envNameType = "sagemaker" | "local";
 
-export { projectName, s3BucketProps, ssmParamKnowledgeBaseId, ssmParamDynamoDb,agentModelId, architectureType, envNameType };
+export { projectName, s3BucketProps, ssmParamKnowledgeBaseId, ssmParamDynamoDb,agentModelId, envNameType };
