@@ -17,6 +17,8 @@ By default, the Streamlit app has the following features:
 * Authentication through Cognito (deactivated by default, activate it in `docker_app/config_file.py`)
 * A simple Strands agent which manages appointments. You can easily substitute this agent by your own.
 
+A version with streaming is also provided. See [here](#implement-streaming).
+
 ![Animated demo](img/animated_demo.gif)
 
 ## Architecture diagram
@@ -100,6 +102,18 @@ streamlit run app.py --server.port 8080
 If the new window does not display the app, you may need to configure your browser to accept cross-site tracking cookies.
 
 5. You can now modify the streamlit app to build your own demo!
+
+## Implement streaming
+
+A version with streaming is also provided. Streaming means you'll see the response appear gradually as it's being generated, instead of waiting for the complete response to show up all at once.
+
+To use the streaming version, replace the content of `docker_app/app.py` by the content of `docker_app/app_streaming.py`.
+
+Alternatively, if you run it locally, you can directly run the streaming version. Follow the setup described in the [previous section](#testing-and-developing-in-cloud9-or-locally), then enter:
+
+```
+streamlit run app_streaming.py --server.port 8080
+```
 
 ## Some limitations
 
