@@ -2,9 +2,12 @@
 import { App, Aspects } from "aws-cdk-lib";
 import { StrandsFargateStack } from "./stacks/strands-fargate-stack";
 import { AwsSolutionsChecks, NagSuppressions } from 'cdk-nag';
-import { projectName } from "./constant";
+import { projectName, envName as envNameType, architecture as architectureType } from "./constant";
 
 const app = new App();
+
+const envName: envNameType = app.node.tryGetContext('envName') || 'sagemaker';
+const architecture: architectureType = app.node.tryGetContext('architecture') || 'X86_64';
 
 // prettier-ignore
 const fargateStack = new StrandsFargateStack(app, `${projectName}FargateStack`, {
@@ -21,6 +24,8 @@ const fargateStack = new StrandsFargateStack(app, `${projectName}FargateStack`, 
   // env: { account: '123456789012', region: 'us-east-1' },
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
+  envName: envName,
+  architecture: architecture
 });
 
 

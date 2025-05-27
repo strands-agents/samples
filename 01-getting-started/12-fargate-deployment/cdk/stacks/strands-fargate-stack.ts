@@ -7,14 +7,19 @@ import * as logs from "aws-cdk-lib/aws-logs";
 import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import * as ecrAssets from "aws-cdk-lib/aws-ecr-assets";
 import * as path from "path";
-import { agentModelId, projectName, s3BucketProps, ssmParamDynamoDb, ssmParamKnowledgeBaseId } from "../constant";
+import { envName as envNameType,architecture as architectureType, projectName, s3BucketProps, ssmParamDynamoDb, ssmParamKnowledgeBaseId } from "../constant";
 import { BlockPublicAccess, Bucket, BucketEncryption, ObjectOwnership } from "aws-cdk-lib/aws-s3";
 import { setSecureTransport } from "../utility";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import { NagSuppressions } from "cdk-nag";
 
+interface StrandsFargateStackProps extends StackProps {
+  envName: envNameType;
+  architecture: architectureType;
+}
+
 export class StrandsFargateStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
+  constructor(scope: Construct, id: string, props: StrandsFargateStackProps) {
     super(scope, id, props);
 
     const knowledgeBaseId = ssm.StringParameter.fromStringParameterName(
@@ -180,9 +185,8 @@ export class StrandsFargateStack extends Stack {
     const dockerAsset = new ecrAssets.DockerImageAsset(this, `${projectName}-image`, {
       directory: path.join(__dirname, "../../docker"),
       file: "./Dockerfile",
-      //platform: ecrAssets.Platform.LINUX_ARM64,
-      platform: ecrAssets.Platform.LINUX_AMD64,
-      networkMode: ecrAssets.NetworkMode.custom("sagemaker"),
+      ...(props.architecture === "ARM_64" && { platform: ecrAssets.Platform.LINUX_AMD64 }),
+      ...(props.envName === "sagemaker" && { networkMode: ecrAssets.NetworkMode.custom("sagemaker") }),
     });
 
     // Add container to the task definition
