@@ -6,6 +6,9 @@ import { StrandsLambdaStack } from './stacks/strands-lambda-stack';
 
 const app = new App();
 
+const envName: "sagemaker" | "local" = app.node.tryGetContext('env') || 'sagemaker';
+const architecture: "X86_64" | "ARM_64" = app.node.tryGetContext('enableFeatureX') || 'sagemaker';
+
 // prettier-ignore
 new StrandsLambdaStack(app, `${projectName}LambdaStack`, {
   /* If you don't specify 'env', this stack will be environment-agnostic.
@@ -21,6 +24,8 @@ new StrandsLambdaStack(app, `${projectName}LambdaStack`, {
   // env: { account: '123456789012', region: 'us-east-1' },
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
+  envName: envName,
+  architecture: architecture
 });
 
 

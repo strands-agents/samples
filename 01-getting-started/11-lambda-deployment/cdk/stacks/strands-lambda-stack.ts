@@ -9,8 +9,13 @@ import { projectName, s3BucketProps, ssmParamDynamoDb, ssmParamKnowledgeBaseId }
 import { setSecureTransport } from '../utility';
 import { NagSuppressions } from 'cdk-nag';
 
+interface StrandsLambdaStackProps extends StackProps {
+  envName: string;
+  enableFeatureX: boolean;
+}
+
 export class StrandsLambdaStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
+  constructor(scope: Construct, id: string, props: StrandsLambdaStackProps) {
     super(scope, id, props);
 
     const knowledgeBaseId = ssm.StringParameter.fromStringParameterName(
