@@ -8,6 +8,7 @@ import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { projectName, s3BucketProps, ssmParamDynamoDb, ssmParamKnowledgeBaseId } from '../constant';
 import { setSecureTransport } from '../utility';
 import { NagSuppressions } from 'cdk-nag';
+import * as ecrAssets from 'aws-cdk-lib/aws-ecr-assets';
 
 interface StrandsLambdaStackProps extends StackProps {
   envName: string;
@@ -55,7 +56,10 @@ export class StrandsLambdaStack extends Stack {
     setSecureTransport(agentBucket);
 
     const restaurantFunction = new lambda.DockerImageFunction(this, `${projectName}-agent-lambda`, {
-      code: lambda.DockerImageCode.fromImageAsset(path.join(__dirname, '../lambda')),
+      code: lambda.DockerImageCode.fromImageAsset(path.join(__dirname, '../lambda'), {
+        networkMode: ecrAssets.NetworkMode.custom("sagemaker"),
+         platform: ecrAssets.Platform.LINUX_AMD64,
+      }),
       functionName: `${projectName}-agent-function`,
       description: "A function that deploys a restaurant agent",
       timeout: Duration.seconds(60),
