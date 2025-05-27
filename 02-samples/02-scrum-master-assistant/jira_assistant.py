@@ -9,8 +9,8 @@ from strands_tools import file_read
 from utils.prompts import JIRA_PROMPT
 from utils.jira_tools import create_jira_ticket
 
-# Enables Phoenix debug log level
-logging.getLogger("phoenix").setLevel(logging.DEBUG)
+# Enables Strands debug log level
+logging.getLogger("strands").setLevel(logging.DEBUG)
 
 # Sets the logging format and streams logs to stderr
 logging.basicConfig(
