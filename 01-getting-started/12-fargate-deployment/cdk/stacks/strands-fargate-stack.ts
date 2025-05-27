@@ -69,6 +69,25 @@ export class StrandsFargateStack extends Stack {
 
     setSecureTransport(flowLogBucket);
 
+    // Allow VPC Flow Logs to write to this bucket
+    flowLogBucket.addToResourcePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        principals: [new iam.ServicePrincipal('vpc-flow-logs.amazonaws.com')],
+        actions: ['s3:PutObject'],
+        resources: [`${flowLogBucket.bucketArn}/*`],
+        conditions: {
+          StringEquals: {
+            'aws:SourceAccount': process.env.CDK_DEFAULT_ACCOUNT,
+          },
+          ArnLike: {
+            'aws:SourceArn': `arn:aws:ec2:${process.env.CDK_DEFAULT_REGION}:${process.env.CDK_DEFAULT_ACCOUNT}:vpc-flow-log/*`,
+          },
+        },
+      })
+    );
+
+
     const agentBucket = new Bucket(this, `${projectName}-agent-bucket`, {
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       encryption: BucketEncryption.S3_MANAGED,
