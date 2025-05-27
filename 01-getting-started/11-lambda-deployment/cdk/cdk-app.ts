@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 import { App, Aspects } from "aws-cdk-lib";
 import { AwsSolutionsChecks, NagSuppressions } from 'cdk-nag';
-import { projectName } from "./constant";
 import { StrandsLambdaStack } from './stacks/strands-lambda-stack';
-import {envName as envNameType, architecture as architectureType} from "./constant"
+import {projectName, envNameType, architectureType} from "./constant"
 
 const app = new App();
 

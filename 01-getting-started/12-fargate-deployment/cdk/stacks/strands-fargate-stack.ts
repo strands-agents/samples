@@ -1,5 +1,9 @@
 import { Stack, StackProps, Duration, RemovalPolicy } from "aws-cdk-lib";
 import { Construct } from "constructs";
+import { envNameType, architectureType, projectName, s3BucketProps, ssmParamDynamoDb, ssmParamKnowledgeBaseId } from "../constant";
+import { BlockPublicAccess, Bucket, BucketEncryption, ObjectOwnership } from "aws-cdk-lib/aws-s3";
+import { setSecureTransport } from "../utility";
+import * as ssm from "aws-cdk-lib/aws-ssm";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as iam from "aws-cdk-lib/aws-iam";
@@ -7,10 +11,6 @@ import * as logs from "aws-cdk-lib/aws-logs";
 import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import * as ecrAssets from "aws-cdk-lib/aws-ecr-assets";
 import * as path from "path";
-import { envName as envNameType,architecture as architectureType, projectName, s3BucketProps, ssmParamDynamoDb, ssmParamKnowledgeBaseId } from "../constant";
-import { BlockPublicAccess, Bucket, BucketEncryption, ObjectOwnership } from "aws-cdk-lib/aws-s3";
-import { setSecureTransport } from "../utility";
-import * as ssm from "aws-cdk-lib/aws-ssm";
 import { NagSuppressions } from "cdk-nag";
 
 interface StrandsFargateStackProps extends StackProps {
@@ -185,7 +185,7 @@ export class StrandsFargateStack extends Stack {
     const dockerAsset = new ecrAssets.DockerImageAsset(this, `${projectName}-image`, {
       directory: path.join(__dirname, "../../docker"),
       file: "./Dockerfile",
-      ...(props.architecture === "ARM_64" && { platform: ecrAssets.Platform.LINUX_AMD64 }),
+      ...(props.architecture === "AMD_64" && { platform: ecrAssets.Platform.LINUX_AMD64 }),
       ...(props.envName === "sagemaker" && { networkMode: ecrAssets.NetworkMode.custom("sagemaker") }),
     });
 

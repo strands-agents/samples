@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import { App, Aspects } from "aws-cdk-lib";
 import { StrandsFargateStack } from "./stacks/strands-fargate-stack";
-import { AwsSolutionsChecks, NagSuppressions } from 'cdk-nag';
-import { projectName, envName as envNameType, architecture as architectureType } from "./constant";
+import { AwsSolutionsChecks } from 'cdk-nag';
+import { projectName, envNameType, architectureType } from "./constant";
 
 const app = new App();
 

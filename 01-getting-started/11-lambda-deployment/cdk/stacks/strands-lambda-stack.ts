@@ -5,7 +5,7 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import * as path from "path";
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as ssm from 'aws-cdk-lib/aws-ssm';
-import { architecture as architectureType, envName as envNameType, projectName, s3BucketProps, ssmParamDynamoDb, ssmParamKnowledgeBaseId } from '../constant';
+import { architectureType, envNameType, projectName, s3BucketProps, ssmParamDynamoDb, ssmParamKnowledgeBaseId } from '../constant';
 import { setSecureTransport } from '../utility';
 import { NagSuppressions } from 'cdk-nag';
 import * as ecrAssets from 'aws-cdk-lib/aws-ecr-assets';
