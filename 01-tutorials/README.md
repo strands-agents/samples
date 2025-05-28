@@ -8,14 +8,14 @@ In this folder we will provide Jupyter Notebook examples on how to get started w
 | F1      | [Creating First Strands Agent](01-fundamentals/01-first-agent)                     | Agent initialization, usage of a default tool, creation of custom tools                              |
 | F2      | [Model Providers - OpenAI](01-fundamentals/02-model-providers/02-openai-model)     | Create agent with GPT 4.0 as model                                                                   |
 | F2      | [Model Providers - Ollama](01-fundamentals/02-model-providers/01-ollama-model)     | Create agent with Ollama model                                                                       |
-| F4      | [Connecting with AWS services](01-fundamentals/03-connecting-with-aws-services)    | Connecting to Amazon Bedrock Knowledge Base and Amazon DynamoDB                                      |
-| F5      | [Tools - Using MCP tools](01-fundamentals/04-tools/01-using-mcp-tools)                     | Integrating MCP tool calling to your agent                                                           |
-| F5      | [Tools - Custom Tools](01-fundamentals/04-tools/02-custom-tools)                           | Creating and using custom tools with your agent                                                      |
-| F6      | [Streaming response from agent](01-fundamentals/05-streaming-agent-response)       | Streaming your agent's response using Async Iterators or Callbacks (Stream Handlers)                 |
-| F7      | [Integrating Bedrock Guardrail](01-fundamentals/06-guardrail-integration)          | Integrate an Amazon Bedrock Guardrail to your agent                                                  |
-| F8      | [Adding memory to your agent](01-fundamentals/07-memory-persistent-agents)         | Personal assistant using memory and websearch tools                                                  |
-| F9     | [Observability and Evaluation](01-fundamentals/08-observability-and-evaluation)    | Adding observability and evaluation to your agent                                                    |
-| F10     | [Human-in-the-loop validation](01-fundamentals/09-human-in-the-loop-validation)    | SNS notifications, asynchronous updates via Lambda                                                   |
+| F3      | [Connecting with AWS services](01-fundamentals/03-connecting-with-aws-services)    | Connecting to Amazon Bedrock Knowledge Base and Amazon DynamoDB                                      |
+| F4      | [Tools - Using MCP tools](01-fundamentals/04-tools/01-using-mcp-tools)                     | Integrating MCP tool calling to your agent                                                           |
+| F4      | [Tools - Custom Tools](01-fundamentals/04-tools/02-custom-tools)                           | Creating and using custom tools with your agent                                                      |
+| F5      | [Streaming response from agent](01-fundamentals/05-streaming-agent-response)       | Streaming your agent's response using Async Iterators or Callbacks (Stream Handlers)                 |
+| F6      | [Integrating Bedrock Guardrail](01-fundamentals/06-guardrail-integration)          | Integrate an Amazon Bedrock Guardrail to your agent                                                  |
+| F7      | [Adding memory to your agent](01-fundamentals/07-memory-persistent-agents)         | Personal assistant using memory and websearch tools                                                  |
+| F8     | [Observability and Evaluation](01-fundamentals/08-observability-and-evaluation)    | Adding observability and evaluation to your agent                                                    |
+| F9     | [Human-in-the-loop validation](01-fundamentals/09-human-in-the-loop-validation)    | SNS notifications, asynchronous updates via Lambda                                                   |
 
 ## Multi-Agent Systems
 | Example | Description                                                | Features showcased                                                                                   |
