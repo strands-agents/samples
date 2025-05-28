@@ -2,7 +2,7 @@
 import { App, Aspects } from "aws-cdk-lib";
 import { AwsSolutionsChecks, NagSuppressions } from 'cdk-nag';
 import { StrandsLambdaStack } from './stacks/strands-lambda-stack';
-import {projectName, envNameType} from "./constant"
+import { projectName, envNameType } from "./constant"
 
 const app = new App();
 
