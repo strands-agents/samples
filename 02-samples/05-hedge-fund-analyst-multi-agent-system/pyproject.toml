@@ -1,0 +1,21 @@
+[project]
+name = "financial-analysis-multi-agent-collaboration"
+version = "0.1.0"
+description = "This is a multi-agent collaboration system that manages a finance agent system"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "litellm",
+    "mem0ai",
+    "opensearch-py",
+    "boto3",
+    "botocore",
+    "watchdog",
+    "jsonschema",
+    "mcp",
+    "retrying",
+    "strands-agents",
+    "strands-agents-tools",
+    "zmq",
+    "langgraph>=0.4.5"
+]

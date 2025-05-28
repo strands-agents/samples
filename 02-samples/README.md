@@ -7,3 +7,4 @@
 | 2           | [Scrum Master Assistant](./02-scrum-master-assistant/)                       | An expert agile development assistant for JIRA specializing in breaking down meeting notes into actionable tasks.        |
 | 3           | [AWS Assistant MCP](./03-aws-assistant-mcp/)                           | AWS-focused assistant using Model Control Protocol (MCP)                     |
 | 4           | [Startup Advisor MCP](./04-startup-advisor-mcp/)                       | Startup advisory agent using Model Control Protocol (MCP)                  |
+| 5           | [Hedge Fund Multi-Agent Sytem](./05-hedge-fund-analyst-multi-agent-system/)                       | Multi agent system for hedge fund tasks using several agents as tools                  |
