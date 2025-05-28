@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 import { App, Aspects } from "aws-cdk-lib";
 import { AwsSolutionsChecks, NagSuppressions } from 'cdk-nag';
-import { projectName } from "./constant";
 import { StrandsLambdaStack } from './stacks/strands-lambda-stack';
+import { projectName, envNameType } from "./constant"
 
 const app = new App();
+
+const envName: envNameType = app.node.tryGetContext('envName') || 'sagemaker';
 
 // prettier-ignore
 new StrandsLambdaStack(app, `${projectName}LambdaStack`, {
@@ -21,6 +23,7 @@ new StrandsLambdaStack(app, `${projectName}LambdaStack`, {
   // env: { account: '123456789012', region: 'us-east-1' },
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
+  envName: envName,
 });
 
 

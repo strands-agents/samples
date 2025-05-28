@@ -1,5 +1,9 @@
 import { Stack, StackProps, Duration, RemovalPolicy } from "aws-cdk-lib";
 import { Construct } from "constructs";
+import { envNameType, projectName, s3BucketProps, ssmParamDynamoDb, ssmParamKnowledgeBaseId } from "../constant";
+import { BlockPublicAccess, Bucket, BucketEncryption, ObjectOwnership } from "aws-cdk-lib/aws-s3";
+import { setSecureTransport } from "../utility";
+import * as ssm from "aws-cdk-lib/aws-ssm";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as iam from "aws-cdk-lib/aws-iam";
@@ -7,14 +11,14 @@ import * as logs from "aws-cdk-lib/aws-logs";
 import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import * as ecrAssets from "aws-cdk-lib/aws-ecr-assets";
 import * as path from "path";
-import { agentModelId, projectName, s3BucketProps, ssmParamDynamoDb, ssmParamKnowledgeBaseId } from "../constant";
-import { BlockPublicAccess, Bucket, BucketEncryption, ObjectOwnership } from "aws-cdk-lib/aws-s3";
-import { setSecureTransport } from "../utility";
-import * as ssm from "aws-cdk-lib/aws-ssm";
 import { NagSuppressions } from "cdk-nag";
 
+interface StrandsFargateStackProps extends StackProps {
+  envName: envNameType;
+}
+
 export class StrandsFargateStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
+  constructor(scope: Construct, id: string, props: StrandsFargateStackProps) {
     super(scope, id, props);
 
     const knowledgeBaseId = ssm.StringParameter.fromStringParameterName(
@@ -64,6 +68,25 @@ export class StrandsFargateStack extends Stack {
     });
 
     setSecureTransport(flowLogBucket);
+
+    // Allow VPC Flow Logs to write to this bucket
+    flowLogBucket.addToResourcePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        principals: [new iam.ServicePrincipal('vpc-flow-logs.amazonaws.com')],
+        actions: ['s3:PutObject'],
+        resources: [`${flowLogBucket.bucketArn}/*`],
+        conditions: {
+          StringEquals: {
+            'aws:SourceAccount': process.env.CDK_DEFAULT_ACCOUNT,
+          },
+          ArnLike: {
+            'aws:SourceArn': `arn:aws:ec2:${process.env.CDK_DEFAULT_REGION}:${process.env.CDK_DEFAULT_ACCOUNT}:vpc-flow-log/*`,
+          },
+        },
+      })
+    );
+
 
     const agentBucket = new Bucket(this, `${projectName}-agent-bucket`, {
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
@@ -170,17 +193,13 @@ export class StrandsFargateStack extends Stack {
       cpu: 256,
       executionRole,
       taskRole,
-      runtimePlatform: {
-        cpuArchitecture: ecs.CpuArchitecture.ARM64,
-        operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
-      },
     });
 
     // This will use the Dockerfile in the docker directory
     const dockerAsset = new ecrAssets.DockerImageAsset(this, `${projectName}-image`, {
       directory: path.join(__dirname, "../../docker"),
       file: "./Dockerfile",
-      platform: ecrAssets.Platform.LINUX_ARM64,
+      ...(props.envName === "sagemaker" && { networkMode: ecrAssets.NetworkMode.custom("sagemaker") }),
     });
 
     // Add container to the task definition
