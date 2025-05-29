@@ -2,6 +2,10 @@
 
 This example demonstrates a simple interactive agent that helps with recipes and cooking information.
 
+## Architecture
+Here is what we are building:
+![Architecture](../images/interactive_recipe_agent.png)
+
 ## Running the Recipe Bot
 
 1. Navigate to this directory: `cd /02-simple-interactive-usecase/`
