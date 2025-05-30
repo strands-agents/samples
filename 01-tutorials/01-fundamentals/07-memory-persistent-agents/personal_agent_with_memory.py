@@ -32,10 +32,18 @@ from duckduckgo_search import DDGS
 from duckduckgo_search.exceptions import DuckDuckGoSearchException, RatelimitException
 
 # Set up environment variables for AWS credentials and OpenSearch
-os.environ["OPENSEARCH_HOST"] = "<your-opensearch-hostname>.<your-region>.aoss.amazonaws.com" # Note: Please make sure to remove 'https://' from the AOSS endpoint.
-os.environ["AWS_REGION"] = "<your-region>" # Replace with your region name e.g. 'us-west-2'
-os.environ['AWS_ACCESS_KEY_ID'] = "<your-aws-access-key-id>"
-os.environ['AWS_SECRET_ACCESS_KEY'] = "<your-aws-secret-access-key>"
+
+# Define AWS credentials:
+#os.environ["AWS_REGION"] = "<your-region>" # Replace with your region name e.g. 'us-west-2'
+#os.environ['AWS_ACCESS_KEY_ID'] = "<your-aws-access-key-id>"
+#os.environ['AWS_SECRET_ACCESS_KEY'] = "<your-aws-secret-access-key>"
+
+# Option 1:
+# os.environ["OPENSEARCH_HOST"] = "<your-opensearch-hostname>.<your-region>.aoss.amazonaws.com" # Note: Please make sure to remove 'https://' from the AOSS endpoint.
+
+# Option 2:
+# os.environ["MEM0_API_KEY"] = "<mem0-api-key>" # Replace with your Mem0 API key
+
 
 # User identifier
 USER_ID = "new_user" # In the real app, this would be set based on user authentication.
