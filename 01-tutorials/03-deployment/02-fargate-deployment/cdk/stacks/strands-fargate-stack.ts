@@ -189,8 +189,8 @@ export class StrandsFargateStack extends Stack {
 
     // Create a task definition
     const taskDefinition = new ecs.FargateTaskDefinition(this, `${projectName}-task-definition`, {
-      memoryLimitMiB: 512,
-      cpu: 256,
+      memoryLimitMiB: 4096,
+      cpu: 2048,
       executionRole,
       taskRole,
     });
