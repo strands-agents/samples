@@ -30,7 +30,7 @@ The following architecture diagram illustrates a reference solution for a genera
 > [!IMPORTANT]
 > This sample application is meant for demo purposes and is not production ready. Please make sure to validate the code with your organizations security best practices.
 > 
-> Cost Alert: This solution will cost approximately $180 USD per month, mainly for Aurora Serverless and RDS Proxy, plus the usage of on-demand services like Amazon Bedrock. Please ensure you understand these costs before deployment.
+> Cost Alert: This solution will cost approximately $230 USD per month, mainly for Aurora Serverless, RDS Proxy, Application Load Balanceer, Fargate container and VPC NAT Gateway, plus the usage of on-demand services like Amazon Bedrock. Please ensure you understand these costs before deployment.
 
 The solution deploys the following AWS services through AWS CDK:
 
