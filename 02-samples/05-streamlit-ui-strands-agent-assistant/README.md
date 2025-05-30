@@ -1,5 +1,5 @@
 
-## Instructions to run locally  
+# Instructions
 
 Clone the repo locally  
 
