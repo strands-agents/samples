@@ -1,0 +1,5 @@
+strands-agents>=0.1.0
+logging
+boto3
+streamlit
+botocore
