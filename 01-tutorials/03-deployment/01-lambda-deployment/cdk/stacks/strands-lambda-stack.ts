@@ -61,7 +61,7 @@ export class StrandsLambdaStack extends Stack {
       functionName: `${projectName}-agent-function`,
       description: "A function that deploys a restaurant agent",
       timeout: Duration.seconds(120),
-      memorySize: 128,
+      memorySize: 512,
       architecture: lambda.Architecture.X86_64,
       environment: {
         AGENT_BUCKET: agentBucket.bucketName,
