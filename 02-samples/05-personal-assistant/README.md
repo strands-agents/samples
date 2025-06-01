@@ -72,6 +72,16 @@ python calendar_assistant.py
 python coding_assistant.py
 ```
 
+#### Search Assistant
+```bash
+python search_assistant.py
+```
+
+
+#### Personal Assistant (multi-agent collaboration)
+```bash
+python personal_assistant.py
+```
 
 ## 🛠️ Usage Examples
 
