@@ -16,4 +16,3 @@ This folder contains a series of tutorials covering the fundamental concepts of 
 | F6      | [Integrating Bedrock Guardrail](./06-guardrail-integration)                  | Integrate an Amazon Bedrock Guardrail to your agent                                                  |
 | F7      | [Adding memory to your agent](./07-memory-persistent-agents)                 | Personal assistant using memory and websearch tools                                                  |
 | F8      | [Observability and Evaluation](./08-observability-and-evaluation)            | Adding observability and evaluation to your agent                                                    |
-| F9      | [Human-in-the-loop validation](./09-human-in-the-loop-validation)            | SNS notifications, asynchronous updates via Lambda                                                   |

@@ -15,7 +15,6 @@ In this folder we will provide Jupyter Notebook examples on how to get started w
 | F6      | [Integrating Bedrock Guardrail](01-fundamentals/06-guardrail-integration)          | Integrate an Amazon Bedrock Guardrail to your agent                                                  |
 | F7      | [Adding memory to your agent](01-fundamentals/07-memory-persistent-agents)         | Personal assistant using memory and websearch tools                                                  |
 | F8     | [Observability and Evaluation](01-fundamentals/08-observability-and-evaluation)    | Adding observability and evaluation to your agent                                                    |
-| F9     | [Human-in-the-loop validation](01-fundamentals/09-human-in-the-loop-validation)    | SNS notifications, asynchronous updates via Lambda                                                   |
 
 ## Multi-Agent Systems
 | Example | Description                                                | Features showcased                                                                                   |
