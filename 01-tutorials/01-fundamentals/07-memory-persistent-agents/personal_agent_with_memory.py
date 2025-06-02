@@ -39,8 +39,8 @@ from duckduckgo_search.exceptions import DuckDuckGoSearchException, RatelimitExc
 #os.environ['AWS_SECRET_ACCESS_KEY'] = "<your-aws-secret-access-key>"
 
 # Option 1:
-# os.environ["OPENSEARCH_HOST"] = "<your-opensearch-hostname>.<your-region>.aoss.amazonaws.com" # Note: Please make sure to remove 'https://' from the AOSS endpoint.
-
+# Note: Please make sure to remove 'https://' from the AOSS endpoint.
+# os.environ["OPENSEARCH_HOST"] = "<your-opensearch-hostname>.<your-region>.aoss.amazonaws.com" 
 # Option 2:
 # os.environ["MEM0_API_KEY"] = "<mem0-api-key>" # Replace with your Mem0 API key
 
