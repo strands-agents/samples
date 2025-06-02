@@ -42,22 +42,11 @@ TOOL_SPEC = {
 def update_appointment(tool: ToolUse, **kwargs: Any) -> ToolResult:
     tool_use_id = tool["toolUseId"]
     appointment_id = tool["input"]["appointment_id"]
-    if "date" in tool["input"]:
-        date = tool["input"]["date"]
-    else:
-        date = None
-    if "location" in tool["input"]:
-        location = tool["input"]["location"]
-    else:
-        location = None
-    if "title" in tool["input"]:
-        title = tool["input"]["title"]
-    else:
-        title = None
-    if "description" in tool["input"]:
-        description = tool["input"]["description"]
-    else:
-        description = None
+    
+    date = tool["input"].get("date")
+    location = tool["input"].get("location")
+    title = tool["input"].get("title")
+    description = tool["input"].get("description")
 
     # Check if database exists
     if not os.path.exists('appointments.db'): 

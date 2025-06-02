@@ -1,6 +1,11 @@
+import os
 from strands import Agent, tool
 from strands.models import BedrockModel
 from strands_tools import python_repl, editor, shell, journal
+from constants import SESSION_ID
+
+# Show rich UI for tools in CLI
+os.environ["STRANDS_TOOL_CONSOLE_MODE"] = "enabled"
 
 
 @tool
@@ -13,20 +18,23 @@ def code_assistant(query: str) -> str:
     Returns:
         Output from interaction
     """
-    system_prompt = """You are a software expert and coder. Write, debug, test, and iterate on software"""
-
-    model = BedrockModel(
-        model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
-    )
-
-    agent = Agent(
-        model=model,
-        system_prompt=system_prompt,
-        tools=[python_repl, editor, shell, journal],
-    )
-
     response = agent(query)
+    print("\n\n")
     return response
+
+
+system_prompt = """You are a software expert and coder. Write, debug, test, and iterate on software"""
+
+model = BedrockModel(
+    model_id="us.anthropic.claude-sonnet-4-20250514-v1:0",
+)
+
+agent = Agent(
+    model=model,
+    system_prompt=system_prompt,
+    tools=[python_repl, editor, shell, journal],
+    trace_attributes={"session.id": SESSION_ID},
+)
 
 
 if __name__ == "__main__":
@@ -82,8 +90,6 @@ if __name__ == "__main__":
                 break
             print("🤖 CodingBot: ", end="")
             response = code_assistant(user_input)
-            print(response)
-            print()
 
         except KeyboardInterrupt:
             print("\n")
