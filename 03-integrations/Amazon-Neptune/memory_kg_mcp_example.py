@@ -9,7 +9,7 @@ memory_mcp_client = MCPClient(lambda: stdio_client(StdioServerParameters(
 )))
 perplexity_mcp_client = MCPClient(lambda: stdio_client(StdioServerParameters(command="npx", 
     args=["server-perplexity-ask"],
-    env={"PERPLEXITY_API_KEY": "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"},
+    env={"PERPLEXITY_API_KEY": "<INSERT PERPLEXITY AI KEY>"},
     )))
 with memory_mcp_client, perplexity_mcp_client:
     tools = memory_mcp_client.list_tools_sync() + perplexity_mcp_client.list_tools_sync()
