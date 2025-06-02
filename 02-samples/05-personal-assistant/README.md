@@ -41,6 +41,12 @@ git clone https://github.com/strands-agents/samples.git
 cd 02-samples/05-personal-assistant
 ```
 
+2. **Set up Python virtual environment**:
+```bash
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+```
+
 2. **Install dependencies**:
 ```bash
 pip install -r requirements.txt
@@ -64,23 +70,22 @@ export PERPLEXITY_API_KEY=your_perplexity_api_key
 
 #### Calendar Assistant
 ```bash
-python calendar_assistant.py
+python -u calendar_assistant.py
 ```
 
 #### Coding Assistant
 ```bash
-python coding_assistant.py
+python -u coding_assistant.py
 ```
 
 #### Search Assistant
 ```bash
-python search_assistant.py
+python -u search_assistant.py
 ```
-
 
 #### Personal Assistant (multi-agent collaboration)
 ```bash
-python personal_assistant.py
+python -u personal_assistant.py
 ```
 
 ## 🛠️ Usage Examples
