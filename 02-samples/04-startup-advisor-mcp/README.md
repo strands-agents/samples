@@ -1,6 +1,6 @@
 # Startup Advisor using Perplexity MCP server
 
-Have a new startup in mind, but haven't quite hired your marketing staff? Use this Startup Advisrt agent to do your market research, come up with campaign ideas, and write effective campaign copy.
+Have a new startup in mind, but haven't quite hired your marketing staff? Use this Startup Advisor agent to do your market research, come up with campaign ideas, and write effective campaign copy.
 
 ![architecture](./architecture.png)
 
@@ -14,14 +14,16 @@ Have a new startup in mind, but haven't quite hired your marketing staff? Use th
 
 ## Key Features
 
-- Shows Sequential mult-agent architecture using Strands Agent
-- Agentic search using Perplexity MCP server.
-- Utilizes `Swarm` tool, allowing collaboration bettween swarm of agents to do market research.
+- Shows sequential mult-agent architecture using Strands Agent
+- Agentic search using the Perplexity MCP server.
+- Utilizes the `swarm` tool, allowing a swarm of agents to collaborate on market research.
 
 ## Prerequisites
 
 1. Install [uv](https://docs.astral.sh/uv/getting-started/installation/).
 
-2. Create .env file with [.env.example](./.env.example). Follow guidance [here](https://docs.perplexity.ai/guides/getting-started) to get started with perplexity AI.
+2. Create .env file with [.env.example](./.env.example).
 
-3. Run `uv run main.py`
+3. Follow guidance [here](https://docs.perplexity.ai/guides/getting-started) to get started with perplexity AI.
+
+4. Run `uv run main.py`
