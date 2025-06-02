@@ -1,0 +1,4 @@
+uv
+strands-agents
+strands-agents-tools
+mcp
