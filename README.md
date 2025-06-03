@@ -93,8 +93,8 @@ agent(message)
 
 ### Step 4: Getting Started with the SDK
 
-Start with the [01-getting-started](./01-getting-started/) directory.
-Create your [first agent](./01-getting-started/00-first-agent/) and explore notebook-based examples covering core functionalities.
+Start with the [01-tutorials](./01-tutorials/) directory.
+Create your [first agent](./01-tutorials/01-fundamentals/01-first-agent/) and explore notebook-based examples covering core functionalities.
 
 ### Step 5: Explore More Samples
 
