@@ -1,4 +1,4 @@
-# Streamlit UI Deme of Strands Agents
+# Streamlit UI Demo of Strands Agents
 
 ## Getting Started  
 
