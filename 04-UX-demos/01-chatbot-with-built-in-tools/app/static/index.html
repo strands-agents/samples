@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Interface</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Chatbot Interface</h1>
+            <div class="user-id-container">
+                <input type="text" id="userId" placeholder="Enter User ID" value="user1">
+                <button id="setUserId">Set User ID</button>
+            </div>
+        </div>
+        
+        <div class="chat-container">
+            <div id="chatMessages" class="chat-messages"></div>
+            
+            <div class="input-container">
+                <textarea id="userInput" placeholder="Type your message here..."></textarea>
+                <button id="sendButton">Send</button>
+            </div>
+        </div>
+        
+        <div class="metrics-container">
+            <div class="metric">
+                <span>Latency:</span>
+                <span id="latency">0 ms</span>
+            </div>
+            <div class="metric">
+                <span>Total Tokens:</span>
+                <span id="tokens">0</span>
+            </div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
