@@ -1,16 +1,14 @@
 import os
 from strands import Agent
 from strands.models import BedrockModel
-from tools import (
+from utils.tools import (
     code_generator,
     code_reviewer,
     code_writer_agent,
     code_execute,
     project_reader,
 )
-
-# Set environment
-os.environ["DEV"] = "false"
+from utils.prompts import CODE_ASSISTANT_PROMPT
 
 # Claude model instance
 claude_sonnet_4 = BedrockModel(
@@ -19,22 +17,7 @@ claude_sonnet_4 = BedrockModel(
 
 # Code Assistant Agent
 code_assistant = Agent(
-    system_prompt="""
-You are an expert programming assistant specializing in Python.
-
-Your capabilities:
-1. Code Generation: Create clean, efficient code
-2. Debugging: Identify and fix issues
-3. Optimization: Enhance performance and readability
-4. Explanation: Make code easy to understand
-5. Best Practices: Follow Python 3.12 standards
-
-Always:
-- Generate code first
-- Review and optimize it
-- Execute for verification before writing the code
-- Explain thoroughly
-""",
+    system_prompt=CODE_ASSISTANT_PROMPT,
     model=claude_sonnet_4,
     tools=[
         project_reader,

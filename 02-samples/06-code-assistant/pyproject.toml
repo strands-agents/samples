@@ -1,7 +1,7 @@
 [project]
 name = "03-coding-assistant"
 version = "0.1.0"
-description = "Add your description here"
+description = "Code Assistant Agent: Introducing the Next-Generation Coding Sidekick"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [

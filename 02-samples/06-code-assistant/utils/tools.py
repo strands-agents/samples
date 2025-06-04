@@ -2,15 +2,23 @@ from strands import Agent, tool
 from strands.models import BedrockModel
 from strands_tools import editor, file_read, file_write, python_repl, shell
 import os
-from prompts import CODE_AGENT_PROMPT, WRITER_AGENT_PROMPT, REVIEWER_AGENT_PROMPT
+from .prompts import CODE_AGENT_PROMPT, WRITER_AGENT_PROMPT, REVIEWER_AGENT_PROMPT
 
 bedrock_model = BedrockModel(
     model_id="us.anthropic.claude-sonnet-4-20250514-v1:0",
 )
 
-# Tools
-@tool(name="project_reader", description="Read files in a project directory")
+@tool
 def project_reader(project_directory: str) -> dict[str, str] | str:
+    """
+    Read files in a project directory
+
+    Args:
+        project_directory: Project directory to read files from
+
+    Returns:
+        files content
+    """
     try:
         file_reader_agent = Agent(tools=[file_read])
         return {
@@ -23,10 +31,17 @@ def project_reader(project_directory: str) -> dict[str, str] | str:
         return f"Error reading project {project_directory}: {e}"
 
 
-@tool(
-    name="code_generator", description="Generates Python code from a task description"
-)
+@tool
 def code_generator(task: str) -> str:
+    """
+    Generates Python code from a task description
+
+    Args:
+        task: Given task by user
+
+    Returns:
+        Generated Python code
+    """
     try:
         agent = Agent(system_prompt=CODE_AGENT_PROMPT, model=bedrock_model)
         result = str(agent(f"Complete the task: {task}")).strip()
@@ -35,8 +50,17 @@ def code_generator(task: str) -> str:
         return f"Error generating code for task '{task}': {e}"
 
 
-@tool(name="code_reviewer", description="Improves Python code using best practices")
+@tool
 def code_reviewer(code: str) -> str:
+    """
+    Reviews Python code to a implement best practices
+
+    Args:
+        code: Python code to write.
+
+    Returns:
+        Improved Python code using best practices
+    """
     try:
         agent = Agent(system_prompt=REVIEWER_AGENT_PROMPT, model=bedrock_model)
         result = str(agent(f"Optimize code:\n{code}")).strip()
