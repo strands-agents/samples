@@ -10,14 +10,6 @@ from utils.prompts import RESEARCH_FORMATTER_PROMPT, SYSTEM_PROMPT
 from utils.utils import (format_crawl_results_for_agent,
                          format_search_results_for_agent, generate_filename)
 
-# Enables Strands debug log level
-logging.getLogger("strands").setLevel(logging.DEBUG)  # or logging.INFO
-# Sets the logging format and streams logs to stderr
-logging.basicConfig(
-    format="%(levelname)s | %(name)s | %(message)s",
-    handlers=[logging.StreamHandler()]
-)
-
 # Define constants
 RESEARCH_DIR = "research_findings"
 
