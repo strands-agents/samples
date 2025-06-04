@@ -4,7 +4,7 @@
 
 Amazon Aurora DSQL is a serverless, distributed relational database service optimized for transactional workloads. Aurora DSQL offers virtually unlimited scale and doesn't require you to manage infrastructure. The active-active highly available architecture provides 99.99% single-Region and 99.999% multi-Region availability.
 
-![architecture](./architecure.png)
+![architecture](./architecture.png)
 
 |Feature             |Description                                        |
 |--------------------|---------------------------------------------------|
