@@ -2,7 +2,7 @@
 
 An intelligent terminal-based research assistant powered by Strands and [Tavily](https://www.tavily.com/). This agent uses Tavily's web search and web crawl API to gather information from reliable sources, extract key insights, and save comprehensive research reports in Markdown format.
 
-<video src="https://github.com/user-attachments/assets/dc24be6a-cfea-499e-9c2c-38b8d5853c5b" controls="controls" style="max-width: 730px;">
+<video src="https://github.com/user-attachments/assets/d873a93e-5086-4fc8-81c7-38dba12417c8" controls="controls" style="max-width: 730px;">
 </video>
 
 
