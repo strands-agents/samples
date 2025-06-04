@@ -11,10 +11,10 @@ Follow the tutorials to build your own web-enabled research agent:
 1. **[Deep Research Agent](./deep-research.ipynb)** - Self-contained implementation with Jupyter notebook.
 2. **[Interactive CLI Tool](./interactive_cli/readme.md)** - Command-line interface, allowing you to perform deep research directly from your terminal.
 
-
 ## Architecture Overview
 
-### Agent Architecture  
+### Agent Architecture
+
 The agent architecture demonstrating the core components and tool orchestration:
 
 <div align="center">
@@ -23,11 +23,19 @@ The agent architecture demonstrating the core components and tool orchestration:
 </div>
 
 ### Solution Architecture
-The complete system architecture showing how the interactive researcher integrates with Tavily API and AWS Bedrock:
+
+The complete system architecture showing how the interactive researcher integrates with Tavily API and Amazon Bedrock:
 
 <div align="center">
     <img src="assets/architecture_interactive.png" alt="Interactive Researcher Solution Architecture" width="75%" />
     <br/>
 </div>
+
+### 🎥 CLI Demo
+
+Here is a short demo of the CLI interactive Deep researcher:
+
+<video src="https://github.com/user-attachments/assets/d873a93e-5086-4fc8-81c7-38dba12417c8" controls="controls" style="max-width: 730px;">
+</video>
 
 ---
