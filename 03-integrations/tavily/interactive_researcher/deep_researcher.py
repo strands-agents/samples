@@ -1,3 +1,4 @@
+import logging
 import os
 from typing import Optional
 
@@ -6,10 +7,15 @@ from strands import Agent, tool
 from strands.models import BedrockModel
 from tavily import TavilyClient
 from utils.prompts import RESEARCH_FORMATTER_PROMPT, SYSTEM_PROMPT
-from utils.utils import (
-    format_crawl_results_for_agent,
-    format_search_results_for_agent,
-    generate_filename,
+from utils.utils import (format_crawl_results_for_agent,
+                         format_search_results_for_agent, generate_filename)
+
+# Enables Strands debug log level
+logging.getLogger("strands").setLevel(logging.DEBUG)  # or logging.INFO
+# Sets the logging format and streams logs to stderr
+logging.basicConfig(
+    format="%(levelname)s | %(name)s | %(message)s",
+    handlers=[logging.StreamHandler()]
 )
 
 # Define constants
@@ -54,7 +60,8 @@ def web_search(
             query=query,  # The search query to execute with Tavily.
             max_results=max_results,
             time_range=time_range,
-            include_domains=include_domains,  # list of domains to specifically include in the search results.
+            # list of domains to specifically include in the search results.
+            include_domains=include_domains,
         )
     )
     return formatted_results
