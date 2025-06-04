@@ -1,15 +1,38 @@
-# DSQL-do is a tool to do things on a DSQL cluster
+# Strands Agent with Amazon Aurora DSQL
 
-Setup:
+## Overview
 
-    export DSQL_CLUSTER=<your dsql cluster name>
-    export DSQL_CLUSTER_REGION=<your cluster region> # defaults to us-east-1 if not set
-    uv run dsql-do.py <prompt>
+Amazon Aurora DSQL is a serverless, distributed relational database service optimized for transactional workloads. Aurora DSQL offers virtually unlimited scale and doesn't require you to manage infrastructure. The active-active highly available architecture provides 99.99% single-Region and 99.999% multi-Region availability.
 
-Examples:
+![architecture](./architecure.png)
 
-    uv run dsql-do.py "List all tables in the database"
-    uv run dsql-do.py "Explain the following query and suggest ways to improve it: ..."
-    uv run dsql-do.py "Create a table called bank with an id column and a balance column using appropriate data types."
-    uv run dsql-do.py "Fill the bank table with 100 rows of random example data. Make sure the sum of all balance columns equals 1000."
-    
+|Feature             |Description                                        |
+|--------------------|---------------------------------------------------|
+|Agent Structure     |Single-agent architecture                          |
+|Native Tools        |file_read, file_write                              |
+|MCP Servers         |[Amazon Aurora DSQL MCP Server](https://pypi.org/project/awslabs.aurora-dsql-mcp-server/)                  |
+|Model Provider      |Amazon Bedrock                                     |
+
+## Prerequisites
+
+- An AWS account with an [Aurora DSQL Cluster](https://docs.aws.amazon.com/aurora-dsql/latest/userguide/getting-started.html).
+- Set up AWS credentials with access to AWS services
+  - You need an AWS account with appropriate permissions
+  - Configure AWS credentials with aws configure or environment variables
+
+## Getting Started
+
+1. Install [uv](https://docs.astral.sh/uv/getting-started/installation/).
+
+2. Set up AWS credentials in `.env` using [.env.example](./.env.example).
+
+3. Run the AWS Assistant using `uv run main.py <prompt>`
+
+## Sample Queries
+
+```bash
+uv run main.py "List all tables in the database"
+uv run main.py "Explain the following query and suggest ways to improve it: ..."
+uv run main.py "Create a table called bank with an id column and a balance column using appropriate data types."
+uv run main.py "Fill the bank table with 100 rows of random example data. Make sure the sum of all balance columns equals 1000."
+```
