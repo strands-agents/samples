@@ -1,7 +1,7 @@
 [project]
 name = "02-aws-assistant-mcp"
 version = "0.1.0"
-description = "Add your description here"
+description = "AWS Assistant is a sophisticated multi-agent system designed to provide comprehensive insights and assistance for AWS-related queries."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

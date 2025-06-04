@@ -10,6 +10,9 @@ from utils.tools import (
 )
 from utils.prompts import CODE_ASSISTANT_PROMPT
 
+# Show rich UI for tools in CLI
+os.environ["STRANDS_TOOL_CONSOLE_MODE"] = "enabled"
+
 # Claude model instance
 claude_sonnet_4 = BedrockModel(
     model_id="us.anthropic.claude-sonnet-4-20250514-v1:0",
@@ -38,7 +41,7 @@ if __name__ == "__main__":
         "  - Explain: def fibonacci(n): a,b=0,1; for _ in range(n): a,b=b,a+b; return a"
     )
     print("  - Create a Python script that sorts a list")
-    print("  - Read todo_ts_app directory and convert into python")
+    print("  - Read sample_ts_app directory and convert into python")
 
     # Interactive loop
     while True:
