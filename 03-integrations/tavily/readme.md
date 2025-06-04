@@ -9,8 +9,13 @@ This tutorial is designed for Python developers who want to empower their Strand
 This tutorial series follows a step-by-step learning path stand-alone tutorials:
 
 1. In [#1 - deep research](./deep-research.ipynb), we'll **build a web agent** that can search and crawl the web agentically with the Strands SDK.
+
+<div style="text-align:center">
+    <img src="assets/agent.svg" width="65%" />
+</div>
+
 2. In [#2 - deep researcher](./interactive_researcher/deep_researcher.py), we'll re-use what we learned in ./deep-research.ipynb and use it to create an interactive deep researcher that we can run via a CLI.
 
-<div align="left">
-  <img src="assets/agent.svg" alt="agent", width = 500/>
+<div style="text-align:center">
+    <img src="assets/architecture_interactive.png" width="65%" />
 </div>

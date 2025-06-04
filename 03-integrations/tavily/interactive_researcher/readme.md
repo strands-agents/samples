@@ -9,6 +9,12 @@ An intelligent terminal-based research assistant powered by Strands and [Tavily]
 - Research formatting with Claude 3.5 Haiku
 - Save research findings as markdown files (when needed)
 
+Here's the architecture of the web-researcher:
+
+<div style="text-align:center">
+    <img src="../assets/architecture_interactive.png" width="65%" />
+</div>
+
 ## Setup
 
 1. Install [uv](https://docs.astral.sh/uv/getting-started/installation/).
