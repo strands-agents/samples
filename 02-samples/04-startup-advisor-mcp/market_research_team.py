@@ -32,7 +32,7 @@ def market_research_team(project_description: str):
         )
 
         with perplexity_mcp_server:
-            # Initialize Phoenix Agent with agent_graph
+            # Initialize Strands Agent with agent_graph
             tools = perplexity_mcp_server.list_tools_sync()
             lead_market_analyst = Agent(
                 system_prompt="""Conduct thorough analysis of the products and competitors, providing detailed 
