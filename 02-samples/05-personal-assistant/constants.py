@@ -1,0 +1,1 @@
+SESSION_ID = "aws-show-tell-test"
