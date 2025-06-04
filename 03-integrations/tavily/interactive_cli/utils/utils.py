@@ -1,6 +1,6 @@
 import re
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 
 def format_search_results_for_agent(tavily_result: Dict) -> str:
@@ -64,7 +64,7 @@ def format_crawl_results_for_agent(tavily_result: List[Dict]) -> str:
         tavily_result (List[Dict]): A list of Tavily crawl result dictionaries
 
     Returns:
-        str: The formatted crawl results
+        formatted_results (str): The formatted crawl results
     """
     if not tavily_result:
         return "No crawl results found."
@@ -94,3 +94,62 @@ def format_crawl_results_for_agent(tavily_result: List[Dict]) -> str:
 
     # Join all formatted results with a separator
     return "\n" + "-" * 40 + "\n".join(formatted_results)
+
+
+def format_extract_results_for_agent(tavily_result):
+    """
+    Format Tavily extract results into a well-structured string for language models.
+
+    Args:
+        tavily_result (Dict): A Tavily extract result dictionary
+
+    Returns:
+        str: A formatted string with extract results organized for easy consumption by LLMs
+    """
+    if not tavily_result or "results" not in tavily_result:
+        return "No extract results found."
+
+    formatted_results = []
+
+    # Process successful results
+    results = tavily_result.get("results", [])
+    for i, doc in enumerate(results, 1):
+        url = doc.get("url", "No URL")
+        raw_content = doc.get("raw_content", "")
+        images = doc.get("images", [])
+
+        formatted_doc = f"\nEXTRACT RESULT {i}:\n"
+        formatted_doc += f"URL: {url}\n"
+
+        if raw_content:
+            # Truncate very long content for readability
+            if len(raw_content) > 5000:
+                formatted_doc += f"Content: {raw_content[:5000]}...\n"
+            else:
+                formatted_doc += f"Content: {raw_content}\n"
+        else:
+            formatted_doc += "Content: No content extracted\n"
+
+        if images:
+            formatted_doc += f"Images found: {len(images)} images\n"
+            for j, image_url in enumerate(images[:3], 1):  # Show up to 3 images
+                formatted_doc += f"  Image {j}: {image_url}\n"
+            if len(images) > 3:
+                formatted_doc += f"  ... and {len(images) - 3} more images\n"
+
+        formatted_results.append(formatted_doc)
+
+    # Process failed results if any
+    failed_results = tavily_result.get("failed_results", [])
+    if failed_results:
+        formatted_results.append("\nFAILED EXTRACTIONS:\n")
+        for i, failure in enumerate(failed_results, 1):
+            url = failure.get("url", "Unknown URL")
+            error = failure.get("error", "Unknown error")
+            formatted_results.append(f"Failed {i}: {url} - {error}\n")
+
+    # Add response time info
+    response_time = tavily_result.get("response_time", 0)
+    formatted_results.append(f"\nResponse time: {response_time} seconds")
+
+    return "\n" + "".join(formatted_results)

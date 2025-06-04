@@ -1,4 +1,3 @@
-import logging
 import os
 from typing import Optional
 
@@ -9,6 +8,7 @@ from tavily import TavilyClient
 from utils.prompts import RESEARCH_FORMATTER_PROMPT, SYSTEM_PROMPT
 from utils.utils import (
     format_crawl_results_for_agent,
+    format_extract_results_for_agent,
     format_search_results_for_agent,
     generate_filename,
 )
@@ -61,6 +61,62 @@ def web_search(
         )
     )
     return formatted_results
+
+
+@tool
+def web_extract(
+    urls: str | list[str], include_images: bool = False, extract_depth: str = "basic"
+) -> str:
+    """Extract content from one or more web pages using Tavily's extract API.
+
+    Args:
+        urls (str | list[str]): A single URL string or a list of URLs to extract content from.
+        include_images (bool, optional): Whether to also extract image URLs from the pages.
+                                       Defaults to False.
+        extract_depth (str, optional): The depth of extraction. 'basic' provides standard
+                                     content extraction, 'advanced' provides more detailed
+                                     extraction. Defaults to "basic".
+
+    Returns:
+        str: A formatted string containing the extracted content from each URL, including
+             the full raw content, any images found (if requested), and information about
+             any URLs that failed to be processed.
+    """
+    try:
+        # Ensure urls is always a list for the API call
+        if isinstance(urls, str):
+            urls_list = [urls]
+        else:
+            urls_list = urls
+
+        # Clean and validate URLs
+        cleaned_urls = []
+        for url in urls_list:
+            if url.strip().startswith("{") and '"url":' in url:
+                import re
+
+                m = re.search(r'"url"\s*:\s*"([^"]+)"', url)
+                if m:
+                    url = m.group(1)
+
+            if not url.startswith(("http://", "https://")):
+                url = "https://" + url
+
+            cleaned_urls.append(url)
+
+        # Call Tavily extract API
+        api_response = tavily_client.extract(
+            urls=cleaned_urls,  # List of URLs to extract content from
+            include_images=include_images,  # Whether to include image extraction
+            extract_depth=extract_depth,  # Depth of extraction (basic or advanced)
+        )
+
+        # Format the results for the agent
+        formatted_results = format_extract_results_for_agent(api_response)
+        return formatted_results
+
+    except Exception as e:
+        return f"Error during extraction: {e}\nURLs attempted: {urls}\nFailed to extract content."
 
 
 @tool
@@ -211,6 +267,7 @@ web_agent = Agent(
     tools=[
         web_search,
         web_crawl,
+        web_extract,
         format_research_response,
         read_file,
         write_markdown_file,
