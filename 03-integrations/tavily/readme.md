@@ -14,7 +14,7 @@ This tutorial series follows a step-by-step learning path stand-alone tutorials:
     <img src="assets/agent.svg" width="65%" />
 </div>
 
-2. In [#2 - deep researcher](./interactive_researcher/deep_researcher.py), we'll re-use what we learned in ./deep-research.ipynb and use it to create an interactive deep researcher that we can run via a CLI.
+2. In [#2 - deep researcher](./interactive_researcher/deep_researcher.py), we'll re-use what we learned in `./deep-research.ipynb` and use it to create an interactive deep researcher that we can run via a CLI.
 
 <div style="text-align:center">
     <img src="assets/architecture_interactive.png" width="65%" />

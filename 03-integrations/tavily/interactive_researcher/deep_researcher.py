@@ -7,15 +7,18 @@ from strands import Agent, tool
 from strands.models import BedrockModel
 from tavily import TavilyClient
 from utils.prompts import RESEARCH_FORMATTER_PROMPT, SYSTEM_PROMPT
-from utils.utils import (format_crawl_results_for_agent,
-                         format_search_results_for_agent, generate_filename)
+from utils.utils import (
+    format_crawl_results_for_agent,
+    format_search_results_for_agent,
+    generate_filename,
+)
 
 # Define constants
 RESEARCH_DIR = "research_findings"
 
 load_dotenv()
 # OR define it here
-# os.environ["TAVILY_API_KEY"] = "<>YOUR_TAVILY_API_KEY>"
+# os.environ["TAVILY_API_KEY"] = "<YOUR_TAVILY_API_KEY>"
 
 if not os.getenv("TAVILY_API_KEY"):
     raise ValueError(
@@ -33,6 +36,7 @@ def web_search(
     include_domains: Optional[str] = None,
 ) -> str:
     """Perform a web search. Returns the search results as a string, with the title, url, and content of each result ranked by relevance.
+    This tool conducts thorough web searches. The results will be ranked by semantic relevance and include title, url, and content.
 
     Args:
         query (str): The search query to be sent for the web search.
@@ -66,9 +70,7 @@ def format_research_response(
     user_query: Optional[str] = None,
 ) -> str:
     """Format research content into a well-structured, properly cited response.
-
-    This tool uses a specialized Research Formatter Agent to transform raw research
-    into polished, reader-friendly content with proper citations and optimal structure.
+    The response will clearly address the user's query and present the research results in markdown format.
 
     Args:
         research_content (str): The raw research content to be formatted
@@ -113,6 +115,8 @@ def format_research_response(
 def web_crawl(url: str, instructions: Optional[str] = None) -> str:
     """
     Crawls a given URL, processes the results, and formats them into a string.
+    This tool conducts deep web crawls that find all nested links from a single page.
+    This is great for finding all the information that is linked from a specific webpage.
 
     Args:
         url (str): The URL of the website to crawl.
@@ -165,6 +169,7 @@ def web_crawl(url: str, instructions: Optional[str] = None) -> str:
 @tool
 def write_markdown_file(filename: str, content: str) -> str:
     """Write markdown content to a file.
+    This tool is helpful for complex or long research, to write it to a markdown file.
 
     Args:
         filename (str): The name of the file to write to
@@ -180,13 +185,35 @@ def write_markdown_file(filename: str, content: str) -> str:
     return f"Successfully saved research to {filename}"
 
 
+@tool
+def read_file(filepath: str) -> str:
+    """Read the contents of a file. This tool accesses the contents of a specific file when
+    you need to understand or update parts of a particular file or files.
+
+    Args:
+        filepath (str): The path to the file to read
+
+    Returns:
+        str: The contents of the file as a string, or an error message if the file cannot be read
+    """
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            content = f.read()
+        return content
+    except FileNotFoundError:
+        return f"Error: File not found at path '{filepath}'"
+    except Exception as e:
+        return f"Error reading file: {str(e)}"
+
+
 web_agent = Agent(
     system_prompt=SYSTEM_PROMPT,
     tools=[
         web_search,
         web_crawl,
-        write_markdown_file,
         format_research_response,
+        read_file,
+        write_markdown_file,
     ],
 )
 
@@ -201,12 +228,12 @@ def run_interactive_session() -> None:
     print(
         "This agent uses Tavily search API to help you research topics.\n"
         f"For complex research, results will be saved in the '{RESEARCH_DIR}' directory.\n"
-        "Type your question or 'exit' to quit.\n"
+        "Type your question / follow up question or 'exit' to quit.\n"
     )
     print(
         "Try following examples: ",
         "- What are the latest developments in quantum computing?\n"
-        "- Find recent studies on climate change from 2022–2023, focusing on impact to coastal regions.",
+        "- Find recent studies on climate change from 2022–2023, focusing on impact to coastal regions.\n",
     )
 
     while True:
