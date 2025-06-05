@@ -1,3 +1,0 @@
-strands-agents
-strands-agents-tools
-nova-act
