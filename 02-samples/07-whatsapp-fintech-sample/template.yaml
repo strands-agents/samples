@@ -72,7 +72,8 @@ Resources:
               - Effect: Allow
                 Action:
                   - social-messaging:SendWhatsAppMessage
-                Resource: arn:aws:social-messaging:*:686948287393:phone-number-id/*
+                Resource: 
+                - !Sub arn:aws:social-messaging:${AWS::Region}:${AWS::AccountId}:phone-number-id/*
         - PolicyName: dynamo-access
           PolicyDocument:
             Version: 2012-10-17
