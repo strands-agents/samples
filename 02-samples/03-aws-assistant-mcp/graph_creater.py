@@ -21,13 +21,12 @@ def graph_creater(query: str) -> str:
         # Create the research agent with specific capabilities
         graph_creater = Agent(
             system_prompt="""
-            You are a graph creater agent. Your task is to write python code using Plotly to create graphs and execute this code in provided code environment. Only create one graph and save it in current directory.
+            You are a graph creater agent. Your task is to write python code using Plotly to create graphs and execute this code in provided code environment. You MUST create a single graph, and then stop. You MUST NOT create more than one graph.
             """,
             tools=[python_repl, shell],
-            # stream_handler=None,
         )
-
         response = str(graph_creater(query))
+        print("\n\n")
 
         if len(response) > 0:
             return response

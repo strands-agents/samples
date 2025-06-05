@@ -19,7 +19,7 @@ This sample implements a personal assistant agent using Strands' [agents as tool
 - **Python REPL**: Execute Python code in a REPL environment with PTY support and state persistence.
 - **Editor**: Editor tool designed to do changes iteratively on multiple files.
 - **Shell Access**: Interactive shell tool with PTY support for real-time command execution and interaction.
-- **Jornal**: Daily journal management tool for Strands Agent.
+- **Journal**: Daily journal management tool for Strands Agent.
 
 ### 🔍 Search Agent
 - **Web Search**: Powered by Perplexity MCP Server for real-time information

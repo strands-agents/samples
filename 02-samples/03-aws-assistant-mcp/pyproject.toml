@@ -1,11 +1,12 @@
 [project]
 name = "02-aws-assistant-mcp"
 version = "0.1.0"
-description = "Add your description here"
+description = "AWS Assistant is a sophisticated multi-agent system designed to provide comprehensive insights and assistance for AWS-related queries."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "awslabs-aws-documentation-mcp-server>=0.1.4",
-    "strands-agents>=0.1.2",
+    "strands-agents>=0.1.6",
     "strands-agents-tools>=0.1.1",
+    "plotly[express]>=6.1.2",
 ]
