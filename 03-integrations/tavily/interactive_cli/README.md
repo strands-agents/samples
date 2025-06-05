@@ -29,9 +29,7 @@ An intelligent terminal-based research agent powered by Strands and [Tavily](htt
 ### Installation
 
 1. **Install uv package manager:**
-   ```bash
-   curl -LsSf https://astral.sh/uv/install.sh | sh
-   ```
+   See [Installing UV](https://docs.astral.sh/uv/getting-started/installation/)
 
 2. **Navigate to the CLI directory:**
    ```bash
@@ -42,7 +40,7 @@ An intelligent terminal-based research agent powered by Strands and [Tavily](htt
    ```bash
    cp .env.example .env
    ```
-   
+
    Edit `.env` file and add your credentials:
    ```env
    TAVILY_API_KEY=your_tavily_api_key_here
@@ -58,7 +56,7 @@ uv run deep_research.py
 
 The agent will prompt you for a research query and then autonomously:
 - 🔍 Search the web for relevant information
-- 🕷️ Crawl websites for deeper insights  
+- 🕷️ Crawl websites for deeper insights
 - 📄 Extract content from specific pages
 - 📝 Generate a formatted research report
 - 💾 Save results to `research_findings/` directory
