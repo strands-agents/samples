@@ -81,7 +81,7 @@ const Chat = ({ userName = "Guest User" }) => {
     if (event.target.value.length > 0 && loading === false && query !== "")
       setEnabled(true);
     else setEnabled(false);
-    setQuery(event.target.value.replace("\n", ""));
+    setQuery(event.target.value.replace(/\n/g, ""));
   };
 
   const handleKeyPress = (event) => {
