@@ -48,10 +48,9 @@ def aws_documentation_researcher(query: str) -> str:
                 Finally output your response to a file in current directory.
                 """,
                 tools=tools,
-                # stream_handler=None,
             )
-
             response = str(research_agent(formatted_query))
+            print("\n\n")
 
         if len(response) > 0:
             return response

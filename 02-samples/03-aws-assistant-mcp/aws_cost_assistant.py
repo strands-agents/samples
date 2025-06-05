@@ -1,19 +1,10 @@
 import os
 
-from dotenv import load_dotenv
 from mcp import StdioServerParameters, stdio_client
 from strands import Agent, tool
 from strands.models import BedrockModel
 from strands.tools.mcp import MCPClient
 from strands_tools import file_write
-
-load_dotenv()
-
-AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-AWS_REGION = os.getenv("AWS_DEFAULT_REGION")
-BEDROCK_LOG_GROUP_NAME = os.getenv("BEDROCK_LOG_GROUP_NAME")
-
 
 @tool
 def aws_cost_assistant(query: str) -> str:
@@ -32,32 +23,15 @@ def aws_cost_assistant(query: str) -> str:
     response = str()
 
     try:
+        env = {}
+        if os.getenv("BEDROCK_LOG_GROUP_NAME") is not None:
+            env["BEDROCK_LOG_GROUP_NAME"] = os.getenv("BEDROCK_LOG_GROUP_NAME")
         cost_mcp_server = MCPClient(
             lambda: stdio_client(
                 StdioServerParameters(
-                    command="docker",
-                    args=[
-                        "run",
-                        "-i",
-                        "--rm",
-                        "-e",
-                        "AWS_ACCESS_KEY_ID",
-                        "-e",
-                        "AWS_SECRET_ACCESS_KEY",
-                        "-e",
-                        "AWS_REGION",
-                        "-e",
-                        "BEDROCK_LOG_GROUP_NAME",
-                        "-e",
-                        "stdio",
-                        "aws-cost-explorer-mcp:latest",
-                    ],
-                    env={
-                        "AWS_ACCESS_KEY_ID": AWS_ACCESS_KEY_ID,
-                        "AWS_SECRET_ACCESS_KEY": AWS_SECRET_ACCESS_KEY,
-                        "AWS_REGION": AWS_REGION,
-                        "BEDROCK_LOG_GROUP_NAME": BEDROCK_LOG_GROUP_NAME,
-                    },
+                    command="uvx",
+                    args=["awslabs.cost-explorer-mcp-server@latest"],
+                    env=env,
                 )
             )
         )
@@ -76,10 +50,9 @@ def aws_cost_assistant(query: str) -> str:
                 - Interactive Interface: Use Claude to query your cost data through natural language
                 """,
                 tools=tools,
-                # stream_handler=None,
             )
-
             response = str(cost_agent(query))
+            print("\n\n")
 
         if len(response) > 0:
             return response
