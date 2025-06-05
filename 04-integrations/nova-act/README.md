@@ -1,6 +1,6 @@
 # Nova Act integration with Strands 
 
-Amazon Nova Act is an AI model trained to perform actions within a web browser. Nova Act is currently is research preview and can be accesed via the Nova Act SDK on [Amazon Nova](https://nova.amazon.com/act). Nova Act is an agentic model which can accept natural language instructions and convert them to playwright APIs to execute the instructions on the browser. To learn more about nova act visit [Nova Act](https://labs.amazon.science/blog/nova-act)
+Amazon Nova Act is an AI model trained to perform actions within a web browser. Nova Act is currently in research preview and can be accesed via the Nova Act SDK on [Amazon Nova](https://nova.amazon.com/act). Nova Act is an agentic model which can accept natural language instructions and convert them to playwright APIs to execute the instructions on the browser. To learn more about nova act visit [Nova Act](https://labs.amazon.science/blog/nova-act)
 
 ## Architecture 
 
@@ -13,6 +13,14 @@ This code sample demonstrates a sample integration of Nova Act with a strands ag
 
 
 ## Prerequisites
+
+1. Operating System:
+    * macOS (Sierra or later)
+    * Ubuntu (22.04 LTS or later)
+    * Windows:
+        * Windows 10 or later
+        * Windows Subsystem for Linux 2 (WSL2)
+2. Python 3.10 or above.
 
 
 ### 1. Install dependencies
@@ -40,6 +48,7 @@ Nova Act works best with Google Chrome but does not have permission to install t
 ```bash
 playwright install chrome
 ```
+#### Note: If you need to install playwright for installing chrome browser, follow [these](https://playwright.dev/docs/intro) instructions. The first time you run NovaAct, it may take 1 to 2 minutes to start. This is because NovaAct needs to install necessary Playwright modules. Subsequent runs will only take a few seconds to start. 
 
 ### 3. Run the supervisor agent 
 
