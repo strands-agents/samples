@@ -45,12 +45,6 @@ AWS Assistant is a sophisticated multi-agent system designed to provide comprehe
 
 3. Setup [aws-cost-explorer-mcp-server](https://github.com/aarora79/aws-cost-explorer-mcp-server) MCP server.
 
-    ```bash
-    git clone https://github.com/aarora79/aws-cost-explorer-mcp-server.git
-    cd aws-cost-explorer-mcp-server
-    docker build -t aws-cost-explorer-mcp .
-    ```
-
 4. Set up AWS credentials in `.env` using [.env.example](./.env.example).
 
 5. Complete [prerequisites](https://github.com/aarora79/aws-cost-explorer-mcp-server?tab=readme-ov-file#prerequisites) for aws-cost-explorer-mcp-server.
@@ -59,6 +53,7 @@ AWS Assistant is a sophisticated multi-agent system designed to provide comprehe
     > `python_repl` tool uses `plotly` to create graphs. Make sure to `pip install plotly` before using the `Graph Creater Agent`
 
 6. Run the AWS Assistant using `uv run main.py`
+
 
 ## Example Queries
 

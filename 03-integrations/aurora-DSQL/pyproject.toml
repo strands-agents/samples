@@ -1,0 +1,10 @@
+[project]
+name = "aurora-dsql"
+version = "0.1.0"
+description = "Simple example that shows strands integration with Amazon Aurora DSQL"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "strands-agents>=0.1.6",
+    "strands-agents-tools>=0.1.4",
+]
