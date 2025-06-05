@@ -7,7 +7,7 @@
 2. Clone the repo locally  
 
     `git clone <path to repo>`
-    `cd 01-streamlit-ui-strands-agent-assistant`
+    `cd 04-UX-demos/01-streamlit-ui-strands-agent-assistant`
 
 3. ensure that you have Python 3.13+ installed.
 
