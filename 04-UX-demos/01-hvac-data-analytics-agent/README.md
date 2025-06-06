@@ -2,9 +2,17 @@
 
 A lightweight conversational AI agent built with Strands SDK that assists facility managers and building operators with HVAC (Heating, Ventilation, and Air Conditioning) data analytics in physical smart buildings. The agent queries relevant data sources and dynamically generates code to process building sensor data before answering user questions.
 
+![Agent Architecture](architecuture.png)
+
+|Feature             |Description                                        |
+|--------------------|---------------------------------------------------|
+|Agent Structure     |Single-agent architecture                           |
+|Tools        | Get current time, Execute Code, Get Site info (from IoT platform), Get Timeseries data (from IoT pltaform)             |
+|Model Provider      |Amazon Bedrock - Anthropic Claude 3.5 Haiku
+
 ## Project Overview
 
-This project demonstrates how to implement a smart building analytics assistant using AWS Bedrock and Strands SDK with minimal code and infrastructure. The agent leverages specialized tools to:
+This project demonstrates how to implement a smart building analytics assistant using Amazon Bedrock and Strands SDK with minimal code and infrastructure. The agent leverages specialized tools to:
 
 - Query physical building entity hierarchies (buildings, floors, zones, equipment)
 - Retrieve time-series data from HVAC sensors and devices in physical buildings
@@ -32,7 +40,7 @@ This solution showcases the power of Amazon Bedrock and  Strands SDK for buildin
 
 ## Architecture Components
 
-![Architecture](SB-Agent-arch.png)
+![Architecture](architecuture_infrastructure.png)
 
 The solution consists of several key components:
 
@@ -45,10 +53,11 @@ The solution consists of several key components:
 
 ## Prerequisites
 
-- AWS Account with appropriate permissions
+- AWS Account with appropriate permissions to create the resources in this architecture and access to Anthropic Claude 3.5 Haiku
 - Python 3.12 or higher
-- AWS CDK v2 installed
+- AWS CDK v2 installed : ![Installation guide](https://docs.aws.amazon.com/cdk/v2/guide/getting-started.html)
 - uv package manager (faster alternative to pip)
+
 
 ## Installation
 
@@ -119,19 +128,13 @@ What makes this agent powerful is its ability to write and execute code on-the-f
 - The `execute_code(code)` tool runs this code in a secure environment
 - Results are formatted and returned to the user with explanations
 
-## Benefits of Strands SDK
+## Lets try our new agent!
 
-This implementation showcases several advantages of using Amazon Bedrock Strands:
+After deployment, you can interact with the agent through the web interface. You can find the link to the web ui in the outputs of the WebAppstack that is deployed with this CDK. 
 
-1. **Lightweight Architecture**: Minimal code required to create a sophisticated agent
-2. **Flexible Tool Integration**: Easy to add or modify tools as requirements change
-3. **Dynamic Reasoning**: Agent can adapt its approach based on the specific query
-4. **Code Generation**: Ability to create and execute code provides powerful analytical capabilities
-5. **Scalable Design**: Architecture can handle increasing complexity without major refactoring
-
-## Example Queries
-
-After deployment, you can interact with the agent through the web interface or by connecting directly to the WebSocket API.
+- Navigate to the WebAppStack in Cloudformation in AWS console and look for the 'CloudFrontURL' in the Outputs tab. Open this link in a new tab.
+- Navigate to the CognitoStack in the Cloudformation in AWS console and look for the 'Username' and 'Password' in the Outputs tab. Use these credentials to login to the web ui.
+- In AWS console, navigate to the Amazon Bedrock page and verify that you have access to Anthropic Claude 3.5 Haiku model.
 
 Example queries:
 - "How many zones are on the first floor?"
@@ -139,9 +142,3 @@ Example queries:
 - "How does this compre with the day before yesterday?"
 
 
-
-## License
-
-MIT No Attribution
-
-Copyright 2024 Amazon Web Services
