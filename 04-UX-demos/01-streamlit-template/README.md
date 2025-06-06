@@ -9,8 +9,8 @@ It can be used as a starting point to easily create and deploy a GenAI demo, wit
 
 It deploys a basic Streamlit app, and contains the following components:
 
-* The Streamlit app in ECS/Fargate, behind an ALB and CloudFront
-* A Cognito user pool in which you can manage users
+* The Streamlit app in [Amazon ECS](https://aws.amazon.com/ecs/), behind an [Application Load Balancer](https://aws.amazon.com/elasticloadbalancing/application-load-balancer/) and [Amazon CloudFront](https://aws.amazon.com/cloudfront/)
+* An [Amazon Cognito](https://aws.amazon.com/cognito/) user pool in which you can manage users
 
 By default, the Streamlit app has the following features:
 
@@ -38,7 +38,7 @@ Prerequisites:
 * python >= 3.8 (tested on 3.11)
 * docker
 * use a Chrome browser for development
-* `anthropic.claude-3-7-sonnet` model activated in Amazon Bedrock in your AWS account
+* `anthropic.claude-3-7-sonnet` model activated in Amazon Bedrock in your AWS account. [Instructions](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html).
 * This demo has been tested on a mac laptop with colima as container runtime, but it should also work with other configurations.
 * You also need to install the AWS Command Line Interface (CLI), the AWS Cloud Development KIT (CDK), and to configure the AWS CLI on your development environment. One way to configure the AWS CLI is to get your access key through the AWS console, and use the `aws configure` command in your terminal to setup your credentials.
 
@@ -101,6 +101,13 @@ streamlit run app.py --server.port 8080
 4. Open `http://localhost:8080/` in your browser, your should see the app.
 
 5. You can now modify the streamlit app to build your own demo!
+
+## Modify this sample to build your own agent
+
+To build your own agent, edit the `docker_app/app.py` file. The key areas you'll want to focus on are:
+
+1. The agent configuration - Look for the `agent = Agent(...)` initialization
+2. The UI elements defined using Streamlit components
 
 ## Implement streaming
 
