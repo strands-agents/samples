@@ -27,6 +27,8 @@ A version with streaming is also provided. See [here](#implement-streaming).
 
 ## Usage
 
+> **Note:** If you want to test locally without the Authentication feature, you can skip this section and go directly to [Testing and developing locally](#testing-and-developing-locally).
+
 In the docker_app folder, you will find the streamlit app. You can run it locally or with docker.
 
 Note: for the docker version to run, you will need to give appropriate permissions to the container for bedrock access. This is not implemented yet.
@@ -45,6 +47,8 @@ Prerequisites:
 To deploy:
 
 1. Edit `docker_app/config_file.py`, choose a `STACK_NAME` and a `CUSTOM_HEADER_VALUE`.
+
+> **Important:** If you want to activate authentication, don't forget to set `ENABLE_AUTH = True` in `docker_app/config_file.py`
 
 2. Install dependencies
  
