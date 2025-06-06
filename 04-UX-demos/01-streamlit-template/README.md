@@ -66,8 +66,8 @@ The deployment takes 5 to 10 minutes.
 Make a note of the output, in which you will find the CloudFront distribution URL
 and the Cognito user pool id.
 
-4. Create a user in the Cognito UserPool that has been created. You can perform this action from your AWS Console. 
-5. From your browser, connect to the CloudFront distribution url.
+4. Create a user in the Cognito UserPool that has been created. You can perform this action from your AWS Console. For detailed instructions, please refer to [this blog post, section "Create an Amazon Cognito user"](https://aws.amazon.com/blogs/machine-learning/build-and-deploy-a-ui-for-your-generative-ai-applications-with-aws-and-python/).
+5. From your browser, connect to the CloudFront distribution url (the one you noted from the CDK output).
 6. Log in to the Streamlit app with the user you have created in Cognito.
 
 ## Testing and developing locally
