@@ -1,6 +1,0 @@
-boto3>=1.26.0
-botocore>=1.29.0
-watchdog
-jsonschema
-mcp>=1.6.0
-retrying

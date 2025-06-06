@@ -1,0 +1,11 @@
+[project]
+name = "aws-strands-a2a"
+version = "0.1.0"
+description = "strands a2a"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "a2a-sdk>=0.2.5",
+    "strands-agents>=0.1.6",
+    "strands-agents-tools>=0.1.4",
+]
