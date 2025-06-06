@@ -9,7 +9,7 @@ Within this directory there are several example Python files:
 * [query_mcp_example.py](./query_mcp_example.py) - This example demonstrates how to use the [Amazon Neptune MCP server](https://github.com/awslabs/mcp/tree/main/src/amazon-neptune-mcp-server) to generate and run queries against a Neptune Database or Neptune Analytics instance.
 * [use_aws_example.py](./use_aws_example.py) - This example demonstrates how to use the `use_aws` tool to perform control or data plane actions against a Neptune Database or Neptune Analytics instance. 
 
-![architecture](./architecure.png)
+![architecture](./architecture.png)
 
 |Feature             |Description                                        |
 |--------------------|---------------------------------------------------|
