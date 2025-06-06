@@ -9,7 +9,7 @@ It can be used as a starting point to easily create and deploy a GenAI demo, wit
 
 It deploys a basic Streamlit app, and contains the following components:
 
-* The Streamlit app in [Amazon ECS](https://aws.amazon.com/ecs/), behind an [Application Load Balancer](https://aws.amazon.com/elasticloadbalancing/application-load-balancer/) and [Amazon CloudFront](https://aws.amazon.com/cloudfront/)
+* The Streamlit app in [Amazon Fargate](https://aws.amazon.com/fargate/) with [ECS](https://aws.amazon.com/ecs/), behind an [Application Load Balancer](https://aws.amazon.com/elasticloadbalancing/application-load-balancer/) and [Amazon CloudFront](https://aws.amazon.com/cloudfront/)
 * An [Amazon Cognito](https://aws.amazon.com/cognito/) user pool in which you can manage users
 
 By default, the Streamlit app has the following features:
