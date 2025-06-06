@@ -1,13 +1,13 @@
-# Smart Building Analytics Agent
+# HVAC Smart Building Analytics Agent
 
-A lightweight conversational AI agent built with Strands SDK that assists human operators with smart building data analytics by querying relevant data sources and dynamically generating code to process data before answering user questions.
+A lightweight conversational AI agent built with Strands SDK that assists facility managers and building operators with HVAC (Heating, Ventilation, and Air Conditioning) data analytics in physical smart buildings. The agent queries relevant data sources and dynamically generates code to process building sensor data before answering user questions.
 
 ## Project Overview
 
 This project demonstrates how to implement a smart building analytics assistant using AWS Bedrock and Strands SDK with minimal code and infrastructure. The agent leverages specialized tools to:
 
-- Query building entity hierarchies (buildings, floors, zones, equipment)
-- Retrieve time-series data from building sensors and devices
+- Query physical building entity hierarchies (buildings, floors, zones, equipment)
+- Retrieve time-series data from HVAC sensors and devices in physical buildings
 - Generate and execute Python code on-the-fly to process complex data queries
 - Provide real-time responses through a WebSocket API
 
