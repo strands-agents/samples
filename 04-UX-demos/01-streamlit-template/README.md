@@ -39,8 +39,8 @@ Prerequisites:
 * docker
 * use a Chrome browser for development
 * `anthropic.claude-3-7-sonnet` model activated in Amazon Bedrock in your AWS account
-* the environment used to create this demo was an AWS Cloud9 m5.large instance with Amazon Linux 2023, but it should also work with other configurations. It has also been tested on a mac laptop with colima as container runtime.
-* You also need to install the AWS Command Line Interface (CLI), the AWS Cloud Development KIT (CDK), and to configure the AWS CLI on your development environment (not required if you use Cloud9, as it is already configured by default). One way to configure the AWS CLI is to get your access key through the AWS console, and use the `aws configure` command in your terminal to setup your credentials.
+* This demo has been tested on a mac laptop with colima as container runtime, but it should also work with other configurations.
+* You also need to install the AWS Command Line Interface (CLI), the AWS Cloud Development KIT (CDK), and to configure the AWS CLI on your development environment. One way to configure the AWS CLI is to get your access key through the AWS console, and use the `aws configure` command in your terminal to setup your credentials.
 
 To deploy:
 
@@ -70,9 +70,9 @@ and the Cognito user pool id.
 5. From your browser, connect to the CloudFront distribution url.
 6. Log in to the Streamlit app with the user you have created in Cognito.
 
-## Testing and developing in Cloud9 or locally
+## Testing and developing locally
 
-After deployment of the cdk template containing the Cognito user pool required for authentication, you can test the Streamlit app directly from Cloud9 or directly on your laptop.
+After deployment of the cdk template containing the Cognito user pool required for authentication, you can test the Streamlit app directly on your laptop.
 You can either use docker, but this would require setting up a role with appropriate permissions, or run the Streamlit app directly in your terminal after having installed the required python dependencies.
 
 To run the Streamlit app directly:
@@ -98,8 +98,7 @@ pip install -r requirements.txt
 streamlit run app.py --server.port 8080
 ```
 
-4. Click on the Preview/Preview running application button in Cloud9, and click on the button to Pop out the browser in a new window, as the Cloud9 embedded browser does not keep session cookies, which prevents the authentication mechanism to work properly.
-If the new window does not display the app, you may need to configure your browser to accept cross-site tracking cookies.
+4. Open `http://localhost:8080/` in your browser, your should see the app.
 
 5. You can now modify the streamlit app to build your own demo!
 
@@ -109,7 +108,7 @@ A version with streaming is also provided. Streaming means you'll see the respon
 
 To use the streaming version, replace the content of `docker_app/app.py` by the content of `docker_app/app_streaming.py`.
 
-Alternatively, if you run it locally, you can directly run the streaming version. Follow the setup described in the [previous section](#testing-and-developing-in-cloud9-or-locally), then enter:
+Alternatively, if you run it locally, you can directly run the streaming version. Follow the setup described in the [previous section](#testing-and-developing-locally), then enter:
 
 ```
 streamlit run app_streaming.py --server.port 8080
