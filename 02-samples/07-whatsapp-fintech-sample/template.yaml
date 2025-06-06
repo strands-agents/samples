@@ -59,11 +59,8 @@ Resources:
                 Action:
                   - bedrock:InvokeModel
                   - bedrock:InvokeModelWithResponseStream
-                  #- bedrock:InvokeAgent
                 Resource: 
                   - arn:aws:bedrock:*:*:foundation-model/*
-                  #- arn:aws:bedrock:*:*:agent/*
-                  #- arn:aws:bedrock:*:*:agent-alias/*
                   - arn:aws:bedrock:*:*:inference-profile/*
         - PolicyName: messaging-access
           PolicyDocument:
@@ -104,7 +101,6 @@ Resources:
       KeySchema:
         - AttributeName: "phone_number"
           KeyType: "HASH"
-      #  - AttributeName: "session_time"
         - AttributeName: day
           KeyType: "RANGE"
       AttributeDefinitions:
@@ -114,32 +110,9 @@ Resources:
           AttributeType: "S"
 
 
-  # Lambda Layer with proper Boto3 version
-  LambdaBoto3Layer:
-    Type: AWS::Lambda::LayerVersion
-    Properties:
-      CompatibleRuntimes:
-        - !Ref PythonVersion
-        #- python3.12
-        #- python3.11
-        #- python3.10
-      Content:
-        S3Bucket: !Ref S3BucketName
-        S3Key: 
-          !Join
-            - ''
-            - 
-              - !Ref S3BucketPath 
-              - "/layer.zip"
-      Description: Layer containing boto3 binaries with proper version
-      LayerName: boto3-lambda-layer
-
-
   # Lambda function that will interact with WhatsApp
   WhatsAppLambdaProcessor:
     Type: AWS::Lambda::Function
-    DependsOn: 
-      - LambdaBoto3Layer
     Properties:
       Code:
         S3Bucket: !Ref S3BucketName
@@ -155,8 +128,6 @@ Resources:
       Runtime: !Ref PythonVersion
       MemorySize: 256
       Timeout: 60
-      Layers:
-        - !Ref LambdaBoto3Layer
       Environment:
         Variables:
           USER_HISTORY_TABLE: !Ref UserHistoryDynamoDBTable

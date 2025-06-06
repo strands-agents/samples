@@ -5,9 +5,9 @@ import os
 import re
 
 from strands_agent import StrandsAgent
-from dynamo import DynamoDB
-from whatsapp import WhatsappService
-from locales import MESSAGES
+from utils.dynamo import DynamoDB
+from utils.whatsapp import WhatsappService
+from utils.locales import MESSAGES
 
 
 # Logger configuration
@@ -60,7 +60,7 @@ def process_record(record):
         # print(f'History: {history}')
         hist_build = (
             history[0] if history != [] else None
-        )  # bedrock.build_agent_hist(history)
+        ) 
         print(f"History after Build: {hist_build}")
 
         # invoking agent
@@ -83,11 +83,6 @@ def process_record(record):
 
         # Insert Log on Dynamo (LLM answer)
         ret = dynamo.insert_user_message(user_history_table, row)
-
-        # Querying and logging amount of records
-        # resp, qtty = dynamo.query_with_gsi(user_history_table, 'PhoneNumberDayIndex', 'phone_number', message.phone_number,
-        #                      'day', datetime.now().strftime("%Y/%m/%d"))
-        # print(f'Querying Dynamo with GSI: {resp}; counter: {qtty}')
 
         data["message"] = remove_thinking_tags(
             llm_response.message["content"][0]["text"]

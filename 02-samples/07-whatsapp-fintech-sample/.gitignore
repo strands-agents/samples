@@ -13,6 +13,7 @@ lambda.zip
 local.txt
 binaries/
 tests/
+package/
 
 # exclude everything
 log/*
@@ -25,3 +26,5 @@ python_binaries/
 python/
 layer/
 local.txt
+pack_and_deploy-bkp.sh
+template-bkp.yaml

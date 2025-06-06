@@ -1,5 +1,8 @@
 ## WhatsApp for Business, Strands-Agents and Amazon Bedrock Demo
 
+> **[!IMPORTANT]**
+> **This sample is meant to show integration of Strands agent with WhatsApp and is for inspirations purposes. Make sure to implement your organizations best practices before deploying this solution in production workloads.**
+
 This demo aims to demonstrate how to use Meta's WhatsApp for Business integrated with **Strands-Agents** and Amazon Bedrock.
 
 It's a multi-agent demo, that will handle tasks for a fictitious fintech. One agent is responsible for loading daily promotions based on the day of the week, and another one is responsible for handling credit card operations, being able to load the last X days of fake transactions and schedule payments.
@@ -88,9 +91,19 @@ Example:
 
 After the stack is created with CloudFormation, retrieve the SNS topic from the Outputs.
 
-This will be used as the entry point for AWS End User Messaging.
+![Stack](img/cloud-form.png)
+
+This will be used as the entry point for AWS End User Messaging. **Copy** SNS output ARN value.
+
+Go to AWS End User Messaging Console, choose *Social Messaging*, on left menu.
+Choose your WhatsApp for Business account integration and click on "Event Destination" tab.
+Click in "Edit Destination" to add your SNS output from Cloud Formation.
+
+![Stack](img/end-user-msg.png)
 
 ### 2.5 Demo
+
+This is a demo showing working solution with English locale:
 
 <img src="img/whatsapp-demo.gif" alt="demo" width="350"/>
 

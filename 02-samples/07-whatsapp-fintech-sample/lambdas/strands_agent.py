@@ -3,9 +3,9 @@ import logging
 
 from strands import Agent
 
-from cards import get_transactions, put_payment
-from promo import get_promotions, get_day_of_week
-from locales import MESSAGES
+from tools.cards import get_transactions, put_payment
+from tools.promo import get_promotions, get_day_of_week
+from utils.locales import MESSAGES
 
 
 STARTUP_LOCALE=os.environ['LOCALE']
