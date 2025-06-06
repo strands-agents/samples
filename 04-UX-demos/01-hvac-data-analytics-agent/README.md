@@ -2,7 +2,7 @@
 
 A lightweight conversational AI agent built with Strands SDK that assists facility managers and building operators with HVAC (Heating, Ventilation, and Air Conditioning) data analytics in physical smart buildings. The agent queries relevant data sources and dynamically generates code to process building sensor data before answering user questions.
 
-![Agent Architecture](architecuture.png)
+![Agent Architecture](architecture.png)
 
 |Feature             |Description                                        |
 |--------------------|---------------------------------------------------|
@@ -40,7 +40,7 @@ This solution showcases the power of Amazon Bedrock and  Strands SDK for buildin
 
 ## Architecture Components
 
-![Architecture](architecuture_infrastructure.png)
+![Architecture](architecture_infrastructure.png)
 
 The solution consists of several key components:
 
@@ -55,7 +55,7 @@ The solution consists of several key components:
 
 - AWS Account with appropriate permissions to create the resources in this architecture and access to Anthropic Claude 3.5 Haiku
 - Python 3.12 or higher
-- AWS CDK v2 installed : ![Installation guide](https://docs.aws.amazon.com/cdk/v2/guide/getting-started.html)
+- AWS CDK v2 installed : [Installation guide](https://docs.aws.amazon.com/cdk/v2/guide/getting-started.html)
 - uv package manager (faster alternative to pip)
 
 
