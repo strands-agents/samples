@@ -1,0 +1,182 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  This is a deployment that will setup resources needed in "WhatsApp integrated on AWS" solution
+
+##########################################################################################
+### Parameters
+#########################################################################################
+Parameters:
+  S3BucketName:
+    Type: String
+    Description: The Bucket to store assets from this project
+  S3BucketPath:
+    Type: String
+    Description: The path inside the bucket to store assets from this project
+  LocaleConfig:
+    Type: String
+    Default: "en_US"
+    Description: The locale configuration to be used by lambdas (values en_US, pt_BR)
+  PythonVersion:
+    Type: String
+    Default: "3.11"
+    Description: Python version
+  FoundationModelParam:
+      Type: String
+      Default: "us.amazon.nova-pro-v1:0"
+      Description: Foundation model to be invoked on agent
+
+##########################################################################################
+### Resources
+#########################################################################################
+Resources:
+
+  #######################
+  ### IAM Permissions
+  #######################
+
+  # Lambda function role that will process WhatsApp requests
+  LambdaExecutionRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - "sts:AssumeRole"
+      Path: /
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+      Policies: 
+        - PolicyName: bedrock-access
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - bedrock:InvokeModel
+                  - bedrock:InvokeModelWithResponseStream
+                Resource: 
+                  - arn:aws:bedrock:*:*:foundation-model/*
+                  - arn:aws:bedrock:*:*:inference-profile/*
+        - PolicyName: messaging-access
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - social-messaging:SendWhatsAppMessage
+                Resource: 
+                - !Sub arn:aws:social-messaging:${AWS::Region}:${AWS::AccountId}:phone-number-id/*
+        - PolicyName: dynamo-access
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                  - dynamodb:GetItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:DeleteItem
+                  - dynamodb:Scan
+                  - dynamodb:Query
+                Resource: 
+                  - !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/WhatsAppUserHistory
+                  - !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/WhatsAppUserHistory/index/PhoneNumberDayIndex
+                  - !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/PromotionsList
+
+  #######################
+  ### Infrastructure Resource Block 
+  #######################
+  
+  # DynamoDB Table to store history
+  UserHistoryDynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: "WhatsAppUserHistory"
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: "phone_number"
+          KeyType: "HASH"
+        - AttributeName: day
+          KeyType: "RANGE"
+      AttributeDefinitions:
+        - AttributeName: "phone_number"
+          AttributeType: "S"
+        - AttributeName: "day"
+          AttributeType: "S"
+
+
+  # Lambda function that will interact with WhatsApp
+  WhatsAppLambdaProcessor:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: !Ref S3BucketName
+        S3Key: 
+          !Join
+            - ''
+            - 
+              - !Ref S3BucketPath 
+              - "/lambda.zip"
+      FunctionName: WhatsApp-Aws-Integration-Main
+      Handler: lambda_function.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Runtime: !Ref PythonVersion
+      MemorySize: 256
+      Timeout: 60
+      Environment:
+        Variables:
+          USER_HISTORY_TABLE: !Ref UserHistoryDynamoDBTable
+          LOCALE: !Ref LocaleConfig 
+          PROMO_TABLE: !Ref PromoDynamoDBTable
+          DEFAULT_MODEL: !Ref FoundationModelParam
+
+
+  # Permisson for SNS to invoke Lambda
+  LambdaFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt WhatsAppLambdaProcessor.Arn
+      Principal: sns.amazonaws.com
+      SourceArn: !Ref WhatsAppAWSTopic
+
+
+  # SNS that will invoke lambda function
+  WhatsAppAWSTopic:
+    Type: AWS::SNS::Topic
+    DependsOn: 
+      - WhatsAppLambdaProcessor
+    Properties:
+      Subscription:
+        - Endpoint: !GetAtt WhatsAppLambdaProcessor.Arn
+          Protocol: "lambda"
+      TopicName: "WhatsAppAWSTopic"
+      DisplayName: "WhatsAppAWSTopic"
+
+
+  # DynamoDB Table to store fake promotions
+  PromoDynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: "PromotionsList"
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: "week_day"
+          KeyType: "HASH"
+      AttributeDefinitions:
+        - AttributeName: "week_day"
+          AttributeType: "N"
+
+
+##########################################################################################
+### Outputs
+#########################################################################################
+Outputs:
+  WhatsAppAWSTopicArn:
+    Description: The ARN of the created SNS topic
+    Value: !Ref WhatsAppAWSTopic
