@@ -1,7 +1,7 @@
 ## WhatsApp for Business, Strands-Agents and Amazon Bedrock Demo
 
-> **[!IMPORTANT]**
-> **This sample is meant to show integration of Strands agent with WhatsApp and is for inspirations purposes. Make sure to implement your organizations best practices before deploying this solution in production workloads.**
+> [!IMPORTANT]
+> This sample is meant to show integration of Strands agent with WhatsApp and is for inspirations purposes. Make sure to implement your organizations best practices before deploying this solution in production workloads.
 
 This demo aims to demonstrate how to use Meta's WhatsApp for Business integrated with **Strands-Agents** and Amazon Bedrock.
 
