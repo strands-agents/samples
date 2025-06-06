@@ -152,7 +152,3 @@ Ths Strands logic comes from the getting started notebook:
 ## Security
 
 See [CONTRIBUTING](../../CONTRIBUTING.md#security-issue-notifications) for more information.
-
-## License
-
-This application is licensed under the MIT-0 License. See the LICENSE file.
