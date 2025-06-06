@@ -48,21 +48,27 @@ The solution consists of several key components:
 - AWS Account with appropriate permissions
 - Python 3.12 or higher
 - AWS CDK v2 installed
+- uv package manager (faster alternative to pip)
 
 ## Installation
 
-1. Create and activate a virtual environment:
+1. Install uv (if not already installed):
    ```
-   python3 -m venv .venv
+   pip install uv
+   ```
+
+2. Create and activate a virtual environment using uv:
+   ```
+   uv venv .venv
    source .venv/bin/activate  # On Windows: .venv\Scripts\activate.bat
    ```
 
-2. Install CDK dependencies:
+3. Install CDK dependencies using uv:
    ```
-   pip install -r requirements.txt
+   uv pip install -r requirements.txt
    ```
 
-3. Deploy the infrastructure:
+4. Deploy the infrastructure:
    ```
    cdk deploy --all
    ```
