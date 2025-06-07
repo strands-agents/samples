@@ -174,17 +174,6 @@ refer to the AWS Shared Responsibility Model and security best practices guidanc
 The developer is responsible for properly implementing and configuring these services to meet their specific security requirements.
 * Regular rotation of secrets is recommended, not implemented in this demo.
 
-## Acknowledgments
-
-This code is inspired from:
-
-* https://github.com/tzaffi/streamlit-cdk-fargate.git
-* https://github.com/aws-samples/build-scale-generative-ai-applications-with-amazon-bedrock-workshop/
-
-Ths Strands logic comes from the getting started notebook:
-
-* https://github.com/strands-agents/samples/blob/main/01-getting-started/00-first-agent/getting-started-with-strands-agents.ipynb
-
 ## Security
 
 See [CONTRIBUTING](../../CONTRIBUTING.md#security-issue-notifications) for more information.
