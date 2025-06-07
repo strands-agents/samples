@@ -1,6 +1,6 @@
 # Streamlit Strands demo
 
-This app is a simple demo of a Strands agent, with a Streamlit user interface and cdk template.
+This app demonstrates how to build and deploy a GenAI agent with a web user interface using Streamlit and AWS CDK. While the demo uses a simple appointment management agent (described in the [agent description section](#agent-description)), the main focus is on the deployment architecture and user interface implementation.
 
 It is based on the deploy-streamlit-app sample from this repo:
 https://github.com/aws-samples/deploy-streamlit-app
@@ -117,6 +117,8 @@ To build your own agent, edit the `docker_app/app.py` file. The key areas you'll
 
 A version with streaming is also provided. Streaming means you'll see the response appear gradually as it's being generated, instead of waiting for the complete response to show up all at once.
 
+![Animated demo with streaming](img/animated_demo_streaming.gif)
+
 To use the streaming version, replace the content of `docker_app/app.py` by the content of `docker_app/app_streaming.py`.
 
 Alternatively, if you run it locally, you can directly run the streaming version. Follow the setup described in the [previous section](#testing-and-developing-locally), then enter:
@@ -124,6 +126,30 @@ Alternatively, if you run it locally, you can directly run the streaming version
 ```
 streamlit run app_streaming.py --server.port 8080
 ```
+
+## Agent description
+
+### Agent Details
+    
+|Feature             |Description                                                |
+|--------------------|-----------------------------------------------------------|
+|Native tools used   |current_time, calculator                                   |
+|Custom tools created|create_appointment, list_appointments, update_appointments |
+|Agent Structure     |Single agent architecture                                  |
+
+
+### Architecture
+
+![Agent architecture](img/agent_architecture.png)
+
+### Sample queries
+
+Here are some sample queries you can try with this agent:
+
+* How much is 2+2?
+* Book 'Agent fun' for tomorrow 3pm in NYC. This meeting will discuss all the fun things that an agent can do
+* Oh no! My bad, 'Agent fun' is actually happening in DC
+* What appointments do I have tomorrow?
 
 ## Some limitations
 
