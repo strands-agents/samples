@@ -1,71 +1,120 @@
-# Strands Agent Service
+# Strands Chatbot with Built-in Tools
 
-A web-based chat interface for the Strands Agent framework, providing a conversational AI experience using AWS Bedrock.
+A web-based chat interface for the Strands Agent framework, providing a conversational AI experience with configurable tools.
+
+## Overview
+
+This project demonstrates how to build a web application that leverages the Strands Agents framework to create an interactive chatbot with configurable built-in tools. The application includes:
+
+- A FastAPI backend that integrates with Strands Agents
+- A responsive web interface for chatting with the AI
+- Real-time metrics and performance monitoring
+- Configurable tool selection for the AI agent
+- User session persistence
 
 ## Project Structure
 
-- `backend/`: FastAPI server that handles API requests and integrates with Strands Agent
-- `frontend/`: Simple HTML/CSS/JS web interface for the chat application
-- `prompts/`: Text files containing system prompts for the agent
-- `cdk/`: AWS CDK code for deploying the application to AWS Fargate
+```
+01-chatbot-with-built-in-tools/
+├── app/                      # Application code
+│   ├── static/               # Frontend assets
+│   │   ├── app.js            # Main application logic
+│   │   ├── index.html        # HTML interface
+│   │   ├── styles.css        # CSS styling
+│   │   ├── summary-panel.js  # Metrics visualization
+│   │   └── tools-panel.js    # Tool selection interface
+│   ├── Dockerfile            # Container definition
+│   ├── main.py               # FastAPI backend
+│   └── requirements.txt      # Python dependencies
+└── infra/                    # Infrastructure as code
+    └── ...                   # AWS CDK deployment code
+```
 
-## Local Development
+## Features
+
+- **Interactive Chat Interface**: Clean, responsive design for conversing with the AI
+- **Tool Configuration**: Select which Strands tools the AI can use during conversations
+- **Performance Metrics**: Real-time display of:
+  - Latency measurements
+  - Token usage statistics
+  - Tool execution metrics
+  - Agent cycle information
+- **User Sessions**: Persistent conversations across page reloads
+- **Customizable System Prompt**: Modify the AI's behavior through system prompt configuration
+
+## Getting Started
 
 ### Prerequisites
 
-- Python 3.12+
+- Python 3.9+
 - Node.js 14+ (for CDK deployment)
-- AWS credentials configured with access to Bedrock
+- AWS credentials configured (for AWS Bedrock access)
 
-### Running Locally
+### Local Development
 
-1. Install backend dependencies:
-   ```
-   cd backend
+1. Install Python dependencies:
+   ```bash
+   cd app
    pip install -r requirements.txt
    ```
 
 2. Run the FastAPI server:
-   ```
-   cd backend
+   ```bash
+   cd app
    python main.py
    ```
 
-3. Open `frontend/index.html` in your browser or serve it using a local web server.
+3. Open your browser and navigate to `http://localhost:8003`
 
-## Docker Deployment
+### Docker Deployment
 
-You can build and run the application using Docker:
+Build and run the application using Docker:
 
 ```bash
-# Build the Docker image
-docker build -t strands-agent-service .
-
-# Run the container
-docker run -p 8003:8003 -e AWS_REGION=us-west-2 strands-agent-service
+cd app
+docker build -t strands-chatbot .
+docker run -p 8003:8003 -e AWS_REGION=us-west-2 strands-chatbot
 ```
 
-## AWS Fargate Deployment
+### AWS Deployment
 
-The application can be deployed to AWS Fargate using the provided CDK code:
+Deploy to AWS using the provided CDK code:
 
 ```bash
-cd cdk
+cd infra
 npm install
 npm run build
 cdk deploy
 ```
 
-See the [CDK README](./cdk/README.md) for more detailed deployment instructions.
+## Usage Examples
 
-## Features
+### Basic Conversation
+Start a conversation with the AI by typing in the chat input field. The AI will respond based on its configured system prompt and available tools.
 
-- Real-time chat interface
-- User session persistence
-- Integration with AWS Bedrock for AI capabilities
-- Support for calculator and HTTP request tools
-- Performance metrics display (latency and token usage)
+### Configuring Tools
+1. Click on the "Tools" panel on the right side
+2. Select or deselect tools from the list
+3. Click "Update" to apply changes
+4. The AI will now use only the selected tools in future conversations
 
-## Configuration
+### Viewing Performance Metrics
+The "Metrics Summary" panel displays:
+- Total cycles and average cycle time
+- Tool usage statistics including call count and success rate
+- Token usage (input, output, and total)
+- Total latency measurements
 
-The application uses AWS Bedrock's Nova Pro model by default. You can modify the model settings in `backend/main.py`.
+## Customization
+
+### Modifying the System Prompt
+1. Enter a new system prompt in the settings panel
+2. Click "Set System Prompt" to apply changes
+3. The AI's behavior will update according to the new instructions
+
+### Adding New Tools
+To add custom tools, modify the `available_tools` dictionary in `main.py` and add your tool implementation.
+
+## License
+
+This project is licensed under the Apache License 2.0 - see the LICENSE file for details.
