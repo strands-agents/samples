@@ -14,7 +14,7 @@ body {
 .app-wrapper {
     display: flex;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 20px;
     gap: 20px;
 }
@@ -99,7 +99,7 @@ body {
     border: 1px solid #ddd;
     border-radius: 4px;
     resize: none;
-    height: 60px;
+    height: 80px;
 }
 
 #setSystemPrompt {
@@ -142,6 +142,43 @@ body {
     background-color: #f0f0f0;
     margin-right: auto;
     border-bottom-left-radius: 0;
+}
+
+.note-message {
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+}
+
+/* Styles for HTML content in messages */
+.bot-message code {
+    background-color: #f8f9fa;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: monospace;
+}
+
+.bot-message pre {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 10px 0;
+}
+
+.bot-message table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px 0;
+}
+
+.bot-message th, .bot-message td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.bot-message th {
+    background-color: #f2f2f2;
 }
 
 .input-container {
@@ -244,6 +281,7 @@ body {
     padding: 15px;
     overflow-y: auto;
     flex: 1;
+    max-height: calc(90vh - 50px);
 }
 
 .tool-item {
@@ -303,4 +341,82 @@ body {
 
 .notification.info {
     background-color: #2196F3;
+}
+
+/* Summary Panel Styles */
+.loading-text {
+    text-align: center;
+    margin-top: 10px;
+    color: #666;
+    font-style: italic;
+}
+.summary-panel-container {
+    width: 300px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+}
+
+.summary-panel-header {
+    padding: 15px;
+    background-color: #232f3e;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.summary-panel-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.summary-panel-content {
+    padding: 15px;
+    overflow-y: auto;
+    flex: 1;
+    max-height: calc(90vh - 50px);
+}
+
+.summary-section {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.summary-section h4 {
+    margin-bottom: 10px;
+    color: #232f3e;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.tool-usage-list {
+    margin-top: 10px;
+}
+
+.tool-usage-item {
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.tool-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #232f3e;
+}
+
+.tool-stats {
+    padding-left: 10px;
 }

@@ -99,6 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
             welcomeMsg.className = 'message bot-message';
             welcomeMsg.textContent = 'Welcome! How can I help you today?';
             chatMessages.appendChild(welcomeMsg);
+            
+            // Add note about file access
             return;
         }
         
@@ -106,7 +108,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (msg.role === 'user' || msg.role === 'assistant') {
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `message ${msg.role === 'user' ? 'user-message' : 'bot-message'}`;
-                messageDiv.textContent = msg.content[0].text;
+                
+                const responseText = msg.content[0].text;
+                messageDiv.textContent = responseText;
+                
                 chatMessages.appendChild(messageDiv);
             }
         });
@@ -129,12 +134,17 @@ document.addEventListener('DOMContentLoaded', () => {
         userInput.value = '';
         scrollToBottom();
         
-        // Show loading indicator
+        // Show loading indicator in chat
         isProcessing = true;
         const loadingDiv = document.createElement('div');
         loadingDiv.className = 'message bot-message';
         loadingDiv.innerHTML = '<div class="loading"></div>';
         chatMessages.appendChild(loadingDiv);
+        
+        // Show loading indicator in summary panel
+        if (window.showSummaryLoading) {
+            window.showSummaryLoading();
+        }
         
         try {
             const startTime = Date.now();
@@ -162,13 +172,21 @@ document.addEventListener('DOMContentLoaded', () => {
             // Add bot response
             const botMessageDiv = document.createElement('div');
             botMessageDiv.className = 'message bot-message';
-            botMessageDiv.textContent = data.messages.content[0].text;
+            
+            const responseText = data.messages.content[0].text;
+            botMessageDiv.textContent = responseText;
+            
             chatMessages.appendChild(botMessageDiv);
             
             // Update metrics
             console.log(data)
             latencyDisplay.textContent = `${data.latencyMs || 0} ms`;
             tokensDisplay.textContent = data.totalTokens || 0;
+            
+            // Update summary panel if available
+            if (data.summary && window.updateSummaryPanel) {
+                window.updateSummaryPanel(data.summary);
+            }
             
             scrollToBottom();
         } catch (error) {
