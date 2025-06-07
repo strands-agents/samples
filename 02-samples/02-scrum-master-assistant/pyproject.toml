@@ -1,7 +1,7 @@
 [project]
 name = "02-scrum-master-assistant"
 version = "0.1.0"
-description = "Add your description here"
+description = "An expert agile development assistant for JIRA specializing in breaking down meeting notes into actionable tasks."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
