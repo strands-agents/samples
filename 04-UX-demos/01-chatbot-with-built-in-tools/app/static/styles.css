@@ -7,11 +7,31 @@
 
 body {
     background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+}
+
+.app-wrapper {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px;
+    gap: 20px;
+}
+
+.tools-sidebar {
+    width: 300px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
 }
 
 .container {
-    max-width: 800px;
-    margin: 20px auto;
+    flex: 1;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -30,6 +50,17 @@ body {
     align-items: center;
 }
 
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-logo {
+    height: 30px;
+    width: auto;
+}
+
 .header h1 {
     font-size: 1.5rem;
 }
@@ -46,6 +77,32 @@ body {
 }
 
 #setUserId {
+    padding: 5px 10px;
+    background-color: #ff9900;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.system-prompt-container {
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    gap: 10px;
+}
+
+#systemPrompt {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: none;
+    height: 60px;
+}
+
+#setSystemPrompt {
     padding: 5px 10px;
     background-color: #ff9900;
     color: white;
@@ -148,4 +205,102 @@ body {
     border-radius: 4px;
     margin-bottom: 15px;
     text-align: center;
+}
+
+.success-message {
+    color: #188038;
+    background-color: #e6f4ea;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Tools Panel Styles */
+.tools-panel-header {
+    padding: 15px;
+    background-color: #232f3e;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tools-panel-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+#update-tools-btn {
+    padding: 5px 10px;
+    background-color: #ff9900;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.tools-list {
+    padding: 15px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.tool-item {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.tool-item:last-child {
+    border-bottom: none;
+}
+
+.tool-description {
+    margin-top: 5px;
+    font-size: 0.85rem;
+    color: #666;
+    padding-left: 25px;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+}
+
+.form-check-input {
+    margin-right: 10px;
+}
+
+.form-check-label {
+    font-weight: bold;
+}
+
+.notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    background-color: #333;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+.notification.show {
+    opacity: 1;
+}
+
+.notification.success {
+    background-color: #4CAF50;
+}
+
+.notification.error {
+    background-color: #F44336;
+}
+
+.notification.info {
+    background-color: #2196F3;
 }

@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendButton = document.getElementById('sendButton');
     const userIdInput = document.getElementById('userId');
     const setUserIdButton = document.getElementById('setUserId');
+    const systemPromptInput = document.getElementById('systemPrompt');
+    const setSystemPromptButton = document.getElementById('setSystemPrompt');
     const latencyDisplay = document.getElementById('latency');
     const tokensDisplay = document.getElementById('tokens');
     
@@ -12,13 +14,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const API_BASE_URL = '';
     const GET_CONVERSATIONS_ENDPOINT = `${API_BASE_URL}/get_conversations`;
     const CS_AGENT_ENDPOINT = `${API_BASE_URL}/cs_agent`;
+    const SYSTEM_PROMPT_ENDPOINT = `${API_BASE_URL}/system_prompt`;
     
     // State
     let userId = userIdInput.value || 'user1';
     let isProcessing = false;
     
-    // Initialize chat
+    // Initialize chat and system prompt
     loadConversation();
+    loadSystemPrompt();
     
     // Event Listeners
     sendButton.addEventListener('click', sendMessage);
@@ -36,6 +40,34 @@ document.addEventListener('DOMContentLoaded', () => {
             loadConversation();
         } else {
             showError('Please enter a valid User ID');
+        }
+    });
+    
+    setSystemPromptButton.addEventListener('click', async () => {
+        const systemPrompt = systemPromptInput.value.trim();
+        if (systemPrompt) {
+            try {
+                const response = await fetch(SYSTEM_PROMPT_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        systemPrompt: systemPrompt
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                showSuccess('System prompt updated successfully');
+            } catch (error) {
+                console.error('Error setting system prompt:', error);
+                showError('Failed to update system prompt. Please try again.');
+            }
+        } else {
+            showError('Please enter a valid system prompt');
         }
     });
     
@@ -152,6 +184,22 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
     
+    async function loadSystemPrompt() {
+        try {
+            const response = await fetch(SYSTEM_PROMPT_ENDPOINT);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            systemPromptInput.value = data.systemPrompt;
+        } catch (error) {
+            console.error('Error loading system prompt:', error);
+            showError('Failed to load system prompt. Please try again.');
+        }
+    }
+    
     function showError(message) {
         const errorDiv = document.createElement('div');
         errorDiv.className = 'error-message';
@@ -161,6 +209,19 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             chatMessages.removeChild(errorDiv);
         }, 5000);
+        
+        scrollToBottom();
+    }
+    
+    function showSuccess(message) {
+        const successDiv = document.createElement('div');
+        successDiv.className = 'success-message';
+        successDiv.textContent = message;
+        chatMessages.appendChild(successDiv);
+        
+        setTimeout(() => {
+            chatMessages.removeChild(successDiv);
+        }, 3000);
         
         scrollToBottom();
     }

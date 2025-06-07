@@ -6,7 +6,7 @@ import re
 
 from strands import Agent, tool
 from strands.models import BedrockModel
-from strands_tools import calculator, http_request, current_time, use_aws
+from strands_tools import calculator, http_request, current_time, use_aws, speak, memory, environment, image_reader, generate_image, think, use_llm
 from strands.tools.mcp import MCPClient
 
 from fastapi import FastAPI, HTTPException
@@ -27,9 +27,23 @@ logging.basicConfig(
     handlers=[logging.StreamHandler()]
 )
 
-# Define tools
-#  http_request, current_time, use_aws
-tools = [calculator, http_request, use_aws]  # Define your tools here
+# Define all available tools
+available_tools = {
+    'calculator': calculator,
+    'http_request': http_request,
+    'current_time': current_time,
+    'use_aws': use_aws,
+    'speak': speak,
+    'memory': memory,
+    'environment': environment,
+    'image_reader': image_reader,
+    'generate_image': generate_image,
+    'think': think,
+    'use_llm': use_llm
+}
+
+# Define default selected tools
+tools = [calculator, http_request, use_aws]  # Default tools
 
 # Define classes
 class CSAgent(Agent):
@@ -42,7 +56,7 @@ class CSAgent(Agent):
         messages = self.restore_agent_state(user_id)
         super().__init__(system_prompt=system_prompt, 
                          model=model,
-                         tools=tools,
+                         tools=tools,  # Use the global tools list
                          callback_handler=None,
                          messages=messages,
                         load_tools_from_directory=False
@@ -72,6 +86,12 @@ class CSAgent(Agent):
 class PromptRequest(BaseModel):
     prompt: str
     userId: str
+
+class SystemPromptRequest(BaseModel):
+    systemPrompt: str
+    
+class ToolsUpdateRequest(BaseModel):
+    tools: list[str]
 
 # Constants
 SYSTEM_PROMPT = """You are a helppful assistant powered by Strands 
@@ -147,6 +167,45 @@ def get_agent_response(request: PromptRequest):
     except Exception as e:
         logger.error(f"Error processing agent response: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing agent response: {str(e)}")
+
+# System prompt endpoints
+@app.get("/system_prompt")
+def get_system_prompt():
+    return {"systemPrompt": SYSTEM_PROMPT}
+
+@app.post("/system_prompt")
+def set_system_prompt(request: SystemPromptRequest):
+    global SYSTEM_PROMPT
+    SYSTEM_PROMPT = request.systemPrompt
+    return {"systemPrompt": SYSTEM_PROMPT}
+
+# Tools management endpoints
+@app.get("/get_available_tools")
+def get_available_tools():
+    global tools, available_tools
+    return {
+        "available_tools": list(available_tools.keys()),
+        "selected_tools": [tool.__name__.split('.')[-1] for tool in tools]
+    }
+
+@app.post("/update_tools")
+def update_tools(request: ToolsUpdateRequest):
+    global tools, available_tools
+    
+    try:
+        # Validate that all requested tools exist
+        for tool_name in request.tools:
+            if tool_name not in available_tools:
+                raise HTTPException(status_code=400, detail=f"Unknown tool: {tool_name}")
+        
+        # Update the tools list
+        tools = [available_tools[tool_name] for tool_name in request.tools]
+        
+        logger.info(f"Updated tools list: {[tool.__name__ for tool in tools]}")
+        return {"success": True, "selected_tools": [tool.__name__ for tool in tools]}
+    except Exception as e:
+        logger.error(f"Error updating tools: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error updating tools: {str(e)}")
 
 # Health check endpoint
 @app.get("/health")

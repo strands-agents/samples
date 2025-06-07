@@ -3,17 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot Interface</title>
+    <title>Strands Playground</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="logo-light.svg" type="image/svg+xml">
 </head>
 <body>
-    <div class="container">
+    <div class="app-wrapper">
+        <div class="tools-sidebar">
+            <div id="tools-panel"></div>
+        </div>
+        <div class="container">
         <div class="header">
-            <h1>Chatbot Interface</h1>
+            <div class="header-title">
+                <img src="logo-light.svg" alt="Strands Logo" class="header-logo">
+                <h1>Strands Playground</h1>
+            </div>
             <div class="user-id-container">
                 <input type="text" id="userId" placeholder="Enter User ID" value="user1">
                 <button id="setUserId">Set User ID</button>
             </div>
+        </div>
+        
+        <div class="system-prompt-container">
+            <textarea id="systemPrompt" placeholder="System prompt..."></textarea>
+            <button id="setSystemPrompt">Set System Prompt</button>
         </div>
         
         <div class="chat-container">
@@ -36,7 +49,9 @@
             </div>
         </div>
     </div>
+    </div>
     
     <script src="app.js"></script>
+    <script src="tools-panel.js"></script>
 </body>
 </html>

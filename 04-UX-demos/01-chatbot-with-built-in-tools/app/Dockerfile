@@ -9,12 +9,13 @@ RUN apt-get update && apt-get install -y \
 
 
 # Copy requirements first for better caching
-COPY app/requirements.txt .
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy code
-COPY app/main.py .
-COPY app/static/ static/
+COPY main.py .
+COPY static/ static/
+
 
 # Expose the port the app runs on
 EXPOSE 3000
