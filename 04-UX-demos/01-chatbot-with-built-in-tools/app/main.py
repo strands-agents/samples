@@ -1,10 +1,11 @@
 import json
 import os
 import logging 
-import random
-import re
+import time
+import boto3
+from botocore.exceptions import ClientError
 
-from strands import Agent, tool
+from strands import Agent
 from strands.models import BedrockModel
 from strands_tools import (
     agent_graph, calculator, cron, current_time, editor, environment, 
@@ -31,6 +32,11 @@ logging.basicConfig(
     format="%(levelname)s | %(name)s | %(message)s", 
     handlers=[logging.StreamHandler()]
 )
+
+# table name for session managament 
+table_name = os.environ.get('TABLE_NAME') or None
+table_region = os.environ.get('TABLE_REGION') or None
+primary_key = os.environ.get('PRIMARY_KEY') or None
 
 # Define all available tools
 available_tools = {
@@ -98,7 +104,7 @@ tool_descriptions = {
 tools = [calculator, http_request, use_aws]  # Default tools
 
 # Define classes
-class CSAgent(Agent):
+class StrandsPlaygroundAgent(Agent):
     def __init__(self, 
                  system_prompt, 
                  model, 
@@ -114,26 +120,68 @@ class CSAgent(Agent):
                          load_tools_from_directory=False
                     )
         logger.debug(f"tools available: {self.tool_names}")
-
     # Restore agent state
     def restore_agent_state(self, user_id):
-        # Retrieve state
-        try:
-            with open(f"sessions/{user_id}.json", "r") as f:
-                state = json.load(f)
-                return state["messages"]
-        except FileNotFoundError:
+        if not table_name and not table_region:
+            logger.debug("TABLE_NAME environment variable not set, fallback to local file session management")
+            # Retrieve state
+            try:
+                with open(f"sessions/{user_id}.json", "r") as f:
+                    state = json.load(f)
+                    return state["messages"]
+            except FileNotFoundError:
+                    logger.error("Failed to restore session from local file, returning empty conversation history")
+                    return []
+        else: 
+            try: 
+                logger.debug(f"Loading session from dynamodb table: {str(table_name)} in {str(table_region)} region")
+                dynamodb = boto3.resource('dynamodb', region_name=table_region)
+                table = dynamodb.Table(table_name)
+                response = table.get_item(
+                Item={
+                        primary_key: user_id,
+                    }
+                )
+                messages = response['Item']['messages'] 
+                logger.debug("messages returned from Dynamo")
+                logger.debug(messages)
+                return messages
+            except ClientError as e:
+                logger.error(f"Failed to restore session from DynamoDB: {str(e)} returning empty conversation history")
                 return []
+
     # Save agent state
     def save_agent_state(self, user_id):
-        os.makedirs("sessions", exist_ok=True)
-
-        state = {
-            "messages": self.messages
-        }
-        # Store state (e.g., database, file system, cache)
-        with open(f"sessions/{user_id}.json", "w") as f:
-            json.dump(state, f)
+        if not table_name and not table_region:
+            try:
+                logger.debug("TABLE_NAME and TABLE_REGION environment variable not set, fallback to local file session management")
+                os.makedirs("sessions", exist_ok=True)
+                state = {
+                    "messages": self.messages
+                }
+                # Store state (e.g., database, file system, cache)
+                with open(f"sessions/{user_id}.json", "w") as f:
+                    json.dump(state, f)
+            except Exception as e:
+                logger.error(f"Failed to save session to local file: {str(e)}, returning empty conversation history")
+                return []
+        else:
+            try:
+                logger.debug(f"Saving session to dynamodb table {table_name} in {table_region} region")
+                dynamodb = boto3.resource('dynamodb', region_name=table_region)
+                table = dynamodb.Table(table_name)
+                state = {
+                    "messages": self.messages
+                }
+                table.put_item(
+                    Item={
+                        primary_key: user_id,
+                        'messages': state['messages']
+                    }
+                )
+            except ClientError as e:
+                logger.error(f"Failed to save session to dynamodb table {table_name} in {table_region} region")
+                return []            
 
 class PromptRequest(BaseModel):
     prompt: str
@@ -170,24 +218,11 @@ app.add_middleware(
 )
 
 
-# Helper functions
-def load_prompt_from_file(prompt_name):
-    """Load a prompt from a file in the prompts directory."""
-    prompts_dir = "prompts"
-    os.makedirs(prompts_dir, exist_ok=True)
-    
-    try:
-        with open(f"{prompts_dir}/{prompt_name}.txt", "r") as f:
-            return f.read().strip()
-    except FileNotFoundError:
-        print(f"Warning: Prompt file '{prompt_name}.txt' not found. Using default prompt.")
-        return None
-
 # API endpoints
 @app.get("/get_conversations")
 def get_conversations(userId: str):
     try:
-        agent = CSAgent(
+        agent = StrandsPlaygroundAgent(
             model=bedrock_model,
             system_prompt=SYSTEM_PROMPT,
             user_id=userId
@@ -200,7 +235,7 @@ def get_conversations(userId: str):
 @app.post("/cs_agent")
 def get_agent_response(request: PromptRequest):
     try:
-        agent = CSAgent(
+        agent = StrandsPlaygroundAgent(
             model=bedrock_model,
             system_prompt=SYSTEM_PROMPT,
             user_id=request.userId

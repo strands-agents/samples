@@ -16,7 +16,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY main.py .
 COPY static/ static/
 
-
 # Expose the port the app runs on
 EXPOSE 3000
 
