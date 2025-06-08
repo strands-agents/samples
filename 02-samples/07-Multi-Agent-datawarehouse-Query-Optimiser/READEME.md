@@ -104,3 +104,8 @@ Output
 
 
 
+## Architecture Diagram
+
+![image](https://github.com/user-attachments/assets/b7ce88c2-e3e1-48d8-afa9-47ebf1fa252f)
+
+
