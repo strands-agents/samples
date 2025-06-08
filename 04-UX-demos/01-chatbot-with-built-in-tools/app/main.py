@@ -138,15 +138,19 @@ class StrandsPlaygroundAgent(Agent):
                 dynamodb = boto3.resource('dynamodb', region_name=table_region)
                 table = dynamodb.Table(table_name)
                 response = table.get_item(
-                Item={
+                Key={
                         primary_key: user_id,
                     }
                 )
-                messages = response['Item']['messages'] 
-                logger.debug("messages returned from Dynamo")
-                logger.debug(messages)
+                if "Item" in response:
+                    messages = response['Item']['messages'] 
+                    logger.debug("messages returned from Dynamo")
+                    logger.debug(messages)
+                else: 
+                    logger.debug("No messages found in DynamoDB")
+                    messages = []
                 return messages
-            except ClientError as e:
+            except Exception as e:
                 logger.error(f"Failed to restore session from DynamoDB: {str(e)} returning empty conversation history")
                 return []
 
@@ -167,7 +171,7 @@ class StrandsPlaygroundAgent(Agent):
                 return []
         else:
             try:
-                logger.debug(f"Saving session to dynamodb table {table_name} in {table_region} region")
+                logger.debug(f"Saving conversation to dynamodb table {table_name} in {table_region} region")
                 dynamodb = boto3.resource('dynamodb', region_name=table_region)
                 table = dynamodb.Table(table_name)
                 state = {
