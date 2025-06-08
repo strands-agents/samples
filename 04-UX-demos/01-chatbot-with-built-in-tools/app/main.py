@@ -123,14 +123,14 @@ class StrandsPlaygroundAgent(Agent):
     # Restore agent state
     def restore_agent_state(self, user_id):
         if not table_name and not table_region:
-            logger.debug("TABLE_NAME environment variable not set, fallback to local file session management")
+            logger.debug("TABLE_NAME environment variable not set, fallback to local file session.. loading conversation history from file")
             # Retrieve state
             try:
                 with open(f"sessions/{user_id}.json", "r") as f:
                     state = json.load(f)
                     return state["messages"]
             except FileNotFoundError:
-                    logger.error("Failed to restore session from local file, returning empty conversation history")
+                    logger.error("Local session file for user not found, returning empty conversation history")
                     return []
         else: 
             try: 
@@ -158,7 +158,7 @@ class StrandsPlaygroundAgent(Agent):
     def save_agent_state(self, user_id):
         if not table_name and not table_region:
             try:
-                logger.debug("TABLE_NAME and TABLE_REGION environment variable not set, fallback to local file session management")
+                logger.debug("TABLE_NAME and TABLE_REGION environment variable not set, fallback to local file session management, saving conversation to file")
                 os.makedirs("sessions", exist_ok=True)
                 state = {
                     "messages": self.messages
@@ -167,8 +167,7 @@ class StrandsPlaygroundAgent(Agent):
                 with open(f"sessions/{user_id}.json", "w") as f:
                     json.dump(state, f)
             except Exception as e:
-                logger.error(f"Failed to save session to local file: {str(e)}, returning empty conversation history")
-                return []
+                logger.error(f"Failed to save session to local file: {str(e)}")
         else:
             try:
                 logger.debug(f"Saving conversation to dynamodb table {table_name} in {table_region} region")
@@ -185,7 +184,6 @@ class StrandsPlaygroundAgent(Agent):
                 )
             except ClientError as e:
                 logger.error(f"Failed to save session to dynamodb table {table_name} in {table_region} region")
-                return []            
 
 class PromptRequest(BaseModel):
     prompt: str
