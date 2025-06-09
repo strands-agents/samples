@@ -98,6 +98,12 @@ body {
     background-color: #f9f9f9;
     border-bottom: 1px solid #e0e0e0;
     display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.prompt-row {
+    display: flex;
     gap: 10px;
 }
 
@@ -117,6 +123,7 @@ body {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    width: 80px;
 }
 
 .model-settings-container {
@@ -124,48 +131,48 @@ body {
     background-color: #f9f9f9;
     border-bottom: 1px solid #e0e0e0;
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
+    flex-direction: column;
+    gap: 15px;
 }
 
-/* Container for optional settings to keep them on the same line */
-.optional-settings-row {
+.model-settings-row {
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    gap: 10px;
     width: 100%;
-    margin-top: 10px;
+}
+
+.model-settings-inputs {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .model-setting {
     display: flex;
     flex-direction: column;
     flex: 1;
-    min-width: 150px;
+}
+
+.model-id-field {
+    flex: 2.2;
+}
+
+.region-field {
+    flex: 0.3;
+}
+
+.required-settings-row {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    width: 100%;
 }
 
 .model-setting label {
     font-size: 0.9rem;
     margin-bottom: 5px;
     color: #333;
-}
-
-.optional-label {
-    font-size: 0.8rem;
-    color: #666;
-    font-style: italic;
-    font-weight: normal;
-}
-
-.model-setting.optional input {
-    border: 1px dashed #ccc;
-}
-
-.model-setting.optional label {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
 .required-label {
@@ -179,31 +186,43 @@ body {
 
 .model-settings-header {
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .field-note {
     font-size: 0.85rem;
     color: #666;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
-.model-setting.optional {
+.optional-settings-container {
+    width: 100%;
+    margin-top: 5px;
+    padding-top: 10px;
+}
+
+.optional-settings-row {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
+.optional-setting {
     display: flex;
     align-items: center;
-    gap: 8px;
-    flex-direction: row;
-    margin-right: 15px;
+    gap: 10px;
+    flex: 1;
 }
 
 .toggle-field {
-    margin-right: 4px;
+    margin-right: 2px;
+    cursor: pointer;
 }
 
-.model-setting.optional label {
-    margin-right: 10px;
-    min-width: auto;
-    margin-bottom: 0;
+.optional-indicator {
+    font-size: 0.8rem;
+    color: #666;
+    font-style: italic;
 }
 
 input:disabled {
@@ -219,14 +238,17 @@ input:disabled {
 }
 
 #updateModelSettings {
-    padding: 8px 15px;
+    padding: 5px 10px;
     background-color: #ff9900;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-left: auto;
-    margin-top: 10px;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
 }
 
 .chat-container {

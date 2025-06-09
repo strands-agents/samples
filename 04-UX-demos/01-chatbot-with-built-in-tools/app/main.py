@@ -4,6 +4,7 @@ import logging
 import time
 import boto3
 from botocore.exceptions import ClientError
+from typing import Optional
 
 from strands import Agent
 from strands.models import BedrockModel
@@ -192,6 +193,13 @@ class PromptRequest(BaseModel):
 class SystemPromptRequest(BaseModel):
     systemPrompt: str
     
+class ModelSettingsRequest(BaseModel):
+    modelId: str
+    region: str
+    maxTokens: Optional[int] = None
+    temperature: Optional[float] = None
+    topP: Optional[float] = None
+    
 class ToolsUpdateRequest(BaseModel):
     tools: list[str]
 
@@ -201,10 +209,18 @@ The user has the ability to modify your set of built-in tools. Every time your t
 """
 
 # Global variables
-bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
-    region_name='us-west-2',
-    temperature=0.3,
+MODEL_ID = "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+REGION = "us-west-2"
+MAX_TOKENS = 1000
+TEMPERATURE = 0.3
+TOP_P = 0.9
+
+BEDROCK_MODEL = BedrockModel(
+    model_id=MODEL_ID,
+    region_name=REGION,
+    temperature=TEMPERATURE,
+    max_tokens=MAX_TOKENS,
+    top_p=TOP_P,
 )
 
 # FastAPI app setup
@@ -225,7 +241,7 @@ app.add_middleware(
 def get_conversations(userId: str):
     try:
         agent = StrandsPlaygroundAgent(
-            model=bedrock_model,
+            model=BEDROCK_MODEL,
             system_prompt=SYSTEM_PROMPT,
             user_id=userId
         )
@@ -238,7 +254,7 @@ def get_conversations(userId: str):
 def get_agent_response(request: PromptRequest):
     try:
         agent = StrandsPlaygroundAgent(
-            model=bedrock_model,
+            model=BEDROCK_MODEL,
             system_prompt=SYSTEM_PROMPT,
             user_id=request.userId
         )
@@ -266,6 +282,64 @@ def set_system_prompt(request: SystemPromptRequest):
     global SYSTEM_PROMPT
     SYSTEM_PROMPT = request.systemPrompt
     return {"systemPrompt": SYSTEM_PROMPT}
+
+# Model settings endpoints
+@app.get("/model_settings")
+def get_model_settings():
+    global BEDROCK_MODEL
+    config = BEDROCK_MODEL.get_config()
+    return {
+        "modelId": MODEL_ID,
+        "region": REGION,
+        "maxTokens": MAX_TOKENS,
+        "temperature": TEMPERATURE,
+        "topP": TOP_P
+    }
+
+@app.post("/model_settings")
+def set_model_settings(request: ModelSettingsRequest):
+    global BEDROCK_MODEL, MODEL_ID, REGION, MAX_TOKENS, TEMPERATURE, TOP_P
+    logger.debug(f"received the following when updated the model: {request}")    
+   
+    # Create a parameters dictionary with only non-None values
+    model_params = {
+        "model_id": request.modelId,
+    }
+    
+    # Only add parameters if they have values
+    if request.maxTokens is not None:
+        model_params["max_tokens"] = request.maxTokens
+    else: 
+        model_params.pop('max_tokens', None)
+
+    if request.temperature is not None:
+        model_params["temperature"] = request.temperature
+    else:
+        model_params.pop('temperature', None)
+
+    if request.topP is not None:
+        model_params["top_p"] = request.topP
+    else:
+        model_params.pop('top_p', None)
+    
+    
+    logger.debug(f"model settings parmaeters passed: {model_params}")
+
+    # Update the bedrock model with new settings
+    BEDROCK_MODEL = BedrockModel(**model_params, region_name=request.region)
+    REGION = request.region
+    MAX_TOKENS = request.maxTokens
+    TEMPERATURE = request.temperature
+    TOP_P = request.topP
+    MODEL_ID = request.modelId
+
+    return {
+        "modelId": request.modelId,
+        "region": request.region,
+        "maxTokens": request.maxTokens,
+        "temperature": request.temperature,
+        "topP": request.topP
+    }
 
 # Tools management endpoints
 @app.get("/get_available_tools")
@@ -302,8 +376,6 @@ def health_check():
     return {"status": "healthy"}
 
 static_dir = "./static"
-print(f"Current working directory: {os.getcwd()}")
-print(f"Static directory exists: {os.path.exists(static_dir)}")
 
 @app.get("/")
 def read_root():

@@ -1,10 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize disabled state for optional fields
-    document.querySelectorAll('.toggle-field').forEach(checkbox => {
-        const fieldId = checkbox.id.replace('enable', '');
-        const field = document.getElementById(fieldId);
-        field.disabled = !checkbox.checked;
-    });
+
     // DOM Elements
     const chatMessages = document.getElementById('chatMessages');
     const userInput = document.getElementById('userInput');
@@ -47,19 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Add event listeners for toggle checkboxes
-    document.querySelectorAll('.toggle-field').forEach(checkbox => {
-        const fieldId = checkbox.id.replace('enable', '');
-        const field = document.getElementById(fieldId);
-        
-        // Set initial state
-        field.disabled = !checkbox.checked;
-        
-        // Add change event
-        checkbox.addEventListener('change', function() {
-            field.disabled = !this.checked;
-        });
-    });
     
     setUserIdButton.addEventListener('click', () => {
         const newUserId = userIdInput.value.trim();
