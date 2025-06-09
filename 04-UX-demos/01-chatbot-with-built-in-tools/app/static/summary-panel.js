@@ -14,8 +14,14 @@ document.addEventListener('DOMContentLoaded', () => {
     summaryPanelContent.id = 'summary-panel-content';
     summaryPanelContent.className = 'summary-panel-content';
     
+    // Create metrics info section
+    const metricsInfo = document.createElement('div');
+    metricsInfo.className = 'metrics-info';
+    metricsInfo.innerHTML = '<a href="https://strandsagents.com/0.1.x/user-guide/observability-evaluation/metrics/" target="_blank" rel="noopener noreferrer">Strands SDK offers detailed metrics tracking to monitor your agent\'s performance</a>';
+    
     // Append elements to container
     summaryPanelContainer.appendChild(summaryPanelHeader);
+    summaryPanelContainer.appendChild(metricsInfo);
     summaryPanelContainer.appendChild(summaryPanelContent);
     
     // Add to DOM
@@ -29,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Function to update summary panel with data
     window.updateSummaryPanel = function(summaryData) {
+        console.log("Received summary data:", summaryData);
         if (!summaryData) return;
         
         const content = document.getElementById('summary-panel-content');

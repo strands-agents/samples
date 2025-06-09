@@ -26,6 +26,11 @@ function renderToolsList(container, availableTools, selectedTools, toolDescripti
             <h3>Strands Built-in Tools</h3>
             <button id="update-tools-btn">Update</button>
         </div>
+        <div class="tools-info">
+            <a href="https://strandsagents.com/0.1.x/user-guide/concepts/tools/example-tools-package/" target="_blank" rel="noopener noreferrer">
+                Learn more about the built-in tools for Strands SDK
+            </a>
+        </div>
         <div class="tools-list">
             ${availableTools.map(tool => `
                 <div class="tool-item">

@@ -233,13 +233,9 @@ document.addEventListener('DOMContentLoaded', () => {
             
             chatMessages.appendChild(botMessageDiv);
             
-            // Update metrics
-            console.log(data)
-            latencyDisplay.textContent = `${data.latencyMs || 0} ms`;
-            tokensDisplay.textContent = data.totalTokens || 0;
-            
             // Update summary panel if available
             if (data.summary && window.updateSummaryPanel) {
+                console.log(data.summary);
                 window.updateSummaryPanel(data.summary);
             }
             

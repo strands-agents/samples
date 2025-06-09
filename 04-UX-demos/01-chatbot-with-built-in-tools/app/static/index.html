@@ -75,6 +75,11 @@
                     </div>
                     <button id="updateModelSettings">Update</button>
                 </div>
+                <div class="bedrock-info">
+                    <a href="https://strandsagents.com/0.1.x/user-guide/concepts/model-providers/amazon-bedrock/" target="_blank" rel="noopener noreferrer">
+                        Model parameters are for the Amazon Bedrock provider from the Strands SDK
+                    </a>
+                </div>
             </div>
 
         </div>
@@ -90,13 +95,9 @@
         </div>
         
         <div class="metrics-container">
-            <div class="metric">
-                <span>Latency:</span>
-                <span id="latency">0 ms</span>
-            </div>
-            <div class="metric">
-                <span>Total Tokens:</span>
-                <span id="tokens">0</span>
+            <div class="file-access-info">
+                <span class="info-icon">ℹ️</span>
+                To make files accessible via the web interface, instruct the agent to save them to the './static' directory. Files stored in this location will be automatically served at the root URL of the application.
             </div>
         </div>
     </div>
