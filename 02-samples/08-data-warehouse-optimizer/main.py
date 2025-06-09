@@ -23,8 +23,6 @@ from botocore.exceptions import NoCredentialsError, ProfileNotFound
 from utils.tools import get_query_execution_plan, suggest_optimizations, validate_query_cost
 from utils.prompts import analyzer_prompt, rewriter_prompt, validator_prompt
 
-# Load environment variables
-load_dotenv()
 
 # Initialize OpenTelemetry
 trace.set_tracer_provider(TracerProvider())
