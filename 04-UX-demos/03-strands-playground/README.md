@@ -28,6 +28,8 @@ strands-playground/
 │   ├── main.py               # FastAPI backend
 │   └── requirements.txt      # Python dependencies
 └── infra/                    # Infrastructure as code
+    ├── lib/                  # CDK stack definition
+    ├── bin/                  # CDK entry point
     └── ...                   # AWS CDK deployment code
 ```
 
@@ -110,6 +112,19 @@ npm install
 npm run build
 cdk deploy
 ```
+
+The CDK deployment creates the following AWS resources:
+
+- **VPC**: A Virtual Private Cloud with public and private subnets
+- **VPC Endpoint**: For Amazon Bedrock Runtime access
+- **ECS Cluster**: To host the containerized application
+- **DynamoDB Table**: For persistent session storage
+- **Fargate Service**: Running 2 instances of the application for high availability
+- **Application Load Balancer**: For distributing traffic to the Fargate instances
+- **IAM Roles**: With permissions for Bedrock API access
+- **CloudWatch Logs**: For application logging
+
+After deployment, the application will be accessible via the load balancer's DNS name, which is provided as an output from the CDK stack.
 
 ## Usage Examples
 
