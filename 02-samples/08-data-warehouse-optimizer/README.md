@@ -56,25 +56,30 @@ uv run scripts/init_db.py
 
 The following CLI commands allow interaction with the query optimizer:
 
-### List tables
+## 🧪 Sample Usage
 
-```bash
-uv run main.py list-tables
-```
-Output
-```json
-{"tables": ["sales_data", "bank"]}
-```
-```bash
-uv run main.py explain-query "SELECT * FROM sales_data WHERE order_date > '2025-01-01'"
-```
-```bash
-uv run main.py create-bank-table
-```
-Output
-```json
-{"status": "success", "message": "Bank table created"}
-```
+You can interact with the multi-agent query optimizer using the following CLI commands:
+
+1. **List Tables**
+
+   Lists all tables in the SQLite database.
+
+   ```bash
+   uv run main.py list-tables
+   ```
+2. **Explain Query**
+   Analyzes the execution plan for a given SQL query using the EXPLAIN QUERY PLAN feature.
+
+   ```bash
+   uv run main.py explain-query "SELECT * FROM sales_data WHERE order_date > '2025-01-01'"
+   ```
+3. **Create Bank Table**
+   Creates a sample bank table with predefined schema and inserts test data.
+
+   ```bash
+   uv run main.py create-bank-table
+   ```
+
 
 ## Project Structure
 
