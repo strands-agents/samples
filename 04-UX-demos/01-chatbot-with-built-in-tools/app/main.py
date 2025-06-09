@@ -250,7 +250,7 @@ def get_conversations(userId: str):
         logger.error(f"Error getting conversations: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error getting conversations: {str(e)}")
 
-@app.post("/cs_agent")
+@app.post("/strandsplayground_agent")
 def get_agent_response(request: PromptRequest):
     try:
         agent = StrandsPlaygroundAgent(

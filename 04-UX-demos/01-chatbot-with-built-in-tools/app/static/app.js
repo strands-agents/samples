@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // API endpoints
     const API_BASE_URL = '';
     const GET_CONVERSATIONS_ENDPOINT = `${API_BASE_URL}/get_conversations`;
-    const CS_AGENT_ENDPOINT = `${API_BASE_URL}/cs_agent`;
+    const CS_AGENT_ENDPOINT = `${API_BASE_URL}/strandsplayground_agent`;
     const SYSTEM_PROMPT_ENDPOINT = `${API_BASE_URL}/system_prompt`;
     const MODEL_SETTINGS_ENDPOINT = `${API_BASE_URL}/model_settings`;
     
