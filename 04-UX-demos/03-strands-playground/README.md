@@ -1,21 +1,22 @@
-# Strands Chatbot with Built-in Tools
+# Strands Playground
 
-A web-based chat interface for the Strands Agent framework, providing a conversational AI experience with configurable tools.
+A web-based interactive playground for experimenting with the Strands SDK, allowing users to quickly test and prototype AI agents with configurable tools.
 
 ## Overview
 
-This project demonstrates how to build a web application that leverages the Strands Agents framework to create an interactive chatbot with configurable built-in tools. The application includes:
+This project provides a sandbox environment for developers to experiment with the Strands Agents framework. The playground allows you to:
 
-- A FastAPI backend that integrates with Strands Agents
-- A responsive web interface for chatting with the AI
-- Real-time metrics and performance monitoring
-- Configurable tool selection for the AI agent
-- User session persistence
+- Interact with AI agents powered by Strands SDK
+- Configure and test different combinations of Strands tools
+- Customize model parameters and system prompts
+- Visualize agent performance metrics
+- Persist conversations across sessions
+- Experiment with code and file operations through the agent
 
 ## Project Structure
 
 ```
-01-chatbot-with-built-in-tools/
+strands-playground/
 ├── app/                      # Application code
 │   ├── static/               # Frontend assets
 │   │   ├── app.js            # Main application logic
@@ -32,15 +33,30 @@ This project demonstrates how to build a web application that leverages the Stra
 
 ## Features
 
-- **Interactive Chat Interface**: Clean, responsive design for conversing with the AI
-- **Tool Configuration**: Select which Strands tools the AI can use during conversations
+- **Interactive Playground Interface**: Clean, responsive design for experimenting with Strands agents
+- **Comprehensive Tool Selection**: Access to 25+ Strands tools including:
+  - File operations (read/write)
+  - AWS service integration
+  - Python REPL execution
+  - HTTP requests
+  - Image generation
+  - Calculator
+  - Shell commands
+  - And many more
+- **Tool Configuration**: Select which Strands tools the agent can use during experiments
 - **Performance Metrics**: Real-time display of:
   - Latency measurements
   - Token usage statistics
   - Tool execution metrics
   - Agent cycle information
 - **User Sessions**: Persistent conversations across page reloads
-- **Customizable System Prompt**: Modify the AI's behavior through system prompt configuration
+- **Customizable System Prompt**: Modify the agent's behavior through system prompt configuration
+- **Model Parameter Tuning**: Configure Bedrock model settings including:
+  - Model ID
+  - Region
+  - Max tokens
+  - Temperature
+  - Top P
 
 ## Getting Started
 
@@ -70,10 +86,18 @@ This project demonstrates how to build a web application that leverages the Stra
 
 Build and run the application using Docker:
 
+#### With Local File-Based Session Management
 ```bash
 cd app
-docker build -t strands-chatbot .
-docker run -p 8003:8003 -e AWS_REGION=us-west-2 strands-chatbot
+docker build -t strands-playground .
+docker run -p 8003:8003 strands-playground
+```
+
+#### With DynamoDB Session Management
+```bash
+cd app
+docker build -t strands-playground .
+docker run -p 8003:8003 -e TABLE_NAME="strands_playground_session" -e TABLE_REGION="us-west-2" -e PRIMARY_KEY="SessionId" strands-playground
 ```
 
 ### AWS Deployment
@@ -89,31 +113,49 @@ cdk deploy
 
 ## Usage Examples
 
-### Basic Conversation
-Start a conversation with the AI by typing in the chat input field. The AI will respond based on its configured system prompt and available tools.
+### Basic Experimentation
+1. Enter a user ID and click "Start Session"
+2. Type your prompt in the chat input field
+3. The agent will respond based on its configured system prompt and available tools
 
 ### Configuring Tools
-1. Click on the "Tools" panel on the right side
+1. Use the tools panel on the left side
 2. Select or deselect tools from the list
 3. Click "Update" to apply changes
-4. The AI will now use only the selected tools in future conversations
+4. The agent will now use only the selected tools in future interactions
 
-### Viewing Performance Metrics
-The "Metrics Summary" panel displays:
-- Total cycles and average cycle time
-- Tool usage statistics including call count and success rate
-- Token usage (input, output, and total)
-- Total latency measurements
-
-## Customization
+### Customizing Model Parameters
+1. Enter the desired model ID (e.g., "us.anthropic.claude-3-7-sonnet-20250219-v1:0")
+2. Specify the AWS region (e.g., "us-west-2")
+3. Optionally configure max tokens, temperature, and top P values
+4. Click "Update" to apply changes
 
 ### Modifying the System Prompt
 1. Enter a new system prompt in the settings panel
 2. Click "Set System Prompt" to apply changes
-3. The AI's behavior will update according to the new instructions
+3. The agent's behavior will update according to the new instructions
+
+### Working with Files
+To make files accessible via the web interface, instruct the agent to save them to the './static' directory. Files stored in this location will be automatically served at the root URL of the application.
+
+## Session Management
+
+The playground supports two methods for managing conversation sessions:
+
+1. **Local File-Based Storage**: By default, conversations are stored in local files in a `sessions` directory.
+
+2. **DynamoDB Storage**: For persistent storage across container restarts or in production environments, configure the following environment variables:
+   - `TABLE_NAME`: Name of your DynamoDB table
+   - `TABLE_REGION`: AWS region where your DynamoDB table is located
+   - `PRIMARY_KEY`: Primary key name for your DynamoDB table (typically "SessionId")
+
+## Extending the Playground
 
 ### Adding New Tools
-To add custom tools, modify the `available_tools` dictionary in `main.py` and add your tool implementation.
+To add custom tools, modify the `available_tools` dictionary in `main.py` and add your tool implementation along with a description in the `tool_descriptions` dictionary.
+
+### Customizing the Frontend
+The frontend is built with vanilla JavaScript and can be easily modified by editing the files in the `static` directory.
 
 ## License
 
