@@ -29,6 +29,38 @@
             <button id="setSystemPrompt">Set System Prompt</button>
         </div>
         
+        <div class="model-settings-container">
+            <div class="model-settings-header">
+                <p class="field-note">* Required fields | Toggle checkboxes to enable/disable optional fields</p>
+            </div>
+            <div class="model-setting required">
+                <label for="modelId">Model ID: <span class="required-label">*</span></label>
+                <input type="text" id="modelId" placeholder="e.g., us.anthropic.claude-3-7-sonnet-20250219-v1:0" value="us.anthropic.claude-3-7-sonnet-20250219-v1:0" required>
+            </div>
+            <div class="model-setting required">
+                <label for="region">Region: <span class="required-label">*</span></label>
+                <input type="text" id="region" placeholder="e.g., us-west-2" value="us-west-2" required>
+            </div>
+            <div class="optional-settings-row">
+                <div class="model-setting optional">
+                    <input type="checkbox" id="enableMaxTokens" class="toggle-field" checked>
+                    <label for="enableMaxTokens">Max Tokens:</label>
+                    <input type="number" id="maxTokens" placeholder="e.g., 1000" value="1000">
+                </div>
+                <div class="model-setting optional">
+                    <input type="checkbox" id="enableTemperature" class="toggle-field" checked>
+                    <label for="enableTemperature">Temperature:</label>
+                    <input type="number" id="temperature" step="0.1" min="0" max="1" placeholder="e.g., 0.3" value="0.3">
+                </div>
+                <div class="model-setting optional">
+                    <input type="checkbox" id="enableTopP" class="toggle-field" checked>
+                    <label for="enableTopP">Top P:</label>
+                    <input type="number" id="topP" step="0.1" min="0" max="1" placeholder="e.g., 0.9" value="0.9">
+                </div>
+            </div>
+            <button id="updateModelSettings">Update Settings</button>
+        </div>
+        
         <div class="chat-container">
             <div id="chatMessages" class="chat-messages"></div>
             
