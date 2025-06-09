@@ -1,7 +1,7 @@
 [project]
 name = "amazon-neptune"
 version = "0.1.0"
-description = "Add your description here"
+description = "Simple example that shows strands integration with Amazon Neptune"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
