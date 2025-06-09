@@ -1,0 +1,96 @@
+# 🧠 Multi-Agent Data Warehouse Query Optimizer
+
+A multi-agent system to optimize SQL queries on a SQLite database, simulating a data warehouse like Amazon Redshift, using the Strands Agents SDK and Claude 3 Haiku.
+
+---
+## Architecture Diagram
+
+![architecture](./architecture.png)
+  
+---
+## ✨ Features
+
+
+| Feature           | Description                                                                  |
+|-------------------|------------------------------------------------------------------------------|
+| **Agent Structure** | Multi-agent architecture - Sequential                                       |
+| **Native Tools**    | `calculator`                                                                |
+| **Custom Agents**   | `Analyzer Agent`, `Rewriter Agent`, `Validator Agent`                       |
+| **Custom Tools**    | `get_query_execution_plan`, `suggest_optimizations`, `validate_query_cost` |
+| **Model Provider**  | Amazon Bedrock                                                              |
+
+---
+
+## ⚙️ Prerequisites
+
+- Python **3.10+**
+- [`uv`](https://github.com/astral-sh/uv) for dependency management.
+- AWS account with Bedrock access to:
+  - `anthropic.claude-3-haiku-20240307-v1:0` in `us-east-1`.
+- IAM role with the following permission:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["bedrock:InvokeModel"],
+      "Resource": "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-haiku-20250307-v1:0"
+    }
+  ]
+}
+```
+
+## ⚙️ Setup
+
+Install [uv](https://docs.astral.sh/uv/getting-started/installation/).
+
+
+**Initialize the SQLite database:**
+```bash
+uv run scripts/init_db.py
+```
+
+## CLI Commands
+
+The following CLI commands allow interaction with the query optimizer:
+
+### List tables
+
+```bash
+uv run main.py list-tables
+```
+Output
+```json
+{"tables": ["sales_data", "bank"]}
+```
+```bash
+uv run main.py explain-query "SELECT * FROM sales_data WHERE order_date > '2025-01-01'"
+```
+```bash
+uv run main.py create-bank-table
+```
+Output
+```json
+{"status": "success", "message": "Bank table created"}
+```
+
+## Project Structure
+
+| Component            | File(s)                 | Description                                         |
+|----------------------|-------------------------|-----------------------------------------------------|
+| CLI Interface        | `main.py`               | Handles CLI commands for listing, explaining queries, and managing tables. |
+| Workflow Orchestrator| `main.py`               | Coordinates agents and compiles JSON reports.       |
+| Analyzer Agent       | `main.py`, `utils/prompts.py` | Analyzes query execution plans.                     |
+| Rewriter Agent       | `main.py`, `utils/prompts.py` | Suggests query optimizations.                       |
+| Validator Agent      | `main.py`, `utils/prompts.py` | Validates query cost.                               |
+| Database Tools       | `utils/tools.py`         | Manages query plans, optimizations, and cost estimates. |
+| Database Initialization | `scripts/init_db.py`   | Initializes the SQLite database with required tables. |
+| System Prompts       | `utils/prompts.py`       | Defines system prompts for agents.                  |
+| SQLite Database      | `query_optimizer.db`     | Stores database tables.                             |
+| AWS Bedrock Integration | `main.py`              | Configures Claude 3 Haiku model.                    |
+| OpenTelemetry Logging| `main.py`                | Traces execution and logs reports.                  |
+
+
+
