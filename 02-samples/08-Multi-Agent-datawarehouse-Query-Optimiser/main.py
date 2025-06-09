@@ -21,6 +21,7 @@ from dotenv import load_dotenv
 from strands.models import BedrockModel
 from utils.tools import get_query_execution_plan, suggest_optimizations, validate_query_cost
 from utils.prompts import analyzer_prompt, rewriter_prompt, validator_prompt
+from botocore.exceptions import NoCredentialsError, ProfileNotFound
 
 # Load environment variables
 load_dotenv()
@@ -31,21 +32,25 @@ tracer = trace.get_tracer(__name__)
 span_processor = BatchSpanProcessor(ConsoleSpanExporter())
 trace.get_tracer_provider().add_span_processor(span_processor)
 
-# Configure Bedrock model
-aws_access_key = os.getenv("AWS_ACCESS_KEY_ID")
-aws_secret_key = os.getenv("AWS_SECRET_ACCESS_KEY")
-if not aws_access_key or not aws_secret_key:
-    raise ValueError("AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY must be set in .env")
-boto_session = boto3.Session(
-    aws_access_key_id=aws_access_key,
-    aws_secret_access_key=aws_secret_key,
-    region_name="us-east-1"
-)
-model = BedrockModel(
-    boto_session=boto_session,
-    model_id="anthropic.claude-3-haiku-20240307-v1:0",
-    max_tokens=4000
-)
+# Default AWS profile and region
+DEFAULT_PROFILE = "default"
+DEFAULT_REGION = "us-east-1"
+
+try:
+    # Create boto3 session using default profile
+    boto_session = boto3.Session(profile_name=DEFAULT_PROFILE)
+    # Initialize Bedrock client with default region
+    bedrock_client = boto_session.client("bedrock-runtime", region_name=DEFAULT_REGION)
+except ProfileNotFound:
+    raise ValueError(
+        f"AWS profile '{DEFAULT_PROFILE}' not found. Configure it using 'aws configure'."
+    )
+except NoCredentialsError:
+    raise ValueError(
+        f"No AWS credentials found for profile '{DEFAULT_PROFILE}'. Run 'aws configure' to set credentials."
+    )
+except Exception as e:
+    raise ValueError(f"Failed to initialize AWS session: {str(e)}")
 
 # Define agents
 analyzer_agent = Agent(
