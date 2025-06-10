@@ -51,7 +51,7 @@ except Exception as e:
 
 model = BedrockModel(
     boto_session=boto_session,
-    model_id="anthropic.claude-3-haiku-20240307-v1:0",
+    model_id="anthropic.claude-3.5-haiku-20240307-v1:0",
     max_tokens=2000
 )
 
