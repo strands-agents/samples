@@ -33,13 +33,14 @@ trace.get_tracer_provider().add_span_processor(span_processor)
 
 # Default AWS profile and region
 DEFAULT_PROFILE = "default"
-DEFAULT_REGION = "us-east-1"
+REGION = os.environ.get("AWS_REGION", "us-east-1")
+
 
 try:
     # Create boto3 session using default profile
     boto_session = boto3.Session(profile_name=DEFAULT_PROFILE)
     # Initialize Bedrock client
-    bedrock_client = boto_session.client("bedrock-runtime", region_name=DEFAULT_REGION)
+    bedrock_client = boto_session.client("bedrock-runtime", region_name=REGION)
 except ProfileNotFound:
     raise ValueError(f"AWS profile '{DEFAULT_PROFILE}' not found. Configure it using 'aws configure'.")
 except NoCredentialsError:
