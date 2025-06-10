@@ -27,20 +27,8 @@ A multi-agent system to optimize SQL queries on a SQLite database, simulating a 
 - [`uv`](https://github.com/astral-sh/uv) for dependency management.
 - AWS account with Bedrock access to:
   - `anthropic.claude-3-haiku-20240307-v1:0` in `us-east-1`.
-- IAM role with the following permission:
+- Ensure you have relevant permissions to invoke Anthropic Claude 3.5 Haiku on Amazon Bedrock. Follow [guidance](https://strandsagents.com/latest/user-guide/quickstart/#configuring-credentials) to configure credentials correctly
 
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": ["bedrock:InvokeModel"],
-      "Resource": "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-haiku-20250307-v1:0"
-    }
-  ]
-}
-```
 
 ## ⚙️ Setup
 
