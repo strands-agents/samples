@@ -136,7 +136,7 @@ body {
 }
 
 .bedrock-info {
-    margin-top: 10px;
+    margin-top: 5px;
     text-align: center;
     font-size: 0.85rem;
 }
@@ -145,7 +145,7 @@ body {
     color: #0066c0;
     text-decoration: none;
     display: inline-block;
-    padding: 5px;
+    padding: 2px;
     border-radius: 4px;
     transition: background-color 0.2s;
 }
@@ -165,7 +165,7 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 6px;
 }
 
 .model-setting {
@@ -190,8 +190,8 @@ body {
 }
 
 .model-setting label {
-    font-size: 0.9rem;
-    margin-bottom: 5px;
+    font-size: 0.85rem;
+    margin-bottom: 2px;
     color: #333;
 }
 
@@ -217,20 +217,20 @@ body {
 
 .optional-settings-container {
     width: 100%;
-    margin-top: 5px;
-    padding-top: 10px;
+    margin-top: 2px;
+    padding-top: 4px;
 }
 
 .optional-settings-row {
     display: flex;
     flex-direction: row;
-    gap: 15px;
+    gap: 8px;
 }
 
 .optional-setting {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 4px;
     flex: 1;
 }
 
@@ -370,10 +370,10 @@ input:disabled {
 .metrics-container {
     display: flex;
     flex-direction: column;
-    padding: 10px 20px;
+    padding: 6px 15px;
     background-color: #f9f9f9;
     border-top: 1px solid #e0e0e0;
-    gap: 8px;
+    gap: 4px;
 }
 
 .metrics-wrapper {
@@ -401,19 +401,59 @@ input:disabled {
 }
 
 .file-access-info {
-    margin-top: 8px;
-    padding: 10px;
+    margin-top: 4px;
+    padding: 5px 8px;
     background-color: #fff3cd;
     border-left: 4px solid #ffc107;
     border-radius: 4px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: #856404;
-    line-height: 1.4;
+    line-height: 1.2;
 }
 
 .info-icon {
     margin-right: 6px;
     font-size: 1.1rem;
+}
+
+.amazon-q-credit {
+    margin-top: 5px;
+    text-align: center;
+    font-size: 0.9rem;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+.amazon-q-credit code {
+    font-family: monospace;
+    background-color: #f1f1f1;
+    padding: 3px 6px;
+    border-radius: 3px;
+}
+
+.amazon-q-credit .heart {
+    color: #ff0000;
+    display: inline-block;
+    animation: heartbeat 1.5s infinite;
+}
+
+.amazon-q-credit a {
+    display: inline;
+    color: #0066c0;
+    text-decoration: none;
+}
+
+.amazon-q-credit a:hover {
+    text-decoration: underline;
+}
+
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.1); }
+    50% { transform: scale(1); }
+    75% { transform: scale(1.1); }
+    100% { transform: scale(1); }
 }
 
 .metric {
