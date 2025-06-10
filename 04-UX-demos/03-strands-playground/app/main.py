@@ -6,7 +6,7 @@ import boto3
 from botocore.exceptions import ClientError
 from typing import Optional
 
-from strands import Agent
+from strands import Agent, tool
 from strands.models import BedrockModel
 from strands_tools import (
     agent_graph, calculator, cron, current_time, editor, environment, 
@@ -39,6 +39,17 @@ table_name = os.environ.get('TABLE_NAME') or None
 table_region = os.environ.get('TABLE_REGION') or None
 primary_key = os.environ.get('PRIMARY_KEY') or None
 
+# dummy in-line python tool to showcase how to define an inline tool + adding it to the playground
+@tool
+def weather_forecast(city: str, days: int = 3) -> str:
+    """Get weather forecast for a city.
+
+    Args:
+        city: The name of the city
+        days: Number of days for the forecast
+    """
+    return f"Weather forecast for {city} for the next {days} days..."
+
 # Define all available tools
 available_tools = {
     'agent_graph': agent_graph,
@@ -67,7 +78,8 @@ available_tools = {
     'think': think,
     'use_aws': use_aws,
     'use_llm': use_llm,
-    'workflow': workflow
+    'workflow': workflow,
+    'weather_forecast': weather_forecast
 }
 
 # Tool descriptions for better user understanding
