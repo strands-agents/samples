@@ -42,8 +42,6 @@ aws iam create-service-linked-role --aws-service-name rds.amazonaws.com
 aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
 ```
 
-aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
-
 ## Deploy the Back-End Services with AWS CDK
 
 Navigate to the CDK project folder (cdk-strands-data-analyst-assistant) and install the required npm dependencies::
