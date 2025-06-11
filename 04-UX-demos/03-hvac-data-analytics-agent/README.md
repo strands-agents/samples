@@ -141,4 +141,6 @@ Example queries:
 - "What was the max temperature in Zone 5 in first floor yesterday?"
 - "How does this compre with the day before yesterday?"
 
+![Demo](demo.gif)
+
 
