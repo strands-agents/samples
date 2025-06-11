@@ -82,7 +82,7 @@ The solution consists of several key components:
    cdk deploy --all
    ```
 
-Note: The required dependencies for the Lambda functions (strands, boto3, requests) are automatically included in the Lambda layers and deployed as part of the CDK stack.
+Note: The required dependencies for the Lambda functions (strands, boto3, requests) are included as pre-packaged zip files in the `layers` directory. These will be automatically used during deployment.
 
 ## Project Structure
 

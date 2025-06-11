@@ -30,7 +30,7 @@ class AgentStack(Stack):
         lambda_layer = lambda_.LayerVersion(
             self, "STLambdaLayer",
             layer_version_name="STLayer",
-            code=lambda_.Code.from_asset("code/lambda/layer-strands/lambda_layer"),
+            code=lambda_.Code.from_asset("layers/layer-strands.zip"),
             compatible_runtimes=[lambda_.Runtime.PYTHON_3_12]
         )
 

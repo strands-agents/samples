@@ -22,7 +22,7 @@ class ToolApiStack(Stack):
         lambda_layer = lambda_.LayerVersion(
             self, "UtilLambdaLayer",
             layer_version_name="UtilLayer",
-            code=lambda_.Code.from_asset("code/lambda/layer-util/lambda_layer"),
+            code=lambda_.Code.from_asset("layers/layer-util.zip"),
             compatible_runtimes=[lambda_.Runtime.PYTHON_3_13]
         )
 
