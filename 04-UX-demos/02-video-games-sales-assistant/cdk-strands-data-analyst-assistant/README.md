@@ -36,11 +36,23 @@ Before you begin, ensure you have:
 aws iam create-service-linked-role --aws-service-name rds.amazonaws.com
 ```
 
-## Deploy the Back-End Services with AWS CDK
-
-Navigate to the CDK project folder and execute:
+* Authenticate with Amazon ECR Public registry to pull required container images:
 
 ```bash
+aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
+```
+
+## Deploy the Back-End Services with AWS CDK
+
+Navigate to the CDK project folder (cdk-strands-data-analyst-assistant) and install the required npm dependencies::
+
+``` bash
+npm install
+```
+
+Deploy the infrastructure stack to AWS:
+
+``` bash
 cdk deploy
 ```
 
@@ -59,6 +71,10 @@ After deployment completes, the following resources will be created:
 - Aurora PostgreSQL Cluster with RDS Proxy
 - S3 bucket for data import
 - Secrets Manager secret for database credentials
+- DynamoDB Tables for tracking questions query details and user conversations
+
+> [!IMPORTANT] 
+> Enhance AI safety and compliance by implementing [Amazon Bedrock Guardrails](https://aws.amazon.com/bedrock/guardrails/) for your AI applications with the seamless integration offered by **[Strands Agents SDK](https://strandsagents.com/latest/user-guide/safety-security/guardrails/)**.
 
 ## Load Sample Data into PostgreSQL Database
 
