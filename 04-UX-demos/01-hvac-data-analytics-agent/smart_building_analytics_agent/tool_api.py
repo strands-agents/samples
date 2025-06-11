@@ -23,7 +23,7 @@ class ToolApiStack(Stack):
             self, "UtilLambdaLayer",
             layer_version_name="UtilLayer",
             code=lambda_.Code.from_asset("code/lambda/layer-util/lambda_layer"),
-            compatible_runtimes=[lambda_.Runtime.PYTHON_3_12]
+            compatible_runtimes=[lambda_.Runtime.PYTHON_3_13]
         )
 
         # Create Authorizer Function
@@ -39,13 +39,13 @@ class ToolApiStack(Stack):
                     "logs:CreateLogStream",
                     "logs:PutLogEvents"
                 ],
-                resources=[f"arn:aws:logs:{self.region}:{self.account}:log-group:/aws/lambda/*:*"]
+                resources=[f"arn:aws:logs:{self.region}:{self.account}:log-group:/aws/lambda/*-ToolApiAuthorizerFunction*"]
             )
         )
 
         authorizer_function = lambda_.Function(
             self, "ToolApiAuthorizerFunction",
-            runtime=lambda_.Runtime.PYTHON_3_12,
+            runtime=lambda_.Runtime.PYTHON_3_13,
             handler="index.lambda_handler",
             code=lambda_.Code.from_asset("code/lambda/SmartBuildingToolAuthorizer"),
             environment={
@@ -61,43 +61,42 @@ class ToolApiStack(Stack):
 
         
 
-        # Common role creation function
-        def create_lambda_role(role_id: str, policy_name: str) -> iam.Role:
-            role = iam.Role(
-                self, role_id,
-                assumed_by=iam.ServicePrincipal("lambda.amazonaws.com"),
-            )
-            
-            
-            
-            role.add_to_policy(iam.PolicyStatement(
-                effect=iam.Effect.ALLOW,
-                actions=[
-                    "logs:CreateLogGroup",
-                    "logs:CreateLogStream",
-                    "logs:PutLogEvents"
-                ],
-                resources=[f"arn:aws:logs:{Aws.REGION}:{Aws.ACCOUNT_ID}:log-group:/aws/lambda/*:*"]
-            ))
-            
-            return role
-
-        # Create Lambda functions
-        entities_role = create_lambda_role(
-            "ToolEntitiesAPIFunctionRole",
-            "ToolEntitiesAPIFunctionPolicy"
+        # Create entities Lambda role
+        entities_role = iam.Role(
+            self, "ToolEntitiesAPIFunctionRole",
+            assumed_by=iam.ServicePrincipal("lambda.amazonaws.com"),
         )
+        
+        entities_role.add_to_policy(iam.PolicyStatement(
+            effect=iam.Effect.ALLOW,
+            actions=[
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            resources=[f"arn:aws:logs:{self.region}:{self.account}:log-group:/aws/lambda/*-ToolEntitiesAPIFunction*"]
+        ))
 
-        timeseries_role = create_lambda_role(
-            "ToolTimeseriesAPIFunctionRole",
-            "ToolTimeseriesAPIFunctionPolicy"
+        # Create timeseries Lambda role
+        timeseries_role = iam.Role(
+            self, "ToolTimeseriesAPIFunctionRole",
+            assumed_by=iam.ServicePrincipal("lambda.amazonaws.com"),
         )
+        
+        timeseries_role.add_to_policy(iam.PolicyStatement(
+            effect=iam.Effect.ALLOW,
+            actions=[
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            resources=[f"arn:aws:logs:{self.region}:{self.account}:log-group:/aws/lambda/*-ToolTimeseriesAPIFunction*"]
+        ))
 
         # Create Lambda functions
         entities_function = lambda_.Function(
             self, "ToolEntitiesAPIFunction",
-            function_name="ToolEntitiesAPI",
-            runtime=lambda_.Runtime.PYTHON_3_12,
+            runtime=lambda_.Runtime.PYTHON_3_13,
             handler="index.lambda_handler",
             role=entities_role,
             code=lambda_.Code.from_asset("code/lambda/SmartBuildingToolEntitiesApi")
@@ -105,8 +104,7 @@ class ToolApiStack(Stack):
 
         timeseries_function = lambda_.Function(
             self, "ToolTimeseriesAPIFunction",
-            function_name="ToolTimeseriesAPI",
-            runtime=lambda_.Runtime.PYTHON_3_12,
+            runtime=lambda_.Runtime.PYTHON_3_13,
             handler="index.lambda_handler",
             role=timeseries_role,
             code=lambda_.Code.from_asset("code/lambda/SmartBuildingToolTimeseriesApi")

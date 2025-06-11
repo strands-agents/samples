@@ -60,7 +60,7 @@ class AgentStack(Stack):
                 "execute-api:Invoke",
                 "execute-api:ManageConnections"
             ],
-            resources=[f"arn:aws:execute-api:{Stack.of(self).region}:{Stack.of(self).account}:{websocket_api.ref}/*/*/*/*"]
+            resources=[f"arn:aws:execute-api:{Stack.of(self).region}:{Stack.of(self).account}:{websocket_api.ref}/$default/POST/@connections/*"]
         ))
 
         # Add S3 permissions to Lambda role
@@ -74,7 +74,7 @@ class AgentStack(Stack):
             ],
             resources=[
                 agent_bucket.bucket_arn,
-                f"{agent_bucket.bucket_arn}/*"
+                f"{agent_bucket.bucket_arn}/threads/*"
             ]
         ))
 
@@ -85,7 +85,7 @@ class AgentStack(Stack):
                 "logs:CreateLogStream",
                 "logs:PutLogEvents"
             ],
-            resources=[f"arn:aws:logs:{self.region}:{self.account}:log-group:/aws/lambda/*:*"]
+            resources=[f"arn:aws:logs:{self.region}:{self.account}:log-group:/aws/lambda/" + agent_main_function_name + "*"]
         ))
 
         # Create Lambda Function

@@ -10,8 +10,13 @@ from smart_building_analytics_agent.smart_building_analytics_agent_stack import 
 
 
 app = cdk.App()
-BaseAgentStack(app, "BaseAgentStack",
+stack = BaseAgentStack(app, "BaseAgentStack",
                     env=cdk.Environment(account=os.getenv('CDK_DEFAULT_ACCOUNT'), region=os.getenv('CDK_DEFAULT_REGION')),
                  )
+
+
+
+# Add CDK-nag to check for best practices AFTER adding suppressions
+#Aspects.of(app).add(AwsSolutionsChecks(verbose=True))
 
 app.synth()

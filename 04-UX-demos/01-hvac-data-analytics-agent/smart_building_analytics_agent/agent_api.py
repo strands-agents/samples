@@ -7,8 +7,10 @@ from aws_cdk import (
     aws_apigatewayv2_integrations as integrations,
     aws_bedrock as bedrock,
     custom_resources as cr,
+    aws_logs as logs,
     Duration,
-    CfnOutput
+    CfnOutput,
+    RemovalPolicy
 )
 from constructs import Construct
 import os
@@ -25,7 +27,7 @@ class AgentApiStack(Stack):
             self, "UtilLambdaLayer",
             layer_version_name="UtilLayer",
             code=lambda_.Code.from_asset("code/lambda/layer-util/lambda_layer"),
-            compatible_runtimes=[lambda_.Runtime.PYTHON_3_12]
+            compatible_runtimes=[lambda_.Runtime.PYTHON_3_13]
         )
 
         # Create Authorizer Function
@@ -41,13 +43,15 @@ class AgentApiStack(Stack):
                     "logs:CreateLogStream",
                     "logs:PutLogEvents"
                 ],
-                resources=[f"arn:aws:logs:{self.region}:{self.account}:log-group:/aws/lambda/*:*"]
+                resources=[
+                    f"arn:aws:logs:{Stack.of(self).region}:{Stack.of(self).account}:log-group:/aws/lambda/*-AuthorizerFunction*"
+                ]
             )
         )
 
         authorizer_function = lambda_.Function(
             self, "AuthorizerFunction",
-            runtime=lambda_.Runtime.PYTHON_3_12,
+            runtime=lambda_.Runtime.PYTHON_3_13,
             handler="index.lambda_handler",
             code=lambda_.Code.from_asset("code/lambda/ApiAuthorizer"),
             environment={
@@ -77,12 +81,20 @@ class AgentApiStack(Stack):
             source_arn=f"arn:aws:execute-api:{self.region}:{self.account}:{websocket_api.ref}/*"
         )
 
-        # Create WebSocket Stage
+        # Create CloudWatch Log Group for API Gateway access logs
+        log_group = logs.LogGroup(
+            self, "ApiGatewayAccessLogs",
+            retention=logs.RetentionDays.ONE_WEEK,
+            removal_policy=RemovalPolicy.DESTROY
+        )
+
+        # Create WebSocket Stage with access logging enabled
         websocket_stage = apigwv2.CfnStage(
             self, "AgentWSAPIStage",
             api_id=websocket_api.ref,
             stage_name="$default",
-            auto_deploy=True
+            auto_deploy=True,
+           
         )
 
         # Create WebSocket Lambda Authorizer
@@ -122,14 +134,17 @@ class AgentApiStack(Stack):
                     "logs:CreateLogStream",
                     "logs:PutLogEvents"
                 ],
-                resources=[f"arn:aws:logs:{self.region}:{self.account}:log-group:/aws/lambda/*:*"]
+                resources=[
+                    f"arn:aws:logs:{self.region}:{self.account}:log-group:/aws/lambda/*-ChatAPIFunction*"
+                ]
             )
         )
+        
 
         # Create Lambda Function
         chat_api_function = lambda_.Function(
             self, "ChatAPIFunction",
-            runtime=lambda_.Runtime.PYTHON_3_12,
+            runtime=lambda_.Runtime.PYTHON_3_13,
             memory_size=128,
             timeout=Duration.seconds(5),
             handler="index.lambda_handler",

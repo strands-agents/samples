@@ -63,7 +63,7 @@ class CognitoStack(Stack):
 
         # Create Identity Pool
         identity_pool = cognito.CfnIdentityPool(self, "IdentityPool",
-            allow_unauthenticated_identities=True,
+            allow_unauthenticated_identities=False,
             cognito_identity_providers=[
                 cognito.CfnIdentityPool.CognitoIdentityProviderProperty(
                     client_id=user_pool_client.user_pool_client_id,
@@ -88,48 +88,24 @@ class CognitoStack(Stack):
             )
         )
 
-        
-
-        # Create Unauthenticated Role
-        unauthenticated_role = iam.Role(self, "UnauthenticatedRole",
-            assumed_by=iam.FederatedPrincipal(
-                "cognito-identity.amazonaws.com",
-                conditions={
-                    "StringEquals": {
-                        "cognito-identity.amazonaws.com:aud": identity_pool.ref
-                    },
-                    "ForAnyValue:StringLike": {
-                        "cognito-identity.amazonaws.com:amr": "unauthenticated"
-                    }
-                },
-                assume_role_action="sts:AssumeRoleWithWebIdentity"
-            )
-        )
-
         # Attach Roles to Identity Pool
         cognito.CfnIdentityPoolRoleAttachment(self, "RoleAttachment",
             identity_pool_id=identity_pool.ref,
             roles={
-                "authenticated": authenticated_role.role_arn,
-                "unauthenticated": unauthenticated_role.role_arn
+                "authenticated": authenticated_role.role_arn
             }
         )
 
 
-        # Create Lambda function to create default user
-        create_user_function = lambda_.Function(
-            self, "CreateDefaultUserFunction",
-            runtime=lambda_.Runtime.PYTHON_3_12,
-            handler="index.lambda_handler",
-            code=lambda_.Code.from_asset("code/lambda/BootstrapCognito"),
-            timeout=Duration.minutes(1),
-            environment={
-                'USER_POOL_ID': user_pool.user_pool_id
-            }
+        # Create Lambda Role
+        create_user_function_role = iam.Role(
+            self, "CreateUserFunctionRole",
+            assumed_by=iam.ServicePrincipal("lambda.amazonaws.com")
+        
         )
 
         # Grant permissions to Lambda to manage Cognito users
-        create_user_function.add_to_role_policy(
+        create_user_function_role.add_to_policy(
             iam.PolicyStatement(
                 actions=[
                     'cognito-idp:AdminCreateUser',
@@ -138,6 +114,34 @@ class CognitoStack(Stack):
                 resources=[user_pool.user_pool_arn]
             )
         )
+
+        create_user_function_role.add_to_policy(
+            iam.PolicyStatement(
+                effect=iam.Effect.ALLOW,
+                actions=[
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                ],
+                resources=[
+                        f"arn:aws:logs:{Stack.of(self).region}:{Stack.of(self).account}:log-group:/aws/lambda/*-CreateDefaultUserFunction*"
+                    ]
+            )
+        )
+
+        # Create Lambda function to create default user
+        create_user_function = lambda_.Function(
+            self, "CreateDefaultUserFunction",
+            runtime=lambda_.Runtime.PYTHON_3_13,
+            handler="index.lambda_handler",
+            code=lambda_.Code.from_asset("code/lambda/BootstrapCognito"),
+            timeout=Duration.minutes(1),
+            environment={
+                'USER_POOL_ID': user_pool.user_pool_id
+            },
+            role = create_user_function_role
+        )
+        
 
         # Create Custom Resource to trigger the Lambda
         custom_resource = CustomResource(
