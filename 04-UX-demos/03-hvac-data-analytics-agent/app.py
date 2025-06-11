@@ -10,7 +10,7 @@ from smart_building_analytics_agent.smart_building_analytics_agent_stack import 
 
 
 app = cdk.App()
-stack = BaseAgentStack(app, "BaseAgentStack",
+stack = BaseAgentStack(app, "BIAgent",
                     env=cdk.Environment(account=os.getenv('CDK_DEFAULT_ACCOUNT'), region=os.getenv('CDK_DEFAULT_REGION')),
                  )
 
