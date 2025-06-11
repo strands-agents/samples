@@ -1,11 +1,11 @@
 - Terraform script deploys the EC2 instance and attaches a read only role to it.
-    Intitialize terraform :terraform init
-    Plan deployment : terraform plan (ensure all necessary resources are being created)
-    Deploy resources : terraform deploy
+    - Intitialize terraform :terraform init
+    -  Plan deployment : terraform plan (ensure all necessary resources are being created)
+    - Deploy resources : terraform deploy
 
 Once deployed, copy the files in the aws-audit-assistant folder to /home/ec2-user/ folder
-    Copy the following files to the instance
-        Command : 
+    - Copy the following files to the instance
+        - Command : 
             scp -i ./audit-assistant-key.pem /path/to/file ec2-user@<instance public ip>:/home/ec2-user/
 
         Files:
