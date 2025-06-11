@@ -1,3 +1,5 @@
+## ⚠️⚠️ PLEASE READ :  The script agent creates and executes the script that may perform changes to your environment, always execute it from a sandbox (sample attached in sandbox folder) with readonly permissions to avoid any issues ⚠️⚠️
+
 from strands import Agent,tool
 from strands.models.bedrock import BedrockModel
 from strands_tools import calculator, file_read, shell,http_request,python_repl, editor, journal

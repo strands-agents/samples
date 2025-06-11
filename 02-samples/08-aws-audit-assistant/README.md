@@ -1,5 +1,8 @@
 #  AWS Audit Assistant: Automated Resource Compliance Checker
 
+⚠️⚠️ PLEASE READ :  The script agent creates and executes the script that may perform changes to your environment, always execute it from a sandbox with readonly permissions. Under sandbox folder a terraform script is provided that creates an ec2 instances and attaches readonly IAM role to it, use it to audit the resources.
+⚠️⚠️
+
 Imagine having a smart, always-on audit partner to check your AWS resources against best practices. I’m not just a tool—I’m your AI-powered guide, ensuring your cloud setup meets top security and efficiency standards.
 
 ![architecture](./architecture.png)
