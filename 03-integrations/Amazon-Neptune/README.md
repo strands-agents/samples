@@ -23,9 +23,14 @@ Within this directory there are several example Python files:
 1. Install [uv](https://docs.astral.sh/uv/getting-started/installation/).
 2. Configure AWS credentials, follow instructions [here](https://strandsagents.com/latest/user-guide/quickstart/#configuring-credentials).
 3. Create a .env file using [.env.template](./.env.template)
-3. Run the example using `uv run <SELECT EXAMPLE FILE TO RUN> <PROMPT>`.
-    * uv run use_aws_example.py "Run this query: MATCH (n) RETURN n LIMIT 10"   
-    * uv run query_mcp_example.py "Find me a flight from Seattle to New York that goes through Chicago?"   
-    * uv run memory_kg_example.py "I work on the Amazon Neptune team.  I am currently building and testing MCP servers with the Strands Agent SDK to show how you can Amazon Neptune with an agent framework to store memories in the form of a knowledge graph.  I am interested in what key considerations I should take into account?"   
+
+## Sample Prompts 
+Run the example using `uv run <SELECT EXAMPLE FILE TO RUN> <PROMPT>`.
+
+* `uv run use_aws_example.py "Run this query: MATCH (n) RETURN n LIMIT 10"`
+
+* `uv run query_mcp_example.py "Find me a flight from Seattle to New York that goes through Chicago?"`
+
+* `uv run memory_kg_example.py "I work on the Amazon Neptune team.  I am currently building and testing MCP servers with the Strands Agent SDK to show how you can Amazon Neptune with an agent framework to store memories in the form of a knowledge graph.  I am interested in what key considerations I should take into account?"`
 
 
