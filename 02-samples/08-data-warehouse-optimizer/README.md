@@ -28,7 +28,7 @@ A multi-agent system to optimize SQL queries on a SQLite database, simulating a 
 - AWS account with Bedrock access to:
   - `anthropic.claude-3-haiku-20240307-v1:0` in `us-east-1`.
 - Ensure you have relevant permissions to invoke Anthropic Claude 3.5 Haiku on Amazon Bedrock. Follow [guidance](https://strandsagents.com/latest/user-guide/quickstart/#configuring-credentials) to configure credentials correctly
-
+- Specify the region using .env file, create the file using [.env.template](./.env.template).
 
 ## ⚙️ Setup
 
