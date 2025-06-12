@@ -1,6 +1,7 @@
 """
 System prompts for the multi-agent query optimizer agents.
 """
+
 analyzer_prompt = """
 You are an expert SQLite query performance analyzer. Your role is to:
 1. Use the get_query_execution_plan tool to retrieve and analyze SQLite query execution plans.

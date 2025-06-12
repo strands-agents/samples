@@ -3,26 +3,29 @@ Multi-Agent Data Warehouse Query Optimizer using SQLite and AWS Bedrock.
 
 Main entry point with CLI interface.
 """
-import sqlite3
-import json
-import uuid
-import boto3
-import re
-import os
-import random
-import click
-from typing import List, Dict, Any
-from strands import Agent, tool
-from strands_tools import calculator
+
+from botocore.exceptions import NoCredentialsError, ProfileNotFound
 from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
-from dotenv import load_dotenv
+from strands import Agent
+from strands_tools import calculator
 from strands.models import BedrockModel
-from botocore.exceptions import NoCredentialsError, ProfileNotFound
-from utils.tools import get_query_execution_plan, suggest_optimizations, validate_query_cost
+from typing import Dict, Any
 from utils.prompts import analyzer_prompt, rewriter_prompt, validator_prompt
-
+from utils.tools import (
+    get_query_execution_plan,
+    suggest_optimizations,
+    validate_query_cost,
+)
+import boto3
+import click
+import json
+import os
+import random
+import re
+import sqlite3
+import uuid
 
 # Initialize OpenTelemetry
 trace.set_tracer_provider(TracerProvider())
@@ -42,9 +45,13 @@ try:
     # Initialize Bedrock client
     bedrock_client = boto_session.client("bedrock-runtime", region_name=REGION)
 except ProfileNotFound:
-    raise ValueError(f"AWS profile '{DEFAULT_PROFILE}' not found. Configure it using 'aws configure'.")
+    raise ValueError(
+        f"AWS profile '{DEFAULT_PROFILE}' not found. Configure it using 'aws configure'."
+    )
 except NoCredentialsError:
-    raise ValueError(f"No AWS credentials found for profile '{DEFAULT_PROFILE}'. Run 'aws configure' to set credentials.")
+    raise ValueError(
+        f"No AWS credentials found for profile '{DEFAULT_PROFILE}'. Run 'aws configure' to set credentials."
+    )
 except Exception as e:
     raise ValueError(f"Failed to initialize AWS session: {str(e)}")
 
@@ -52,25 +59,24 @@ except Exception as e:
 model = BedrockModel(
     boto_session=boto_session,
     model_id="anthropic.claude-3-5-haiku-20241022-v1:0",
-    max_tokens=2000
+    max_tokens=2000,
 )
 
 # Define agents
 analyzer_agent = Agent(
     model=model,
     system_prompt=analyzer_prompt,
-    tools=[get_query_execution_plan, calculator]
+    tools=[get_query_execution_plan, calculator],
 )
 rewriter_agent = Agent(
     model=model,
     system_prompt=rewriter_prompt,
-    tools=[suggest_optimizations, calculator]
+    tools=[suggest_optimizations, calculator],
 )
 validator_agent = Agent(
-    model=model,
-    system_prompt=validator_prompt,
-    tools=[validate_query_cost, calculator]
+    model=model, system_prompt=validator_prompt, tools=[validate_query_cost, calculator]
 )
+
 
 def optimize_query(query: str) -> Dict[str, Any]:
     """
@@ -87,30 +93,52 @@ def optimize_query(query: str) -> Dict[str, Any]:
             analysis_result = analyzer_agent(f"Analyze query: {query}")
         except Exception as e:
             print(f"Bedrock error in analyzer_agent: {str(e)}")
-            analysis = {"query_id": str(uuid.uuid4()), "status": "error", "message": str(e)}
+            analysis = {
+                "query_id": str(uuid.uuid4()),
+                "status": "error",
+                "message": str(e),
+            }
         else:
             try:
                 analysis_text = (
-                    analysis_result if isinstance(analysis_result, str)
-                    else analysis_result.text if hasattr(analysis_result, 'text')
-                    else analysis_result.messages[-1].get('content', '{}') if hasattr(analysis_result, 'messages') and analysis_result.messages
-                    else '{}'
+                    analysis_result
+                    if isinstance(analysis_result, str)
+                    else (
+                        analysis_result.text
+                        if hasattr(analysis_result, "text")
+                        else (
+                            analysis_result.messages[-1].get("content", "{}")
+                            if hasattr(analysis_result, "messages")
+                            and analysis_result.messages
+                            else "{}"
+                        )
+                    )
                 )
                 try:
                     analysis = json.loads(analysis_text)
                 except json.JSONDecodeError:
                     query_id_match = re.search(r"Query ID: ([\w-]+)", analysis_text)
-                    query_id = query_id_match.group(1) if query_id_match else str(uuid.uuid4())
-                    bottlenecks = ["Full table scan detected"] if "full table scan" in analysis_text.lower() else []
+                    query_id = (
+                        query_id_match.group(1) if query_id_match else str(uuid.uuid4())
+                    )
+                    bottlenecks = (
+                        ["Full table scan detected"]
+                        if "full table scan" in analysis_text.lower()
+                        else []
+                    )
                     analysis = {
                         "query_id": query_id,
                         "status": "success",
                         "summary": analysis_text,
-                        "bottlenecks": bottlenecks
+                        "bottlenecks": bottlenecks,
                     }
             except Exception as e:
                 print(f"Error parsing analysis result: {str(e)}")
-                analysis = {"query_id": str(uuid.uuid4()), "status": "error", "message": str(e)}
+                analysis = {
+                    "query_id": str(uuid.uuid4()),
+                    "status": "error",
+                    "message": str(e),
+                }
 
         rewriter_input = f"Query: {query}\nExecution Plan: {json.dumps(analysis)}"
         try:
@@ -121,21 +149,36 @@ def optimize_query(query: str) -> Dict[str, Any]:
         else:
             try:
                 suggestions_text = (
-                    rewrite_result if isinstance(rewrite_result, str)
-                    else rewrite_result.text if hasattr(rewrite_result, 'text')
-                    else rewrite_result.messages[-1].get('content', '{}') if hasattr(rewrite_result, 'messages') and rewrite_result.messages
-                    else '{}'
+                    rewrite_result
+                    if isinstance(rewrite_result, str)
+                    else (
+                        rewrite_result.text
+                        if hasattr(rewrite_result, "text")
+                        else (
+                            rewrite_result.messages[-1].get("content", "{}")
+                            if hasattr(rewrite_result, "messages")
+                            and rewrite_result.messages
+                            else "{}"
+                        )
+                    )
                 )
                 suggestions = json.loads(suggestions_text)
             except json.JSONDecodeError:
-                suggestions = {"status": "error", "message": "Invalid JSON from rewriter"}
+                suggestions = {
+                    "status": "error",
+                    "message": "Invalid JSON from rewriter",
+                }
             except Exception as e:
                 print(f"Error parsing rewrite result: {str(e)}")
                 suggestions = {"status": "error", "message": str(e)}
 
         rewritten_query = next(
-            (s['suggestion'] for s in suggestions.get('suggestions', []) if s['type'] == 'query_rewrite'),
-            query
+            (
+                s["suggestion"]
+                for s in suggestions.get("suggestions", [])
+                if s["type"] == "query_rewrite"
+            ),
+            query,
         )
         try:
             validation_result = validator_agent(f"Validate query: {rewritten_query}")
@@ -145,24 +188,35 @@ def optimize_query(query: str) -> Dict[str, Any]:
         else:
             try:
                 validation_text = (
-                    validation_result if isinstance(validation_result, str)
-                    else validation_result.text if hasattr(validation_result, 'text')
-                    else validation_result.messages[-1].get('content', '{}') if hasattr(validation_result, 'messages') and validation_result.messages
-                    else '{}'
+                    validation_result
+                    if isinstance(validation_result, str)
+                    else (
+                        validation_result.text
+                        if hasattr(validation_result, "text")
+                        else (
+                            validation_result.messages[-1].get("content", "{}")
+                            if hasattr(validation_result, "messages")
+                            and validation_result.messages
+                            else "{}"
+                        )
+                    )
                 )
                 validation = json.loads(validation_text)
             except json.JSONDecodeError:
-                validation = {"status": "error", "message": "Invalid JSON from validator"}
+                validation = {
+                    "status": "error",
+                    "message": "Invalid JSON from validator",
+                }
             except Exception as e:
                 print(f"Error parsing validation result: {str(e)}")
                 validation = {"status": "error", "message": str(e)}
 
         report = {
-            'query_id': analysis.get('query_id', str(uuid.uuid4())),
-            'original_query': query,
-            'analysis': analysis,
-            'suggestions': suggestions,
-            'validation': validation
+            "query_id": analysis.get("query_id", str(uuid.uuid4())),
+            "original_query": query,
+            "analysis": analysis,
+            "suggestions": suggestions,
+            "validation": validation,
         }
 
         span = trace.get_current_span()
@@ -170,10 +224,12 @@ def optimize_query(query: str) -> Dict[str, Any]:
 
         return report
 
+
 @click.group()
 def cli():
     """CLI for interacting with the query optimizer."""
     pass
+
 
 @cli.command()
 def list_tables():
@@ -185,6 +241,7 @@ def list_tables():
     conn.close()
     print(json.dumps({"tables": tables}, indent=2))
 
+
 @cli.command()
 @click.argument("query")
 def explain_query(query):
@@ -192,20 +249,24 @@ def explain_query(query):
     result = optimize_query(query)
     print(json.dumps(result, indent=2))
 
+
 @cli.command()
 def create_bank_table():
     """Create a bank table with id and balance columns."""
     conn = sqlite3.connect("query_optimizer.db")
     cursor = conn.cursor()
-    cursor.execute("""
+    cursor.execute(
+        """
         CREATE TABLE IF NOT EXISTS bank (
             id INTEGER PRIMARY KEY,
             balance REAL NOT NULL
         )
-    """)
+    """
+    )
     conn.commit()
     conn.close()
     print(json.dumps({"status": "success", "message": "Bank table created"}, indent=2))
+
 
 @cli.command()
 def fill_bank_table():
@@ -214,29 +275,39 @@ def fill_bank_table():
     cursor = conn.cursor()
     cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='bank';")
     if not cursor.fetchone():
-        print(json.dumps({"status": "error", "message": "Bank table does not exist"}, indent=2))
+        print(
+            json.dumps(
+                {"status": "error", "message": "Bank table does not exist"}, indent=2
+            )
+        )
         conn.close()
         return
-    
+
     total = 1000.0
     balances = [random.uniform(0, total) for _ in range(99)]
     balances.append(total - sum(balances))
     random.shuffle(balances)
-    
+
     cursor.execute("DELETE FROM bank")
     cursor.executemany(
         "INSERT INTO bank (id, balance) VALUES (?, ?)",
-        [(i + 1, balance) for i, balance in enumerate(balances)]
+        [(i + 1, balance) for i, balance in enumerate(balances)],
     )
     conn.commit()
-    
+
     cursor.execute("SELECT SUM(balance) FROM bank")
     actual_sum = cursor.fetchone()[0]
     conn.close()
-    print(json.dumps({
-        "status": "success",
-        "message": f"Inserted 100 rows into bank table. Total balance: {actual_sum}"
-    }, indent=2))
+    print(
+        json.dumps(
+            {
+                "status": "success",
+                "message": f"Inserted 100 rows into bank table. Total balance: {actual_sum}",
+            },
+            indent=2,
+        )
+    )
+
 
 if __name__ == "__main__":
     cli()

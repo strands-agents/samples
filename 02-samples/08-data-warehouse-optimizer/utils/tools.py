@@ -1,12 +1,14 @@
 """
 SQLite database tools for query optimization.
 """
+
 import sqlite3
 import json
 import uuid
 from typing import List
 from strands import tool
 from opentelemetry import trace
+
 
 @tool
 def get_query_execution_plan(query: str) -> str:
@@ -26,28 +28,29 @@ def get_query_execution_plan(query: str) -> str:
             cursor.execute(f"EXPLAIN QUERY PLAN {query}")
             plan = cursor.fetchall()
             conn.close()
-            return json.dumps({
-                'status': 'success',
-                'query_id': str(uuid.uuid4()),
-                'execution_plan': plan,
-                'bottlenecks': analyze_plan(plan)
-            })
+            return json.dumps(
+                {
+                    "status": "success",
+                    "query_id": str(uuid.uuid4()),
+                    "execution_plan": plan,
+                    "bottlenecks": analyze_plan(plan),
+                }
+            )
         except sqlite3.Error as e:
-            return json.dumps({
-                'status': 'error',
-                'message': str(e)
-            })
+            return json.dumps({"status": "error", "message": str(e)})
+
 
 def analyze_plan(plan: List) -> List[str]:
     """Identify bottlenecks in SQLite execution plan."""
     bottlenecks = []
     for step in plan:
         detail = step[3].lower()
-        if 'scan' in detail and 'index' not in detail:
+        if "scan" in detail and "index" not in detail:
             bottlenecks.append("Full table scan detected")
-        if 'temporary table' in detail:
+        if "temporary table" in detail:
             bottlenecks.append("Use of temporary table detected")
     return bottlenecks
+
 
 @tool
 def suggest_optimizations(query: str, execution_plan: str) -> str:
@@ -65,30 +68,31 @@ def suggest_optimizations(query: str, execution_plan: str) -> str:
         try:
             plan_data = json.loads(execution_plan)
             suggestions = []
-            if 'full table scan' in str(plan_data.get('bottlenecks', [])):
-                suggestions.append({
-                    'type': 'schema_change',
-                    'suggestion': 'Create index on filtered columns (e.g., customer_id, order_date)'
-                })
-                suggestions.append({
-                    'type': 'query_rewrite',
-                    'suggestion': f"Use selective filters: "
-                                  f"{query.replace('SELECT *', 'SELECT order_id, customer_id')}"
-                })
-            if 'temporary table' in str(plan_data.get('bottlenecks', [])):
-                suggestions.append({
-                    'type': 'query_rewrite',
-                    'suggestion': 'Simplify joins/subqueries to avoid temporary tables'
-                })
-            return json.dumps({
-                'status': 'success',
-                'suggestions': suggestions
-            })
+            if "full table scan" in str(plan_data.get("bottlenecks", [])):
+                suggestions.append(
+                    {
+                        "type": "schema_change",
+                        "suggestion": "Create index on filtered columns (e.g., customer_id, order_date)",
+                    }
+                )
+                suggestions.append(
+                    {
+                        "type": "query_rewrite",
+                        "suggestion": f"Use selective filters: "
+                        f"{query.replace('SELECT *', 'SELECT order_id, customer_id')}",
+                    }
+                )
+            if "temporary table" in str(plan_data.get("bottlenecks", [])):
+                suggestions.append(
+                    {
+                        "type": "query_rewrite",
+                        "suggestion": "Simplify joins/subqueries to avoid temporary tables",
+                    }
+                )
+            return json.dumps({"status": "success", "suggestions": suggestions})
         except Exception as e:
-            return json.dumps({
-                'status': 'error',
-                'message': str(e)
-            })
+            return json.dumps({"status": "error", "message": str(e)})
+
 
 @tool
 def validate_query_cost(query: str) -> str:
@@ -109,24 +113,24 @@ def validate_query_cost(query: str) -> str:
             plan = cursor.fetchall()
             conn.close()
             cost = estimate_cost(plan)
-            return json.dumps({
-                "status": "success",
-                "cost": cost,
-                "message": f"Estimated query cost: {cost}"
-            })
+            return json.dumps(
+                {
+                    "status": "success",
+                    "cost": cost,
+                    "message": f"Estimated query cost: {cost}",
+                }
+            )
         except sqlite3.Error as e:
-            return json.dumps({
-                "status": "error",
-                "message": str(e)
-            })
+            return json.dumps({"status": "error", "message": str(e)})
+
 
 def estimate_cost(plan: List) -> float:
     """Estimate query cost from SQLite EXPLAIN QUERY PLAN."""
     total_cost = 0.0
     for step in plan:
         detail = step[3].lower()
-        if 'scan' in detail and 'index' not in detail:
+        if "scan" in detail and "index" not in detail:
             total_cost += 100.0
-        elif 'index' in detail:
+        elif "index" in detail:
             total_cost += 10.0
     return total_cost
