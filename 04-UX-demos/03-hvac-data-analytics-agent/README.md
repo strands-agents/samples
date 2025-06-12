@@ -179,3 +179,13 @@ Once configured, you'll be able to view detailed traces of all agent interaction
 ![Langfuse trace](langfuse_trace.png)
 
 
+
+## Cleaning Up Resources
+
+When you're done experimenting with this agent, you can easily remove all deployed AWS resources to avoid incurring additional costs. Run the command below:
+
+```bash
+cdk destroy --all
+```
+
+This command will remove all AWS resources that were created by the CDK stack for that particular demo.
