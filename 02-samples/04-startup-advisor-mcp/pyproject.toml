@@ -1,0 +1,10 @@
+[project]
+name = "03-startup-advisor-mcp"
+version = "0.1.0"
+description = "Startup Advisor using Perplexity MCP server"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "strands-agents>=0.1.2",
+    "strands-agents-tools>=0.1.1",
+]

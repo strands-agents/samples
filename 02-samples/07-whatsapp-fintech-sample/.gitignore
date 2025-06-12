@@ -1,0 +1,30 @@
+*.whl
+.env
+.env_runtime
+.ipynb_checkpoints
+.vscode
+__pycache__
+.DS_Store
+.venv
+.web
+boto3/
+tmp-img/
+lambda.zip
+local.txt
+binaries/
+tests/
+package/
+
+# exclude everything
+log/*
+# exception to the rule
+!log/.gitkeep
+
+sample_assets/
+docs/
+python_binaries/
+python/
+layer/
+local.txt
+pack_and_deploy-bkp.sh
+template-bkp.yaml
