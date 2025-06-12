@@ -141,7 +141,7 @@ Example queries:
 - "What was the max temperature in Zone 5 in first floor yesterday?"
 - "How does this compre with the day before yesterday?"
 
-![Demo](demo.gif)
+<img src="demo.gif" alt="Agent demo" width="400">
 
 ## Observability with Langfuse
 
