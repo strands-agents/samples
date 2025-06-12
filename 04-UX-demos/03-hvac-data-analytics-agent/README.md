@@ -143,4 +143,39 @@ Example queries:
 
 ![Demo](demo.gif)
 
+## Observability with Langfuse
+
+This agent includes built-in support for Langfuse tracing, which provides detailed observability into agent operations, tool usage, and performance metrics.
+
+### What is Langfuse?
+
+Langfuse is an open-source observability platform specifically designed for LLM applications. It helps track:
+- Agent execution flows
+- Tool invocations and responses
+- Token usage and costs
+- Latency metrics
+- Prompt engineering effectiveness
+
+### Setting Up Langfuse
+
+The agent is pre-configured with environment variables for Langfuse integration:
+
+![Agent Main function Environment variables](env_vars.png)
+
+To enable tracing:
+
+1. Deploy a serverless Langfuse instance on AWS using the guide at [aws-samples/deploy-langfuse-on-ecs-with-fargate](https://github.com/aws-samples/deploy-langfuse-on-ecs-with-fargate)
+2. Obtain your Langfuse public and secret keys from your deployed instance
+3. Update the environment variables in the agent's Lambda function with your actual keys and host URL
+
+The serverless deployment uses:
+- Amazon ECS with Fargate for containerized deployment
+- Amazon RDS PostgreSQL for data storage
+- Application Load Balancer for traffic management
+- AWS Secrets Manager for secure credential storage
+
+Once configured, you'll be able to view detailed traces of all agent interactions in your Langfuse dashboard, helping you optimize performance and troubleshoot issues.
+
+![Langfuse trace](langfuse_trace.png)
+
 
