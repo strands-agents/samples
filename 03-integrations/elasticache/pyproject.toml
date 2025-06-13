@@ -1,0 +1,53 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "elasticache-integration"
+version = "0.1.0"
+description = "ElastiCache integration for Strands Agent framework"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [
+    {name = "seaofawareness", email="utkarshshah@gmail.com"},
+]
+dependencies = [
+    "strands-agents>=0.1.6",
+    "strands-agents-tools>=0.1.4",
+    "python-dotenv>=1.0.0",
+    "mcp>=0.1.0",
+    "awslabs.elasticache-mcp-server",
+    "awslabs.valkey-mcp-server",
+    "awslabs.memcached-mcp-server",
+    "awslabs.aws-documentation-mcp-server"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-mock>=3.10.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+]
+
+[tool.black]
+line-length = 88
+target-version = ["py310"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
