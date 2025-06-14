@@ -1,0 +1,10 @@
+[project]
+name = "query-optimizer"
+version = "0.1.0"
+description = "Multi-Agent Data Warehouse Query Optimizer using SQLite and AWS Bedrock"
+requires-python = ">=3.10"
+dependencies = [
+    "strands-agents",
+    "strands-agents-tools",
+    "boto3",
+]
