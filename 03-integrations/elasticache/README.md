@@ -84,6 +84,17 @@ cp .env.example .env
 #### AWS Documentation Configuration
 - `AWS_DOCUMENTATION_PARTITION`: AWS partition to use for documentation (default: aws, use aws-cn for AWS China)
 
+#### Strands Model Configuration
+- `STRANDS_MODEL_ID`: The ID of the inference profile to use for the Strands agent. Note that you must provide the ID of an inference profile and not the model for this parameter.
+
+To find the correct inference profile ID, run the following AWS CLI command with the appropriate credentials:
+
+```bash
+aws bedrock list-inference-profiles
+```
+
+From the output, provide either the `inferenceProfileId` or `inferenceProfileArn` value for the model you want to use.
+
 ## Usage
 
 Run the integration with a prompt:

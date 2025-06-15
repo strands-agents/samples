@@ -184,9 +184,10 @@ def main():
     parser.add_argument(
         "--ro", action="store_true", help="Run in read-only mode (no writes allowed)"
     )
+
     parser.add_argument(
         "--model", 
-        default=os.getenv("STRANDS_MODEL_ID", "anthropic.claude-3-7-sonnet-20250219-v1:0"),
+        default=os.getenv("STRANDS_MODEL_ID", "us.anthropic.claude-3-7-sonnet-20250219-v1:0"),
         help="Model ID to use for the agent (default: from STRANDS_MODEL_ID env var or Claude 3 Sonnet)"
     )
 
