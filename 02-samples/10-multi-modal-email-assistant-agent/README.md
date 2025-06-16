@@ -1,5 +1,7 @@
 # ✉️ 🔍 Email Assistant with RAG and Image Generation
 
+Author: Julia Hu
+
 This project presents a multi-agent Email Assistant that leverages retrieval-augmented generation (RAG), image synthesis, and web data enrichment to generate high-quality, multi-modal email content. Built using the Strands Agents SDK, the assistant coordinates a suite of specialized agents—each responsible for tasks like querying knowledge bases, generating contextual images, and refining email content.
 
 The system architecture integrates Amazon Bedrock for both text and image generation, a Knowledge Base for enterprise data retrieval, and optional web research capabilities to supplement real-time context. The final output is a well-structured, polished email that includes relevant knowledge snippets and visually compelling elements, all orchestrated through a single plain-language request.
