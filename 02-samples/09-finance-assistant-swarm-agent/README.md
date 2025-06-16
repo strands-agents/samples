@@ -1,5 +1,7 @@
 # Finance-Assistant Swarm Agent Collaboration 📊 🐝
 
+Author: Julia Hu
+
 Finance-Assistant Swarm Agent Collaboration is a modular, multi-agent system designed to autonomously generate comprehensive equity research reports from a single stock query. Built using the Strands SDK and powered by Amazon Bedrock, this assistant orchestrates a collaborative swarm of specialized agents—each responsible for a distinct financial research task including ticker resolution, company profiling, price analytics, financial health assessment, and sentiment analysis.
 
 By leveraging shared memory and coordinated agent workflows, the system transforms raw data from APIs and web sources into a polished, structured Markdown or HTML report. The orchestrator uses natural language reasoning and synthesis (via Amazon Nova) to integrate the findings into actionable insights. The architecture supports flexible deployment, modular agent execution, and scalable financial intelligence delivery for developers, analysts, and automated trading systems.
