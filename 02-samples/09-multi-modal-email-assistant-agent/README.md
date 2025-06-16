@@ -38,50 +38,21 @@ The assistant creates professional emails with:
 - Web research findings incorporated seamlessly
 - Professional tone and formatting
 
-## 4. Repository layout
-
-```
-email-assistant/
-├── __init__.py                # Package initialization
-├── requirements.txt           # Project dependencies
-├── kb_rag.py                  # Knowledge Base retrieval agent
-├── image_generation_agent.py  # Image generation agent
-├── email_assistant.py         # Main email assistant agent
-└── Image/                     # Images and diagrams
-    └── architecture.png       # Architecture diagram
-```
-
-## 5. Quick start 🛠️
+## 4. Quick start 🛠️
 
 ### Prerequisites
+
 - Python 3.10+
 - AWS CLI v2 configured
-- Access to Amazon Bedrock (Nova in us-east-1 region and Knowledge Base in your preferred region)
+- [Access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) to Amazon Bedrock (Nova in us-east-1 region and Knowledge Base in your preferred region)
 
 ### Step 1: Set up Knowledge Base
+
 1. Run the notebooks in Multi-modal-data-ingest/ folder to process audio files
 2. Create a Bedrock Knowledge Base and note the KB ID
 
-### Step 2: Install and run the Email Assistant
+### Step 2: Run the Email Assistant
 
-#### 1. Clone the repository
-```bash
-git clone https://github.com/strands-agents/agents-samples.git
-cd agents-samples/03-multi-agent-collaboration//02-multi-modal-email-assistant-agent
-```
-
-#### 2. Create and activate a virtual environment
-```bash
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-```
-
-#### 3. Install dependencies
-```bash
-pip install -r requirements.txt
-```
-
-#### 4. Run the Email Assistant with your Knowledge Base ID
 ```bash
 python email_assistant.py --kb-id YOUR_KB_ID --region replace_your_region
 ```
@@ -89,16 +60,18 @@ python email_assistant.py --kb-id YOUR_KB_ID --region replace_your_region
 ### Optional: Run individual agents
 
 #### Run the KB RAG agent
+
 ```bash
 python kb_rag.py --kb-id YOUR_KB_ID
 ```
 
 #### Run the image generation agent
+
 ```bash
 python image_generation_agent.py
 ```
 
-## 6. AWS Architecture 🏗️
+## 5. AWS Architecture 🏗️
 
 | Component Type | AWS Service | Purpose |
 |----------------|-------------|---------|
@@ -108,7 +81,7 @@ python image_generation_agent.py
 | AI Services | Amazon Nova | Foundation model for text generation and image creation |
 | Compute | Amazon SageMaker | Notebook environment for development |
 
-## 7. Troubleshooting 🐞
+## 6. Troubleshooting 🐞
 
 | Symptom | Likely Cause | Fix |
 |---------|-------------|-----|
@@ -118,24 +91,27 @@ python image_generation_agent.py
 | ImportError Strands SDK | Missing Strands SDK | Check Python path includes SDK locations |
 | ModuleNotFoundError | Incorrect import structure | Use absolute imports when running as script |
 
-## 8. Usage Examples
+## 7. Usage Examples
 
 ### Basic Email Request
-```
+
+```bash
 Email Request> Write an email to my team about our Q3 financial results
 ```
 
 ### Email with Knowledge Base Context
-```
+
+```bash
 Email Request> Write an email summarizing the key points from our last earnings call
 ```
 
 ### Email with Custom Image
-```
+
+```bash
 Email Request> Write an email announcing our new product launch with an image of a futuristic device
 ```
 
-## 9. Advanced Configuration
+## 8. Advanced Configuration
 
 You can customize the Email Assistant by modifying:
 
@@ -148,3 +124,4 @@ For production use, consider:
 - Setting up persistent storage for generated images
 - Implementing authentication for sensitive knowledge bases
 - Creating a web interface using Streamlit or Flask
+- 
