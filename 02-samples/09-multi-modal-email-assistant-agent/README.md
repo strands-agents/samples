@@ -48,7 +48,7 @@ The assistant creates professional emails with:
 
 ### Step 1: Set up Knowledge Base
 
-1. Run the notebooks in Multi-modal-data-ingest/ folder to process audio files
+1. Run the notebooks in [Multi-modal-data-ingest/audio-video-rag/](./Multi-modal-data-ingest/audio-video-rag/) folder to process audio files
 2. Create a Bedrock Knowledge Base and note the KB ID
 
 ### Step 2: Run the Email Assistant
@@ -124,4 +124,3 @@ For production use, consider:
 - Setting up persistent storage for generated images
 - Implementing authentication for sensitive knowledge bases
 - Creating a web interface using Streamlit or Flask
-- 
