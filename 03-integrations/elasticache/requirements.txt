@@ -1,0 +1,11 @@
+strands-agents>=0.1.6
+strands-agents-tools>0.1.4
+python-dotenv>=1.0.0
+mcp>=0.1.0
+pytest>=7.0.0
+pytest-mock>=3.10.0
+
+awslabs.elasticache-mcp-server
+awslabs.valkey-mcp-server
+awslabs.memcached-mcp-server
+awslabs.aws-documentation-mcp-server
