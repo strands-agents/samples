@@ -5,7 +5,6 @@ Image Generation Agent
 A tool for generating and saving images using Amazon Bedrock Nova Canvas model.
 """
 
-import io
 import os
 import re
 import base64
@@ -13,12 +12,12 @@ import json
 import boto3
 import argparse
 from datetime import datetime
-from typing import Any, Dict, Union, Optional
+from typing import Any, Dict
 from IPython.display import Image, display
 
 from strands import Agent, tool
 from strands.models import BedrockModel
-from strands_tools import file_write, think
+from strands_tools import think
 
 
 # Create directory for saved images if it doesn't exist
@@ -182,7 +181,7 @@ def run_image_agent(region: str = "us-east-1") -> None:
             if isinstance(response, dict) and "message" in response:
                 print(response["message"]["content"][0]["text"])
             else:
-                print(f"Done!\n")
+                print("Done!\n")
 
         except Exception as e:
             print(f"Error: {str(e)}\n")

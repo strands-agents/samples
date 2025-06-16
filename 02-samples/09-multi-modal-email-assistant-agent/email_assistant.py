@@ -7,16 +7,14 @@ to create comprehensive emails.
 """
 
 # Standard library imports
-import sys
 import os
 import time
-import uuid
 from typing import Dict, Any, List
 
 # Third-party imports
 from strands import Agent, tool
 from strands.models import BedrockModel
-from strands_tools import editor, http_request, think
+from strands_tools import editor, think
 
 # Import your existing 02-agents
 # Assuming these are in the same directory or in your Python path

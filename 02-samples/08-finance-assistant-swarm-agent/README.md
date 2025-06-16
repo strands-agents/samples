@@ -38,66 +38,36 @@ The orchestrator outputs five ordered sections:
 4. **Market Sentiment** – headline heat-map, keyword cloud, notable events
 5. **Integrated Insights** – strengths, risks, forward outlook, ↑/↓ triggers, recommendation
 
-## 4. Project Structure
-
-```
-finance-assistant-swarm-agent/
-├── __init__.py                      # Package initialization
-├── requirements.txt                 # Project dependencies
-├── stock_price_agent.py             # Stock price analysis agent
-├── financial_metrics_agent.py       # Financial metrics analysis agent
-├── company_analysis_agent.py        # Company info and news analysis agent
-├── finance_assistant_swarm_agent.py # Main swarm orchestration agent
-└── Image/                           # Images and diagrams
-    └── architecture_stock_swarm.png # Architecture diagram
-```
-
-## 5. Quick start 🛠️ (local dev)
+## 4. Quick start 🛠️ (local dev)
 
 ### Prerequisites
+
 - Python 3.10+
 - AWS CLI v2 configured
 - Access to Amazon Bedrock (Nova in us-east-1 region)
 
-### Installation and Setup
-
-#### 1. Clone the repository
-```bash
-git clone https://github.com/strands-agents/agents-samples.git
-cd agents-samples/03-multi-agent-collaboration/01-finance-assistant-swarm-agent
-```
-
-#### 2. Create and activate a virtual environment
-```bash
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-```
-
-#### 3. Install dependencies
-```bash
-pip install -r requirements.txt
-```
-
 ### Running the Application
 
-#### 4. Run the swarm agent
+#### Run the swarm agent
+
 ```bash
-python -m finance_assistant_swarm_agent
+uv run finance_assistant_swarm.py
 ```
 
-#### 5. Optional: Run individual agents
+#### Optional: Run individual agents
+
 ```bash
 # Run the stock price agent
-python -m stock_price_agent
+uv run stock_price_agent.py
 
 # Run the financial metrics agent
-python -m financial_metrics_agent
+uv run financial_metrics_agent.py
 
 # Run the company analysis agent
-python -m company_analysis_agent
+uv run company_analysis_agent.py
 ```
 
-## 6. AWS Architecture 🏗️ (components)
+## 5. AWS Architecture 🏗️ (components)
 
 | Component Type | AWS Service | Description |
 |----------------|-------------|-------------|
@@ -106,7 +76,7 @@ python -m company_analysis_agent
 | Search Layer | Amazon Bedrock Knowledge Base | Vector / keyword index for RAG_agent |
 | AI Services | Amazon Nova | Foundation model for text + image generation |
 
-## 7. Troubleshooting 🐞
+## 6. Troubleshooting 🐞
 
 | Symptom | Likely Cause | Fix |
 |---------|-------------|-----|
