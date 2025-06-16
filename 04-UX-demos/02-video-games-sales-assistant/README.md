@@ -57,7 +57,7 @@ The solution deploys the following AWS services through AWS CDK:
 > You can also change the data source to connect to your preferred database engine by adapting the Agent's instructions and tool implementations.
 
 > [!IMPORTANT] 
-> Enhance AI safety and compliance by implementing **[Amazon Bedrock Guardrails](https://aws.amazon.com/bedrock/guardrails/)** for your AI applications.
+> Enhance AI safety and compliance by implementing [Amazon Bedrock Guardrails](https://aws.amazon.com/bedrock/guardrails/) for your AI applications with the seamless integration offered by **[Strands Agents SDK](https://strandsagents.com/latest/user-guide/safety-security/guardrails/)**.
 
 The **user interaction workflow** operates as follows:
 
@@ -67,7 +67,7 @@ The **user interaction workflow** operates as follows:
 - After the agent's response is received by the web application, the raw data query results are retrieved from the DynamoDB table to display both the answer and the corresponding records
 - For chart generation, the application invokes a model (powered by Claude 3.5 Sonnet) to analyze the agent's answer and raw data query results to generate the necessary data to render an appropriate chart visualization
 
-### Strand Agent Architecture
+### Strands Agent Architecture
 
 ![Video Games Sales Assistant](./images/data-analyst-assistant-strands-agent-diagram.png)
 
