@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strands Playground</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="logo-light.svg" type="image/svg+xml">
+</head>
+<body>
+    <div class="app-wrapper">
+        <div class="tools-sidebar">
+            <div id="tools-panel"></div>
+        </div>
+        <div class="container">
+        <div class="header">
+            <div class="header-title">
+                <img src="logo-light.svg" alt="Strands Logo" class="header-logo">
+                <h1>Strands Playground</h1>
+            </div>
+            <div class="user-id-container">
+                <input type="text" id="userId" placeholder="Enter User ID" value="user1">
+                <button id="setUserId">Start Session</button>
+            </div>
+        </div>
+        
+        <div class="system-prompt-container">
+            <div class="prompt-row">
+                <textarea id="systemPrompt" placeholder="System prompt..."></textarea>
+                <button id="setSystemPrompt">Set System Prompt</button>
+            </div>
+            
+            <div class="model-settings-container">
+                <div class="model-settings-row">
+                    <div class="model-settings-inputs">
+                        <div class="required-settings-row">
+                            <div class="model-setting required model-id-field">
+                                <label>Model ID <span class="required-label">*</span></label>
+                                <input type="text" id="modelId" placeholder="Enter model ID">
+                            </div>
+                            
+                            <div class="model-setting required region-field">
+                                <label>Region <span class="required-label">*</span></label>
+                                <input type="text" id="region" placeholder="Enter region">
+                            </div>
+                        </div>
+                        
+                        <div class="optional-settings-container">
+                            <div class="optional-settings-row">
+                                <div class="optional-setting">
+                                    <input type="checkbox" id="enableMaxTokens" class="toggle-field">
+                                    <div class="model-setting">
+                                        <label>Max Tokens</label>
+                                        <input type="number" id="maxTokens" placeholder="Enter max tokens" disabled>
+                                    </div>
+                                </div>
+                                
+                                <div class="optional-setting">
+                                    <input type="checkbox" id="enableTemperature" class="toggle-field">
+                                    <div class="model-setting">
+                                        <label>Temperature</label>
+                                        <input type="number" id="temperature" placeholder="Enter temperature" step="0.1" min="0" max="1" disabled>
+                                    </div>
+                                </div>
+                                
+                                <div class="optional-setting">
+                                    <input type="checkbox" id="enableTopP" class="toggle-field">
+                                    <div class="model-setting">
+                                        <label>Top P</label>
+                                        <input type="number" id="topP" placeholder="Enter top P" step="0.1" min="0" max="1" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="updateModelSettings">Update</button>
+                </div>
+                <div class="bedrock-info">
+                    <a href="https://strandsagents.com/0.1.x/user-guide/concepts/model-providers/amazon-bedrock/" target="_blank" rel="noopener noreferrer">
+                        Model parameters are for the Amazon Bedrock provider from the Strands SDK
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        
+        
+        <div class="chat-container">
+            <div id="chatMessages" class="chat-messages"></div>
+            
+            <div class="input-container">
+                <textarea id="userInput" placeholder="Type your message here..."></textarea>
+                <button id="sendButton">Send</button>
+            </div>
+        </div>
+        
+        <div class="metrics-container">
+            <div class="file-access-info">
+                <span class="info-icon">ℹ️</span>
+                To make files accessible via the web interface, instruct the agent to save them to the './static' directory. Files stored in this location will be automatically served at the root URL of the application.
+            </div>
+            <div class="amazon-q-credit">
+                <code>Front-end built with love using <a href="https://aws.amazon.com/q/developer/" target="_blank" rel="noopener noreferrer">Amazon Q Developer</a><span class="heart">❤️</span> </code>
+            </div>
+        </div>
+    </div>
+    </div>
+    
+    <script src="app.js"></script>
+    <script src="tools-panel.js"></script>
+    <script src="summary-panel.js"></script>
+</body>
+</html>
