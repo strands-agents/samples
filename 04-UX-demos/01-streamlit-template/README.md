@@ -40,7 +40,7 @@ Prerequisites:
 * python >= 3.8 (tested on 3.11)
 * docker
 * use a Chrome browser for development
-* `anthropic.claude-3-7-sonnet` model activated in Amazon Bedrock in your AWS account. [Instructions](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html).
+* `anthropic.claude-3-7-sonnet` model activated in Amazon Bedrock in your AWS account, in **each** AWS region of the Cross Region Inference profile. [Instructions](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html).
 * This demo has been tested on a mac laptop with colima as container runtime, but it should also work with other configurations.
 * You also need to install the AWS Command Line Interface (CLI), the AWS Cloud Development KIT (CDK), and to configure the AWS CLI on your development environment. One way to configure the AWS CLI is to get your access key through the AWS console, and use the `aws configure` command in your terminal to setup your credentials.
 
