@@ -1,6 +1,8 @@
 # Strands Playground
 
-A web-based interactive playground for experimenting with the Strands SDK, allowing users to quickly test and prototype AI agents with configurable system promtps, model parameters, and tool selection. The Strands Playground provides the user with agent metrics with every agent invocation. 
+A web-based interactive playground for experimenting with the Strands SDK, allowing users to quickly test and prototype AI agents with configurable system promtps, model parameters, and tool selection. The Strands Playground provides the user with agent metrics with every agent invocation.
+
+![Strands Playground Screenshot](./images/main_page_screenshot.png)
 
 ## Overview
 
