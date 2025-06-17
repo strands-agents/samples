@@ -173,7 +173,7 @@ The CDK deployment creates the following AWS resources:
 
 After deployment, the application will be accessible via the load balancer's DNS name, which is provided as an output from the CDK stack.
 
-## Architecture
+#### Architecture
 
 [Architecture diagram placeholder]
 
@@ -184,6 +184,8 @@ The Strands Playground follows a modern web application architecture:
 - **Session Storage**: Flexible storage options (local files or DynamoDB)
 - **AI Integration**: Direct integration with Amazon Bedrock through the Strands SDK
 - **Deployment**: Containerized application deployable locally or on AWS infrastructure
+
+
 
 ## Usage Examples
 
