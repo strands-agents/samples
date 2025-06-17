@@ -173,7 +173,7 @@ The CDK deployment creates the following AWS resources:
 
 After deployment, the application will be accessible via the load balancer's DNS name, which is provided as an output from the CDK stack.
 
-## CDK Deployment Architecture
+## Architecture
 
 [Architecture diagram placeholder]
 
