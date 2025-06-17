@@ -1,4 +1,4 @@
-# Zep Dining Assistant
+# Zep AI Dining Assistant
 
 Minimal proof-of-concept for a personal dining assistant agent using Zep AI's graph-based memory and the Strands framework.
 
