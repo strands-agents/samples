@@ -126,3 +126,16 @@ For production use, consider:
 - Setting up persistent storage for generated images
 - Implementing authentication for sensitive knowledge bases
 - Creating a web interface using Streamlit or Flask
+
+## 9. Cleanup
+
+After you're done using the Email Assistant, you should clean up the resources to avoid incurring unnecessary costs.
+
+### Option 1: Clean up in the notebook
+
+If you created the knowledge base using the notebook in `Multi-modal-data-ingest/audio-video-rag/`, you can run the cleanup cell at the end of the notebook:
+
+```python
+# Delete Knowledge Base
+knowledge_base.delete_kb(delete_s3_bucket=True, delete_iam_roles_and_policies=True)
+```
