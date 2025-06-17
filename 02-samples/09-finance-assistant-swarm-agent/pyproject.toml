@@ -1,0 +1,18 @@
+[project]
+name = "08-finance-assistant-swarm-agent"
+version = "0.1.0"
+description = "Finance-Assistant Swarm Agent Collaboration is a modular, multi-agent system designed to autonomously generate comprehensive equity research reports from a single stock query."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aws-requests-auth>=0.4.3",
+    "boto3>=1.38.36",
+    "frozendict>=2.4.6",
+    "pandas>=2.3.0",
+    "pillow>=11.2.1",
+    "requests>=2.32.4",
+    "strands-agents>=0.1.7",
+    "strands-agents-tools>=0.1.5",
+    "textblob>=0.19.0",
+    "yfinance>=0.2.63",
+]
