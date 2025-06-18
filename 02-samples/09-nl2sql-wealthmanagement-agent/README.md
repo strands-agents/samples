@@ -60,7 +60,7 @@ source .venv/bin/activate
 ### 2. Install dependencies:
 
 ```bash
-pip install strands-agents strands-agents-tools boto3
+python -m pip install strands-agents strands-agents-tools boto3
 ```
 
 ### 3. Set up local SQLite database:
