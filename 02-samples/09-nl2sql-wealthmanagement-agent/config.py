@@ -31,14 +31,12 @@ def get_config() -> Dict[str, Any]:
         "aws_region": os.environ.get("AWS_REGION", "us-east-1"),  # Default to us-east-1
         
         # Athena Configuration
-        "athena_database": os.environ.get("ATHENA_DATABASE", "wealthmanagement-db"),
-        "athena_output_location": os.environ.get("ATHENA_OUTPUT_LOCATION", "s3://strands-athena-output-503561448057/"),
+        "athena_database": os.environ.get("ATHENA_DATABASE", ""),
+        "athena_output_location": os.environ.get("ATHENA_OUTPUT_LOCATION", ""),
         
         # Knowledge Base Configuration
-        "knowledge_base_id": os.environ.get("KNOWLEDGE_BASE_ID", "2GKUK2LAUT"),
-        
-        # Bedrock Configuration
-        "bedrock_model_id": os.environ.get("BEDROCK_MODEL_ID", "us.anthropic.claude-3-5-sonnet-20240620-v1:0"), 
+        "knowledge_base_id": os.environ.get("KNOWLEDGE_BASE_ID", ""),
+
     }
     
     return config

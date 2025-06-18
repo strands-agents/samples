@@ -10,11 +10,25 @@ A Natural Language to SQL (NL2SQL) agent built using the Strands SDK. This agent
 - Knowledge base integration for schema information
 - Wealth management domain-specific schema
 
+## Prerequisites
+
+- **AWS Environment Access**: This agent requires access to an AWS environment if you use Amazon Bedrock as model provider
+  - AWS credentials configured (via AWS CLI, environment variables, or IAM roles)
+  - **Model Access**: Enable access to Claude 3.7 Sonnet model in Amazon Bedrock console
+    - Navigate to Amazon Bedrock → Model access
+    - Request access to "Anthropic Claude 3.7 Sonnet" model
+    - Wait for approval (usually immediate for supported regions)
+  - **Athena mode Access**: 
+    - Additional access to Amazon Athena and S3
+    - Create Amazon Bedrock for knowledge base with sample wealthmanagement schema
+- Python 3.11 or higher
+- Virtual environment (recommended)
+
 ## Architecture
 
 The agent supports two execution modes:
 
-### Local Mode (Default)
+### SQLite Mode (Default)
 - **Database**: SQLite (`wealthmanagement.db`)
 - **Schema**: Hardcoded wealth management schema in knowledge base tool
 - **Query Engine**: SQLite with direct file access
@@ -23,6 +37,16 @@ The agent supports two execution modes:
 - **Database**: Amazon Athena
 - **Schema**: AWS Knowledge Base integration
 - **Query Engine**: Athena with S3 output location
+
+## Model Configuration
+
+### Default Model
+The Strands Agent framework uses **Claude 3.7 Sonnet** as the default model for natural language processing and SQL generation. 
+
+### Custom Model Providers
+You can configure the agent to use different model providers by modifying the agent initialization in `src/agent.py`. The Strands framework supports multiple model providers. 
+
+For detailed information on configuring different model providers, refer to the [Strands Model Providers documentation](https://strandsagents.com/latest/user-guide/concepts/model-providers/amazon-bedrock/).
 
 ## Setup
 
@@ -41,7 +65,7 @@ pip install strands-agents strands-agents-tools boto3
 
 ### 3. Set up local SQLite database:
 
-This is optional, if you are using the existing wealthmanagement.db
+**This setup is optional, if you use wealthmanagement.db in this repo.** 
 
 ```bash
 # Create data directory
@@ -123,27 +147,6 @@ Exit SQLite shell:
 .quit
 ```
 
-### 4. Configure environment variables:
-
-#### For Local Mode (SQLite - Default):
-```bash
-# No additional environment variables needed
-# Database path is hardcoded to ./data/wealthmanagement.db
-```
-
-#### For AWS Mode (Athena):
-```bash
-export AWS_REGION=us-east-1
-export ATHENA_DATABASE=wealthmanagement-db
-export ATHENA_OUTPUT_LOCATION=s3://your-bucket/athena-results/
-export KNOWLEDGE_BASE_ID=your-knowledge-base-id
-export BEDROCK_MODEL_ID=us.anthropic.claude-3-5-sonnet-20240620-v1:0
-
-# AWS credentials (if not using IAM roles)
-export AWS_ACCESS_KEY_ID=your-access-key
-export AWS_SECRET_ACCESS_KEY=your-secret-key
-```
-
 ## Usage
 
 ### Command Line Examples
@@ -167,27 +170,6 @@ python main.py --engine athena --question "How many clients do we have?"
 
 # Complex Athena query
 python main.py -e athena -q "Show portfolio performance above benchmark for 2023"
-```
-
-### Sample Questions
-
-The agent can handle various wealth management queries:
-
-```bash
-# Client information
-python main.py -q "How many clients have aggressive risk tolerance?"
-
-# Investment analysis
-python main.py -q "What's the total current value of all investments?"
-
-# Performance metrics
-python main.py -q "Which clients outperformed the benchmark in 2023?"
-
-# Asset allocation
-python main.py -q "Show me the distribution of asset types"
-
-# Client portfolio summary
-python main.py -q "Show me John Smith's investment portfolio"
 ```
 
 ## Project Structure
