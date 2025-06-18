@@ -197,10 +197,9 @@ nl2sql_agent/
 The agent uses `config.py` for environment-specific settings:
 
 - **AWS Region**: Default `us-east-1`
-- **Athena Database**: Default `wealthmanagement-db`
-- **Athena Output**: Default S3 location for query results
+- **Athena Database**: Athena / Glue database name
+- **Athena Output**: Athena S3 output location for query results
 - **Knowledge Base ID**: AWS Bedrock Knowledge Base identifier
-- **Bedrock Model**: Claude 3.5 Sonnet model for NL2SQL conversion
 
 ## Development Status
 
@@ -215,7 +214,7 @@ The agent uses `config.py` for environment-specific settings:
 ### Common Issues
 
 1. **Database not found**: Ensure `wealthmanagement.db` exists in `./data/` directory
-2. **AWS credentials**: Set up AWS credentials for Athena mode
+2. **AWS credentials**: Set up AWS credentials for Model Access and Athena mode
 3. **Missing dependencies**: Install required packages with pip
 4. **Query syntax errors**: Check SQL syntax compatibility between SQLite and Athena
 
