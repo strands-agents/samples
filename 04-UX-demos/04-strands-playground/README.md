@@ -280,22 +280,9 @@ When deploying this application, consider the following security best practices:
 4. **CORS Settings**: Restrict CORS settings to specific origins in production
 5. **Network Security**: Deploy within a VPC with appropriate security groups and network ACLs
 
-## Contributing
-
-Contributions to the Strands Playground are welcome! To contribute:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-Please ensure your code follows the existing style and includes appropriate tests.
-
 ## Version History
 
 - **1.0.0** - Initial release with core playground functionality
-- **1.0.1** - Added support for Claude 3.7 Sonnet model
 
 ## License
 
