@@ -1,6 +1,6 @@
-# NL2SQL Agent
+# Adaptive Structured RAG Agent
 
-A Natural Language to SQL (NL2SQL) agent built using the Strands SDK. This agent converts natural language questions into SQL queries, executes them against either local SQLite database or Amazon Athena, and implements a self-correcting feedback loop to handle errors.
+An Adaptive Structured RAG agent that converts natural language questions into SQL queries with self-correcting feedback loops. This agent features dual-mode support for both local SQLite databases and AWS Athena, and intelligent error handling. The agent includes knowledge base integration for schema information and can handle complex SQL queries.
 
 ## Features
 
@@ -26,17 +26,51 @@ A Natural Language to SQL (NL2SQL) agent built using the Strands SDK. This agent
 
 ## Architecture
 
-The agent supports two execution modes:
+The NL2SQL agent implements a structured RAG (Retrieval-Augmented Generation) approach with dual execution modes. The agent processes natural language queries, retrieves relevant schema information, generates SQL queries, and executes them with self-correction capabilities.
 
-### SQLite Mode (Default)
-- **Database**: SQLite (`wealthmanagement.db`)
-- **Schema**: Hardcoded wealth management schema in knowledge base tool
-- **Query Engine**: SQLite with direct file access
+### Architecture Overview
 
-### AWS Mode
-- **Database**: Amazon Athena
-- **Schema**: AWS Knowledge Base integration
-- **Query Engine**: Athena with S3 output location
+The agent supports two execution modes & architecture, each optimized for different use cases:
+
+#### SQLite Mode (Default)
+**Use Case**: Local development, testing, and demonstrations
+
+![SQLite Execution Mode](Architecture_SQLite_Execution.png)
+*SQLite Execution Mode - Local development and testing*
+
+**Components**:
+- **Database**: SQLite (`wealthmanagement.db`) - Local file-based database
+- **Schema Source**: Hardcoded wealth management schema in knowledge base tool
+- **Query Engine**: Direct SQLite execution with local file access
+- **LLM Provider**: Amazon Bedrock (Claude 3.7 Sonnet)
+
+**Architecture Flow**:
+1. User submits natural language query
+2. Structured RAG Agent processes the request
+3. `get_schema()` tool retrieves hardcoded database schema
+4. Agent generates SQL query using LLM
+5. `run_sqlite_query()` tool executes query against local SQLite database
+6. Results are processed and returned to user
+
+#### AWS Athena Mode
+**Use Case**: Production environments with large-scale data processing
+
+![Athena Execution Mode](Architecture_Athena_Execution.png)
+*Athena + Knowledge Bases Execution Mode - Production AWS environment*
+
+**Components**:
+- **Database**: Your choice of Amazon Datastores like AWS Glue that can be queried through Athena
+- **Schema Source**: AWS Bedrock Knowledge Base with dynamic schema retrieval
+- **Query Engine**: Athena with S3 output location for results
+- **LLM Provider**: Amazon Bedrock (Claude 3.7 Sonnet)
+
+**Architecture Flow**:
+1. User submits natural language query
+2. Structured RAG Agent processes the request
+3. `get_schema()` tool queries AWS Bedrock Knowledge Base for current schema
+4. Agent generates SQL query using LLM
+5. `run_athena_query()` tool executes query via Amazon Athena
+6. Query results stored in S3 and returned to user
 
 ## Model Configuration
 
