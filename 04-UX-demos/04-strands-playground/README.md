@@ -28,9 +28,12 @@ strands-playground/
 │   │   ├── styles.css        # CSS styling
 │   │   ├── summary-panel.js  # Metrics visualization
 │   │   └── tools-panel.js    # Tool selection interface
+│   ├── workflows/            # Agent workflow definitions
 │   ├── Dockerfile            # Container definition
 │   ├── main.py               # FastAPI backend
 │   └── requirements.txt      # Python dependencies
+├── images/                   # Documentation images
+│   └── main_page_screenshot.png # Main application screenshot
 └── infra/                    # Infrastructure as code (CDK Deployment)
     ├── lib/                  # CDK stack definition
     ├── bin/                  # CDK entry point
@@ -165,7 +168,6 @@ Deploy a complete production-ready environment to AWS using CDK:
 The CDK deployment creates the following AWS resources:
 
 - **VPC**: A Virtual Private Cloud with public and private subnets
-- **VPC Endpoint**: For Amazon Bedrock Runtime access
 - **ECS Cluster**: To host the containerized application
 - **DynamoDB Table**: For persistent session storage
 - **Fargate Service**: Running 2 instances of the application for high availability
@@ -177,7 +179,7 @@ After deployment, the application will be accessible via the load balancer's DNS
 
 #### Architecture
 
-[Architecture diagram placeholder]
+![Architecture diagram](./images/strands_playground_arch.png)
 
 The Strands Playground follows a modern web application architecture:
 

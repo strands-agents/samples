@@ -1,7 +1,6 @@
 import json
 import os
 import logging 
-import time
 import boto3
 from botocore.exceptions import ClientError
 from typing import Optional
@@ -14,10 +13,9 @@ from strands_tools import (
     load_tool, mem0_memory, memory, nova_reels, python_repl, retrieve, shell, 
     slack, speak, stop, swarm, think, use_aws, use_llm, workflow
 )
-from strands.tools.mcp import MCPClient
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import StreamingResponse, FileResponse
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -50,29 +48,6 @@ def weather_forecast(city: str, days: int = 3) -> str:
     """
     return f"Weather forecast for {city} for the next {days} days..."
 
-@tool
-def fizzbuzz(n: int) -> str:
-    """Generate FizzBuzz sequence up to n.
-
-    Args:
-        n: Number of terms in the FizzBuzz sequence
-    """
-    if n <= 0:
-        return "Number of terms must be positive"
-    
-    result = []
-    for i in range(1, n+1):
-        if i % 15 == 0:
-            result.append("FizzBuzz")
-        elif i % 3 == 0:
-            result.append("Fizz")
-        elif i % 5 == 0:
-            result.append("Buzz")
-        else:
-            result.append(str(i))
-    
-    return ", ".join(result)
-
 # Define all available tools
 available_tools = {
     'agent_graph': agent_graph,
@@ -103,7 +78,6 @@ available_tools = {
     'use_llm': use_llm,
     'workflow': workflow,
     'weather_forecast': weather_forecast,
-    'fizzbuzz': fizzbuzz
 }
 
 # Tool descriptions for better user understanding
@@ -114,7 +88,6 @@ tool_descriptions = {
     'current_time': 'Get the current time in various timezones',
     'editor': 'Editor tool designed to do changes iteratively on multiple files',
     'environment': 'Manage environment variables at runtime',
-    'fizzbuzz': 'Generate FizzBuzz sequence up to n terms',
     'file_read': 'File reading tool with search capabilities, various reading modes, and document mode support',
     'file_write': 'Write content to a file with proper formatting and validation based on file type',
     'generate_image': 'Create images using Stable Diffusion models',
@@ -135,7 +108,8 @@ tool_descriptions = {
     'think': 'Process thoughts through multiple recursive cycles',
     'use_aws': 'Execute AWS service operations using boto3',
     'use_llm': 'Create isolated agent instances for specific tasks',
-    'workflow': 'Advanced workflow orchestration system for parallel AI task execution'
+    'workflow': 'Advanced workflow orchestration system for parallel AI task execution',
+    'weather_forecast': 'Return a dummy weather for the input city and day, used to showcase inline python tool for Strands'
 }
 
 # Define default selected tools
