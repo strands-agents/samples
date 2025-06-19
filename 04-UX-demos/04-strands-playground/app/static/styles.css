@@ -304,11 +304,6 @@ input:disabled {
     border-bottom-left-radius: 0;
 }
 
-.note-message {
-    background-color: #fff3cd;
-    border-left: 4px solid #ffc107;
-}
-
 /* Styles for HTML content in messages */
 .bot-message code {
     background-color: #f8f9fa;
@@ -374,11 +369,6 @@ input:disabled {
     background-color: #f9f9f9;
     border-top: 1px solid #e0e0e0;
     gap: 4px;
-}
-
-.metrics-wrapper {
-    display: flex;
-    justify-content: space-between;
 }
 
 .metrics-info {
@@ -454,11 +444,6 @@ input:disabled {
     50% { transform: scale(1); }
     75% { transform: scale(1.1); }
     100% { transform: scale(1); }
-}
-
-.metric {
-    font-size: 0.9rem;
-    color: #666;
 }
 
 .loading {

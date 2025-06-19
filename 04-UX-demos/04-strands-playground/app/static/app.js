@@ -14,8 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const temperatureInput = document.getElementById('temperature');
     const topPInput = document.getElementById('topP');
     const updateModelSettingsButton = document.getElementById('updateModelSettings');
-    const latencyDisplay = document.getElementById('latency');
-    const tokensDisplay = document.getElementById('tokens');
     
     // API endpoints
     const API_BASE_URL = '';
