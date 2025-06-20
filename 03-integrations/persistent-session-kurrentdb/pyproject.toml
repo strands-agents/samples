@@ -1,0 +1,11 @@
+[project]
+name = "persistent-session-kurrentdb"
+version = "0.1.0"
+description = "A conversation and session manager which allows you to store and restore state of your agents to resume execution. It also has unique temporal windowing capabilities, in addition to fix window sizing."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "kurrentdbclient>=1.0.4",
+    "strands-agents>=0.1.8",
+    "strands-agents-tools>=0.1.6"
+]
