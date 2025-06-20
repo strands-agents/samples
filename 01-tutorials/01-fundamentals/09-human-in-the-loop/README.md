@@ -18,8 +18,8 @@ A virtual HR assistant built with the Strands SDK that helps employees manage th
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/strands-hr-assistant.git
-   cd strands-hr-assistant
+   git clone https://github.com/strands-agents/samples.git
+   cd strands-samples/01-tutorials/01-fundamentals/09-human-in-the-loop
    ```
 
 2. Create and activate a virtual environment:
@@ -30,7 +30,7 @@ A virtual HR assistant built with the Strands SDK that helps employees manage th
 
 3. Install the required packages:
    ```
-   pip install strands boto3
+   pip install -r requirements.txt
    ```
 
 4. Configure AWS credentials:
