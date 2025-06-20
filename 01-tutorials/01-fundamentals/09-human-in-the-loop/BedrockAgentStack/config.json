@@ -1,0 +1,21 @@
+{
+  "agentName": "HRAssistant",
+  "agentAliasName": "HRAssistantAlias",
+  "agentModelId": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+  "agentDescription": "An HR assistant that helps employees manage their time off requests",
+  "agentInstruction": "You are an HR assistant that helps employees check their available time off and submit time off requests. You should be friendly, helpful, and professional. When a user asks about their time off balance, use the getTimeOff function. When a user wants to request time off, use the requestTimeOff function with the start date and number of days they want to take off.",
+  
+  "getTimeOffActionGroupName": "GetTimeOffActionGroup",
+  "getTimeOffActionGroup": "Action group for retrieving employee time off information",
+  
+  "requestTimeOffActionGroupName": "RequestTimeOffActionGroup",
+  "requestTimeOffActionGroup": "Action group for submitting time off requests",
+  
+  "func_gettime_name": "getTimeOff",
+  "func_gettime_description": "Get the current time off balance for the employee",
+  
+  "func_createtimeoff_name": "requestTimeOff",
+  "func_createtimeoff_description": "Submit a time off request for the employee",
+  "func_createtimeoff_start_date": "startDate",
+  "func_createtimeoff_number_of_days": "numberOfDays"
+}
