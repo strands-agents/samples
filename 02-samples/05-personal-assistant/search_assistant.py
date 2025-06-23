@@ -1,16 +1,35 @@
 import os
 from dotenv import load_dotenv
 from mcp import StdioServerParameters, stdio_client
-from strands import Agent
+from strands import Agent, tool
 from strands.models import BedrockModel
 from strands.tools.mcp import MCPClient
+from constants import SESSION_ID
 
 # Load environment variables
 load_dotenv()
 
+# Show rich UI for tools in CLI
+os.environ["STRANDS_TOOL_CONSOLE_MODE"] = "enabled"
+
+
+@tool
+def search_assistant(query: str) -> str:
+    """
+    Search assistant agent for handling general queries
+    Args:
+        query: A request to the search assistant
+
+    Returns:
+        Output from interaction
+    """
+    # Reuse the already initialized MCP server connection
+    response = agent(query)
+    print("\n\n")
+    return response
+
 
 PERPLEXITY_API_KEY = os.getenv("PERPLEXITY_API_KEY")
-
 if not PERPLEXITY_API_KEY:
     raise ValueError("PERPLEXITY_API_KEY environment variable is required")
 
@@ -36,16 +55,7 @@ except Exception as e:
     raise Exception(f"Failed to initialize MCP Client: {str(e)}")
 
 
-def search_assistant(query: str) -> str:
-    """
-    Search assistant agent for handling general queries
-    Args:
-        query: A request to the search assistant
-
-    Returns:
-        Output from interaction
-    """
-    system_prompt = """You are an intelligent search and research assistant with access to real-time web information.
+system_prompt = """You are an intelligent search and research assistant with access to real-time web information.
 
     Your capabilities include:
     - Searching the web for current information and news
@@ -68,25 +78,26 @@ def search_assistant(query: str) -> str:
     3. Provide context and background information
     4. Summarize key findings clearly
     5. Highlight any limitations or uncertainties in the data"""
-    """Initialize the search agent with Perplexity MCP server."""
 
-    try:
-        model = BedrockModel(
-            model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
-        )
-        # Get available tools from MCP server
-        tools = perplexity_mcp_server.list_tools_sync()
+# Initialize the MCP server connection once and reuse it
+perplexity_mcp_server.__enter__()
 
-        agent = Agent(
-            model=model,
-            system_prompt=system_prompt,
-            tools=tools,
-        )
-        response = agent(query)
-        return response
+try:
+    model = BedrockModel(
+        model_id="us.anthropic.claude-sonnet-4-20250514-v1:0",
+    )
+    # Get available tools from MCP server
+    tools = perplexity_mcp_server.list_tools_sync()
 
-    except Exception as e:
-        raise Exception(f"Failed to create agent: {str(e)}")
+    agent = Agent(
+        model=model,
+        system_prompt=system_prompt,
+        tools=tools,
+        trace_attributes={"session.id": SESSION_ID},
+    )
+except Exception as e:
+    perplexity_mcp_server.__exit__(None, None, None)
+    raise e
 
 
 if __name__ == "__main__":
@@ -136,11 +147,9 @@ if __name__ == "__main__":
             print("🤖 SearchBot: ", end="")
             try:
                 response = search_assistant(user_input)
-                print(response)
             except Exception as e:
                 print(f"❌ Error processing search query: {str(e)}")
                 print("🔧 Please try rephrasing your question or check your connection")
-            print()
         except KeyboardInterrupt:
             print("\n")
             print("============================================================")

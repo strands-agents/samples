@@ -4,3 +4,4 @@ mem0ai
 boto3 
 opensearch-py
 duckduckgo-search
+python-dotenv

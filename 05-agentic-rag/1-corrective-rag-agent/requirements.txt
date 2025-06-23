@@ -1,0 +1,9 @@
+opensearch-py
+retrying
+strands-agents
+strands-agents-tools
+langchain_aws
+tavily-python
+boto3
+langchain
+ragas

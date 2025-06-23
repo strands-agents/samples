@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Building HVAC Data Analytics Agent</title>
+
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1048.0.min.js"></script>
+
+
+    <style>
+        :root {
+            --primary-color: #075e54;
+            --secondary-color: #128c7e;
+            --chat-bg: #dcf8c6;
+            --user-message-bg: #e1ffc7;
+            --bot-message-bg: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #f0f2f5;
+        }
+
+        .chat-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 16px;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .chat-messages {
+            height: 500px;
+            overflow-y: auto;
+            padding: 16px;
+            background: #e5ddd5;
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABeSURBVEhL7ZOxDQAwCMN4/4H8K4ZKFQyi8gG+gpGsOHE8q7Mu5pWgRFKkRFJ0kl6SVrXly2vagB1Q0cxLqLbQdhm+7LX1Pb8CGT7XVgM7oOIkvaSXpEiJpEi5Mws1LQdQyUbLfwAAAABJRU5ErkJggg==");
+        }
+
+        .message {
+            margin-bottom: 10px;
+            max-width: 65%;
+            padding: 8px 12px;
+            border-radius: 7.5px;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            background: var(--user-message-bg);
+            margin-left: auto;
+            border-top-right-radius: 0;
+        }
+
+        .bot-message {
+            background: var(--bot-message-bg);
+            margin-right: auto;
+            border-top-left-radius: 0;
+        }
+
+        .chat-input-container {
+            display: flex;
+            padding: 10px;
+            background: #f0f0f0;
+            align-items: center;
+        }
+        .message-time {
+            font-size: 0.7em;
+            color: #667781;
+            margin-top: 4px;
+            display: block;
+            text-align: right;
+        }
+
+        #messageInput {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 20px;
+            margin-right: 10px;
+            font-size: 15px;
+        }
+
+        #sendButton {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        #sendButton:hover {
+            background: var(--primary-color);
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 4px 8px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #90959c;
+            border-radius: 50%;
+            animation: typing-bounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing-bounce {
+            0%, 80%, 100% { transform: scale(0.6); }
+            40% { transform: scale(1); }
+        }
+
+        .login-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .login-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-form h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(7, 94, 84, 0.1);
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-button:hover {
+            background: var(--secondary-color);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div id="loginContainer" class="login-container">
+        <div class="login-form">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <div id="errorMessage" class="error-message hidden"></div>
+                <button type="submit" class="login-button">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="chat-container hidden" id="chatContainer">
+        
+    <div class="chat-header">
+        Smart Building HVAC Agent
+        <button id="clearButton" style="float: right; background: transparent; border: 1px solid white; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Clear</button>
+        <button id="logoutButton" style="margin-right:10px; float: right; background: transparent; border: 1px solid white; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Logout</button>
+    </div>
+
+                 
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will be inserted here -->
+        </div>
+        <div class="chat-input-container">
+            <input type="text" id="messageInput" placeholder="Type a message...">
+            <button id="sendButton">Send</button>
+        </div>
+    </div>
+
+    
+
+
+    <script src="config.js"></script>
+    <script>
+        var AWS_REGION = window.APP_CONFIG.AWS_REGION;
+        var CLIENT_ID = window.APP_CONFIG.CLIENT_ID;
+        var WS_ENDPOINT = window.APP_CONFIG.WS_ENDPOINT;
+        var ws;
+        var thread_id = "";
+        // Configure AWS SDK
+        AWS.config.region = AWS_REGION;
+
+        // Initialize the Amazon Cognito client
+        const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
+
+        async function loginUser(username, password) {
+            const params = {
+                AuthFlow: 'USER_PASSWORD_AUTH',
+                ClientId: CLIENT_ID, // Your Cognito User Pool App Client ID
+                AuthParameters: {
+                    USERNAME: username,
+                    PASSWORD: password
+                }
+            };
+
+            try {
+                const data = await cognitoIdentityServiceProvider.initiateAuth(params).promise();
+                
+                // Store tokens (consider security implications)
+                const tokens = {
+                    idToken: data.AuthenticationResult.IdToken,
+                    accessToken: data.AuthenticationResult.AccessToken,
+                    refreshToken: data.AuthenticationResult.RefreshToken
+                };
+
+                // Store tokens securely
+                localStorage.setItem('tokens', JSON.stringify(tokens));
+                
+                return tokens;
+            } catch (error) {
+                console.error('Authentication error:', error);
+                throw error;
+            }
+        }
+
+        // Add these functions to your existing JavaScript
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+        }
+
+        function hideError() {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.classList.add('hidden');
+        }
+
+        function showChat() {
+            document.getElementById('loginContainer').classList.add('hidden');
+            document.getElementById('chatContainer').classList.remove('hidden');
+            // Initialize WebSocket connection with JWT
+            try {
+                idToken = JSON.parse(localStorage.getItem('tokens')).idToken
+                ws = new WebSocket( WS_ENDPOINT + `/$default/?jwt=${idToken}`);
+                setupWebSocket();
+            } catch (error) {
+                console.error("WebSocket connection failed:", error);
+                alert("Failed to connect to the chat service");
+            }
+        }
+
+        // Update your form submission handler
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideError();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const tokens = await loginUser(username, password);
+                console.log('Successfully logged in');
+                showChat(); // Show chat container after successful login
+            } catch (error) {
+                showError(error.message || 'Login failed. Please try again.');
+            }
+        });
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if we already have tokens
+            const storedTokens = localStorage.getItem('tokens');
+            if (storedTokens) {
+                try {
+                    const tokens = JSON.parse(storedTokens);
+                    // You might want to validate the tokens here
+                    showChat();
+                } catch (error) {
+                    localStorage.removeItem('tokens');
+                }
+            }
+        });
+
+   
+        function generateRandomString() {
+            return Math.random().toString(36).substring(2, 10) + 
+                Math.random().toString(36).substring(2, 10);
+        }
+
+
+        function setupWebSocket() {
+            ws.onopen = () => {
+                console.log("Connected to WebSocket");
+                thread_id = generateRandomString()
+                addMessage("System", "Connected to chat service", false);
+            };
+
+            ws.onmessage = (event) => {
+                
+                addMessage("Agent", event.data, false);
+            };
+
+            ws.onclose = () => {
+                console.log("Disconnected from WebSocket");
+                addMessage("System", "Disconnected from chat service", false);
+                clearHistory()
+                logout()
+            };
+
+            ws.onerror = (error) => {
+                console.error("WebSocket error:", error);
+                addMessage("System", "Error in chat service", false);
+            };
+        }
+
+        function addTypingIndicator() {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot-message';
+            messageDiv.id = 'typing-indicator';
+            
+            // Create typing indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'typing-dot';
+                typingDiv.appendChild(dot);
+            }
+            
+            messageDiv.appendChild(typingDiv);
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            
+            return messageDiv; // Return the element so it can be replaced later
+        }
+
+        function addMessage(sender, content, isUser) {
+            const messagesDiv = document.getElementById('chatMessages');
+            
+            // If there's a typing indicator and this is a bot message, remove it
+            if (!isUser) {
+                const existingIndicator = document.getElementById('typing-indicator');
+                if (existingIndicator) {
+                    existingIndicator.remove();
+                }
+            }
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+            
+            // Create message content
+            const messageContent = document.createElement('div');
+            messageContent.innerHTML = content;
+            
+            // Create timestamp
+            const timeSpan = document.createElement('span');
+            timeSpan.className = 'message-time';
+            const now = new Date();
+            timeSpan.textContent = now.toLocaleTimeString('en-US', { 
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            
+            // Append content and timestamp to message
+            messageDiv.appendChild(messageContent);
+            messageDiv.appendChild(timeSpan);
+            
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        document.getElementById('sendButton').onclick = sendMessage;
+        document.getElementById('messageInput').onkeypress = function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        };
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (message && ws && ws.readyState === WebSocket.OPEN) {
+                const messageObj = {
+                    thread_id: thread_id ,
+                    human_message: message
+                };
+                
+                ws.send(JSON.stringify(messageObj));
+                addMessage("You", message, true);
+                setTimeout(
+                    function(){
+                        addTypingIndicator()
+                    }, 500)
+                input.value = '';
+            }
+        }
+        
+        function logout() {
+            // Clear stored tokens
+            localStorage.removeItem('tokens');
+            
+            // Close WebSocket connection if it exists
+            if (ws) {
+                ws.close();
+            }
+            
+            // Hide chat and show login
+            document.getElementById('chatContainer').classList.add('hidden');
+            document.getElementById('loginContainer').classList.remove('hidden');
+        }
+
+        document.getElementById('logoutButton').addEventListener('click', logout);
+
+        function clearHistory() {
+           //clear message history
+           const messagesDiv = document.getElementById('chatMessages');
+           messagesDiv.innerHTML = ""
+           thread_id = generateRandomString()
+        }
+
+        document.getElementById('clearButton').addEventListener('click', clearHistory);
+    </script>
+
+</body>
+</html>
