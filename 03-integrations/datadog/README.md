@@ -14,7 +14,7 @@ The [adot-collector-datadog](https://github.com/jasonmimick-aws/adot-collector-d
 - Deployment YAML files for Kubernetes
 - Setup and configuration scripts
 - Sample applications with OpenTelemetry instrumentation
-- Detailed setup instructions in [adot/README.md](adot/README-ADOT-SETUP.md)
+- Detailed setup instructions in [README.md](https://github.com/jasonmimick-aws/adot-collector-datadog/blob/main/README.md)
 
 ## Getting Started
 
