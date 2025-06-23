@@ -15,7 +15,7 @@ Within this directory there are several example Python files:
 |--------------------|---------------------------------------------------|
 |Agent Structure     |Single-agent architecture                           |
 |Native Tools        |use_aws|
-|MCP Servers         |[Neptune Query](https://github.com/awslabs/mcp/blob/main/src/amazon-neptune-mcp-server/README.md), [Neptune Memory](https://github.com/aws-samples/amazon-neptune-generative-ai-samples/tree/main/neptune-mcp-servers/neptune-memory/README.md). (Perplexity Ask MCP Server)[https://github.com/ppl-ai/modelcontextprotocol]               |
+|MCP Servers         |[Neptune Query](https://github.com/awslabs/mcp/blob/main/src/amazon-neptune-mcp-server/README.md), [Neptune Memory](https://github.com/aws-samples/amazon-neptune-generative-ai-samples/tree/main/neptune-mcp-servers/neptune-memory/README.md). [Perplexity Ask MCP Server](https://github.com/ppl-ai/modelcontextprotocol)               |
 |Model Provider      |Amazon Bedrock                                     |
 
 ## Getting started
