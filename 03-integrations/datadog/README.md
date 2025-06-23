@@ -9,7 +9,7 @@ This folder contains an extension of the Amazon Bedrock Agents with Strands samp
 
 ## ADOT Collector with Datadog Exporter _(optional)_
 
-The `[adot-collector-datadog](https://github.com/jasonmimick-aws/adot-collector-datadog)` project contains all necessary components to deploy an AWS Distro for OpenTelemetry (ADOT) collector with the Datadog exporter enabled and configured in AWS:
+The [adot-collector-datadog](https://github.com/jasonmimick-aws/adot-collector-datadog) project contains all necessary components to deploy an AWS Distro for OpenTelemetry (ADOT) collector with the Datadog exporter enabled and configured in AWS:
 
 - Deployment YAML files for Kubernetes
 - Setup and configuration scripts
@@ -27,7 +27,7 @@ The `[adot-collector-datadog](https://github.com/jasonmimick-aws/adot-collector-
 
 - AWS account with access to Amazon Bedrock
 - Datadog account with API key
-- Kubernetes cluster (for ADOT collector deployment)
+- _(optional)_ Kubernetes cluster (for ADOT collector deployment)
 - Python 3.8+ with required dependencies
 
 ## Additional Resources
