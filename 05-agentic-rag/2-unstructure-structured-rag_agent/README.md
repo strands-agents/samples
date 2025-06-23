@@ -10,15 +10,14 @@ The system consists of:
 - **Intelligent Routing Agent**: Uses Strands Agent to automatically route queries to the appropriate knowledge base
 
 ## Architecture
-
-
+![architecture](./images/architecture.png)
 
 ## Project Structure
 
 ```
 2-unstructure-structured-rag_agent/
 ├── 0-prerequisites-structured-kb.ipynb                # Setup structured KB
-├── 1-0-prerequisites-unstructured-kb.ipynb            # Setup unstructured KB 
+├── 1-prerequisites-unstructured-kb.ipynb              # Setup unstructured KB 
 ├── 2-unstructured-structured-rag-agent.ipynb          # Main RAG Agent implementation
 ├── utils/
 │   ├── structured_knowledge_base.py                   # Utility for structured Bedrock KB
@@ -43,7 +42,7 @@ This notebook creates:
 - **IAM Roles**: For service permissions
 - **Structured Bedrock Knowledge Base**: Configured with Redshift as data source
 
-#### 2. Unstructured Knowledge Base Setup (`1-0-prerequisites-unstructured-kb.ipynb`)
+#### 2. Unstructured Knowledge Base Setup (`1-prerequisites-unstructured-kb.ipynb`)
 
 This notebook creates:
 - **S3 Bucket**: For document storage
