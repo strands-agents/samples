@@ -5,11 +5,11 @@ This folder contains an extension of the Amazon Bedrock Agents with Strands samp
 ## Contents
 
 - **Jupyter Notebooks**:
-  - [DatadogObservabilityStrandsAgents.ipynb](DatadogObservabilityStrandsAgents.ipynb): Main notebook demonstrating Datadog integration with Bedrock Agents
+  - [StrandsAgentDatadogObservability.ipynb](StrandsAgentDatadogObservability.ipynb): Main notebook demonstrating Datadog integration with Bedrock Agents
 
-## ADOT Collector with Datadog Exporter
+## ADOT Collector with Datadog Exporter _(optional)_
 
-The `adot` directory contains all necessary components to deploy an AWS Distro for OpenTelemetry (ADOT) collector with the Datadog exporter enabled and configured in AWS:
+The `[adot-collector-datadog](https://github.com/jasonmimick-aws/adot-collector-datadog)` project contains all necessary components to deploy an AWS Distro for OpenTelemetry (ADOT) collector with the Datadog exporter enabled and configured in AWS:
 
 - Deployment YAML files for Kubernetes
 - Setup and configuration scripts
@@ -19,9 +19,9 @@ The `adot` directory contains all necessary components to deploy an AWS Distro f
 ## Getting Started
 
 1. Review the Jupyter notebooks to understand the integration patterns
-2. Follow the instructions in [adot/README.md](adot/README.md) to deploy the ADOT collector
+2. _(optional)_ Follow the instructions in [adot/README.md](adot/README.md) to deploy the ADOT collector
 3. Configure your Datadog API key in the `.env` file
-4. Run the [DatadogObservabilityStrandsAgents.ipynb](DatadogObservabilityStrandsAgents.ipynb) notebook to execute the sample with Datadog integration
+4. Run the [StrandsAgentDatadogObservability.ipynb](StrandsAgentDatadogObservability.ipynb) notebook to execute the sample with Datadog integration
 
 ## Requirements
 
