@@ -39,40 +39,49 @@ This integration demonstrates how to use Strands Agents with OpenInference and A
 
 6. View the traces in the [Arize AI dashboard](https://app.arize.com)
 
-## Trace Visualization in Arize
+## Trace Visualization and Monitoring in Arize
 
-After running the agent, you can explore the traces in Arize AI:
+After running the agent, you can explore the traces and set up monitoring in Arize AI:
 
-### Project Traces
-![Project Traces](images/project_traces.png)
+### Trace Visualization
 
-### Filtering Traces
-You can filter traces by various attributes to find specific interactions:
+1. **Project Traces**  
+   ![1. Project Traces](images/project_traces.png)
 
-![Filter Traces](images/filter_traces.png)
+2. **Filtering Traces**  
+   ![2. Filter Traces](images/filter_traces.png)
 
-You can also filter by model ID:
+3. **Filtering by Model ID**  
+   ![3. Filter by Model ID](images/filter_trace_model_ID.png)
 
-![Filter by Model ID](images/filter_trace_model_ID.png)
+4. **Trace Details**  
+   ![4. Trace Details](images/trace_arize.png)
 
-For more information on filtering traces, see the [Arize documentation](https://arize.com/docs/ax/observe/tracing/how-to-query-traces/filter-traces).
+5. **Execution Graph**  
+   ![5. Graph View](images/graph.png)
 
-### Trace Details
-![Trace Details](images/trace_arize.png)
+6. **Inspecting Execution Paths**  
+   ![6. Inspect Path](images/inspect_path.png)
 
-### Execution Graph
-![Graph View](images/graph.png)
+7. **Session Information**  
+   ![7. View Sessions](images/view_sessions.png)
 
-### Inspecting Execution Paths
-![Inspect Path](images/inspect_path.png)
+### Production Monitoring
 
-### Session Information
-![View Sessions](images/view_sessions.png)
+8. **Pre-built Monitors**  
+   ![8. Pre-built Monitors](images/prebuilt_monitors.png)
 
-7. Clean up resources when done:
-   ```
-   sh cleanup.sh
-   ```
+9. **Monitor Explanation**  
+   ![9. Monitor Explained](images/monitor_explained.png)
+
+For more information on monitoring, see the [Arize documentation on production monitoring](https://arize.com/docs/ax/observe/production-monitoring).
+
+## Cleanup Resources
+
+When you're done experimenting, clean up the AWS resources:
+```
+sh cleanup.sh
+```
 
 ## What You'll Learn
 
@@ -80,11 +89,11 @@ For more information on filtering traces, see the [Arize documentation](https://
 - How to use the custom `StrandsToOpenInferenceProcessor` to convert telemetry
 - How to build a functional restaurant assistant with Strands
 - How to visualize and analyze agent behavior in Arize AI
+- How to set up monitoring for your agent in production
 
 ## Additional Resources
 
 - [Strands Agents Documentation](https://github.com/strands-agents/sdk-python)
 - [OpenInference Specification](https://openinference.ai/)
 - [Arize AI Documentation](https://docs.arize.com/)
-- [Arize Trace Filtering Documentation](https://arize.com/docs/ax/observe/tracing/how-to-query-traces/filter-traces)
 - [Amazon Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
