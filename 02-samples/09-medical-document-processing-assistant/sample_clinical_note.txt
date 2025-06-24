@@ -1,0 +1,27 @@
+PATIENT: Carlie Johnson
+DOB: 05/12/1985
+DATE: 06/01/2025
+
+CHIEF COMPLAINT: Seizure episode and persistent headaches
+
+HISTORY OF PRESENT ILLNESS:
+Carlie had a seizure 2 weeks ago. She is complaining of frequent headaches
+Nausea is also present. She also complains of eye trouble with blurry vision.
+Patient reports the headaches have been occurring daily for the past month,
+typically in the afternoon. Pain is described as throbbing and primarily
+located in the frontal and temporal regions.
+
+MEDICATIONS:
+Topamax 50 mgs at breakfast daily
+
+ASSESSMENT:
+1. New-onset seizure disorder
+2. Migraine with aura
+3. Possible post-ictal state
+
+PLAN:
+1. Send referral order to neurologist
+2. MRI of brain to rule out structural abnormalities
+3. Continue Topamax 50mg daily
+4. Follow-up as scheduled in 2 weeks
+5. Call if symptoms worsen or new seizure activity occurs
