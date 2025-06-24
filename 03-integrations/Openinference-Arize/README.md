@@ -66,7 +66,7 @@ After running the agent, you can explore the traces and set up monitoring in Ari
 7. **Session Information**  
    ![7. View Sessions](images/view_sessions.png)
 
-### Production Monitoring
+### Monitoring
 
 8. **Pre-built Monitors**  
    ![8. Pre-built Monitors](images/prebuilt_monitors.png)
@@ -74,7 +74,7 @@ After running the agent, you can explore the traces and set up monitoring in Ari
 9. **Monitor Explanation**  
    ![9. Monitor Explained](images/monitor_explained.png)
 
-For more information on monitoring, see the [Arize documentation on production monitoring](https://arize.com/docs/ax/observe/production-monitoring).
+For more information on monitoring, see the [Arize documentation on  monitoring](https://arize.com/docs/ax/observe/production-monitoring).
 
 ## Cleanup Resources
 
