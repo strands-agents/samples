@@ -20,7 +20,7 @@ This integration demonstrates how to use Strands Agents with OpenInference and A
 
 2. Run the notebook:
    ```
-   03-integrations/Openinference-Arize/Arize-Observability-openinference-strands.ipynbArize-Observability-openinference-strands.ipynb
+   Arize-Observability-openinference-strands.ipynb
    
    ```
 
@@ -69,7 +69,7 @@ For more information on monitoring, see the [Arize documentation on  monitoring]
 
 ## Cleanup Resources
 
-When you're done experimenting, clean up the AWS resources:
+When you're done experimenting, please clean up the AWS resources:
 
 ```
 sh cleanup.sh
