@@ -18,26 +18,17 @@ This integration demonstrates how to use Strands Agents with OpenInference and A
    cd  03-integrations/Openinference-Arize
    ```
 
-2. Install the required packages:
+2. Run the notebook:
    ```
-   pip install -r requirements.txt
-   ```
-
-3. Deploy the prerequisites (Amazon knowledge base and Amazon DynamoDB table):
-   ```
-   sh deploy_prereqs.sh
+   03-integrations/Openinference-Arize/Arize-Observability-openinference-strands.ipynbArize-Observability-openinference-strands.ipynb
+   
    ```
 
-4. Update the Arize AI credentials in the notebook:
+3. Update the Arize AI credentials in the notebook:
    - Get your API key and Space ID from [Arize AI dashboard](https://app.arize.com/settings)
    - Replace the placeholder values in the notebook
 
-5. Run the notebook:
-   ```
-   jupyter notebook Arize-Observability-openinference-strands.ipynb
-   ```
-
-6. View the traces in the [Arize AI dashboard](https://app.arize.com)
+4. View the traces in the [Arize AI dashboard](https://app.arize.com)
 
 ## Trace Visualization and Monitoring in Arize
 
@@ -71,7 +62,7 @@ After running the agent, you can explore the traces and set up monitoring in Ari
 8. **Pre-built Monitors**  
    ![8. Pre-built Monitors](images/prebuilt_monitors.png)
 
-9. **Monitor Explanation**  
+9. **Monitor View**  
    ![9. Monitor Explained](images/monitor_explained.png)
 
 For more information on monitoring, see the [Arize documentation on  monitoring](https://arize.com/docs/ax/observe/production-monitoring).
@@ -79,6 +70,7 @@ For more information on monitoring, see the [Arize documentation on  monitoring]
 ## Cleanup Resources
 
 When you're done experimenting, clean up the AWS resources:
+
 ```
 sh cleanup.sh
 ```
