@@ -1,7 +1,7 @@
+strands-agents
+strands-agents-tools
 arize-otel
+arize-toolkit
 opentelemetry-api
 opentelemetry-sdk
-arize-toolkit
-arize-phoenix-otel
 opentelemetry-exporter-otlp-proto-grpc
-git+https://github.com/strands-agents/sdk-python.git
