@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="30" fill="#4A90E2" stroke="#2C5AA0" stroke-width="2"/>
+  
+  <!-- Hospital building -->
+  <rect x="16" y="24" width="32" height="28" fill="#ffffff" rx="2"/>
+  
+  <!-- Hospital cross -->
+  <rect x="28" y="16" width="8" height="24" fill="#E74C3C"/>
+  <rect x="20" y="24" width="24" height="8" fill="#E74C3C"/>
+  
+  <!-- Windows -->
+  <rect x="20" y="36" width="4" height="4" fill="#4A90E2"/>
+  <rect x="26" y="36" width="4" height="4" fill="#4A90E2"/>
+  <rect x="34" y="36" width="4" height="4" fill="#4A90E2"/>
+  <rect x="40" y="36" width="4" height="4" fill="#4A90E2"/>
+  
+  <rect x="20" y="44" width="4" height="4" fill="#4A90E2"/>
+  <rect x="26" y="44" width="4" height="4" fill="#4A90E2"/>
+  <rect x="34" y="44" width="4" height="4" fill="#4A90E2"/>
+  <rect x="40" y="44" width="4" height="4" fill="#4A90E2"/>
+</svg> 

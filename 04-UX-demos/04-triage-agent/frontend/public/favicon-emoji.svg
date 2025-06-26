@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Background -->
+  <rect width="64" height="64" fill="#ffffff" rx="8"/>
+  
+  <!-- Hospital emoji -->
+  <text x="32" y="45" font-family="Apple Color Emoji, Segoe UI Emoji, sans-serif" 
+        font-size="40" text-anchor="middle" dominant-baseline="middle">🏥</text>
+</svg> 
