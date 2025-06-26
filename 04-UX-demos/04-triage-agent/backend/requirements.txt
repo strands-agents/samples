@@ -1,0 +1,12 @@
+fastapi>=0.104.1
+uvicorn>=0.24.0
+pydantic>=2.5.0
+python-multipart>=0.0.6
+mcp>=1.0.0
+strands-agents>=0.1.8
+strands-agents-tools>=0.1.6
+boto3>=1.35.0
+python-dotenv>=1.0.0
+httpx>=0.24.0
+pandas>=1.5.0
+numpy>=1.24.0
