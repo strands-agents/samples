@@ -12,6 +12,16 @@ The system consists of:
 ## Architecture
 ![architecture](./images/architecture.png)
 
+
+|Feature             |Description                                        |
+|--------------------|---------------------------------------------------|
+|Agent Structure     |Single intelligent routing agent                          |
+|Unstrcutured Knowledge Base        |Amazon Bedrock Knowledge Base with OpenSearch Serverless                          |
+|Structured Knowledge Base       |Amazon Bedrock Knowledge Base connected to Amazon Redshift                  |
+|Custom Tools       |structured_data_assistant, unstructured_data_assitant|
+|Model Provider      |Amazon Bedrock                                     |
+
+
 ## Project Structure
 
 ```
