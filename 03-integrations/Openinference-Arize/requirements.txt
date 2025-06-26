@@ -1,0 +1,15 @@
+strands-agents
+strands-agents-tools
+arize-otel
+arize-toolkit
+opentelemetry-api
+opentelemetry-sdk
+opentelemetry-exporter-otlp-proto-grpc
+boto3
+botocore
+awscli
+opensearch-py
+requests-aws4auth
+pyyaml
+retrying
+pandas
