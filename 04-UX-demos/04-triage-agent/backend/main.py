@@ -7,7 +7,6 @@ import os
 import json
 import logging
 import asyncio
-import subprocess
 import time
 import uuid
 from typing import Dict, List, Any, Optional
@@ -17,7 +16,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from dataclasses import dataclass, asdict, field
-import xml.etree.ElementTree as ET
 import re
 
 # Strands imports
