@@ -1,41 +1,30 @@
 ## AI Triage Agent with MCP
 
-This is **AI Triage Agent**, a comprehensive AI-powered productivity platform that integrates multiple tools and services to enhance daily productivity. The project leverages AWS Bedrock's Claude models through the Strands AI framework and MCP (Model Context Protocol) servers to provide intelligent assistance for tasks, calendar management, weather updates, calculations, and more.
+This is **AI Triage Agent**, a demonstration of an AI-powered medical triage system that showcases intelligent patient assessment through **"structured decision tree navigation"**. The project leverages Amazon Bedrock through the Strands AI framework and MCP (Model Context Protocol) servers, with integrated calendar scheduling and weather information for comprehensive patient care coordination.
 
 ![AI Triage Agent](preview.png)
 
 *AI-powered productivity platform with unified chat interface, task management, and intelligent assistance*
 
+## Important Disclaimer
+
+**⚠️ This is a Proof of Concept (PoC) demonstration only.** This application is designed for educational and demonstration purposes to showcase AI integration capabilities and productivity tool orchestration. It is not intended to provide medical advice, professional consultation, or replace qualified professional judgment in any domain.
+
+The AI responses and any data generated are produced by artificial intelligence models and should be treated as mock/demo content only. Use this application at your own risk. The developers and contributors are not responsible for any decisions made based on the output from this system.
+
+For any medical, legal, financial, or other professional advice, please consult with qualified professionals in the respective fields.
+
 ## Use case
 
-This project addresses the common challenge of managing multiple productivity tools across different platforms and contexts. Users often switch between various applications for task management, calendar scheduling, weather checking, calculations, and email management, leading to fragmented workflows and reduced efficiency.
+This project demonstrates how AI can assist in medical triage workflows by providing structured patient assessment, intelligent questioning, and decision tree navigation. The system showcases how healthcare organizations could potentially streamline initial patient evaluations while maintaining safety and accuracy standards.
 
-**AI Triage Agent** consolidates these essential productivity functions into a single, intelligent interface that:
+**AI Triage Agent** demonstrates essential medical triage functions through an intelligent interface that:
 
-- **Unifies Task Management**: Create, track, and manage tasks with priority levels and completion status
-- **Integrates Calendar Events**: Access and manage calendar events seamlessly
-- **Provides Weather Intelligence**: Get current weather information for better planning
-- **Offers Quick Calculations**: Perform calculations without switching to external tools
-- **Manages Communication**: Access email history and insights
-- **Enables Intelligent Conversations**: Interact with AI assistants that understand context across all productivity domains
-
-## Value proposition
-
-**AI Triage Agent** delivers significant value to end users by:
-
-🚀 **Streamlined Workflow**: Eliminate the need to switch between multiple applications - everything you need is in one intelligent interface
-
-🧠 **AI-Powered Intelligence**: Leverage advanced AI models (Claude 3.7 Sonnet) to get intelligent suggestions, automate routine tasks, and provide contextual assistance
-
-🔧 **Modular Architecture**: Built on MCP (Model Context Protocol) servers, allowing easy extension and customization of productivity tools
-
-⚡ **Real-time Integration**: Connect with your existing calendar, weather services, and other productivity tools for seamless data flow
-
-🎯 **Context-Aware Assistance**: The AI understands your tasks, calendar, and preferences to provide personalized productivity recommendations
-
-💡 **Unified Experience**: A beautiful, modern React-based interface that makes productivity management enjoyable rather than overwhelming
-
-This solution transforms fragmented productivity workflows into a cohesive, AI-enhanced experience that adapts to your working style and helps you accomplish more with less effort.
+- **AI-Powered Medical Assessment**: Demonstrates structured patient evaluation workflows and intelligent questioning
+- **Decision Tree Navigation**: Showcases systematic medical triage decision-making processes  
+- **Calendar Integration**: Demonstrates appointment scheduling and healthcare provider coordination
+- **Weather Intelligence**: Shows how environmental factors can be integrated into patient care decisions
+- **Intelligent Healthcare Conversations**: Demonstrates AI assistants that understand medical context and workflows
 
 ## Quick Start
 
@@ -133,14 +122,6 @@ triage-agents/
 └── README.md                  # Project documentation
 ```
 
-### Documentation Files
-
-* **requirements.md**: Defines the functional and non-functional requirements for this project
-* **design.md**: Defines the system design, architecture, and AWS infrastructure components
-* **tasks.md**: Lists the discrete implementation tasks with checkboxes for tracking progress
-* **test-plan.md**: Describes unit test, integration test, and performance test strategies
-* **threat-model.md**: Comprehensive security threat model and security testing plan
-
 ### Technology Stack
 
 - **Backend**: Python 3.11+, FastAPI, AWS Bedrock, Strands AI, MCP Protocol
@@ -148,26 +129,6 @@ triage-agents/
 - **AI Models**: Claude 3.7 Sonnet via AWS Bedrock
 - **Infrastructure**: AWS (Bedrock, EC2, S3, CloudFormation)
 - **Development**: Git, Docker (optional), AWS CLI
-
-## Features
-
-### Core Capabilities
-
-- **AI Triage System**: AI-powered decision tree for guiding users through structured assessments
-- **Multi-Modal Chat Interface**: Support for text and image inputs with streaming responses
-- **Task Management**: Comprehensive task creation, tracking, and management
-- **Calendar Integration**: Seamless calendar event management and scheduling
-- **Weather Services**: Real-time weather information and forecasts
-- **Calculator Tools**: Built-in calculation capabilities
-- **Email History**: Access and manage email communications
-
-### Technical Features
-
-- **MCP Server Architecture**: Modular server components for extensibility
-- **Real-time Streaming**: Streaming responses for improved user experience
-- **Session Management**: Persistent user sessions and conversation state
-- **Decision Tree Navigation**: Structured conversation flows and reasoning
-- **Tool Integration**: Dynamic tool loading and execution
 
 ## Architecture
 
