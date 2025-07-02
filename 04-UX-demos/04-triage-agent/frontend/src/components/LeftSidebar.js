@@ -310,6 +310,11 @@ const LeftSidebar = ({ selectedModel, setSelectedModel, sessionId, onClose }) =>
           )}
         </div>
       </div>
+      
+      {/* Disclaimer */}
+      <div className="sidebar-disclaimer">
+        ⚠️ PoC Demo Only - Not Medical Advice
+      </div>
     </div>
   );
 };

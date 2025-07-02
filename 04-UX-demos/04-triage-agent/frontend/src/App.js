@@ -1,4 +1,20 @@
 // src/App.js
+/*
+⚠️ IMPORTANT DISCLAIMER:
+This is a Proof of Concept (PoC) demonstration only. This application is designed for 
+educational and demonstration purposes to showcase AI integration capabilities and productivity 
+tool orchestration. It is not intended to provide medical advice, professional consultation, 
+or replace qualified professional judgment in any domain.
+
+The AI responses and any data generated are produced by artificial intelligence models and 
+should be treated as mock/demo content only. Use this application at your own risk. The 
+developers and contributors are not responsible for any decisions made based on the output 
+from this system.
+
+For any medical, legal, financial, or other professional advice, please consult with 
+qualified professionals in the respective fields.
+*/
+
 import React, { useState, useEffect, useRef } from 'react';
 import ChatInterface from './components/ChatInterface';
 import LeftSidebar from './components/LeftSidebar';
