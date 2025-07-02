@@ -7,6 +7,26 @@ Minimal proof-of-concept for a personal dining assistant agent using Zep AI's gr
 - Showcases graph memory for user preferences, experiences, and context-aware recommendations
 - Integrates mock APIs for calendar and restaurant booking
 
+## 🆚 Zep vs Traditional Memory Approaches
+
+| Feature | Traditional | Zep Graph Memory |
+|---------|-------------|------------------|
+| Memory Structure | Flat key-value storage | Connected knowledge graph |
+| Relationship Handling | Limited associations | Rich relationship modeling |
+| Temporal Preferences | Difficult to distinguish | Built-in temporal handling |
+| Context Understanding | Context lost over time | Context preserved in graph |
+| Scalability | Storage limitations | Scales with connections |
+| Query Capability | Simple text search | Semantic graph search |
+| Learning Speed | Requires manual curation | Automatic learning & inference |
+
+💡 **Real-world Impact:**
+
+- 🎯 More accurate recommendations based on relationship context
+- ⏰ Better handling of changing preferences over time
+- 🧠 Richer understanding of user behavior patterns
+- 🔄 Self-improving system through graph connections
+- 🎪 Enhanced user experience through personalization
+
 ## Architecture
 - **Agent Framework:** Strands
 - **Memory:** Zep AI (graph-based)
