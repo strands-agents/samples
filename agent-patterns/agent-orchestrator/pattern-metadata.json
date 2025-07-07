@@ -1,0 +1,56 @@
+{
+  "title": "Agent Orchestrator with Specialized Assistants",
+  "description": "Build a hierarchical multi-agent system where specialized AI agents are wrapped as tools and coordinated by an orchestrator agent to handle complex, multi-domain queries",
+  "category": "multi-agent-systems",
+  "complexity": "intermediate",
+  "tags": ["strands", "multi-agent", "orchestrator", "hierarchical", "agents-as-tools", "specialization"],
+  "frameworks": ["strands-agents"],
+  "llm_providers": ["bedrock"],
+  "aws_services": ["bedrock"],
+  "pattern_type": "multi-agent-system",
+  "author": {
+    "name": "Strands Team",
+    "github": "strands-agents",
+    "linkedin": ""
+  },
+  "created_date": "2024-01-15",
+  "updated_date": "2024-01-15",
+  "version": "1.0.0",
+  "demo": {
+    "available": false,
+    "url": ""
+  },
+  "metrics": {
+    "estimated_cost": "$0.005/query (multiple agent calls)",
+    "performance": "3-8s average response time (depends on query complexity)"
+  },
+  "dependencies": {
+    "python_version": ">=3.10",
+    "strands_version": ">=0.1.0",
+    "aws_services": ["bedrock"]
+  },
+  "features": {
+    "tools": ["research_assistant", "product_recommendation_assistant", "trip_planning_assistant"],
+    "integrations": ["bedrock"],
+    "deployment_options": ["local", "lambda", "fargate", "ec2"],
+    "architecture_patterns": ["agents-as-tools", "hierarchical-delegation", "modular-specialization"]
+  },
+  "learning_objectives": [
+    "Understand the agents-as-tools architectural pattern",
+    "Learn to create specialized agent tools",
+    "Build hierarchical multi-agent systems",
+    "Implement query routing and delegation",
+    "Design modular agent architectures"
+  ],
+  "related_patterns": [
+    "agent-swarm",
+    "agent-graph",
+    "sequential-agent-workflow"
+  ],
+  "use_cases": [
+    "Customer service systems with multiple domains",
+    "Research and recommendation platforms",
+    "Complex query processing systems",
+    "Multi-domain virtual assistants"
+  ]
+} 

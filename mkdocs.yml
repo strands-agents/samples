@@ -1,0 +1,477 @@
+# mkdocs.yml for strands-agents/samples repository
+# Designed to be imported via multi-repo plugin into strandsagents.com
+
+site_name: Strands Agents Patterns
+site_url: https://patterns.strandsagents.com
+repo_url: https://github.com/strands-agents/samples
+repo_name: strands-agents/samples
+
+# Minimal theme config for local development
+# Main site will override with its own theme configuration
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.sections
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - navigation.tracking
+
+# Plugins for local development and content generation
+plugins:
+  - search
+  - tags
+  - awesome-pages
+
+# Markdown extensions for rich content
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+
+# Navigation structure that will be imported
+# The main site controls how this gets integrated
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Categories:
+      - Basic Agents: categories/basic-agents.md
+      - Multi-Agent Systems: categories/multi-agent-systems.md
+      - Knowledge & Retrieval: categories/knowledge-retrieval.md
+      - AWS Integrations: categories/aws-integrations.md
+      - Tool Integrations: categories/tool-integrations.md
+      - UI/UX Patterns: categories/ui-ux-patterns.md
+  - Patterns:
+      - ... # Auto-generated from pattern directories
+  - Contributing: contributing.md
+
+# Repository information for GitHub links
+edit_uri: edit/main/docs/
+
+# Variables for content generation
+extra:
+  # Pattern discovery configuration
+  patterns:
+    base_path: "../agent-patterns"
+    categories:
+      basic:
+        title: "Basic Agents"
+        description: "Single LLM agents with focused capabilities"
+        icon: "🤖"
+      multi-agent:
+        title: "Multi-Agent Systems" 
+        description: "Coordinated agent teams and swarms"
+        icon: "👥"
+      knowledge:
+        title: "Knowledge & Retrieval"
+        description: "RAG, vector databases, and knowledge graphs"
+        icon: "📚"
+      aws:
+        title: "AWS Integrations"
+        description: "Native AWS service integrations"
+        icon: "☁️"
+      tools:
+        title: "Tool Integrations"
+        description: "External APIs and service connectors"
+        icon: "🔧"
+  
+  # Metadata for pattern filtering
+  filters:
+    complexity: ["beginner", "intermediate", "advanced"]
+    frameworks: ["strands", "langchain", "llamaindex", "crewai"]
+    llm_providers: ["openai", "anthropic", "bedrock", "ollama"]
+    deployment: ["local", "lambda", "fargate", "ec2"]
+
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/strands-agents/samples
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/strands
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX
+
+# Hooks for content generation
+hooks:
+  - scripts/generate_patterns.py
+
+---
+
+# scripts/generate_pattern_pages.py
+# Auto-generates documentation pages from pattern directories
+
+import os
+import json
+import yaml
+from pathlib import Path
+from mkdocs_gen_files import edit_file, open_file
+
+def generate_pattern_pages():
+    """Generate documentation pages for each pattern."""
+    patterns_dir = Path("../agent-patterns")
+    docs_dir = Path("docs/patterns")
+    
+    # Ensure directories exist
+    docs_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Categories for organization
+    categories = {
+        "basic": [],
+        "multi-agent": [],
+        "knowledge": [],
+        "aws": [],
+        "tools": []
+    }
+    
+    # Process each pattern directory
+    for pattern_path in patterns_dir.iterdir():
+        if not pattern_path.is_dir() or pattern_path.name.startswith('.'):
+            continue
+            
+        metadata_file = pattern_path / "pattern-metadata.json"
+        readme_file = pattern_path / "README.md"
+        
+        if not metadata_file.exists() or not readme_file.exists():
+            continue
+            
+        # Load pattern metadata
+        with open(metadata_file) as f:
+            metadata = json.load(f)
+            
+        # Read pattern README
+        with open(readme_file) as f:
+            readme_content = f.read()
+            
+        # Generate enhanced pattern page
+        pattern_doc = generate_pattern_doc(metadata, readme_content, pattern_path)
+        
+        # Write to docs directory
+        category = metadata.get("category", "basic")
+        pattern_file = docs_dir / category / f"{pattern_path.name}.md"
+        pattern_file.parent.mkdir(exist_ok=True)
+        
+        with open_file(f"patterns/{category}/{pattern_path.name}.md", "w") as f:
+            f.write(pattern_doc)
+            
+        # Add to category index
+        categories[category].append({
+            "name": pattern_path.name,
+            "title": metadata.get("title", pattern_path.name),
+            "description": metadata.get("description", ""),
+            "complexity": metadata.get("complexity", "beginner"),
+            "tags": metadata.get("tags", [])
+        })
+    
+    # Generate category index pages
+    for category, patterns in categories.items():
+        if patterns:
+            category_doc = generate_category_index(category, patterns)
+            with open_file(f"patterns/{category}/index.md", "w") as f:
+                f.write(category_doc)
+    
+    # Generate main patterns index
+    all_patterns_doc = generate_all_patterns_index(categories)
+    with open_file("patterns/all.md", "w") as f:
+        f.write(all_patterns_doc)
+
+def generate_pattern_doc(metadata, readme_content, pattern_path):
+    """Generate enhanced documentation for a single pattern."""
+    title = metadata.get("title", pattern_path.name)
+    description = metadata.get("description", "")
+    complexity = metadata.get("complexity", "beginner")
+    tags = metadata.get("tags", [])
+    
+    # Build the enhanced documentation
+    doc_content = f"""# {title}
+
+{description}
+
+## Quick Info
+
+| Property | Value |
+|----------|-------|
+| **Complexity** | {complexity.title()} |
+| **Category** | {metadata.get('category', 'basic').title()} |
+| **Tags** | {', '.join(f'`{tag}`' for tag in tags)} |
+| **Frameworks** | {', '.join(metadata.get('frameworks', []))} |
+| **LLM Providers** | {', '.join(metadata.get('llm_providers', []))} |
+
+## Architecture
+
+```mermaid
+graph TD
+    A[User Input] --> B[Agent]
+    B --> C[LLM Provider]
+    B --> D[Tools/APIs]
+    C --> E[Response]
+    D --> E
+```
+
+## Getting Started
+
+```bash
+# Clone the pattern
+git clone https://github.com/strands-agents/samples.git
+cd samples/agent-patterns/{pattern_path.name}
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the example
+python examples/basic_usage.py
+```
+
+---
+
+{readme_content}
+
+## Files in this Pattern
+
+```
+{pattern_path.name}/
+├── README.md                 # This documentation
+├── pattern-metadata.json     # Pattern metadata
+├── agent-config.yaml         # Agent configuration
+├── requirements.txt          # Dependencies
+├── src/
+│   ├── agent.py             # Main implementation
+│   └── tools/               # Custom tools
+├── examples/
+│   └── basic_usage.py       # Usage examples
+└── tests/
+    └── test_agent.py        # Tests
+```
+
+## Related Patterns
+
+!!! tip "Similar Patterns"
+    Check out these related patterns that might interest you:
+    
+    - [Pattern 1](../pattern1.md)
+    - [Pattern 2](../pattern2.md)
+
+## Community
+
+- **Author**: [{metadata.get('author', {}).get('name', 'Community')}]({metadata.get('author', {}).get('github', '#')})
+- **Discuss**: [GitHub Discussions](https://github.com/strands-agents/samples/discussions)
+- **Issues**: [Report a bug](https://github.com/strands-agents/samples/issues/new)
+
+## Tags
+
+{' '.join(f'#{tag}' for tag in tags)}
+"""
+    
+    return doc_content
+
+def generate_category_index(category, patterns):
+    """Generate index page for a pattern category."""
+    category_info = {
+        "basic": {"title": "Basic Agents", "icon": "🤖"},
+        "multi-agent": {"title": "Multi-Agent Systems", "icon": "👥"},
+        "knowledge": {"title": "Knowledge & Retrieval", "icon": "📚"},
+        "aws": {"title": "AWS Integrations", "icon": "☁️"},
+        "tools": {"title": "Tool Integrations", "icon": "🔧"}
+    }.get(category, {"title": category.title(), "icon": "📁"})
+    
+    content = f"""# {category_info['icon']} {category_info['title']}
+
+Explore patterns in this category:
+
+## Available Patterns
+
+"""
+    
+    # Sort patterns by complexity and name
+    complexity_order = {"beginner": 0, "intermediate": 1, "advanced": 2}
+    sorted_patterns = sorted(
+        patterns, 
+        key=lambda p: (complexity_order.get(p["complexity"], 0), p["title"])
+    )
+    
+    for pattern in sorted_patterns:
+        complexity_badge = {
+            "beginner": "🟢",
+            "intermediate": "🟡", 
+            "advanced": "🔴"
+        }.get(pattern["complexity"], "⚪")
+        
+        content += f"""### [{pattern['title']}]({pattern['name']}.md) {complexity_badge}
+
+{pattern['description']}
+
+**Tags**: {', '.join(f'`{tag}`' for tag in pattern['tags'][:3])}
+
+---
+
+"""
+    
+    return content
+
+def generate_all_patterns_index(categories):
+    """Generate the main patterns index page."""
+    content = """# All Patterns
+
+Browse all available agent patterns organized by category.
+
+## Quick Filter
+
+<div class="grid cards" markdown>
+
+-   :material-robot: **Basic Agents**
+    
+    ---
+    
+    Simple, focused agents for specific tasks
+    
+    [:octicons-arrow-right-24: Explore Basic Patterns](basic/index.md)
+
+-   :material-account-group: **Multi-Agent Systems**
+    
+    ---
+    
+    Coordinated teams and swarms of agents
+    
+    [:octicons-arrow-right-24: Explore Multi-Agent Patterns](multi-agent/index.md)
+
+-   :material-book: **Knowledge & Retrieval**
+    
+    ---
+    
+    RAG, vector databases, and knowledge graphs
+    
+    [:octicons-arrow-right-24: Explore Knowledge Patterns](knowledge/index.md)
+
+-   :material-cloud: **AWS Integrations**
+    
+    ---
+    
+    Native AWS service integrations
+    
+    [:octicons-arrow-right-24: Explore AWS Patterns](aws/index.md)
+
+-   :material-tools: **Tool Integrations**
+    
+    ---
+    
+    External APIs and service connectors
+    
+    [:octicons-arrow-right-24: Explore Tool Patterns](tools/index.md)
+
+</div>
+
+## Pattern Statistics
+
+"""
+    
+    total_patterns = sum(len(patterns) for patterns in categories.values())
+    content += f"**Total Patterns**: {total_patterns}\n\n"
+    
+    for category, patterns in categories.items():
+        if patterns:
+            category_info = {
+                "basic": "🤖 Basic Agents",
+                "multi-agent": "👥 Multi-Agent Systems", 
+                "knowledge": "📚 Knowledge & Retrieval",
+                "aws": "☁️ AWS Integrations",
+                "tools": "🔧 Tool Integrations"
+            }.get(category, category.title())
+            
+            content += f"**{category_info}**: {len(patterns)} patterns\n"
+    
+    return content
+
+if __name__ == "__main__":
+    generate_pattern_pages()
+
+---
+
+# scripts/generate_patterns.py
+# MkDocs hook for pattern generation
+
+def on_pre_build(config):
+    """Generate pattern documentation before build."""
+    from scripts.generate_pattern_pages import generate_pattern_pages
+    generate_pattern_pages()
+
+---
+
+# .github/workflows/deploy-docs.yml
+# Workflow for building and deploying the docs
+
+name: Deploy Documentation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: |
+          pip install mkdocs-material mkdocs-gen-files mkdocs-literate-nav
+          pip install mkdocs-macros-plugin
+          
+      - name: Validate patterns
+        run: |
+          python scripts/validate_all_patterns.py
+          
+      - name: Build documentation
+        run: |
+          mkdocs build --strict
+          
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          cname: examples.strandsagents.com
+
+extra_css:
+  - stylesheets/extra.css
