@@ -15,7 +15,7 @@ const APP_SUBJECT = "Video Games Sales";
 const WELCOME_MESSAGE =
   "I'm your Video Games Sales Data Analyst, crunching data for insights.";
 
-const STRANDS_ENDPOINT = "http://<AGENT_ENDPOINT_URL>/assistant-streaming";
+const AGENT_ENDPOINT_URL = "http://<AGENT_ENDPOINT_URL>/assistant-streaming";
 
 // --------------------------------
 
@@ -303,7 +303,7 @@ export {
   APP_NAME,
   APP_SUBJECT,
   WELCOME_MESSAGE,
-  STRANDS_ENDPOINT,
+  AGENT_ENDPOINT_URL,
   MODEL_ID_FOR_CHART,
   MAX_LENGTH_INPUT_SEARCH,
   ACCESS_KEY_ID,
