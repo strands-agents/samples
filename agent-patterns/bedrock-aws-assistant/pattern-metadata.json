@@ -1,0 +1,48 @@
+{
+  "title": "AWS Assistant",
+  "description": "A sophisticated multi-agent system that provides comprehensive insights for AWS-related queries using MCP servers for documentation research and cost analysis",
+  "category": "aws-integrations",
+  "complexity": "intermediate",
+  "tags": ["aws", "documentation", "cost-analysis", "mcp", "bedrock", "multi-agent"],
+  "frameworks": ["strands-agents"],
+  "llm_providers": ["bedrock"],
+  "aws_services": ["bedrock", "cost-explorer"],
+  "pattern_type": "multi-agent",
+  "author": {
+    "name": "Strands Team",
+    "github": "strands-agents",
+    "linkedin": ""
+  },
+  "created_date": "2024-03-20",
+  "updated_date": "2024-03-20",
+  "version": "1.0.0",
+  "source_url": "https://github.com/strands-agents/samples/tree/main/samples/02-samples/03-aws-assistant-mcp",
+  "demo": {
+    "available": true,
+    "url": ""
+  },
+  "metrics": {
+    "estimated_cost": "$10-20/month (depends on query volume and Bedrock API calls)",
+    "performance": "2-3s average response time"
+  },
+  "dependencies": {
+    "python_version": ">=3.10",
+    "strands_version": ">=0.1.0",
+    "external_libs": ["plotly", "boto3"],
+    "aws_services": ["bedrock", "cost-explorer"]
+  },
+  "features": {
+    "tools": ["think", "file_write", "python_repl", "shell"],
+    "integrations": ["aws-documentation-mcp", "aws-cost-explorer-mcp"],
+    "deployment_options": ["local", "lambda"],
+    "data_operations": ["read", "analyze", "visualize"],
+    "aws_capabilities": ["documentation-search", "cost-analysis", "graph-visualization"]
+  },
+  "learning_objectives": [
+    "Build multi-agent systems for AWS operations",
+    "Integrate MCP servers for AWS services",
+    "Implement documentation research capabilities",
+    "Create cost analysis visualizations",
+    "Design agent coordination workflows"
+  ]
+} 

@@ -1,0 +1,49 @@
+{
+  "title": "Tavily Search Integration",
+  "description": "A pattern demonstrating how to integrate Tavily's AI-powered search capabilities with Strands agents for enhanced web research and information retrieval",
+  "category": "tool-integrations",
+  "complexity": "beginner",
+  "tags": ["tavily", "search", "web-research", "bedrock", "information-retrieval"],
+  "frameworks": ["strands-agents"],
+  "llm_providers": ["bedrock"],
+  "aws_services": ["bedrock"],
+  "pattern_type": "tool-integration",
+  "author": {
+    "name": "Strands Team",
+    "github": "strands-agents",
+    "linkedin": ""
+  },
+  "created_date": "2024-03-20",
+  "updated_date": "2024-03-20",
+  "version": "1.0.0",
+  "source_url": "https://github.com/strands-agents/samples/tree/main/samples/03-integrations/tavily",
+  "demo": {
+    "available": true,
+    "url": ""
+  },
+  "metrics": {
+    "estimated_cost": "$10-20/month (depends on search volume and Bedrock API calls)",
+    "performance": "1-2s average response time"
+  },
+  "dependencies": {
+    "python_version": ">=3.10",
+    "strands_version": ">=0.1.0",
+    "external_libs": ["tavily"],
+    "aws_services": ["bedrock"]
+  },
+  "features": {
+    "tools": ["search_web", "analyze_results", "extract_information"],
+    "integrations": ["tavily"],
+    "deployment_options": ["local", "lambda"],
+    "data_operations": ["search", "analyze", "extract"],
+    "search_capabilities": ["web-search", "result-analysis", "information-extraction"]
+  },
+  "learning_objectives": [
+    "Build web search integrations",
+    "Implement search result analysis",
+    "Create information extraction workflows",
+    "Design search strategies",
+    "Handle search results",
+    "Manage API integration"
+  ]
+} 

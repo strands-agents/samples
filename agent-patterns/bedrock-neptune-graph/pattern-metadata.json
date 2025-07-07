@@ -1,0 +1,49 @@
+{
+  "title": "Amazon Neptune Graph Assistant",
+  "description": "A pattern demonstrating how to use Amazon Neptune with Strands agents for graph database operations, including memory knowledge graphs and graph queries using MCP servers",
+  "category": "aws-integrations",
+  "complexity": "advanced",
+  "tags": ["neptune", "graph-database", "mcp", "bedrock", "knowledge-graph", "memory"],
+  "frameworks": ["strands-agents"],
+  "llm_providers": ["bedrock"],
+  "aws_services": ["bedrock", "neptune", "neptune-analytics"],
+  "pattern_type": "tool-integration",
+  "author": {
+    "name": "Strands Team",
+    "github": "strands-agents",
+    "linkedin": ""
+  },
+  "created_date": "2024-03-20",
+  "updated_date": "2024-03-20",
+  "version": "1.0.0",
+  "source_url": "https://github.com/strands-agents/samples/tree/main/samples/03-integrations/Amazon-Neptune",
+  "demo": {
+    "available": true,
+    "url": ""
+  },
+  "metrics": {
+    "estimated_cost": "$30-50/month (depends on Neptune instance and Bedrock API calls)",
+    "performance": "2-4s average response time"
+  },
+  "dependencies": {
+    "python_version": ">=3.10",
+    "strands_version": ">=0.1.0",
+    "external_libs": ["boto3", "gremlin-python"],
+    "aws_services": ["bedrock", "neptune", "neptune-analytics"]
+  },
+  "features": {
+    "tools": ["use_aws", "memory_kg_mcp", "query_mcp"],
+    "integrations": ["neptune-query-mcp", "neptune-memory-mcp", "perplexity-mcp"],
+    "deployment_options": ["local", "lambda", "fargate"],
+    "data_operations": ["query", "create", "analyze"],
+    "graph_capabilities": ["knowledge-graphs", "graph-queries", "memory-persistence"]
+  },
+  "learning_objectives": [
+    "Build graph database integrations",
+    "Implement memory knowledge graphs",
+    "Create graph query systems",
+    "Design Neptune MCP servers",
+    "Handle graph data operations",
+    "Integrate multiple MCP servers"
+  ]
+} 

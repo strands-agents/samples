@@ -1,5 +1,6 @@
 # mkdocs.yml for strands-agents/samples repository
-# Designed to be imported via multi-repo plugin into strandsagents.com
+# This repo is now a source for pattern content, browsed via the main website (strandsagents.com).
+# Patterns navigation and browsing are managed upstream; this file is for local development only.
 
 site_name: Strands Agents Patterns
 site_url: https://patterns.strandsagents.com
@@ -62,20 +63,19 @@ markdown_extensions:
   - toc:
       permalink: true
 
-# Navigation structure that will be imported
-# The main site controls how this gets integrated
+# Navigation for local preview only. Main site controls actual navigation.
 nav:
   - Home: index.md
   - Getting Started: getting-started.md
-  - Categories:
-      - Basic Agents: categories/basic-agents.md
-      - Multi-Agent Systems: categories/multi-agent-systems.md
-      - Knowledge & Retrieval: categories/knowledge-retrieval.md
-      - AWS Integrations: categories/aws-integrations.md
-      - Tool Integrations: categories/tool-integrations.md
-      - UI/UX Patterns: categories/ui-ux-patterns.md
-  - Patterns:
-      - ... # Auto-generated from pattern directories
+  # - Categories:
+  #     - Basic Agents: categories/basic-agents.md
+  #     - Multi-Agent Systems: categories/multi-agent-systems.md
+  #     - Knowledge & Retrieval: categories/knowledge-retrieval.md
+  #     - AWS Integrations: categories/aws-integrations.md
+  #     - Tool Integrations: categories/tool-integrations.md
+  #     - UI/UX Patterns: categories/ui-ux-patterns.md
+  # - Patterns:
+  #     - ... # Patterns navigation is managed by the main website
   - Contributing: contributing.md
 
 # Repository information for GitHub links
@@ -83,38 +83,14 @@ edit_uri: edit/main/docs/
 
 # Variables for content generation
 extra:
-  # Pattern discovery configuration
   patterns:
     base_path: "../agent-patterns"
-    categories:
-      basic:
-        title: "Basic Agents"
-        description: "Single LLM agents with focused capabilities"
-        icon: "🤖"
-      multi-agent:
-        title: "Multi-Agent Systems" 
-        description: "Coordinated agent teams and swarms"
-        icon: "👥"
-      knowledge:
-        title: "Knowledge & Retrieval"
-        description: "RAG, vector databases, and knowledge graphs"
-        icon: "📚"
-      aws:
-        title: "AWS Integrations"
-        description: "Native AWS service integrations"
-        icon: "☁️"
-      tools:
-        title: "Tool Integrations"
-        description: "External APIs and service connectors"
-        icon: "🔧"
-  
-  # Metadata for pattern filtering
+    # Categories and filters are managed by the main website
   filters:
     complexity: ["beginner", "intermediate", "advanced"]
     frameworks: ["strands", "langchain", "llamaindex", "crewai"]
     llm_providers: ["openai", "anthropic", "bedrock", "ollama"]
     deployment: ["local", "lambda", "fargate", "ec2"]
-
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/strands-agents/samples
@@ -124,9 +100,10 @@ extra:
     provider: google
     property: G-XXXXXXXXXX
 
-# Hooks for content generation
-hooks:
-  - scripts/generate_patterns.py
+# Hooks for local content generation only
+# Main site will aggregate and build patterns navigation
+# hooks:
+#   - scripts/generate_patterns.py
 
 ---
 

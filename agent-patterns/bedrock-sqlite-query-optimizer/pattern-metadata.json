@@ -1,0 +1,49 @@
+{
+  "title": "Data Warehouse Query Optimizer",
+  "description": "A multi-agent system that optimizes SQL queries using Amazon Bedrock, demonstrating query analysis, optimization, and validation with a SQLite database simulating a data warehouse",
+  "category": "aws-integrations",
+  "complexity": "intermediate",
+  "tags": ["sql", "query-optimization", "multi-agent", "bedrock", "data-warehouse", "sqlite"],
+  "frameworks": ["strands-agents"],
+  "llm_providers": ["bedrock"],
+  "aws_services": ["bedrock"],
+  "pattern_type": "multi-agent",
+  "author": {
+    "name": "Strands Team",
+    "github": "strands-agents",
+    "linkedin": ""
+  },
+  "created_date": "2024-03-20",
+  "updated_date": "2024-03-20",
+  "version": "1.0.0",
+  "source_url": "https://github.com/aws-samples/strands/tree/main/samples/02-samples/08-data-warehouse-optimizer",
+  "demo": {
+    "available": true,
+    "url": ""
+  },
+  "metrics": {
+    "estimated_cost": "$5-15/month (depends on query volume and Bedrock API calls)",
+    "performance": "1-2s average response time"
+  },
+  "dependencies": {
+    "python_version": ">=3.10",
+    "strands_version": ">=0.1.0",
+    "external_libs": ["sqlite3", "opentelemetry-sdk"],
+    "aws_services": ["bedrock"]
+  },
+  "features": {
+    "tools": ["get_query_execution_plan", "suggest_optimizations", "validate_query_cost", "calculator"],
+    "integrations": ["bedrock", "sqlite", "opentelemetry"],
+    "deployment_options": ["local", "lambda", "fargate"],
+    "data_operations": ["read", "analyze", "optimize"],
+    "query_capabilities": ["execution-plan", "cost-analysis", "optimization-suggestions"]
+  },
+  "learning_objectives": [
+    "Build multi-agent systems for query optimization",
+    "Integrate Amazon Bedrock for SQL analysis",
+    "Implement query execution plan analysis",
+    "Design cost-based query validation",
+    "Create collaborative agent workflows",
+    "Add observability with OpenTelemetry"
+  ]
+} 
