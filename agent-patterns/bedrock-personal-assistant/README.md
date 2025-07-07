@@ -168,7 +168,7 @@ For detailed usage examples and implementation details, refer to the source repo
 ## Related Patterns
 
 - [AWS Assistant](../bedrock-aws-assistant/)
-- [Code Assistant](../code-assistant/)
+- [Code Assistant](../bedrock-code-assistant/)
 - [Startup Advisor](../perplexity-startup-advisor/)
 
 ## Resources

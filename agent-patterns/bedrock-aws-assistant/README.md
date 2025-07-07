@@ -166,8 +166,8 @@ For detailed usage examples and implementation details, refer to the source repo
 
 ## Related Patterns
 
-- [Personal Assistant](../personal-assistant/)
-- [Code Assistant](../code-assistant/)
+- [Personal Assistant](../bedrock-personal-assistant/)
+- [Code Assistant](../bedrock-code-assistant/)
 - [Bedrock Knowledge Base with DynamoDB](../bedrock-knowledgebase-dynamodb/)
 
 ## Resources

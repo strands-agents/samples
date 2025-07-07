@@ -149,9 +149,9 @@ For detailed usage examples and implementation details, refer to the source repo
 
 ## Related Patterns
 
-- [Personal Assistant](../personal-assistant/)
-- [AWS Assistant](../aws-cost-documentation-assistant/)
-- [Code Assistant](../code-assistant/)
+- [Personal Assistant](../bedrock-personal-assistant/)
+- [AWS Assistant](../bedrock-aws-assistant/)
+- [Code Assistant](../bedrock-code-assistant/)
 
 ## Resources
 

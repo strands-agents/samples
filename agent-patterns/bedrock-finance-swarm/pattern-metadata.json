@@ -1,1 +1,49 @@
- 
+{
+  "title": "Finance Swarm Agent",
+  "description": "A sophisticated multi-agent system that uses swarm intelligence to analyze financial data, generate investment strategies, and provide market insights",
+  "category": "multi-agent-systems",
+  "complexity": "advanced",
+  "tags": ["finance", "swarm", "investment", "bedrock", "analysis", "multi-agent"],
+  "frameworks": ["strands-agents"],
+  "llm_providers": ["bedrock"],
+  "aws_services": ["bedrock"],
+  "pattern_type": "swarm-agent",
+  "author": {
+    "name": "Strands Team",
+    "github": "strands-agents",
+    "linkedin": ""
+  },
+  "created_date": "2024-03-20",
+  "updated_date": "2024-03-20",
+  "version": "1.0.0",
+  "source_url": "https://github.com/strands-agents/samples/tree/main/samples/02-samples/09-finance-assistant-swarm-agent",
+  "demo": {
+    "available": true,
+    "url": ""
+  },
+  "metrics": {
+    "estimated_cost": "$25-35/month (depends on analysis volume and Bedrock API calls)",
+    "performance": "3-5s average response time"
+  },
+  "dependencies": {
+    "python_version": ">=3.10",
+    "strands_version": ">=0.1.0",
+    "external_libs": ["pandas", "numpy", "yfinance"],
+    "aws_services": ["bedrock"]
+  },
+  "features": {
+    "tools": ["analyze_market", "generate_strategy", "calculate_metrics", "swarm_consensus"],
+    "integrations": ["yfinance", "bedrock"],
+    "deployment_options": ["local", "lambda", "fargate"],
+    "data_operations": ["analyze", "calculate", "predict"],
+    "finance_capabilities": ["market-analysis", "strategy-generation", "risk-assessment", "portfolio-optimization"]
+  },
+  "learning_objectives": [
+    "Build swarm intelligence systems",
+    "Implement financial analysis tools",
+    "Create investment strategies",
+    "Design consensus mechanisms",
+    "Handle market data",
+    "Manage multi-agent coordination"
+  ]
+} 
