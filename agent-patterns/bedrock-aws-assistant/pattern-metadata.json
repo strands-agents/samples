@@ -12,7 +12,7 @@
     ]
   },
   "source": {
-    "file_url": "https://raw.githubusercontent.com/strands-agents/samples/main/02-samples/03-aws-assistant-mcp/agent.py",
+    "file_url": "https://raw.githubusercontent.com/strands-agents/samples/refs/heads/main/02-samples/03-aws-assistant-mcp/main.py",
     "repo_url": "https://github.com/strands-agents/samples/tree/main/02-samples/03-aws-assistant-mcp"
   }
 } 
