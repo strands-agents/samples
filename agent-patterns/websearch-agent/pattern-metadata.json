@@ -1,49 +1,18 @@
 {
   "title": "Web Search Agent with DuckDuckGo",
   "description": "Build a conversational AI agent that can search the web in real-time using DuckDuckGo to provide up-to-date information on any topic",
-  "category": "tool-integrations",
-  "complexity": "beginner",
-  "tags": ["strands", "agent", "websearch", "duckduckgo", "real-time", "information-retrieval"],
-  "frameworks": ["strands-agents"],
-  "llm_providers": ["bedrock"],
-  "aws_services": ["bedrock"],
-  "pattern_type": "tool-integration",
-  "author": {
-    "name": "Strands Team",
-    "github": "strands-agents",
-    "linkedin": ""
+  "introBox": {
+    "headline": "How it works",
+    "text": [
+      "Integrates DuckDuckGo search API for real-time web information retrieval",
+      "Implements custom tools for handling search queries and results processing",
+      "Features comprehensive error handling for rate limits and API failures",
+      "Supports multiple deployment options including local, Lambda, and Fargate",
+      "Provides interactive conversational interface for natural search interactions"
+    ]
   },
-  "created_date": "2024-01-15",
-  "updated_date": "2024-01-15",
-  "version": "1.0.0",
-  "demo": {
-    "available": false,
-    "url": ""
-  },
-  "metrics": {
-    "estimated_cost": "$0.001/query (Bedrock API calls only)",
-    "performance": "2-5s average response time (depends on search API)"
-  },
-  "dependencies": {
-    "python_version": ">=3.10",
-    "strands_version": ">=0.1.0",
-    "external_libs": ["duckduckgo-search"],
-    "aws_services": ["bedrock"]
-  },
-  "features": {
-    "tools": ["websearch", "real-time-search"],
-    "integrations": ["duckduckgo-api"],
-    "deployment_options": ["local", "lambda", "fargate"]
-  },
-  "learning_objectives": [
-    "Learn to create custom tools with external APIs",
-    "Understand real-time information retrieval",
-    "Explore error handling in agent tools",
-    "Build interactive conversational agents"
-  ],
-  "related_patterns": [
-    "tavily-websearch-agent",
-    "hybrid-search-agent",
-    "knowledge-base-agent"
-  ]
+  "source": {
+    "repo_url": "https://github.com/strands-agents/samples/tree/main/02-samples/websearch-agent",
+    "file_url": "https://raw.githubusercontent.com/strands-agents/samples/main/02-samples/websearch-agent/agent.py"
+  }
 } 

@@ -1,49 +1,18 @@
 {
   "title": "Code Assistant",
   "description": "An intelligent coding companion that provides code generation, review, and execution capabilities using a multi-agent architecture and interactive development tools",
-  "category": "tool-integrations",
-  "complexity": "intermediate",
-  "tags": ["coding", "development", "python", "bedrock", "multi-agent", "repl"],
-  "frameworks": ["strands-agents"],
-  "llm_providers": ["bedrock"],
-  "aws_services": ["bedrock"],
-  "pattern_type": "multi-agent",
-  "author": {
-    "name": "Strands Team",
-    "github": "strands-agents",
-    "linkedin": ""
+  "introBox": {
+    "headline": "How it works",
+    "text": [
+      "Combines multiple specialized agents for code generation, review, and execution",
+      "Provides interactive Python REPL and file management capabilities",
+      "Features secure shell operations for development tasks",
+      "Implements comprehensive code review and debugging workflows",
+      "Supports local development with integrated editor tools"
+    ]
   },
-  "created_date": "2024-03-20",
-  "updated_date": "2024-03-20",
-  "version": "1.0.0",
-  "source_url": "https://github.com/strands-agents/samples/tree/main/samples/02-samples/06-code-assistant",
-  "demo": {
-    "available": true,
-    "url": ""
-  },
-  "metrics": {
-    "estimated_cost": "$10-20/month (depends on usage and Bedrock API calls)",
-    "performance": "1-2s average response time"
-  },
-  "dependencies": {
-    "python_version": ">=3.10",
-    "strands_version": ">=0.1.0",
-    "external_libs": ["python-pty"],
-    "aws_services": ["bedrock"]
-  },
-  "features": {
-    "tools": ["file_read", "shell", "file_write", "editor", "python_repl"],
-    "integrations": ["bedrock"],
-    "deployment_options": ["local"],
-    "data_operations": ["read", "write", "execute"],
-    "coding_capabilities": ["code-generation", "code-review", "debugging", "file-management"]
-  },
-  "learning_objectives": [
-    "Build interactive coding assistants",
-    "Implement code execution environments",
-    "Create code review workflows",
-    "Design file management tools",
-    "Handle shell operations safely",
-    "Integrate development tools"
-  ]
+  "source": {
+    "repo_url": "https://github.com/strands-agents/samples/tree/main/samples/02-samples/06-code-assistant",
+    "file_url": "https://raw.githubusercontent.com/strands-agents/samples/main/02-samples/06-code-assistant/agent.py"
+  }
 } 

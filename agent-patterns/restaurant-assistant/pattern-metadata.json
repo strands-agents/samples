@@ -1,44 +1,18 @@
 {
   "title": "Restaurant Assistant with Bedrock Knowledge Base",
   "description": "A restaurant assistant agent that helps customers make reservations and query restaurant information using Amazon Bedrock Knowledge Base and DynamoDB",
-  "category": "basic-agents",
-  "complexity": "beginner",
-  "tags": ["strands", "agent", "bedrock", "dynamodb", "restaurant", "booking"],
-  "frameworks": ["strands-agents"],
-  "llm_providers": ["bedrock"],
-  "aws_services": ["bedrock", "dynamodb", "ssm"],
-  "pattern_type": "basic-agent",
-  "author": {
-    "name": "Strands Team",
-    "github": "strands-agents",
-    "linkedin": ""
+  "introBox": {
+    "headline": "How it works",
+    "text": [
+      "Integrates with Amazon Bedrock Knowledge Base and DynamoDB for restaurant information and bookings",
+      "Uses multiple tools including current_time, retrieve, create_booking, and booking management",
+      "Handles conversational flows with follow-up questions for natural interactions",
+      "Implements tool definitions using both decorator and TOOL_SPEC approaches",
+      "Provides local deployment option with AWS service integrations"
+    ]
   },
-  "created_date": "2024-03-20",
-  "updated_date": "2024-03-20",
-  "version": "1.0.0",
-  "source_url": "https://github.com/strands-agents/samples/tree/main/02-samples/01-restaurant-assistant",
-  "demo": {
-    "available": false,
-    "url": ""
-  },
-  "metrics": {
-    "estimated_cost": "Varies based on Bedrock and DynamoDB usage",
-    "performance": "~1-2s average response time"
-  },
-  "dependencies": {
-    "python_version": ">=3.10",
-    "strands_version": ">=0.1.0",
-    "aws_services": ["bedrock", "dynamodb", "ssm"]
-  },
-  "features": {
-    "tools": ["current_time", "retrieve", "create_booking", "get_booking_details", "delete_booking"],
-    "integrations": ["Amazon Bedrock Knowledge Base", "Amazon DynamoDB"],
-    "deployment_options": ["local"]
-  },
-  "learning_objectives": [
-    "Learn to create Strands agents with AWS service integrations",
-    "Understand tool definition approaches (decorator and TOOL_SPEC)",
-    "Implement restaurant booking system with Knowledge Base and DynamoDB",
-    "Handle conversational flows with follow-up questions"
-  ]
+  "source": {
+    "repo_url": "https://github.com/strands-agents/samples/tree/main/02-samples/01-restaurant-assistant",
+    "file_url": "https://raw.githubusercontent.com/strands-agents/samples/main/02-samples/01-restaurant-assistant/agent.py"
+  }
 } 

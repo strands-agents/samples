@@ -1,43 +1,18 @@
 {
-  "title": "[Pattern Title]",
-  "description": "[Brief description of the pattern]",
-  "category": "basic-agents",
-  "complexity": "beginner",
-  "tags": ["strands", "agent", "bedrock"],
-  "frameworks": ["strands-agents"],
-  "llm_providers": ["bedrock"],
-  "aws_services": [],
-  "pattern_type": "basic-agent",
-  "author": {
-    "name": "[Author Name]",
-    "github": "[github-username]",
-    "linkedin": "[linkedin-profile]"
+  "title": "WhatsApp Fintech Assistant",
+  "description": "A multi-agent system that integrates WhatsApp for Business with Strands agents to handle fintech operations like transaction history, payments, and daily promotions",
+  "introBox": {
+    "headline": "How it works",
+    "text": [
+      "Integrates WhatsApp Business API with AWS End User Messaging for secure communication",
+      "Uses a multi-agent system with specialized agents for transactions, payments, and promotions",
+      "Implements secure financial transaction handling and promotional content delivery",
+      "Provides real-time response capabilities through Lambda functions",
+      "Supports asynchronous processing and comprehensive error handling"
+    ]
   },
-  "created_date": "[YYYY-MM-DD]",
-  "updated_date": "[YYYY-MM-DD]",
-  "version": "1.0.0",
-  "source_url": "[GitHub Repository URL]",
-  "demo": {
-    "available": false,
-    "url": ""
-  },
-  "metrics": {
-    "estimated_cost": "$[X]/month",
-    "performance": "[X]ms average response time"
-  },
-  "dependencies": {
-    "python_version": ">=3.10",
-    "strands_version": ">=0.1.0",
-    "aws_services": []
-  },
-  "features": {
-    "tools": [],
-    "integrations": [],
-    "deployment_options": ["local", "lambda", "fargate"]
-  },
-  "learning_objectives": [
-    "Learn to create basic Strands agents",
-    "Understand agent configuration",
-    "Explore tool integration"
-  ]
+  "source": {
+    "repo_url": "https://github.com/strands-agents/samples/tree/main/02-samples/07-whatsapp-fintech-sample",
+    "file_url": "https://raw.githubusercontent.com/strands-agents/samples/main/02-samples/07-whatsapp-fintech-sample/agent.py"
+  }
 } 

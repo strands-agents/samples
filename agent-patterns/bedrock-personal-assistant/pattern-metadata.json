@@ -1,49 +1,18 @@
 {
   "title": "Personal Assistant",
   "description": "A comprehensive personal assistant that combines calendar management, coding assistance, and web search capabilities using agents as tools functionality",
-  "category": "multi-agent-systems",
-  "complexity": "intermediate",
-  "tags": ["calendar", "coding", "search", "multi-agent", "bedrock", "perplexity"],
-  "frameworks": ["strands-agents"],
-  "llm_providers": ["bedrock"],
-  "aws_services": ["bedrock"],
-  "pattern_type": "multi-agent",
-  "author": {
-    "name": "Strands Team",
-    "github": "strands-agents",
-    "linkedin": ""
+  "introBox": {
+    "headline": "How it works",
+    "text": [
+      "Uses agents as tools pattern to combine multiple specialized assistants",
+      "Integrates calendar management with coding and web search capabilities",
+      "Provides interactive shell access for system operations",
+      "Features Python REPL and editor tools for coding assistance",
+      "Implements journal functionality for persistent memory"
+    ]
   },
-  "created_date": "2024-03-20",
-  "updated_date": "2024-03-20",
-  "version": "1.0.0",
-  "source_url": "https://github.com/strands-agents/samples/tree/main/samples/02-samples/05-personal-assistant",
-  "demo": {
-    "available": true,
-    "url": ""
-  },
-  "metrics": {
-    "estimated_cost": "$15-25/month (depends on usage and Bedrock API calls)",
-    "performance": "1-2s average response time"
-  },
-  "dependencies": {
-    "python_version": ">=3.10",
-    "strands_version": ">=0.1.0",
-    "external_libs": ["perplexity-mcp", "python-pty"],
-    "aws_services": ["bedrock"]
-  },
-  "features": {
-    "tools": ["python_repl", "editor", "shell", "journal"],
-    "integrations": ["perplexity-mcp"],
-    "deployment_options": ["local"],
-    "data_operations": ["read", "write", "execute"],
-    "assistant_capabilities": ["calendar-management", "code-assistance", "web-search", "shell-access"]
-  },
-  "learning_objectives": [
-    "Build multi-agent personal assistants",
-    "Implement agents as tools pattern",
-    "Create calendar management systems",
-    "Design coding assistance tools",
-    "Integrate web search capabilities",
-    "Handle interactive shell operations"
-  ]
+  "source": {
+    "repo_url": "https://github.com/strands-agents/samples/tree/main/samples/02-samples/05-personal-assistant",
+    "file_url": "https://raw.githubusercontent.com/strands-agents/samples/main/02-samples/05-personal-assistant/agent.py"
+  }
 } 

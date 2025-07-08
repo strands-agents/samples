@@ -1,48 +1,18 @@
 {
   "title": "Scrum Master Assistant",
   "description": "An expert agile development assistant that converts meeting notes into actionable JIRA tickets, helping product teams transform high-level planning items into well-structured tasks",
-  "category": "tool-integrations",
-  "complexity": "intermediate",
-  "tags": ["jira", "agile", "scrum", "bedrock", "task-management", "meeting-notes"],
-  "frameworks": ["strands-agents"],
-  "llm_providers": ["bedrock"],
-  "aws_services": ["bedrock"],
-  "pattern_type": "single-agent",
-  "author": {
-    "name": "Strands Team",
-    "github": "strands-agents",
-    "linkedin": ""
+  "introBox": {
+    "headline": "How it works",
+    "text": [
+      "Analyzes meeting notes and automatically converts them into structured JIRA tickets",
+      "Uses Bedrock for natural language understanding and task breakdown",
+      "Integrates with JIRA API for automated ticket creation and management",
+      "Implements intelligent task breakdown strategies for agile workflows",
+      "Supports both local and Lambda deployment options for flexibility"
+    ]
   },
-  "created_date": "2024-03-20",
-  "updated_date": "2024-03-20",
-  "version": "1.0.0",
-  "source_url": "https://github.com/aws-samples/strands/tree/main/samples/02-samples/02-scrum-master-assistant",
-  "demo": {
-    "available": true,
-    "url": ""
-  },
-  "metrics": {
-    "estimated_cost": "$5-10/month (depends on meeting frequency and Bedrock API calls)",
-    "performance": "2-3s average response time"
-  },
-  "dependencies": {
-    "python_version": ">=3.10",
-    "strands_version": ">=0.1.0",
-    "external_libs": ["jira"],
-    "aws_services": ["bedrock"]
-  },
-  "features": {
-    "tools": ["create_jira_ticket", "file_read"],
-    "integrations": ["jira", "bedrock"],
-    "deployment_options": ["local", "lambda"],
-    "data_operations": ["read", "create"],
-    "task_capabilities": ["meeting-notes-analysis", "ticket-creation", "task-breakdown"]
-  },
-  "learning_objectives": [
-    "Integrate JIRA with Strands agents",
-    "Process meeting notes into structured tasks",
-    "Implement agile task management",
-    "Create automated ticket workflows",
-    "Design task breakdown strategies"
-  ]
+  "source": {
+    "repo_url": "https://github.com/aws-samples/strands/tree/main/samples/02-samples/02-scrum-master-assistant",
+    "file_url": "https://raw.githubusercontent.com/aws-samples/strands/main/samples/02-samples/02-scrum-master-assistant/agent.py"
+  }
 } 

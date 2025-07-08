@@ -1,49 +1,18 @@
 {
   "title": "Openinference Arize Integration",
   "description": "A pattern demonstrating how to integrate Openinference with Arize for comprehensive agent observability, monitoring, and evaluation using standardized telemetry",
-  "category": "observability",
-  "complexity": "intermediate",
-  "tags": ["openinference", "arize", "observability", "monitoring", "evaluation", "telemetry"],
-  "frameworks": ["strands-agents"],
-  "llm_providers": ["bedrock"],
-  "aws_services": ["bedrock"],
-  "pattern_type": "tool-integration",
-  "author": {
-    "name": "Strands Team",
-    "github": "strands-agents",
-    "linkedin": ""
+  "introBox": {
+    "headline": "How it works",
+    "text": [
+      "Integrates Openinference for standardized telemetry collection from agents",
+      "Uses Arize for real-time monitoring and performance tracking",
+      "Implements comprehensive agent evaluation frameworks",
+      "Features minimal overhead telemetry collection",
+      "Supports multiple deployment options with consistent observability"
+    ]
   },
-  "created_date": "2024-03-20",
-  "updated_date": "2024-03-20",
-  "version": "1.0.0",
-  "source_url": "https://github.com/strands-agents/samples/tree/main/samples/03-integrations/Openinference-Arize",
-  "demo": {
-    "available": true,
-    "url": ""
-  },
-  "metrics": {
-    "estimated_cost": "$20-30/month (depends on telemetry volume and Bedrock API calls)",
-    "performance": "minimal overhead"
-  },
-  "dependencies": {
-    "python_version": ">=3.10",
-    "strands_version": ">=0.1.0",
-    "external_libs": ["openinference", "arize"],
-    "aws_services": ["bedrock"]
-  },
-  "features": {
-    "tools": ["collect_telemetry", "monitor_performance", "evaluate_agents"],
-    "integrations": ["openinference", "arize"],
-    "deployment_options": ["local", "lambda", "fargate"],
-    "data_operations": ["collect", "monitor", "evaluate"],
-    "observability_capabilities": ["telemetry-collection", "performance-monitoring", "agent-evaluation"]
-  },
-  "learning_objectives": [
-    "Build observability systems",
-    "Implement telemetry collection",
-    "Create monitoring workflows",
-    "Design evaluation frameworks",
-    "Handle performance tracking",
-    "Manage agent metrics"
-  ]
+  "source": {
+    "repo_url": "https://github.com/strands-agents/samples/tree/main/samples/03-integrations/Openinference-Arize",
+    "file_url": "https://raw.githubusercontent.com/strands-agents/samples/main/03-integrations/Openinference-Arize/agent.py"
+  }
 } 

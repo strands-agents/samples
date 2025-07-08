@@ -1,71 +1,18 @@
 {
   "title": "Bedrock Knowledge Base with DynamoDB Integration",
   "description": "Build an intelligent agent that combines Amazon Bedrock Knowledge Base for RAG with DynamoDB for persistent data operations, creating a comprehensive information and transaction system",
-  "category": "aws-integrations",
-  "complexity": "advanced",
-  "tags": ["strands", "bedrock", "knowledge-base", "dynamodb", "rag", "aws", "persistence", "crud"],
-  "frameworks": ["strands-agents"],
-  "llm_providers": ["bedrock"],
-  "aws_services": ["bedrock", "dynamodb", "s3", "ssm"],
-  "pattern_type": "aws-integration",
-  "author": {
-    "name": "Strands Team",
-    "github": "strands-agents",
-    "linkedin": ""
+  "introBox": {
+    "headline": "How it works",
+    "text": [
+      "Combines Bedrock Knowledge Base for RAG with DynamoDB for persistent storage",
+      "Implements CRUD operations through custom agent tools",
+      "Features document retrieval and semantic search capabilities",
+      "Provides context-aware responses using hybrid information sources",
+      "Handles AWS service integrations with comprehensive error handling"
+    ]
   },
-  "created_date": "2024-01-15",
-  "updated_date": "2024-01-15",
-  "version": "1.0.0",
-  "demo": {
-    "available": false,
-    "url": ""
-  },
-  "metrics": {
-    "estimated_cost": "$5-15/month (depends on usage - KB, DynamoDB, Bedrock API calls)",
-    "performance": "1-3s average response time (varies by query type)"
-  },
-  "dependencies": {
-    "python_version": ">=3.10",
-    "strands_version": ">=0.1.0",
-    "external_libs": ["boto3", "pandas"],
-    "aws_services": ["bedrock", "dynamodb", "s3", "ssm"]
-  },
-  "features": {
-    "tools": ["retrieve", "current_time", "get_item_details", "create_item", "delete_item"],
-    "integrations": ["bedrock-knowledge-base", "dynamodb", "s3", "ssm"],
-    "deployment_options": ["local", "lambda", "fargate", "ec2"],
-    "data_operations": ["create", "read", "update", "delete"],
-    "rag_capabilities": ["document-retrieval", "semantic-search", "context-aware-responses"]
-  },
-  "learning_objectives": [
-    "Integrate Bedrock Knowledge Base with Strands agents",
-    "Implement DynamoDB CRUD operations as agent tools",
-    "Design hybrid information and transaction systems",
-    "Use both decorator and tool specification approaches",
-    "Handle AWS service errors gracefully",
-    "Build conversation-aware agents"
-  ],
-  "related_patterns": [
-    "corrective-rag-agent",
-    "adaptive-structured-rag",
-    "restaurant-assistant",
-    "knowledge-base-agent"
-  ],
-  "use_cases": [
-    "Customer service systems with knowledge base and booking capabilities",
-    "Document Q&A with transaction processing",
-    "Hybrid information retrieval and data management",
-    "Restaurant reservation systems",
-    "Product catalog with order management"
-  ],
-  "infrastructure": {
-    "required_services": [
-      "Amazon Bedrock Knowledge Base",
-      "Amazon DynamoDB Table",
-      "Amazon S3 Bucket",
-      "AWS Systems Manager Parameter Store"
-    ],
-    "deployment_automation": ["CloudFormation templates", "Shell scripts"],
-    "cleanup_provided": true
+  "source": {
+    "repo_url": "https://github.com/strands-agents/samples/tree/main/02-samples/bedrock-knowledgebase-dynamodb",
+    "file_url": "https://raw.githubusercontent.com/strands-agents/samples/main/02-samples/bedrock-knowledgebase-dynamodb/agent.py"
   }
 } 

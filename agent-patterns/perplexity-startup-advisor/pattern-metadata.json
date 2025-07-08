@@ -1,48 +1,18 @@
 {
   "title": "Startup Advisor with Perplexity Search",
   "description": "A multi-agent system that uses Perplexity MCP server to conduct market research and generate marketing strategies for startups, including campaign ideas and copy generation",
-  "category": "tool-integrations",
-  "complexity": "intermediate",
-  "tags": ["perplexity", "market-research", "marketing", "mcp", "bedrock", "multi-agent"],
-  "frameworks": ["strands-agents"],
-  "llm_providers": ["bedrock"],
-  "aws_services": ["bedrock"],
-  "pattern_type": "multi-agent",
-  "author": {
-    "name": "Strands Team",
-    "github": "strands-agents",
-    "linkedin": ""
+  "introBox": {
+    "headline": "How it works",
+    "text": [
+      "Leverages multi-agent architecture with Perplexity MCP for comprehensive market research",
+      "Implements swarm intelligence patterns for coordinated research and analysis",
+      "Provides tools for market research, campaign planning, and content creation",
+      "Supports both local and Lambda deployment options",
+      "Uses Bedrock for advanced language processing and content generation"
+    ]
   },
-  "created_date": "2024-03-20",
-  "updated_date": "2024-03-20",
-  "version": "1.0.0",
-  "source_url": "https://github.com/strands-agents/samples/tree/main/samples/02-samples/04-startup-advisor-mcp",
-  "demo": {
-    "available": true,
-    "url": ""
-  },
-  "metrics": {
-    "estimated_cost": "$10-20/month (depends on research volume and Bedrock API calls)",
-    "performance": "3-5s average response time"
-  },
-  "dependencies": {
-    "python_version": ">=3.10",
-    "strands_version": ">=0.1.0",
-    "external_libs": ["perplexity-mcp"],
-    "aws_services": ["bedrock"]
-  },
-  "features": {
-    "tools": ["swarm", "file_write", "editor"],
-    "integrations": ["perplexity-mcp"],
-    "deployment_options": ["local", "lambda"],
-    "data_operations": ["research", "analyze", "create"],
-    "marketing_capabilities": ["market-research", "campaign-planning", "content-creation"]
-  },
-  "learning_objectives": [
-    "Build multi-agent systems for market research",
-    "Integrate Perplexity MCP for web research",
-    "Implement swarm intelligence patterns",
-    "Create marketing content workflows",
-    "Design research-based strategies"
-  ]
+  "source": {
+    "repo_url": "https://github.com/strands-agents/samples/tree/main/samples/02-samples/04-startup-advisor-mcp",
+    "file_url": "https://raw.githubusercontent.com/strands-agents/samples/main/02-samples/04-startup-advisor-mcp/agent.py"
+  }
 } 

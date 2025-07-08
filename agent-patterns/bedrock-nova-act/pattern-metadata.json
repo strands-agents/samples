@@ -1,49 +1,18 @@
 {
   "title": "Nova ACT Assistant",
   "description": "A pattern demonstrating how to use Amazon Bedrock's Nova ACT (Action) capabilities for controlled task execution and automation with safety guardrails",
-  "category": "aws-integrations",
-  "complexity": "intermediate",
-  "tags": ["nova", "act", "bedrock", "automation", "task-execution", "safety"],
-  "frameworks": ["strands-agents"],
-  "llm_providers": ["bedrock"],
-  "aws_services": ["bedrock", "nova"],
-  "pattern_type": "tool-integration",
-  "author": {
-    "name": "Strands Team",
-    "github": "strands-agents",
-    "linkedin": ""
+  "introBox": {
+    "headline": "How it works",
+    "text": [
+      "Integrates with Amazon Bedrock's Nova ACT for controlled task execution and automation",
+      "Implements comprehensive safety guardrails and execution monitoring",
+      "Provides tools for action execution, validation, and monitoring",
+      "Supports both local and Lambda deployment options",
+      "Features built-in task automation and safety control mechanisms"
+    ]
   },
-  "created_date": "2024-03-20",
-  "updated_date": "2024-03-20",
-  "version": "1.0.0",
-  "source_url": "https://github.com/strands-agents/samples/tree/main/samples/03-integrations/nova-act",
-  "demo": {
-    "available": true,
-    "url": ""
-  },
-  "metrics": {
-    "estimated_cost": "$15-25/month (depends on Nova usage and Bedrock API calls)",
-    "performance": "1-2s average response time"
-  },
-  "dependencies": {
-    "python_version": ">=3.10",
-    "strands_version": ">=0.1.0",
-    "external_libs": ["boto3"],
-    "aws_services": ["bedrock", "nova"]
-  },
-  "features": {
-    "tools": ["execute_action", "validate_action", "monitor_execution"],
-    "integrations": ["nova-act", "bedrock"],
-    "deployment_options": ["local", "lambda"],
-    "data_operations": ["execute", "validate", "monitor"],
-    "act_capabilities": ["task-execution", "safety-controls", "execution-monitoring"]
-  },
-  "learning_objectives": [
-    "Build Nova ACT integrations",
-    "Implement task execution systems",
-    "Create safety guardrails",
-    "Design monitoring workflows",
-    "Handle execution control",
-    "Manage task automation"
-  ]
+  "source": {
+    "repo_url": "https://github.com/strands-agents/samples/tree/main/samples/03-integrations/nova-act",
+    "file_url": "https://raw.githubusercontent.com/strands-agents/samples/main/03-integrations/nova-act/agent.py"
+  }
 } 

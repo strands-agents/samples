@@ -1,49 +1,18 @@
 {
   "title": "Multi-Modal Email Assistant",
   "description": "A sophisticated email assistant combining RAG, image generation, and web research for creating high-quality, multi-modal email content",
-  "category": "tool-integrations",
-  "complexity": "advanced",
-  "tags": ["email", "rag", "image-generation", "bedrock", "nova", "multi-modal"],
-  "frameworks": ["strands-agents"],
-  "llm_providers": ["bedrock"],
-  "aws_services": ["bedrock", "nova"],
-  "pattern_type": "multi-agent",
-  "author": {
-    "name": "Strands Team",
-    "github": "strands-agents",
-    "linkedin": ""
+  "introBox": {
+    "headline": "How it works",
+    "text": [
+      "Combines RAG with Bedrock Knowledge Base for contextual email composition",
+      "Integrates Nova Canvas for dynamic image generation in emails",
+      "Features web research capabilities for up-to-date content",
+      "Implements multi-modal content handling and composition",
+      "Provides tools for retrieving, generating, and composing email content"
+    ]
   },
-  "created_date": "2024-03-20",
-  "updated_date": "2024-03-20",
-  "version": "1.0.0",
-  "source_url": "https://github.com/strands-agents/samples/tree/main/samples/02-samples/10-multi-modal-email-assistant-agent",
-  "demo": {
-    "available": true,
-    "url": ""
-  },
-  "metrics": {
-    "estimated_cost": "$20-30/month (depends on usage and Bedrock API calls)",
-    "performance": "2-3s average response time"
-  },
-  "dependencies": {
-    "python_version": ">=3.10",
-    "strands_version": ">=0.1.0",
-    "external_libs": ["boto3", "nova-canvas"],
-    "aws_services": ["bedrock", "nova"]
-  },
-  "features": {
-    "tools": ["retrieve_from_kb", "generate_image_nova", "http_request", "editor"],
-    "integrations": ["nova-canvas", "bedrock-kb"],
-    "deployment_options": ["local", "lambda"],
-    "data_operations": ["retrieve", "generate", "compose"],
-    "email_capabilities": ["rag-integration", "image-generation", "web-research", "content-composition"]
-  },
-  "learning_objectives": [
-    "Build multi-modal email assistants",
-    "Implement RAG with Knowledge Base",
-    "Create image generation workflows",
-    "Design email composition systems",
-    "Handle multi-modal content",
-    "Manage web research integration"
-  ]
+  "source": {
+    "repo_url": "https://github.com/strands-agents/samples/tree/main/samples/02-samples/10-multi-modal-email-assistant-agent",
+    "file_url": "https://raw.githubusercontent.com/strands-agents/samples/main/02-samples/10-multi-modal-email-assistant-agent/agent.py"
+  }
 } 

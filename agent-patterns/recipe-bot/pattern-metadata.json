@@ -1,7 +1,6 @@
 {
   "title": "Interactive Recipe Bot",
   "description": "A simple interactive agent that helps users find recipes and get cooking information using web search capabilities",
-  "category": "basic-agents",
   "introBox": {
     "headline": "How it works",
     "text": [
@@ -15,6 +14,5 @@
   "source": {
     "file_url": "https://raw.githubusercontent.com/strands-agents/samples/main/01-tutorials/01-fundamentals/01-first-agent/02-simple-interactive-usecase/recipe_bot.py",
     "repo_url": "https://github.com/strands-agents/samples/blob/main/01-tutorials/01-fundamentals/01-first-agent/02-simple-interactive-usecase/"
-  },
-  "tags": ["recipes", "websearch", "interactive", "duckduckgo", "basic"]
+  }
 } 
