@@ -1,7 +1,6 @@
 {
   "title": "AWS Assistant",
   "description": "A sophisticated multi-agent system that provides comprehensive insights for AWS-related queries using MCP servers for documentation research and cost analysis",
-  "category": "aws-integrations",
   "introBox": {
     "headline": "How it works",
     "text": [
@@ -13,8 +12,7 @@
     ]
   },
   "source": {
-    "file_url": "https://raw.githubusercontent.com/strands-agents/samples/main/samples/02-samples/03-aws-assistant-mcp/agent.py",
-    "repo_url": "https://github.com/strands-agents/samples/tree/main/samples/02-samples/03-aws-assistant-mcp"
-  },
-  "tags": ["aws", "documentation", "cost-analysis", "mcp", "bedrock", "multi-agent"]
+    "file_url": "https://raw.githubusercontent.com/strands-agents/samples/main/02-samples/03-aws-assistant-mcp/agent.py",
+    "repo_url": "https://github.com/strands-agents/samples/tree/main/02-samples/03-aws-assistant-mcp"
+  }
 } 
