@@ -2,47 +2,19 @@
   "title": "AWS Assistant",
   "description": "A sophisticated multi-agent system that provides comprehensive insights for AWS-related queries using MCP servers for documentation research and cost analysis",
   "category": "aws-integrations",
-  "complexity": "intermediate",
-  "tags": ["aws", "documentation", "cost-analysis", "mcp", "bedrock", "multi-agent"],
-  "frameworks": ["strands-agents"],
-  "llm_providers": ["bedrock"],
-  "aws_services": ["bedrock", "cost-explorer"],
-  "pattern_type": "multi-agent",
-  "author": {
-    "name": "Strands Team",
-    "github": "strands-agents",
-    "linkedin": ""
+  "introBox": {
+    "headline": "How it works",
+    "text": [
+      "The AWS Assistant uses multiple specialized agents to handle different aspects of AWS operations",
+      "A documentation agent searches and analyzes AWS documentation using MCP servers",
+      "A cost analysis agent provides insights into AWS spending and creates visualizations",
+      "The orchestrator agent coordinates between these specialists to provide comprehensive responses",
+      "Each agent uses Amazon Bedrock for natural language understanding and processing"
+    ]
   },
-  "created_date": "2024-03-20",
-  "updated_date": "2024-03-20",
-  "version": "1.0.0",
-  "source_url": "https://github.com/strands-agents/samples/tree/main/samples/02-samples/03-aws-assistant-mcp",
-  "demo": {
-    "available": true,
-    "url": ""
+  "source": {
+    "file_url": "https://raw.githubusercontent.com/strands-agents/samples/main/samples/02-samples/03-aws-assistant-mcp/agent.py",
+    "repo_url": "https://github.com/strands-agents/samples/tree/main/samples/02-samples/03-aws-assistant-mcp"
   },
-  "metrics": {
-    "estimated_cost": "$10-20/month (depends on query volume and Bedrock API calls)",
-    "performance": "2-3s average response time"
-  },
-  "dependencies": {
-    "python_version": ">=3.10",
-    "strands_version": ">=0.1.0",
-    "external_libs": ["plotly", "boto3"],
-    "aws_services": ["bedrock", "cost-explorer"]
-  },
-  "features": {
-    "tools": ["think", "file_write", "python_repl", "shell"],
-    "integrations": ["aws-documentation-mcp", "aws-cost-explorer-mcp"],
-    "deployment_options": ["local", "lambda"],
-    "data_operations": ["read", "analyze", "visualize"],
-    "aws_capabilities": ["documentation-search", "cost-analysis", "graph-visualization"]
-  },
-  "learning_objectives": [
-    "Build multi-agent systems for AWS operations",
-    "Integrate MCP servers for AWS services",
-    "Implement documentation research capabilities",
-    "Create cost analysis visualizations",
-    "Design agent coordination workflows"
-  ]
+  "tags": ["aws", "documentation", "cost-analysis", "mcp", "bedrock", "multi-agent"]
 } 
