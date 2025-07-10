@@ -4,7 +4,7 @@ This is **AI Triage Agent**, a demonstration of an AI-powered medical triage sys
 
 ![AI Triage Agent](preview.png)
 
-*AI-powered productivity platform with unified chat interface, task management, and intelligent assistance*
+_AI-powered productivity platform with unified chat interface, task management, and intelligent assistance_
 
 ## Important Disclaimer
 
@@ -21,7 +21,7 @@ This project demonstrates how AI can assist in medical triage workflows by provi
 **AI Triage Agent** demonstrates essential medical triage functions through an intelligent interface that:
 
 - **AI-Powered Medical Assessment**: Demonstrates structured patient evaluation workflows and intelligent questioning
-- **Decision Tree Navigation**: Showcases systematic medical triage decision-making processes  
+- **Decision Tree Navigation**: Showcases systematic medical triage decision-making processes
 - **Calendar Integration**: Demonstrates appointment scheduling and healthcare provider coordination
 - **Weather Intelligence**: Shows how environmental factors can be integrated into patient care decisions
 - **Intelligent Healthcare Conversations**: Demonstrates AI assistants that understand medical context and workflows
@@ -39,29 +39,44 @@ To get started with the AI Triage Agent, follow these simple steps:
 ### Installation and Running
 
 1. **Clone the repository:**
+
    ```bash
-   git clone <repository-url>
-   cd triage-agents
+   git clone https://github.com/strands-agents/samples.git
+   cd 04-UX-demos/04-triage-agent
    ```
 
-2. **Start the application:**
+2. **Configure your AWS Credentials**
+   You can use `aws configure` command in your terminal to setup your credentials.
+
+   OR export environment variables
+
    ```bash
-   ./start.sh
+   export AWS_ACCESS_KEY_ID=<your_access_key>
+   export AWS_SECRET_ACCESS_KEY=<your_secret_key>
+   export AWS_DEFAULT_REGION=<aws-region>
+   ```
+
+3. **Start the application:**
+
+   ```bash
+   bash start.sh
    ```
 
    This script will:
+
    - Create a Python virtual environment
    - Install all Python dependencies
    - Install Node.js dependencies
    - Start both backend (port 8000) and frontend (port 3000) servers
 
-3. **Access the application:**
+4. **Access the application:**
+
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:8000
 
-4. **Stop the application:**
+5. **Stop the application:**
    ```bash
-   ./stop.sh
+   bash stop.sh
    ```
 
 The application will automatically check for port availability and guide you through any issues.
@@ -76,6 +91,7 @@ cd deploy
 ```
 
 This script deploys:
+
 - **EC2**: Backend server with FastAPI application
 - **S3**: Frontend hosting bucket
 - **CloudFront**: Global content distribution
@@ -89,7 +105,7 @@ The agent should update and extend this README.md file with additional informati
 
 Working with the user, the agent will implement the project step by step, first by working out the requirements, then the design/architecture including AWS infrastructure components, then the list of tasks needed to: 1) implement the project source code and AWS infrastructure as code, 2) deploy the project to a test AWS environment, 3) run any integration tests against the deployed project.
 
-Once all planning steps are completed and documented, and the user is ready to proceed, the agent will begin implementing the tasks one at a time until the project is completed. 
+Once all planning steps are completed and documented, and the user is ready to proceed, the agent will begin implementing the tasks one at a time until the project is completed.
 
 ## Project layout
 
@@ -151,4 +167,3 @@ This project is licensed under the MIT License - see the [LICENSE.md](../../LICE
 ## Support
 
 For questions, issues, or feature requests, please open an issue in the GitHub repository.
-
