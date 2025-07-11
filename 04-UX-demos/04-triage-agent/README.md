@@ -1,4 +1,6 @@
-## AI Triage Agent with MCP
+# AI Triage Agent
+
+> **A demonstration of AI-powered medical triage using structured decision tree navigation**
 
 This is **AI Triage Agent**, a demonstration of an AI-powered medical triage system that showcases intelligent patient assessment through **"structured decision tree navigation"**. The project leverages Amazon Bedrock through the Strands AI framework and MCP (Model Context Protocol) servers, with integrated calendar scheduling and weather information for comprehensive patient care coordination.
 
@@ -14,7 +16,7 @@ The AI responses and any data generated are produced by artificial intelligence 
 
 For any medical, legal, financial, or other professional advice, please consult with qualified professionals in the respective fields.
 
-## Use case
+## Features
 
 This project demonstrates how AI can assist in medical triage workflows by providing structured patient assessment, intelligent questioning, and decision tree navigation. The system showcases how healthcare organizations could potentially streamline initial patient evaluations while maintaining safety and accuracy standards.
 
@@ -36,125 +38,200 @@ To get started with the AI Triage Agent, follow these simple steps:
 - Node.js 16 or higher
 - npm or yarn package manager
 
-### Installation and Running
+### Installation
 
-1. **Clone the repository:**
+#### 1. Clone Repository
 
-   ```bash
-   git clone https://github.com/strands-agents/samples.git
-   cd 04-UX-demos/04-triage-agent
-   ```
+```bash
+git clone https://github.com/strands-agents/samples.git
+cd samples/04-UX-demos/04-triage-agent
+```
 
-2. **Configure your AWS Credentials**
-   You can use `aws configure` command in your terminal to setup your credentials.
+#### 2. Configure AWS Credentials
 
-   OR export environment variables
+**Option A: AWS CLI**
 
-   ```bash
-   export AWS_ACCESS_KEY_ID=<your_access_key>
-   export AWS_SECRET_ACCESS_KEY=<your_secret_key>
-   export AWS_DEFAULT_REGION=<aws-region>
-   ```
+```bash
+aws configure
+```
 
-3. **Start the application:**
+**Option B: Environment Variables**
 
-   ```bash
-   bash start.sh
-   ```
+```bash
+export AWS_ACCESS_KEY_ID=<your_access_key>
+export AWS_SECRET_ACCESS_KEY=<your_secret_key>
+export AWS_DEFAULT_REGION=<aws_region>
+```
 
-   This script will:
+#### 3. Launch Application
 
-   - Create a Python virtual environment
-   - Install all Python dependencies
-   - Install Node.js dependencies
-   - Start both backend (port 8000) and frontend (port 3000) servers
+```bash
+bash start.sh
+```
 
-4. **Access the application:**
+The startup script automatically:
 
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:8000
+- Creates Python virtual environment
+- Installs all dependencies (Python & Node.js)
+- Starts backend server (port 8000)
+- Starts frontend server (port 3000)
+- Checks port availability
 
-5. **Stop the application:**
-   ```bash
-   bash stop.sh
-   ```
+#### 4. Access Application
+
+| Service     | URL                   | Description                |
+| ----------- | --------------------- | -------------------------- |
+| Frontend    | http://localhost:3000 | Main application interface |
+| Backend API | http://localhost:8000 | REST API endpoints         |
+
+#### 5. Stop Application
+
+```bash
+bash stop.sh
+```
 
 The application will automatically check for port availability and guide you through any issues.
 
 ## AWS Deployment
 
-For AWS deployment, use the provided CloudFormation template:
+### Infrastructure as Code
+
+Deploy to AWS using the provided CloudFormation template:
 
 ```bash
 cd deploy
 ./deploy.sh
 ```
 
-This script deploys:
+### AWS Resources
 
-- **EC2**: Backend server with FastAPI application
-- **S3**: Frontend hosting bucket
-- **CloudFront**: Global content distribution
-- **VPC**: Secure network infrastructure
+| Service        | Purpose          | Configuration                  |
+| -------------- | ---------------- | ------------------------------ |
+| **EC2**        | Backend hosting  | FastAPI application server     |
+| **S3**         | Frontend hosting | Static website bucket          |
+| **CloudFront** | CDN              | Global content distribution    |
+| **VPC**        | Networking       | Secure network infrastructure  |
+| **Bedrock**    | AI Services      | Claude 3.7 Sonnet model access |
 
-## Development approach
+## Development Workflow
 
-When working with this project, the agent should ensure it is working within a git repo. If one is not configured yet, the agent should create one.
+### Project Methodology
 
-The agent should update and extend this README.md file with additional information about the project as development progresses, and commit changes to this file and the other planning files below as they are updated.
+This project follows an iterative development approach:
 
-Working with the user, the agent will implement the project step by step, first by working out the requirements, then the design/architecture including AWS infrastructure components, then the list of tasks needed to: 1) implement the project source code and AWS infrastructure as code, 2) deploy the project to a test AWS environment, 3) run any integration tests against the deployed project.
+1. **Requirements Analysis** - Define functional and technical requirements
+2. **Architecture Design** - Plan system components and AWS infrastructure
+3. **Implementation** - Develop source code and infrastructure as code
+4. **Testing** - Deploy to test environment and run integration tests
+5. **Documentation** - Update README and planning documents
 
-Once all planning steps are completed and documented, and the user is ready to proceed, the agent will begin implementing the tasks one at a time until the project is completed.
+### Version Control
 
-## Project layout
+- Ensure Git repository is properly configured
+- Commit changes to README.md and planning files as development progresses
+- Follow conventional commit message format
 
-### Core Application Structure
+### Development Standards
+
+- **Code Quality** - Follow PEP 8 for Python, ESLint for JavaScript
+- **Testing** - Unit tests for backend, integration tests for full stack
+- **Documentation** - Keep README current with project evolution
+- **Security** - Follow AWS security best practices
+
+## Project Structure
+
+### Directory Layout
 
 ```
-triage-agents/
-├── backend/                    # Python FastAPI backend
-│   ├── main.py                # Main FastAPI application
-│   ├── mcpmanager.py          # MCP server management
-│   ├── mcp.json               # MCP server configuration
-│   ├── requirements.txt       # Python dependencies
-│   └── mcp_servers/           # MCP server implementations
-│       ├── task_manager_server.py     # Task management functionality
-│       ├── calculator_server.py       # Calculator functionality
-│       ├── calendar/                  # Calendar integration
-│       ├── weather/                   # Weather services
-│       ├── email_history/             # Email management
-│       └── strands/                   # Strands agent integration
-├── frontend/                   # React frontend application
-│   ├── public/                # Static assets
-│   ├── src/                   # React source code
-│   │   ├── App.js            # Main application component
-│   │   └── components/       # React components
-│   ├── package.json          # Node.js dependencies
-│   └── tailwind.config.js    # Tailwind CSS configuration
-├── start.sh                   # Application startup script
-├── stop.sh                    # Application shutdown script
-├── preview.png                # Application preview image
-└── README.md                  # Project documentation
+04-triage-agent/
+├── backend/                           # Python FastAPI Backend
+│   ├── main.py                       # FastAPI application entry point
+│   ├── mcpmanager.py                 # MCP server orchestration
+│   ├── mcp.json                      # MCP server configuration
+│   ├── requirements.txt              # Python dependencies
+│   └── mcp_servers/                  # MCP Protocol Implementations
+│       ├── task_manager_server.py    # Task management services
+│       ├── calculator_server.py      # Mathematical operations
+│       ├── calendar/                 # Appointment scheduling
+│       ├── weather/                  # Environmental data services
+│       ├── email_history/            # Communication management
+│       └── strands/                  # AI agent integration
+├── frontend/                          # React Frontend Application
+│   ├── public/                       # Static assets and resources
+│   ├── src/                          # React source code
+│   │   ├── App.js                   # Main application component
+│   │   └── components/              # Reusable UI components
+│   ├── package.json                 # Node.js dependencies
+│   └── tailwind.config.js           # Tailwind CSS configuration
+├── start.sh                          # Development server startup
+├── stop.sh                           # Development server shutdown
+├── preview.png                       # Application screenshot
+└── README.md                         # Project documentation
 ```
 
 ### Technology Stack
 
-- **Backend**: Python 3.11+, FastAPI, AWS Bedrock, Strands AI, MCP Protocol
-- **Frontend**: React 18, Tailwind CSS, Axios
-- **AI Models**: Claude 3.7 Sonnet via AWS Bedrock
-- **Infrastructure**: AWS (Bedrock, EC2, S3, CloudFormation)
-- **Development**: Git, Docker (optional), AWS CLI
+#### Backend Technologies
 
-## Architecture
+| Technology   | Version | Purpose                        |
+| ------------ | ------- | ------------------------------ |
+| Python       | 3.11+   | Core backend language          |
+| FastAPI      | Latest  | High-performance web framework |
+| AWS Bedrock  | -       | AI model hosting and inference |
+| Strands AI   | Latest  | Agent development framework    |
+| MCP Protocol | Latest  | Tool communication standard    |
 
-The application follows a modern microservices architecture with:
+#### Frontend Technologies
 
-- **Frontend**: React-based SPA with Tailwind CSS for responsive design
-- **Backend**: FastAPI server with async support for high performance
-- **AI Integration**: AWS Bedrock integration with Claude models via Strands SDK
-- **MCP Protocol**: Standardized protocol for tool and server communication
-- **State Management**: Session-based state management for conversation flows
+| Technology   | Version | Purpose                     |
+| ------------ | ------- | --------------------------- |
+| React        | 18+     | User interface framework    |
+| Tailwind CSS | Latest  | Utility-first CSS framework |
+| Axios        | Latest  | HTTP client library         |
+
+#### Infrastructure & DevOps
+
+| Service        | Purpose                              |
+| -------------- | ------------------------------------ |
+| AWS Bedrock    | AI model hosting (Claude 3.7 Sonnet) |
+| AWS EC2        | Application hosting                  |
+| AWS S3         | Static asset storage                 |
+| AWS CloudFront | Content delivery network             |
+| CloudFormation | Infrastructure as Code               |
+
+## System Architecture
+
+### High-Level Design
+
+The application implements a modern, scalable architecture:
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   React SPA     │───▶│FastAPI + Strands│───▶│   AWS Bedrock   │
+│   (Frontend)    │    │   (Backend)     │    │     (LLMs)      │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+                                 │
+                                 ▼
+                        ┌─────────────────┐
+                        │  MCP Servers    │
+                        │  (Tools/APIs)   │
+                        └─────────────────┘
+                                 │
+                                 │
+                                 ▼
+                    ┌─────────────────────────┐
+                    │   External Services     │
+                    │ (Calendar, Weather, etc)│
+                    └─────────────────────────┘
+```
+
+### Key Components
+
+- **React Frontend** - Responsive SPA with Tailwind CSS styling
+- **FastAPI Backend** - Async Python server with high performance
+- **MCP Integration** - Standardized protocol for tool communication
+- **AWS Bedrock** - Claude 3.7 Sonnet for advanced AI capabilities
+- **Session Management** - Stateful conversation flow handling
 
 ## Contributing
 
@@ -162,8 +239,8 @@ Please refer to [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed contributi
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](../../LICENSE.md) file for details.
+This project is licensed under the **MIT License** - see [LICENSE.md](../../LICENSE.md) for details.
 
-## Support
-
-For questions, issues, or feature requests, please open an issue in the GitHub repository.
+<div align="center">
+  <p><strong>Built with ❤️ using Strands Agents</strong></p>
+</div>
