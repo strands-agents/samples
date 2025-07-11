@@ -6,7 +6,7 @@ This is **AI Triage Agent**, a demonstration of an AI-powered medical triage sys
 
 ![AI Triage Agent](preview.png)
 
-_AI-powered productivity platform with unified chat interface, task management, and intelligent assistance_
+_AI-powered medical triage system with structured decision tree navigation and intelligent patient assessment_
 
 ## Important Disclaimer
 
@@ -15,6 +15,17 @@ _AI-powered productivity platform with unified chat interface, task management, 
 The AI responses and any data generated are produced by artificial intelligence models and should be treated as mock/demo content only. Use this application at your own risk. The developers and contributors are not responsible for any decisions made based on the output from this system.
 
 For any medical, legal, financial, or other professional advice, please consult with qualified professionals in the respective fields.
+
+## Architecture Overview
+
+![System Architecture](architecture.png)
+
+| Feature | Description |
+|---------|-------------|
+| **Agent Structure** | Single-agent architecture with structured decision tree navigation |
+| **MCP Tools** | Weather information, calendar scheduling, and external system integration with `mcp.json` |
+| **Model Provider** | Amazon Bedrock with Claude or Nova for intelligent medical triage |
+| **Deployment** | AWS CloudFormation with EC2, S3, CloudFront, and VPC infrastructure |
 
 ## Features
 
