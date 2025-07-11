@@ -10,6 +10,7 @@ from a2a.types import MessageSendParams, SendMessageRequest
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+DEFAULT_TIMEOUT = 300 # set request timeout to 5 minutes
 
 def create_message_payload(*, role: str = "user", text: str) -> dict[str, Any]:
     return {
@@ -22,7 +23,7 @@ def create_message_payload(*, role: str = "user", text: str) -> dict[str, Any]:
 
 
 async def send_sync_message(message: str, base_url: str = "http://localhost:9000"):
-    async with httpx.AsyncClient() as httpx_client:
+    async with httpx.AsyncClient(timeout=DEFAULT_TIMEOUT) as httpx_client:
         # Get agent card
         resolver = A2ACardResolver(httpx_client=httpx_client, base_url=base_url)
         agent_card = await resolver.get_agent_card()
