@@ -1,211 +1,125 @@
-# Strands Agents Samples & Patterns
+<div align="center">
+  <div>
+    <a href="https://strandsagents.com">
+      <img src="https://strandsagents.com/latest/assets/logo-auto.svg" alt="Strands Agents" width="55px" height="105px">
+    </a>
+  </div>
 
-A comprehensive collection of tutorials, samples, and reusable patterns for building AI agents with the [Strands SDK](https://strandsagents.com). This repository serves as both a learning resource and a pattern library for the Strands community.
+  <h1>
+    Strands Agents Samples
+  </h1>
 
-## 🗂️ Repository Structure
+  <h2>
+    A model-driven approach to building AI agents in just a few lines of code.
+  </h2>
 
-### 📚 Learning Path (01-05 directories)
+  <div align="center">
+    <a href="https://github.com/strands-agents/samples/graphs/commit-activity"><img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/strands-agents/samples"/></a>
+    <a href="https://github.com/strands-agents/samples/issues"><img alt="GitHub open issues" src="https://img.shields.io/github/issues/strands-agents/samples"/></a>
+    <a href="https://github.com/strands-agents/samples/pulls"><img alt="GitHub open pull requests" src="https://img.shields.io/github/issues-pr/strands-agents/samples"/></a>
+    <a href="https://github.com/strands-agents/samples/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/github/license/strands-agents/samples"/></a>
+  </div>
+  
+  <p>
+    <a href="https://strandsagents.com/">Documentation</a>
+    ◆ <a href="https://github.com/strands-agents/samples">Samples</a>
+    ◆ <a href="https://github.com/strands-agents/sdk-python">Python SDK</a>
+    ◆ <a href="https://github.com/strands-agents/tools">Tools</a>
+    ◆ <a href="https://github.com/strands-agents/agent-builder">Agent Builder</a>
+    ◆ <a href="https://github.com/strands-agents/mcp-server">MCP Server</a>
+  </p>
+</div>
 
-**Start here if you're new to Strands Agents**
+Welcome to the Strands Agents Samples repository!
 
-- **[01-tutorials/](01-tutorials/)** - Step-by-step learning materials
-  - Fundamentals, multi-agent systems, and deployment guides
-- **[02-samples/](02-samples/)** - Complete application examples  
-  - Real-world use cases and production-ready implementations
-- **[03-integrations/](03-integrations/)** - Third-party service integrations
-  - AWS services, external APIs, and tool connections
-- **[04-UX-demos/](04-UX-demos/)** - User interface implementations
-  - Streamlit apps, web interfaces, and deployment templates
-- **[05-agentic-rag/](05-agentic-rag/)** - Advanced RAG patterns
-  - Corrective RAG, adaptive systems, and retrieval patterns
+Explore easy-to-use examples to get started with <a href="https://strandsagents.com">Strands Agents</a>.
 
-### 🎯 Reusable Patterns (New!)
+The examples in this repository are for **demonstration and educational purposes** only. They demonstrate concepts and techniques but are **not intended for direct use in production**. Always apply proper **security** and **testing** procedures before using in production environments.
 
-**Use these for quick implementation of specific features**
+## 📚 Table of Contents
 
-- **[agent-patterns/](agent-patterns/)** - Production-ready, discoverable patterns
-  - Focused 2-4 service integrations following serverlessland.com model
-  - Complete with metadata, testing, and deployment automation
-- **[_templates/](\_templates/)** - Pattern creation templates
-  - Standardized starting points for new patterns
+- [📚 Table of Contents](#-table-of-contents)
+- [🏁 Getting Started](#-getting-started)
+  - [Step 1: Install Required Packages](#step-1-install-required-packages)
+  - [Step 2: Setup Model Provider](#step-2-setup-model-provider)
+  - [Step 3: Build Your First Strands Agent](#step-3-build-your-first-strands-agent)
+  - [Step 4: Getting Started with the SDK](#step-4-getting-started-with-the-sdk)
+  - [Step 5: Explore More Samples](#step-5-explore-more-samples)
 
-## 🚀 Quick Start
+## 🏁 Getting Started
 
-### For Learning
-If you're new to Strands Agents, start with the learning path:
+### Step 1: Install Required Packages
 
 ```bash
-# Begin with the fundamentals
-cd 01-tutorials/01-fundamentals/01-first-agent
-pip install -r requirements.txt
-# Follow the README instructions
+pip install strands-agents
+pip install strands-agents-tools
 ```
 
-### For Implementation
-If you need a specific feature, browse the patterns:
+### Step 2: Setup Model Provider
 
-```bash
-# Find and use a pattern
-cd agent-patterns/websearch-agent
-pip install -r requirements.txt
-python src/agent.py
+Follow the instructions [here](https://strandsagents.com/latest/user-guide/quickstart/#model-providers) to configure your model provider and model access.
+
+### Step 3: Build Your First Strands Agent
+
+```python
+from strands import Agent, tool
+from strands_tools import calculator, current_time, python_repl
+
+@tool
+def letter_counter(word: str, letter: str) -> int:
+    """
+    Count the occurrences of a specific letter in a word.
+    """
+    if not isinstance(word, str) or not isinstance(letter, str):
+        return 0
+    if len(letter) != 1:
+        raise ValueError("The 'letter' parameter must be a single character")
+    return word.lower().count(letter.lower())
+
+agent = Agent(tools=[calculator, current_time, python_repl, letter_counter])
+
+message = """
+I have 4 requests:
+
+1. What is the time right now?
+2. Calculate 3111696 / 74088
+3. Tell me how many letter R's are in the word "strawberry" 🍓
+4. Output a script that does what we just spoke about!
+   Use your python tools to confirm that the script works before outputting it
+"""
+
+agent(message)
 ```
 
-## 🎨 Featured Patterns
+### Step 4: Getting Started with the SDK
 
-| Pattern | Description | Complexity | AWS Services |
-|---------|-------------|------------|--------------|
-| [**websearch-agent**](agent-patterns/websearch-agent) | Real-time web search with DuckDuckGo | Beginner | Bedrock |
-| [**agent-orchestrator**](agent-patterns/agent-orchestrator) | Multi-agent coordination system | Intermediate | Bedrock |
-| [**bedrock-knowledgebase-dynamodb**](agent-patterns/bedrock-knowledgebase-dynamodb) | RAG + persistent data operations | Advanced | Bedrock, DynamoDB, S3 |
+Start with the [01-tutorials](./01-tutorials/) directory.
+Create your [first agent](./01-tutorials/01-fundamentals/01-first-agent/) and explore notebook-based examples covering core functionalities.
 
-[**Browse all patterns →**](agent-patterns/)
+### Step 5: Explore More Samples
 
-## 📖 Learning Journey
+Looking for inspiration?
+Check out more examples in the [02-samples](./02-samples/) folder for real-world use cases.
 
-### 1. **Start with Fundamentals** (01-tutorials)
-- Create your first agent
-- Learn about tools and integrations  
-- Understand multi-agent patterns
-- Explore deployment options
+## Contributing ❤️
 
-### 2. **Study Real Applications** (02-samples)
-- Restaurant assistant with reservations
-- Personal assistant with multiple capabilities
-- Data analysis and visualization agents
-- Industry-specific implementations
+We welcome contributions! See our [Contributing Guide](CONTRIBUTING.md) for details on:
+- Reporting bugs & features
+- Development setup
+- Contributing via Pull Requests
+- Code of Conduct
+- Reporting of security issues
 
-### 3. **Explore Integrations** (03-integrations)
-- AWS service connections
-- Third-party API integrations
-- Advanced observability patterns
+## License
 
-### 4. **Build User Interfaces** (04-UX-demos)
-- Streamlit web applications
-- Interactive dashboards
-- Deployment architectures
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
 
-### 5. **Master Advanced RAG** (05-agentic-rag)
-- Corrective retrieval systems
-- Adaptive query processing
-- Hybrid search approaches
+## Security
 
-### 6. **Use Production Patterns** (agent-patterns)
-- Ready-to-deploy implementations
-- Best practice examples
-- Tested and validated code
+See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
 
-## 🛠️ Contributing
+## ⚠️ Preview Status
 
-### Adding Patterns
-We welcome community contributions! To add a new pattern:
-
-1. **Use a template**: `cp -r _templates/basic-agent agent-patterns/your-pattern`
-2. **Follow naming**: `service1-service2-usecase` format
-3. **Complete documentation**: README, metadata, tests
-4. **Submit PR**: Our automation will validate your pattern
-
-See our [Contributing Guide](docs/contributing.md) for detailed instructions.
-
-### Improving Existing Content
-- Fix bugs or improve documentation in existing tutorials/samples
-- Add new examples or use cases
-- Enhance testing and validation
-
-## 🏗️ Pattern vs Tutorial vs Sample
-
-| Type | Purpose | Structure | When to Use |
-|------|---------|-----------|-------------|
-| **Pattern** | Reusable integration template | Focused 2-4 services, standardized | Need specific functionality quickly |
-| **Tutorial** | Step-by-step learning | Educational progression | Learning Strands concepts |
-| **Sample** | Complete application example | Full-featured implementation | Understanding real-world usage |
-
-## 📦 Installation
-
-### Basic Setup
-```bash
-# Install Strands Agents
-pip install strands-agents strands-agents-tools
-
-# Clone this repository
-git clone https://github.com/strands-agents/samples.git
-cd samples
-```
-
-### AWS Configuration (for AWS patterns)
-```bash
-# Configure AWS CLI
-aws configure
-
-# Verify Bedrock access
-aws bedrock list-foundation-models --region us-east-1
-```
-
-## 📚 Documentation
-
-- **[Strands Agents Documentation](https://strandsagents.com)** - Official SDK docs
-- **[Pattern Documentation](docs/)** - Pattern-specific guides
-- **[API Reference](https://strandsagents.com/api)** - Complete API documentation
-
-## 🎯 Use Cases by Category
-
-### 🤖 Basic Agents
-- Conversational assistants
-- Tool-calling agents  
-- Simple automation
-
-### 🔄 Multi-Agent Systems
-- Hierarchical coordination
-- Swarm intelligence
-- Specialized teams
-
-### 📚 Knowledge & Retrieval
-- Document Q&A systems
-- RAG implementations
-- Information retrieval
-
-### ☁️ AWS Integrations
-- Bedrock model usage
-- DynamoDB persistence
-- S3 file processing
-- Lambda deployment
-
-### 🔧 Tool Integrations
-- External API connections
-- Database operations
-- Web scraping
-- File processing
-
-### 🎨 UI/UX Patterns
-- Web applications
-- Chatbot interfaces
-- Dashboard creation
-- Mobile apps
-
-## 🚦 Status & Roadmap
-
-### Current Status
-- ✅ Complete learning tutorials (01-05)
-- ✅ Pattern framework implemented
-- ✅ Automated validation pipeline
-- ✅ Community contribution process
-
-### Coming Soon
-- 🔄 More AWS integration patterns
-- 🔄 Advanced multi-agent patterns  
-- 🔄 Mobile and web framework integrations
-- 🔄 Industry-specific templates
-
-## 💬 Community & Support
-
-- **GitHub Issues**: [Report bugs or request features](https://github.com/strands-agents/samples/issues)
-- **Discussions**: [Ask questions and share ideas](https://github.com/strands-agents/samples/discussions)
-- **Documentation**: [Official Strands docs](https://strandsagents.com)
-
-## 📄 License
-
-This project is licensed under the MIT-0 License - see the [LICENSE](LICENSE) file for details.
-
----
-
-**Happy building with Strands Agents! 🚀**
+Strands Agents is currently in public preview. During this period:
+- APIs may change as we refine the SDK
+- We welcome feedback and contributions
