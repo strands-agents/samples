@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "weather": {
+      "command": "python",
+      "args": [
+        "mcp_servers/weather/weather_server.py"
+      ],
+      "enabled": true
+    },
+    "calendar": {
+      "command": "python",
+      "args": [
+        "mcp_servers/calendar/calendar_server.py"
+      ],
+      "enabled": true
+    }
+  }
+}
