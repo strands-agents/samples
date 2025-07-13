@@ -19,5 +19,10 @@ COPY static/ static/
 # Expose the port the app runs on
 EXPOSE 8003
 
+# Running as non-root 
+RUN useradd --create-home --shell /bin/bash appuser && \
+    chown -R appuser:appuser /app
+USER appuser
+
 # Command to run the application
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8003"]

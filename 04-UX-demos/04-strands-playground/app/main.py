@@ -237,15 +237,6 @@ BEDROCK_MODEL = BedrockModel(
 # FastAPI app setup
 app = FastAPI()
 
-# Add CORS middleware to allow frontend to communicate with backend
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # In production, replace with specific origins
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 
 # API endpoints
 @app.get("/get_conversations")
