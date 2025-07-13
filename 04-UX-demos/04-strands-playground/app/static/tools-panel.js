@@ -15,40 +15,78 @@ async function initToolsPanel() {
         }
     } catch (error) {
         console.error('Error fetching tools:', error);
-        toolsPanel.innerHTML = '<p class="error">Failed to load tools</p>';
+        const errorP = document.createElement('p');
+        errorP.className = 'error';
+        errorP.textContent = 'Failed to load tools';
+        toolsPanel.appendChild(errorP);
     }
 }
 
 // Render the tools list with checkboxes
 function renderToolsList(container, availableTools, selectedTools, toolDescriptions = {}) {
-    container.innerHTML = `
-        <div class="tools-panel-header">
-            <h3>Strands Built-in Tools</h3>
-            <button id="update-tools-btn">Update</button>
-        </div>
-        <div class="tools-info">
-            <a href="https://strandsagents.com/0.1.x/user-guide/concepts/tools/example-tools-package/" target="_blank" rel="noopener noreferrer">
-                Learn more about the built-in tools for Strands SDK
-            </a>
-        </div>
-        <div class="tools-list">
-            ${availableTools.map(tool => `
-                <div class="tool-item">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="${tool}" 
-                            id="tool-${tool}" ${selectedTools.includes(tool) ? 'checked' : ''}>
-                        <label class="form-check-label" for="tool-${tool}">
-                            ${tool}
-                        </label>
-                    </div>
-                    <p class="tool-description">${toolDescriptions[tool] || 'No description available'}</p>
-                </div>
-            `).join('')}
-        </div>
-    `;
-
+    container.textContent = '';
+    
+    // Create header
+    const header = document.createElement('div');
+    header.className = 'tools-panel-header';
+    const h3 = document.createElement('h3');
+    h3.textContent = 'Strands Built-in Tools';
+    const updateBtn = document.createElement('button');
+    updateBtn.id = 'update-tools-btn';
+    updateBtn.textContent = 'Update';
+    header.appendChild(h3);
+    header.appendChild(updateBtn);
+    
+    // Create info section
+    const info = document.createElement('div');
+    info.className = 'tools-info';
+    const link = document.createElement('a');
+    link.href = 'https://strandsagents.com/0.1.x/user-guide/concepts/tools/example-tools-package/';
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.textContent = 'Learn more about the built-in tools for Strands SDK';
+    info.appendChild(link);
+    
+    // Create tools list
+    const toolsList = document.createElement('div');
+    toolsList.className = 'tools-list';
+    
+    availableTools.forEach(tool => {
+        const toolItem = document.createElement('div');
+        toolItem.className = 'tool-item';
+        
+        const formCheck = document.createElement('div');
+        formCheck.className = 'form-check';
+        
+        const checkbox = document.createElement('input');
+        checkbox.className = 'form-check-input';
+        checkbox.type = 'checkbox';
+        checkbox.value = tool;
+        checkbox.id = `tool-${tool}`;
+        checkbox.checked = selectedTools.includes(tool);
+        
+        const label = document.createElement('label');
+        label.className = 'form-check-label';
+        label.setAttribute('for', `tool-${tool}`);
+        label.textContent = tool;
+        
+        const description = document.createElement('p');
+        description.className = 'tool-description';
+        description.textContent = toolDescriptions[tool] || 'No description available';
+        
+        formCheck.appendChild(checkbox);
+        formCheck.appendChild(label);
+        toolItem.appendChild(formCheck);
+        toolItem.appendChild(description);
+        toolsList.appendChild(toolItem);
+    });
+    
+    container.appendChild(header);
+    container.appendChild(info);
+    container.appendChild(toolsList);
+    
     // Add event listener to update button
-    document.getElementById('update-tools-btn').addEventListener('click', updateSelectedTools);
+    updateBtn.addEventListener('click', updateSelectedTools);
 }
 
 // Update the selected tools
