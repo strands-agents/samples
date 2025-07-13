@@ -1,3 +1,4 @@
 strands-agents
 strands-agents-tools
 strands-agents[litellm]
+aiohttp>=3.12.13

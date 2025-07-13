@@ -1,0 +1,11 @@
+[project]
+name = "native-a2a-support"
+version = "0.1.0"
+description = "Sample Project Demonstrating Native A2A Support in Strands"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "strands-agents[a2a]>=0.2.2",
+    "strands-agents-tools[a2a]>=0.1.9",
+    "a2a-sdk[sql]>=0.2.6",
+]
