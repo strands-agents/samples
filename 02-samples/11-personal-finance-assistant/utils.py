@@ -136,20 +136,22 @@ _cache_timestamp = None
 
 
 @tool
-def get_stock_data(tickers: List[str] = None, start_date: str = "2023-01-01", end_date: str = "2024-12-31", save_csv: bool = False, use_cache: bool = True) -> Dict[str, Any]:
+def get_stock_data(tickers: List[str] = None, year: int = 2024, save_csv: bool = False, use_cache: bool = True) -> Dict[str, Any]:
     """
     Fetch real stock data INCLUDING DAILY PRICES with automatic CSV export when caching enabled.
     
     Args:
         tickers: List of stock symbols (defaults to major stocks across sectors)
-        start_date: Start date for data fetch
-        end_date: End date for data fetch
+        year: Year for data fetch (fetches from Jan 1 to Dec 31 of specified year)
         save_csv: Whether to force save CSV files (saves regardless of use_cache setting)
         use_cache: Whether to check/use CSV cache first (also enables auto-save to CSV)
     
     Returns:
         Stock performance data WITH daily prices and summary metrics
     """
+    # Construct date range from year parameter
+    start_date = f"{year}-01-01"
+    end_date = f"{year}-12-31"
     # Default to comprehensive set of major stocks if none provided
     if tickers is None:
         tickers = [
@@ -1074,7 +1076,7 @@ def validation_agent(query: str) -> str:
         - validate_portfolio_performance() - Tests portfolios against actual market data
         - compare_analysis_accuracy() - Compares expected vs actual performance across strategies
         - calculate_accuracy_metrics() - Calculates detailed accuracy statistics
-        - get_stock_analysis() - Gets current market data for validation
+        - get_stock_analysis() - Gets current market data for validation for year 2025
         
         Key principles:
         - Always emphasize that historical analysis does not guarantee future performance
