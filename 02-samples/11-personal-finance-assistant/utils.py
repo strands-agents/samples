@@ -136,20 +136,30 @@ _cache_timestamp = None
 
 
 @tool
-def get_stock_data(tickers: List[str], start_date: str = "2023-01-01", end_date: str = "2024-12-31", save_csv: bool = False, use_cache: bool = True) -> Dict[str, Any]:
+def get_stock_data(tickers: List[str] = None, start_date: str = "2023-01-01", end_date: str = "2024-12-31", save_csv: bool = False, use_cache: bool = True) -> Dict[str, Any]:
     """
-    Fetch real stock data INCLUDING DAILY PRICES with optional CSV export and caching.
+    Fetch real stock data INCLUDING DAILY PRICES with automatic CSV export when caching enabled.
     
     Args:
-        tickers: List of stock symbols
+        tickers: List of stock symbols (defaults to major stocks across sectors)
         start_date: Start date for data fetch
         end_date: End date for data fetch
-        save_csv: Whether to save CSV files including daily prices
-        use_cache: Whether to check/use CSV cache first
+        save_csv: Whether to force save CSV files (saves regardless of use_cache setting)
+        use_cache: Whether to check/use CSV cache first (also enables auto-save to CSV)
     
     Returns:
         Stock performance data WITH daily prices and summary metrics
     """
+    # Default to comprehensive set of major stocks if none provided
+    if tickers is None:
+        tickers = [
+            'AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA',  # Tech giants
+            'JPM', 'V',                                # Financial
+            'JNJ', 'PFE', 'MRK',                      # Healthcare  
+            'WMT', 'KO', 'PG',                        # Consumer
+            'META', 'NVDA'                            # Growth/AI
+        ]
+    
     # Try to load from cache first if enabled
     if use_cache:
         cache_result = load_comprehensive_stock_data_from_csv()
@@ -217,8 +227,8 @@ def get_stock_data(tickers: List[str], start_date: str = "2023-01-01", end_date:
             'source': 'fresh'
         }
         
-        # Save to CSV if requested
-        if save_csv and stock_data:
+        # Save to CSV if caching is enabled OR explicitly requested
+        if (use_cache or save_csv) and stock_data:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             
             # Save summary data
@@ -325,13 +335,14 @@ def get_stock_analysis(tickers: List[str] = None, period: str = "1y", use_cache:
 
 # Portfolio creation functions moved from lab3
 @tool
-def create_growth_portfolio(stock_analysis: Dict[str, Any] = None, allocation_count: int = 4) -> Dict[str, Any]:
+def create_growth_portfolio(stock_analysis: Dict[str, Any] = None, allocation_count: int = 4, allocation_method: str = "performance_weighted") -> Dict[str, Any]:
     """
-    Enhanced growth portfolio creator with CSV caching support.
+    Enhanced growth portfolio creator with multiple allocation strategies.
     
     Args:
         stock_analysis: Stock analysis data (if None, loads from cache)
         allocation_count: Number of stocks to include in portfolio
+        allocation_method: "equal_weight", "performance_weighted", or "risk_adjusted"
     
     Returns:
         Dictionary with portfolio allocations and metrics
@@ -353,23 +364,64 @@ def create_growth_portfolio(stock_analysis: Dict[str, Any] = None, allocation_co
     # Select top performers for growth portfolio
     selected_stocks = sorted_stocks[:allocation_count]
     
-    # Create simple equal-weight allocation
-    allocation_pct = 100.0 / len(selected_stocks)
-    
     portfolio = {}
-    for ticker, data in selected_stocks:
-        portfolio[ticker] = round(allocation_pct, 1)
+    
+    if allocation_method == "equal_weight":
+        # Original simple equal-weight allocation
+        allocation_pct = 100.0 / len(selected_stocks)
+        for ticker, data in selected_stocks:
+            portfolio[ticker] = round(allocation_pct, 1)
+            
+    elif allocation_method == "performance_weighted":
+        # Weight by relative performance (higher returns get higher allocation)
+        total_returns = sum(data['return_pct'] for _, data in selected_stocks)
+        
+        for ticker, data in selected_stocks:
+            # Weight based on relative performance
+            weight = (data['return_pct'] / total_returns) * 100
+            # Apply minimum 10% and maximum 40% constraints for diversification
+            weight = max(10.0, min(40.0, weight))
+            portfolio[ticker] = round(weight, 1)
+            
+        # Normalize to ensure total = 100%
+        total_weight = sum(portfolio.values())
+        for ticker in portfolio:
+            portfolio[ticker] = round((portfolio[ticker] / total_weight) * 100, 1)
+            
+    elif allocation_method == "risk_adjusted":
+        # Weight by risk-adjusted returns (Sharpe-like ratio)
+        risk_adjusted_scores = []
+        
+        for ticker, data in selected_stocks:
+            # Calculate risk-adjusted score (return / volatility)
+            risk_adj_score = data['return_pct'] / max(data['volatility_pct'], 1.0)  # Avoid division by zero
+            risk_adjusted_scores.append((ticker, data, risk_adj_score))
+        
+        total_scores = sum(score for _, _, score in risk_adjusted_scores)
+        
+        for ticker, data, score in risk_adjusted_scores:
+            # Weight based on risk-adjusted performance
+            weight = (score / total_scores) * 100
+            # Apply constraints for diversification
+            weight = max(10.0, min(40.0, weight))
+            portfolio[ticker] = round(weight, 1)
+            
+        # Normalize to ensure total = 100%
+        total_weight = sum(portfolio.values())
+        for ticker in portfolio:
+            portfolio[ticker] = round((portfolio[ticker] / total_weight) * 100, 1)
     
     # Calculate portfolio metrics - simple analysis uses return_pct, volatility_pct
-    total_return = sum(stocks[ticker]['return_pct'] * (allocation_pct/100) 
+    total_return = sum(stocks[ticker]['return_pct'] * (portfolio[ticker]/100) 
                       for ticker in portfolio.keys())
     
-    avg_volatility = sum(stocks[ticker]['volatility_pct'] * (allocation_pct/100) 
+    avg_volatility = sum(stocks[ticker]['volatility_pct'] * (portfolio[ticker]/100) 
                         for ticker in portfolio.keys())
     
     return {
         'success': True,
         'strategy': 'Growth',
+        'allocation_method': allocation_method,
         'portfolio': portfolio,
         'expected_return': round(total_return, 1),
         'risk_level': 'High' if avg_volatility > 25 else 'Moderate',
@@ -928,6 +980,56 @@ def calculate_accuracy_metrics(expected_returns: Dict[str, float],
                                 key=lambda x: accuracy_metrics[x]['accuracy'])
         }
     }
+
+
+# Global state to track printed tool calls
+printed_tools = set()
+
+def simple_multi_agent_tracker(**kwargs):
+    """
+    Callback handler based on official Strands Agents streaming patterns
+    Prevents duplicates by checking specific event states
+    """
+    try:
+        # Track reasoning events with emoji
+        if kwargs.get("reasoning") and "reasoningText" in kwargs:
+            reasoning_text = kwargs["reasoningText"]
+            if len(reasoning_text) > 100:
+                reasoning_text = reasoning_text[:100] + "..."
+            print(f"🧠 REASONING: {reasoning_text}")
+        
+        # Event loop lifecycle tracking
+        elif kwargs.get("init_event_loop", False):
+            print("🔄 Event loop initialized")
+        elif kwargs.get("start_event_loop", False):
+            print("▶️ Event loop cycle starting")
+        elif kwargs.get("start", False):
+            print("📝 New cycle started")
+        elif kwargs.get("complete", False):
+            print("✅ Cycle completed")
+        
+        # Tool usage tracking - only when tool name is present and complete
+        elif ("current_tool_use" in kwargs and 
+              kwargs["current_tool_use"].get("name") and
+              not kwargs.get("data")):  # Avoid printing during text streaming
+            
+            tool_name = kwargs["current_tool_use"]["name"]
+            
+            # Agent-specific emojis
+            agent_emojis = {
+                'stock_data_agent': '📊',
+                'growth_strategy_agent': '🚀', 
+                'diversified_strategy_agent': '⚖️',
+                'performance_calculator_agent': '💰',
+                'visualization_agent': '🎨',
+                'validation_agent': '🔍'
+            }
+            
+            emoji = agent_emojis.get(tool_name, '🔧')
+            print(f"{emoji} Using tool: {tool_name}")
+            
+    except Exception as e:
+        print(f"⚠️ Callback error: {e}")
 
 
 # Validation Agent
