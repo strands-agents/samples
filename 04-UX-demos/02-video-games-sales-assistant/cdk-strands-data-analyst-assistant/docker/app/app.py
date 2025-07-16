@@ -48,7 +48,7 @@ DATA_ANALYST_SYSTEM_PROMPT = load_system_prompt()
 def health_check():
     """
     Health check endpoint for the load balancer.
-    
+
     Returns:
         dict: A status message indicating the service is healthy
     """
@@ -58,14 +58,14 @@ def health_check():
 async def run_data_analyst_assistant_with_stream_response(bedrock_model, system_prompt: str, prompt: str, prompt_uuid: str, session_id: str):
     """
     Run the data analyst assistant and stream the response.
-    
+
     Args:
         bedrock_model: The LLM model to use
         system_prompt (str): The system prompt for the agent
         prompt (str): The user's prompt
         prompt_uuid (str): Unique identifier for the prompt
         session_id (str): Session identifier for conversation context
-        
+
     Yields:
         str: Chunks of the response as they become available
     """
@@ -168,7 +168,7 @@ async def run_data_analyst_assistant_with_stream_response(bedrock_model, system_
 class PromptRequest(BaseModel):
     """
     Request model for the assistant API endpoint.
-    
+
     Attributes:
         bedrock_model_id (str): The ID of the Bedrock model to use
         prompt (str): The user's prompt
@@ -186,13 +186,13 @@ class PromptRequest(BaseModel):
 async def assistant_streaming(request: PromptRequest):
     """
     Endpoint to stream the data analysis as it comes in, not all at once at the end.
-    
+
     Args:
         request (PromptRequest): The request containing the prompt and other parameters
-        
+
     Returns:
         StreamingResponse: A streaming response with the assistant's output
-        
+
     Raises:
         HTTPException: If the request is invalid or if an error occurs
     """
@@ -203,7 +203,7 @@ async def assistant_streaming(request: PromptRequest):
         prompt = request.prompt
         if not prompt:
             raise HTTPException(status_code=400, detail="No prompt provided")
-        
+
         prompt_uuid = request.prompt_uuid
         if not prompt_uuid:
             prompt_uuid = str(uuid4())
