@@ -53,7 +53,7 @@ def market_research_team(project_description: str):
 
             market_analyst_response = str(
                 lead_market_analyst(
-                    f"Use a swarm of 2 agents to conduct market analysis in competetive pattern. The project description is: \n\n{project_description}"
+                    f"Use a swarm of 2 agents to conduct market analysis in competitive pattern. The project description is: \n\n{project_description}"
                 )
             )
 

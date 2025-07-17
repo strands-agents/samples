@@ -8,7 +8,7 @@ def writer_team(market_research: str):
     try:
         content_writer = Agent(
             system_prompt="""Develop and revise compelling and innovative content, including campaign ideas,
-            campaing copy, and even detailed campaign reports. As a Content Writer at a digital marketing agency, you 
+            campaign copy, and even detailed campaign reports. As a Content Writer at a digital marketing agency, you 
             excel in creating narratives that resonate with target audiences. 
             Your expertise is in turning marketing strategies into engaging stories and visual 
             content that captures attention and inspires action.
