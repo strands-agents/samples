@@ -13,13 +13,3 @@
 # limitations under the License.
 
 """Tools for the DataProcessing Agent."""
-
-from amazon_dataprocessing_agent.tools.email_tools import EmailTools
-from amazon_dataprocessing_agent.tools.s3_tables_tools import S3TablesTools
-from amazon_dataprocessing_agent.tools.s3_tools import S3Tools
-
-__all__ = [
-    "S3Tools",
-    "S3TablesTools",
-    "EmailTools",
-]

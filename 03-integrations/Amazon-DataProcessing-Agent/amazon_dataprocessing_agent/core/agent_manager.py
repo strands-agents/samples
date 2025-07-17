@@ -26,6 +26,11 @@ from strands import Agent
 from strands.agent.conversation_manager import SlidingWindowConversationManager
 from strands.tools.mcp import MCPClient
 
+from amazon_dataprocessing_agent.tools.email_tools import \
+    create_send_email_tools
+from amazon_dataprocessing_agent.tools.s3_tables_tools import \
+    create_s3tables_tools
+
 from ..config.prompts import SYSTEM_PROMPT
 from .bedrock_agent import BedrockAgent
 from .chat_history_manager import ChatHistoryManager
@@ -89,6 +94,11 @@ class MCPAgentManager:
 
             # Get all tools
             dataprocessing_tools = self.mcp_client.list_tools_sync()
+            all_tools = (
+                dataprocessing_tools
+                + create_send_email_tools()
+                + create_s3tables_tools()
+            )
 
             # Create the bedrock agent
             self.bedrock_agent = BedrockAgent(
@@ -102,7 +112,7 @@ class MCPAgentManager:
             # Create the agent
             self.agent = Agent(
                 system_prompt=SYSTEM_PROMPT,
-                tools=dataprocessing_tools,
+                tools=all_tools,
                 model=self.bedrock_agent.model,
                 conversation_manager=SlidingWindowConversationManager(
                     window_size=10,  # Maximum number of messages to keep
@@ -157,6 +167,7 @@ class MCPAgentManager:
                     self.agent, user_input, messages=context_messages
                 )
                 final_content = response.content
+                print(f"final_content: {final_content}")
 
             # Extract thinking steps from the response
             thinking = self._extract_thinking(final_content)
@@ -298,12 +309,24 @@ class MCPAgentManager:
             thinking_text = match.group(1).strip()
             # Fix potential space issues by normalizing whitespace
             thinking_text = re.sub(r"\s+", " ", thinking_text)
+
+            # Sanitize markdown headers to prevent UI formatting issues
+            thinking_text = self._sanitize_markdown(thinking_text)
+
             return thinking_text
         return ""
 
     def _clean_response(self, content: str) -> str:
-        """Remove thinking steps from the response"""
-        return re.sub(r"<thinking>.*?</thinking>", "", content, flags=re.DOTALL).strip()
+        """Remove thinking steps from the response and sanitize markdown"""
+        # Remove thinking steps
+        cleaned = re.sub(
+            r"<thinking>.*?</thinking>", "", content, flags=re.DOTALL
+        ).strip()
+
+        # Sanitize markdown headers to prevent UI formatting issues
+        cleaned = self._sanitize_markdown(cleaned)
+
+        return cleaned
 
     def _extract_metrics(self, response) -> Dict[str, Any]:
         """Extract metrics from the response"""
@@ -333,17 +356,24 @@ class MCPAgentManager:
                 # Parse existing accumulated tokens
                 existing_input = 0
                 existing_output = 0
-                if isinstance(st.session_state.accumulated_tokens, str) and "Input Token" in st.session_state.accumulated_tokens:
+                if (
+                    isinstance(st.session_state.accumulated_tokens, str)
+                    and "Input Token" in st.session_state.accumulated_tokens
+                ):
                     tokens_str = st.session_state.accumulated_tokens
-                    existing_input = int(tokens_str.split("Input Token: ")[1].split(",")[0].strip())
+                    existing_input = int(
+                        tokens_str.split("Input Token: ")[1].split(",")[0].strip()
+                    )
                     existing_output = int(tokens_str.split("Output Token: ")[1].strip())
-                
+
                 # Add current tokens to existing totals
                 total_input = existing_input + input_token
                 total_output = existing_output + output_token
-                
+
                 # Update accumulated values
-                st.session_state.accumulated_tokens = f"Input Token: {total_input}, Output Token: {total_output}"
+                st.session_state.accumulated_tokens = (
+                    f"Input Token: {total_input}, Output Token: {total_output}"
+                )
                 st.session_state.accumulated_cost += current_cost
 
             # Extract execution time
@@ -378,7 +408,6 @@ class MCPAgentManager:
                     tools_used.append(
                         f"{tool_name}{tool_input}\n"
                         f"total execution time: {tool_metrics.total_time:.2f} seconds\n"
-                        f"manual cost: ${manual_cost:.2f} ({call_count}  calls × {st.session_state.manual_api_prep_time/60}m × ${st.session_state.manual_engineer_cost/60:.2f}/min)"
                     )
 
             metrics_dict["tools_used"] = tools_used
@@ -389,6 +418,40 @@ class MCPAgentManager:
 
         return metrics_dict
 
+    def _sanitize_markdown(self, text: str) -> str:
+        """Sanitize markdown headers and other problematic formatting"""
+        if not text:
+            return text
+
+        # Convert markdown headers to bold text to prevent UI formatting issues
+        # ## Header -> **Header**
+        text = re.sub(r"^##\s+(.+)$", r"**\1**", text, flags=re.MULTILINE)
+
+        # ### Header -> **Header**
+        text = re.sub(r"^###\s+(.+)$", r"**\1**", text, flags=re.MULTILINE)
+
+        # #### Header -> **Header**
+        text = re.sub(r"^####\s+(.+)$", r"**\1**", text, flags=re.MULTILINE)
+
+        # ##### Header -> **Header**
+        text = re.sub(r"^#####\s+(.+)$", r"**\1**", text, flags=re.MULTILINE)
+
+        # ###### Header -> **Header**
+        text = re.sub(r"^######\s+(.+)$", r"**\1**", text, flags=re.MULTILINE)
+
+        # # Header -> **Header** (main headers)
+        text = re.sub(r"^#\s+(.+)$", r"**\1**", text, flags=re.MULTILINE)
+
+        # Also handle headers that might be in the middle of lines
+        text = re.sub(r"\n##\s+(.+)", r"\n**\1**", text)
+        text = re.sub(r"\n###\s+(.+)", r"\n**\1**", text)
+        text = re.sub(r"\n####\s+(.+)", r"\n**\1**", text)
+        text = re.sub(r"\n#####\s+(.+)", r"\n**\1**", text)
+        text = re.sub(r"\n######\s+(.+)", r"\n**\1**", text)
+        text = re.sub(r"\n#\s+(.+)", r"\n**\1**", text)
+
+        return text
+
     def _combine_thinking_with_metrics(
         self, thinking: str, metrics: Dict[str, Any]
     ) -> str:
@@ -396,10 +459,6 @@ class MCPAgentManager:
         # Format metrics section
         metrics_section = "\n📊 EXECUTION STATISTICS\n"
         metrics_section += f"⏱️ Execution Time: {metrics['execution_time']}\n"
-
-        # Add manual cost if available
-        if "manual_cost" in metrics:
-            metrics_section += f"💰 Manual API Cost: ${metrics['manual_cost']:.2f}  (based  on  {st.session_state.manual_api_prep_time}s prep time  at ${st.session_state.manual_engineer_cost}/hour)\n"
 
         if metrics["tools_used"]:
             tool_count = len(metrics["tools_used"])

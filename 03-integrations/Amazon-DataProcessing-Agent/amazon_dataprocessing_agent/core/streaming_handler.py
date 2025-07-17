@@ -14,6 +14,7 @@
 
 """Streaming handler for real-time LLM responses."""
 
+import re
 import time
 
 import streamlit as st
@@ -47,7 +48,9 @@ class StreamingHandler:
 
                 # Update UI with streaming content
                 if self.message_placeholder:
-                    self.message_placeholder.markdown(self.content + "▋")
+                    self.message_placeholder.markdown(
+                        self._sanitize_markdown(self.content) + "\n"
+                    )
 
             # Handle tool usage events
             if "current_tool_use" in kwargs and kwargs["current_tool_use"].get("name"):
@@ -99,7 +102,7 @@ class StreamingHandler:
         """Finalize streaming and return content"""
         if self.message_placeholder:
             # Remove the typing indicator and show final content
-            self.message_placeholder.markdown(self.content)
+            self.message_placeholder.markdown(self._sanitize_markdown(self.content))
         if self.tool_placeholder:
             self.tool_placeholder.empty()
         return self.content
@@ -109,3 +112,37 @@ class StreamingHandler:
         self.content = ""
         self.current_tool = None
         self.tool_count = 0
+
+    def _sanitize_markdown(self, text: str) -> str:
+        """Sanitize markdown headers and other problematic formatting"""
+        if not text:
+            return text
+
+        # Convert markdown headers to bold text to prevent UI formatting issues
+        # ## Header -> **Header**
+        text = re.sub(r"^##\s+(.+)$", r"**\1**", text, flags=re.MULTILINE)
+
+        # ### Header -> **Header**
+        text = re.sub(r"^###\s+(.+)$", r"**\1**", text, flags=re.MULTILINE)
+
+        # #### Header -> **Header**
+        text = re.sub(r"^####\s+(.+)$", r"**\1**", text, flags=re.MULTILINE)
+
+        # ##### Header -> **Header**
+        text = re.sub(r"^#####\s+(.+)$", r"**\1**", text, flags=re.MULTILINE)
+
+        # ###### Header -> **Header**
+        text = re.sub(r"^######\s+(.+)$", r"**\1**", text, flags=re.MULTILINE)
+
+        # # Header -> **Header** (main headers)
+        text = re.sub(r"^#\s+(.+)$", r"**\1**", text, flags=re.MULTILINE)
+
+        # Also handle headers that might be in the middle of lines
+        text = re.sub(r"\n##\s+(.+)", r"\n**\1**", text)
+        text = re.sub(r"\n###\s+(.+)", r"\n**\1**", text)
+        text = re.sub(r"\n####\s+(.+)", r"\n**\1**", text)
+        text = re.sub(r"\n#####\s+(.+)", r"\n**\1**", text)
+        text = re.sub(r"\n######\s+(.+)", r"\n**\1**", text)
+        text = re.sub(r"\n#\s+(.+)", r"\n**\1**", text)
+
+        return text
