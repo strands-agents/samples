@@ -1,0 +1,318 @@
+.decision-tree-container {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.decision-tree-container.collapsed {
+    padding: 8px;
+    margin: 8px 0;
+}
+
+.tree-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tree-header h4 {
+    margin: 0;
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.tree-stats {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.stat-label {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.stat-value {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+.tree-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.tree-svg {
+    width: 100%;
+    height: 100%;
+    background: var(--bg-secondary);
+}
+
+/* SVG Styles */
+.link {
+    fill: none;
+    stroke: var(--border-color);
+    stroke-width: 2px;
+    stroke-opacity: 0.6;
+}
+
+.node {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.node:hover {
+    transform: scale(1.1);
+}
+
+.current-node {
+    fill: var(--accent-color);
+    stroke: var(--accent-color);
+    stroke-width: 3px;
+    filter: drop-shadow(0 0 6px rgba(var(--accent-color-rgb), 0.5));
+    animation: currentNodePulse 2s infinite;
+}
+
+.terminal-node {
+    fill: #22c55e;
+    stroke: #16a34a;
+    stroke-width: 2px;
+}
+
+.regular-node {
+    fill: var(--bg-primary);
+    stroke: var(--border-color);
+    stroke-width: 2px;
+}
+
+.node-label {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    fill: var(--text-primary);
+    pointer-events: none;
+}
+
+.node.current .node-label {
+    fill: var(--accent-color);
+    font-weight: 600;
+}
+
+.node.terminal .node-label {
+    fill: #16a34a;
+    font-weight: 600;
+}
+
+@keyframes currentNodePulse {
+    0%, 100% { 
+        filter: drop-shadow(0 0 6px rgba(var(--accent-color-rgb), 0.5));
+    }
+    50% { 
+        filter: drop-shadow(0 0 12px rgba(var(--accent-color-rgb), 0.8));
+    }
+}
+
+.tree-legend {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.legend-circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid;
+}
+
+.legend-circle.current-node {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.legend-circle.terminal-node {
+    background: #22c55e;
+    border-color: #16a34a;
+}
+
+.legend-circle.regular-node {
+    background: var(--bg-primary);
+    border-color: var(--border-color);
+}
+
+/* Collapsed state */
+.decision-tree-container.collapsed .tree-content {
+    min-height: 150px;
+}
+
+.decision-tree-container.collapsed .tree-header h4 {
+    font-size: 14px;
+}
+
+.decision-tree-container.collapsed .tree-stats {
+    font-size: 10px;
+    gap: 8px;
+}
+
+.decision-tree-container.collapsed .tree-legend {
+    gap: 12px;
+}
+
+.decision-tree-container.collapsed .legend-item {
+    font-size: 10px;
+}
+
+.decision-tree-container.collapsed .legend-circle {
+    width: 8px;
+    height: 8px;
+}
+
+/* Placeholder state */
+.decision-tree-placeholder {
+    background: var(--bg-secondary);
+    border: 2px dashed var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 16px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 120px;
+}
+
+.placeholder-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.placeholder-content .tree-icon {
+    font-size: 24px;
+    opacity: 0.5;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .decision-tree-container {
+        padding: 12px;
+        margin: 12px 0;
+    }
+    
+    .tree-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .tree-stats {
+        width: 100%;
+        justify-content: space-around;
+    }
+    
+    .tree-content {
+        min-height: 300px;
+    }
+    
+    .tree-legend {
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+}
+
+.tree-container {
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+  font-size: 12px;
+}
+
+.tree-container.empty-tree {
+  text-align: center;
+  color: #9ca3af;
+}
+
+.tree-node {
+  margin-left: 18px;
+  position: relative;
+}
+
+.node-content {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+  cursor: pointer;
+}
+
+.node-icon {
+  margin-right: 6px;
+  font-size: 14px;
+}
+
+.node-topic {
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.tree-node.current-node {
+  background: rgba(59, 130, 246, 0.1);
+  border: 2px solid #3b82f6;
+  border-radius: 6px;
+  padding: 4px;
+}
+
+.tree-node.current-node .node-topic {
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+.node-children {
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  padding-left: 10px;
+}
+
+.node-terminal-badge {
+  background-color: #374151;
+  color: #9ca3af;
+  font-size: 9px;
+  padding: 2px 5px;
+  border-radius: 4px;
+  margin-left: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+} 

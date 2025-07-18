@@ -1,0 +1,18 @@
+{
+  "title": "Aurora DSQL Integration",
+  "description": "A pattern demonstrating how to integrate Amazon Aurora DSQL capabilities with Strands agents for natural language database queries and schema exploration",
+  "introBox": {
+    "headline": "How it works",
+    "text": [
+      "Integrates Amazon Aurora DSQL for natural language database queries and schema exploration",
+      "Provides tools for querying databases, exploring schemas, and analyzing queries",
+      "Supports both local and Lambda deployment options",
+      "Implements natural language to SQL conversion using Aurora DSQL capabilities",
+      "Handles database operations with built-in query analysis and optimization"
+    ]
+  },
+  "source": {
+    "repo_url": "https://github.com/strands-agents/samples/tree/main/03-integrations/aurora-DSQL",
+    "file_url": "https://raw.githubusercontent.com/strands-agents/samples/refs/heads/main/03-integrations/aurora-DSQL/main.py"
+  }
+} 

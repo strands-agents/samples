@@ -1,0 +1,18 @@
+{
+  "title": "Interactive Recipe Bot",
+  "description": "A simple interactive agent that helps users find recipes and get cooking information using web search capabilities",
+  "introBox": {
+    "headline": "How it works",
+    "text": [
+      "The Recipe Bot uses a simple but powerful architecture combining a Strands agent with web search capabilities",
+      "A custom websearch tool is implemented using DuckDuckGo to fetch real-time recipe and cooking information",
+      "The agent runs in an interactive loop, allowing users to have natural conversations about recipes and cooking",
+      "System prompts define the agent's role as a cooking assistant to help guide responses",
+      "Error handling is built in to manage rate limits and search exceptions gracefully"
+    ]
+  },
+  "source": {
+    "file_url": "https://raw.githubusercontent.com/strands-agents/samples/main/01-tutorials/01-fundamentals/01-first-agent/02-simple-interactive-usecase/recipe_bot.py",
+    "repo_url": "https://github.com/strands-agents/samples/blob/main/01-tutorials/01-fundamentals/01-first-agent/02-simple-interactive-usecase/"
+  }
+} 
