@@ -3,6 +3,7 @@
 | Integration                           | Features showcased                                                                                                                                                               |
 | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [A2A Protocol](./A2A-protocol/) | Demonstrates agent-to-agent communication protocol for collaborative problem-solving between specialized AI agents.         
+| [Amazon Data Processing Agent](./Amazon-DataProcessing-Agent/) | Intelligent conversational AI assistant for AWS data processing services including AWS Glue, Amazon Athena, and Amazon EMR-EC2 with natural language interface and MCP integration. |
 | [Amazon Neptune](./Amazon-Neptune/) | This directory contains several examples of how to use Strands Agent SDK with [Amazon Neptune](https://aws.amazon.com/neptune/developer-resources/).                                                     |
 | [Aurora DSQL](./aurora-DSQL) | Demonstrates the Strands Agent integration with Amazon Aurora DSQL. |
 | [Nova Act](./nova-act) | Nova Act integration with Strands. Amazon Nova Act is an AI model trained to perform actions within a web browser. |

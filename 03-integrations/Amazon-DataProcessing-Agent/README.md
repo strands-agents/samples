@@ -4,6 +4,20 @@
 
 The **Amazon Data Processing Agent** is an intelligent conversational AI assistant that specializes in AWS data processing services. Built on top of the **Model Context Protocol (MCP)**, this agent provides a natural language interface to complex data engineering tasks across AWS Glue, Amazon Athena, and Amazon EMR-EC2.
 
+### Architecture Diagram
+
+![Architecture Diagram](architecture/AmazonDataProcessingArchitecture.png)
+
+### Agent Features
+
+| Feature | Description |
+|---------|-------------|
+| Agent Structure | Multi-agent architecture with specialized components |
+| Native Tools | send_email, manage_s3_table_buckets, manage_s3_namespaces, manage_s3_tables | 
+| MCP Servers | [AWS Data Processing MCP Server](https://pypi.org/project/awslabs.aws-dataprocessing-mcp-server/) |
+| Model Provider | Amazon Bedrock (Claude 3.7 Sonnet, Claude 4.0 Sonnet) |
+| UI Framework | Streamlit with real-time streaming |
+
 ### What We're Building
 
 This agent transforms how data engineers interact with AWS data processing services by:
@@ -108,21 +122,18 @@ src/amazon_dataprocessing_agent/
 ### Installation
 
 1. **Install uv** (if not already installed):
-   ```bash
-   curl -LsSf https://astral.sh/uv/install.sh | sh
-   ```
+   Follow uv [installation guidelines](https://docs.astral.sh/uv/getting-started/installation/).
 
 2. **Configure AWS credentials** following instructions [here](https://strandsagents.com/latest/user-guide/quickstart/#configuring-credentials).
 
 3. **Install dependencies using uv**:
    ```bash
-   cd Amazon-DataProcessing-Agent
    uv sync
    ```
 
 4. **Set up environment variables**:
    ```bash
-   cp .env.example .env
+   cp .env.template .env
    # Edit .env with your configuration
    ```
 
