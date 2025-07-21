@@ -28,7 +28,7 @@ from urllib3.exceptions import ReadTimeoutError as Urllib3ReadTimeoutError
 logger = logging.getLogger(__name__)
 
 
-class BedrockAgent:
+class StrandsBedrockAgent:
     """Class to handle interactions with Amazon Bedrock models"""
 
     MAX_RETRIES = 3

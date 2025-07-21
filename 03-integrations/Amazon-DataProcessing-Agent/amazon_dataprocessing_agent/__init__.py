@@ -19,7 +19,6 @@ A comprehensive data processing agent for AWS services including Glue, EMR, and 
 """
 
 __version__ = "0.1.0"
-__author__ = "naikvaib@amazon.com"
 
 from amazon_dataprocessing_agent.core.agent_manager import MCPAgentManager
 from amazon_dataprocessing_agent.core.session_state import SessionState

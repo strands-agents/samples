@@ -32,7 +32,7 @@ from amazon_dataprocessing_agent.tools.s3_tables_tools import \
     create_s3tables_tools
 
 from ..config.prompts import SYSTEM_PROMPT
-from .bedrock_agent import BedrockAgent
+from .strands_bedrock_agent import StrandsBedrockAgent
 from .chat_history_manager import ChatHistoryManager
 from .streaming_handler import StreamingHandler
 
@@ -58,16 +58,6 @@ class MCPAgentManager:
     ) -> bool:
         """Initialize the agent with MCP tools and Bedrock model"""
         try:
-            # Get environment variables
-            dataprocessing_mcp_server_script_path = os.getenv(
-                "DATAPROCESSING_MCP_SERVER_SCRIPT_PATH"
-            )
-
-            if not dataprocessing_mcp_server_script_path:
-                st.error(
-                    "DATAPROCESSING_MCP_SERVER_SCRIPT_PATH environment variable not set"
-                )
-                return False
 
             # Set up MCP client for DataProcessing
             self.mcp_client = MCPClient(
@@ -101,7 +91,7 @@ class MCPAgentManager:
             )
 
             # Create the bedrock agent
-            self.bedrock_agent = BedrockAgent(
+            self.bedrock_agent = StrandsBedrockAgent(
                 model_id=model_id,
                 region=region,
                 max_tokens=max_tokens,

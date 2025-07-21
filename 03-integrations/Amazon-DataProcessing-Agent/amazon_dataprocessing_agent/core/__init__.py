@@ -15,7 +15,7 @@
 """Core functionality for the DataProcessing Agent."""
 
 from amazon_dataprocessing_agent.core.agent_manager import MCPAgentManager
-from amazon_dataprocessing_agent.core.bedrock_agent import BedrockAgent
+from core.strands_bedrock_agent import StrandsBedrockAgent
 from amazon_dataprocessing_agent.core.chat_history_manager import \
     ChatHistoryManager
 from amazon_dataprocessing_agent.core.session_state import SessionState
@@ -24,7 +24,7 @@ from amazon_dataprocessing_agent.core.streaming_handler import StreamingHandler
 __all__ = [
     "MCPAgentManager",
     "SessionState",
-    "BedrockAgent",
+    "StrandsBedrockAgent",
     "StreamingHandler",
     "ChatHistoryManager",
 ]

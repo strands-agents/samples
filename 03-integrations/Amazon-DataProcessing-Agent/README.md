@@ -13,7 +13,7 @@ The **Amazon Data Processing Agent** is an intelligent conversational AI assista
 | Feature | Description |
 |---------|-------------|
 | Agent Structure | Multi-agent architecture with specialized components |
-| Native Tools | send_email, manage_s3_table_buckets, manage_s3_namespaces, manage_s3_tables | 
+| Custom Tools | send_email, manage_s3_table_buckets, manage_s3_namespaces, manage_s3_tables | 
 | MCP Servers | [AWS Data Processing MCP Server](https://pypi.org/project/awslabs.aws-dataprocessing-mcp-server/) |
 | Model Provider | Amazon Bedrock (Claude 3.7 Sonnet, Claude 4.0 Sonnet) |
 | UI Framework | Streamlit with real-time streaming |
@@ -190,8 +190,8 @@ uv run python -m streamlit run app.py
 
 #### **Data Catalog Management**
 ```
-User: "I need to create a new database in Glue Data Catalog for my e-commerce data"
-Agent: Creates database, sets up proper naming conventions, and configures metadata
+User: "Look at all the tables from my account federated across Glue Data Catalog"
+Agent: Goes over glue databases and tables and provide summary of different databases, tables and it schema
 ```
 
 #### **ETL Job Development**
@@ -202,13 +202,13 @@ Agent: Generates optimized PySpark script, uploads to S3, creates Glue job with 
 
 #### **Natural Language to SQL**
 ```
-User: "Show me the top 10 customers by revenue from last month"
+User: "Show me the top 10 customers by revenue for the month of July"
 Agent: Converts to SQL, executes via Athena, provides results with cost analysis
 ```
 
 #### **EMR Cluster Management**
 ```
-User: "I need an EMR cluster for processing 500GB of log data"
+User: "Identify EMR clusters which are sitting idle and can be terminated"
 Agent: Recommends optimal cluster configuration, creates cluster, provides cost estimates
 ```
 
@@ -263,13 +263,32 @@ The agent connects to the `aws-dataprocessing-mcp-server` which provides:
 ## Requirements
 
 - Python >= 3.12
-- AWS Strands Agents
+- Strands Agents
 - Valid AWS credentials
-- Access to Amazon Bedrock Claude models
+- Access to Amazon Bedrock Claude Athropic models
 
 ## Troubleshooting
 
 - Ensure AWS credentials are properly configured
-- Check that the DATAPROCESSING_MCP_SERVER_SCRIPT_PATH environment variable is set
 - Verify network connectivity to AWS services
 - Check the Streamlit logs for detailed error messages
+
+## Clean up Resources
+
+The Amazon Data Processing Agent creates various AWS resources during operation, including:
+
+- **AWS Glue**: Databases, tables, crawlers, ETL jobs, and workflows
+- **Amazon Athena**: Query results stored in S3, workgroups, and data catalogs
+- **Amazon EMR**: EC2 clusters, security groups, and associated storage
+- **Amazon S3**: Buckets, objects, and lifecycle policies
+
+### Resource Cleanup Options
+
+#### Option 1: Agent-Assisted Cleanup
+Ask the agent to help clean up resources:
+```
+"Please help me clean up all the AWS resources we created today"
+```
+
+#### Option 2: Manual Cleanup
+Manually clean up resources through the AWS Console or CLI
