@@ -14,7 +14,7 @@ Have a new startup in mind, but haven't quite hired your marketing staff? Use th
 
 ## Key Features
 
-- Shows sequential mult-agent architecture using Strands Agent
+- Shows sequential multi-agent architecture using Strands Agent
 - Agentic search using the Perplexity MCP server.
 - Utilizes the `swarm` tool, allowing a swarm of agents to collaborate on market research. Checkout multi-agent systems and [Swarm](https://strandsagents.com/latest/user-guide/concepts/multi-agent/swarm/) intelligence with Strands for more information.
 
