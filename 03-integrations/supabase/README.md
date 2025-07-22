@@ -4,37 +4,24 @@
 
 [Supabase](https://supabase.com/) is an open-source Firebase alternative providing all the backend services you need to build a product: a PostgreSQL database, authentication, instant APIs, edge functions, realtime subscriptions, and storage. This integration demonstrates how to use Supabase with Strands AI agents through the Model Context Protocol (MCP).
 
-![architecture](./assets/architecture.png)
+## Supabase MCP Features
 
-|Feature             |Description                                        |
-|--------------------|---------------------------------------------------|
-|Agent Structure     |Single-agent architecture                          |
-|Native Tools        |file_read, file_write                              |
-|MCP Servers         |[Supabase MCP Server](https://github.com/supabase-community/supabase-mcp)                  |
-|Model Provider      |Amazon Bedrock                                     |
+| Feature Group | Available Tools |
+|---------------|----------------|
+| Account | `list_projects`, `get_project`, `create_project`, `pause_project`, `restore_project`, `list_organizations`, `get_organization`, `get_cost`, `confirm_cost` |
+| Knowledge Base | `search_docs` |
+| Database | `list_tables`, `list_extensions`, `list_migrations`, `apply_migration`, `execute_sql` |
+| Debug | `get_logs`, `get_advisors` |
+| Development | `get_project_url`, `get_anon_key`, `generate_typescript_types` |
+| Edge Functions | `list_edge_functions`, `deploy_edge_function` |
+| Branching (Experimental) | `create_branch`, `list_branches`, `delete_branch`, `merge_branch`, `reset_branch`, `rebase_branch` |
+| Storage | `list_storage_buckets`, `get_storage_config`, `update_storage_config` |
 
-## Prerequisites
 
-- A [Supabase account](https://supabase.com/) with a project
-- Supabase personal access token
-- Set up AWS credentials with access to AWS services
-  - You need an AWS account with appropriate permissions
-  - Configure AWS credentials with aws configure or environment variables
+![Agent architecture](./assets/architecture1.png)
 
-## Getting Started
+![Solution architecture](./assets/architecture2.png)                                  
 
-1. Install [uv](https://docs.astral.sh/uv/getting-started/installation/).
+## Agenda
+Run the notebook [`supabase-integration.ipynb`](./supabase-integration.ipynb) to explore the Supabase MCP features.
 
-2. Set up Supabase credentials in `.env` using [.env.example](./.env.example).
-
-3. Run the notebook `supabase-integration.ipynb` to explore the Supabase MCP features.
-
-## Features
-
-The Supabase MCP integration provides the following capabilities:
-
-- **Project Management**: Create, list, and manage Supabase projects
-- **Database Management**: Execute SQL queries, manage tables, and handle database migrations
-- **Edge Function Management**: Deploy, update, and invoke serverless functions
-- **Storage Management**: Upload, download, and manage files in Supabase storage
-- **Authentication**: Manage users and authentication settings
