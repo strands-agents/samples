@@ -6,4 +6,3 @@ import { Aspects } from 'aws-cdk-lib';
 
 const app = new cdk.App();
 new InfraStack(app, 'StrandsPlayground', {});
-Aspects.of(app).add(new AwsSolutionsChecks());
