@@ -11,3 +11,4 @@ langfuse
 ragas
 langchain-aws
 pandas
+datasets
