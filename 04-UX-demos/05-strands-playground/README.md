@@ -123,28 +123,6 @@ This project provides a playground environment for developers to experiment with
 
 3. Open your browser and navigate to `http://localhost:8003`
 
-### Option 2: Docker Deployment
-
-Build and run the application using Docker:
-
-#### Without DynamoDB (File-based Session Storage)
-```bash
-cd app
-docker build -t strands-playground .
-docker run -p 8003:8003 strands-playground
-```
-
-#### With DynamoDB Session Storage
-```bash
-cd app
-docker build -t strands-playground .
-docker run -p 8003:8003 \
-  -e TABLE_NAME="<table-name>" \
-  -e TABLE_REGION="<table-region>" \
-  -e PRIMARY_KEY="SessionId" \
-  strands-playground
-```
-
 ### Option 3: Full CDK Deployment to AWS
 
 Deploy a complete production-ready environment to AWS using CDK:
