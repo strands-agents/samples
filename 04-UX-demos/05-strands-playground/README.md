@@ -87,18 +87,20 @@ This project provides a playground environment for developers to experiment with
 1. Clone the repository and navigate to the project directory:
    ```bash
    git clone https://github.com/strands-agents/samples.git
-   cd samples/04-strands-playground
+   cd 04-UX-demos/05-strands-playground/
    ```
 
 2. Install Python dependencies:
    ```bash
+   python -m venv .venv
+   source .venv/bin/activate
    cd app
    pip install -r requirements.txt
    ```
 
 3. Run the FastAPI server with default file-based session storage:
    ```bash
-   uvicorn main:app --reload --host 0.0.0.0 --port 8003
+   python -m uvicorn main:app --reload --host 0.0.0.0 --port 8003
    ```
 
 4. Open your browser and navigate to `http://localhost:8003`
@@ -118,7 +120,7 @@ This project provides a playground environment for developers to experiment with
 2. Run the FastAPI server with DynamoDB configuration:
    ```bash
    cd app
-   TABLE_NAME=<table-name> TABLE_REGION=<table-region> PRIMARY_KEY="SessionId" uvicorn main:app --host 0.0.0.0 --reload --port 8003
+   TABLE_NAME=<table-name> TABLE_REGION=<table-region> PRIMARY_KEY="SessionId" python -m uvicorn main:app --host 0.0.0.0 --reload --port 8003
    ```
 
 3. Open your browser and navigate to `http://localhost:8003`
@@ -132,6 +134,7 @@ Deploy a complete production-ready environment to AWS using CDK:
 2. Navigate to the infrastructure directory:
    ```bash
    cd infra
+   npm install
    ```
 
 3. Bootstrap your AWS environment (if not already done):
