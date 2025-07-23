@@ -835,41 +835,39 @@ Respond with guidance followed by EXACTLY this XML format:
                     if "data" in event:
                         text_data = event["data"]
                         accumulated_response += text_data
-                        
+
                         # Add to XML buffer for processing
                         xml_buffer += text_data
-                        
+
                         # Check for XML in accumulated response for node transitions
                         if not xml_processed:
                             decision_tree_match = re.search(r'<decision_tree_status[^>]*next_node="([^"]+)"[^>]*/?>', accumulated_response)
                             if decision_tree_match:
                                 xml_processed = True
                                 next_node_id = decision_tree_match.group(1)
-                                
+
                                 add_server_log("triage", f"XML DETECTED: {session_id} -> {next_node_id}", level="info")
-                                
+
                                 if next_node_id in decision_tree.nodes:
                                     decision_tree.set_current_node(session_id, next_node_id)
                                     yield f"data: {json.dumps({'type': 'node_changed', 'node_id': next_node_id, 'reload_left_ui': True, 'call_status_api': True})}\n\n"
-                        
+
                         # Send all text - let frontend handle filtering
                         if text_data.strip():
                             yield f"data: {json.dumps({'type': 'content', 'content': text_data})}\n\n"
-                    
+
                     elif "current_tool_use" in event and event["current_tool_use"].get("name"):
                         tool_name = event["current_tool_use"]["name"]
                         yield f"data: {json.dumps({'type': 'tool_use', 'tool_name': tool_name})}\n\n"
-                    
-                    elif event.get("complete", False):
-                        add_server_log("triage", f"STREAM COMPLETE: {session_id}", level="info")
-                        break
+
+                add_server_log("triage", f"STREAM COMPLETE: {session_id}", level="info")
 
             except Exception as llm_error:
                 add_server_log("triage", f"LLM STREAM ERROR: {session_id} - {str(llm_error)}", level="error")
                 yield f"data: {json.dumps({'type': 'content', 'content': f'Error: {str(llm_error)}'})}\n\n"
-        
+
         yield "data: [DONE]\n\n"
-        
+
     except Exception as e:
         logger.error(f"Error in chat stream: {e}")
         yield f"data: {json.dumps({'type': 'content', 'content': f'Error: {str(e)}'})}\n\n"
