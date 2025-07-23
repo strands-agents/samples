@@ -4,7 +4,7 @@
 
 The Swarm pattern enables multiple AI agents to collaborate on complex tasks through parallel processing and shared memory. Agents work together using different coordination strategies to achieve emergent collective intelligence.
 
-Here's an example of a swarm : 
+Here's an example of a swarm :
 
 ![Architecture](./images/swarm_example.png)
 
@@ -20,7 +20,9 @@ Here's an example of a swarm :
 from strands import Agent
 from strands_tools import swarm
 
-agent = Agent(tools=[swarm])
+agent = Agent(
+    model="us.anthropic.claude-3-7-sonnet-20250219-v1:0",  # Optional: Specify the model ID
+    tools=[swarm])
 
 # Create a collaborative swarm
 result = agent.tool.swarm(
@@ -44,7 +46,7 @@ result = agent.tool.swarm(
 - **Phase-Based Execution**: Progressive refinement of solutions
 - **Agent Specialization**: Tailored roles based on coordination pattern
 
-Read more about how it works [here](https://strandsagents.com/latest/user-guide/concepts/multi-agent/swarm/#how-the-swarm-tool-works) 
+Read more about how it works [here](https://strandsagents.com/latest/user-guide/concepts/multi-agent/swarm/#how-the-swarm-tool-works)
 
 ## When to Use
 
