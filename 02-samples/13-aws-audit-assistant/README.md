@@ -4,7 +4,7 @@
 This tool executes scripts that may affect your AWS environment. **Always run it from a sandbox environment with read-only permissions**. A Terraform script is provided in the `sandbox` folder to create an EC2 instance with the appropriate read-only IAM role for safe auditing.
 
 ## 🎯 Overview
-AWS Audit Assistant is your AI-powered partner for ensuring AWS resource compliance with best practices. It continuously monitors your cloud infrastructure, providing intelligent insights and recommendations for security and efficiency improvements.
+AWS Audit Assistant is your AI-powered partner for ensuring AWS resource compliance with best practices. It provides intelligent insights and recommendations for security and efficiency improvements.   
 
 ![Architecture Diagram](./architecture.png)
 
