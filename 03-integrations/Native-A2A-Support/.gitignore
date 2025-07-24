@@ -1,0 +1,19 @@
+# Python bytecode cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# This sample's package info
+native_a2a_support.egg-info/
+
+# Virtual environment
+.venv/
+
+# UV lock file
+uv.lock
+
+# Rope project files
+.ropeproject/
+
+# Python version file
+.python-version

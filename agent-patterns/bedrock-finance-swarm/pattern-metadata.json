@@ -1,0 +1,16 @@
+{
+  "title": "Finance Swarm Agent",
+  "description": "A a modular, multi-agent system designed to autonomously generate comprehensive equity research reports from a single stock query.",
+  "introBox": {
+    "headline": "How it works",
+    "text": [
+      "By leveraging shared memory and coordinated agent workflows, the system transforms raw data from APIs and web sources into a polished, structured Markdown or HTML report.",
+      "The orchestrator uses natural language reasoning and synthesis (via Amazon Nova) to integrate the findings into actionable insights.",
+      "The architecture supports flexible deployment, modular agent execution, and scalable financial intelligence delivery for developers, analysts, and automated trading systems."
+    ]
+  },
+  "source": {
+    "repo_url": "https://github.com/strands-agents/samples/tree/main/02-samples/09-finance-assistant-swarm-agent",
+    "file_url": "https://raw.githubusercontent.com/strands-agents/samples/refs/heads/main/02-samples/09-finance-assistant-swarm-agent/finance_assistant_swarm.py"
+  }
+} 

@@ -1,15 +1,21 @@
 # Import Agent and tools
-from strands import Agent, tool
-from duckduckgo_search import DDGS
-from duckduckgo_search.exceptions import RatelimitException, DuckDuckGoSearchException
 import logging
 
+from ddgs import DDGS
+from ddgs.exceptions import DDGSException, RatelimitException
+from strands import Agent, tool
+
 # Configure logging
-logging.getLogger("strands").setLevel(logging.INFO) # Set to DEBUG for more detailed logs
+logging.getLogger("strands").setLevel(
+    logging.INFO
+)  # Set to DEBUG for more detailed logs
+
 
 # Define a websearch tool
 @tool
-def websearch(keywords: str, region: str = "us-en", max_results: int | None = None) -> str:
+def websearch(
+    keywords: str, region: str = "us-en", max_results: int | None = None
+) -> str:
     """Search the web to get updated information.
     Args:
         keywords (str): The search query keywords.
@@ -23,11 +29,11 @@ def websearch(keywords: str, region: str = "us-en", max_results: int | None = No
         return results if results else "No results found."
     except RatelimitException:
         return "RatelimitException: Please try again after a short delay."
-    except DuckDuckGoSearchException as d:
+    except DDGSException as d:
         return f"DuckDuckGoSearchException: {d}"
     except Exception as e:
         return f"Exception: {e}"
-    
+
 
 # Create a recipe assistant agent
 recipe_agent = Agent(
@@ -40,7 +46,7 @@ recipe_agent = Agent(
 
 if __name__ == "__main__":
     print("\n👨‍🍳 RecipeBot: Ask me about recipes or cooking! Type 'exit' to quit.\n")
-    
+
     # Run the agent in a loop for interactive conversation
     while True:
         user_input = input("\nYou > ")

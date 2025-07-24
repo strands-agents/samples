@@ -1,0 +1,18 @@
+{
+  "title": "Code Assistant",
+  "description": "An intelligent coding companion that provides code generation, review, and execution capabilities using a multi-agent architecture and interactive development tools",
+  "introBox": {
+    "headline": "How it works",
+    "text": [
+      "Combines multiple specialized agents for code generation, review, and execution",
+      "Provides interactive Python REPL and file management capabilities",
+      "Features secure shell operations for development tasks",
+      "Implements comprehensive code review and debugging workflows",
+      "Supports local development with integrated editor tools"
+    ]
+  },
+  "source": {
+    "repo_url": "https://github.com/strands-agents/samples/tree/main/02-samples/06-code-assistant",
+    "file_url": "https://github.com/strands-agents/samples/raw/refs/heads/main/02-samples/06-code-assistant/main.py"
+  }
+} 

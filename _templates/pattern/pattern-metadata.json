@@ -1,0 +1,16 @@
+{
+  "title": "[Pattern Title]",
+  "description": "[Brief description of what this pattern does]",
+  "introBox": {
+    "headline": "How it works",
+    "text": [
+      "Describe the main components and how they work together",
+      "Explain key features or capabilities",
+      "Mention any important tools or integrations"
+    ]
+  },
+  "source": {
+    "file_url": "https://raw.githubusercontent.com/strands-agents/samples/main/path/to/implementation.py",
+    "repo_url": "https://github.com/strands-agents/samples/tree/main/path/to/pattern/"
+  }
+} 

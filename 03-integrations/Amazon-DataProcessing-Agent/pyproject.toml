@@ -1,0 +1,23 @@
+[project]
+name = "amazon-dataprocessing-agent"
+version = "0.1.0"
+description = "The Amazon Data Processing Agent is an intelligent conversational AI assistant that specializes in AWS data processing services. Built on top of AWSLabs Data Processing MCP Server, this agent provides a natural language interface to complex data engineering tasks across AWS Glue, Amazon Athena, and Amazon EMR-EC2."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "streamlit>=1.30.0",
+    "mcp>=0.1.0",
+    "boto3>=1.28.0",
+    "python-dotenv==1.1.0",
+    "strands-agents==0.1.8",
+]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["amazon_dataprocessing_agent"]
+
+[project.scripts]
+dataprocessing-agent = "amazon_dataprocessing_agent.main:main"

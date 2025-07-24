@@ -18,7 +18,7 @@ def get_customer_profile(customer_id: str = None, email: str = None) -> Dict:
         dict: Customer profile information or error message
     """
     if not customer_id and not email:
-        return {"status": "error", content: [{"text": "Either customer_id or email must be provided"}]}
+        return {"Either customer_id or email must be provided"}
     
     profile = None
     if customer_id:
@@ -27,7 +27,7 @@ def get_customer_profile(customer_id: str = None, email: str = None) -> Dict:
         profile = profile_manager.get_profile_by_email(email)
         
     if not profile:
-        return {"status": "error", content: [{"text": "Customer profile not found"}]}
+        return {"Customer profile not found"}
 
     return profile.to_dict()
 
@@ -45,16 +45,17 @@ def list_customer_purchases(customer_id: str = None, email: str = None) -> List[
         list: List of customer purchases or error message
     """
     if not customer_id and not email:
-        return {"status": "error", content: [{"text": "Either customer_id or email must be provided"}]}
+        return {"Either customer_id or email must be provided"}
     
     profile = None
     if customer_id:
         profile = profile_manager.get_profile(customer_id)
+
     elif email:
         profile = profile_manager.get_profile_by_email(email)
         
     if not profile:
-        return {"status": "error", content: [{"text": "Customer profile not found"}]}
+        return {"Customer profile not found"}
         
     return profile.purchase_history
 
@@ -72,7 +73,7 @@ def list_customer_tickets(customer_id: str = None, email: str = None) -> List[Di
         list: List of customer support tickets or error message
     """
     if not customer_id and not email:
-        return {"status": "error", content: [{"text": "Either customer_id or email must be provided"}]}
+        return {"Either customer_id or email must be provided"}
     
     profile = None
     if customer_id:
@@ -81,7 +82,7 @@ def list_customer_tickets(customer_id: str = None, email: str = None) -> List[Di
         profile = profile_manager.get_profile_by_email(email)
         
     if not profile:
-        return {"status": "error", content: [{"text": "Customer profile not found"}]}
+        return {"Customer profile not found"}
         
     return profile.support_tickets
 
@@ -100,6 +101,6 @@ def update_customer_profile(customer_id: str, updates: Dict) -> Dict:
     """
     profile = profile_manager.update_profile(customer_id, updates)
     if not profile:
-        return {"status": "error", content: [{"text": "Customer profile not found"}]}
+        return {"Customer profile not found"}
         
     return profile.to_dict()
