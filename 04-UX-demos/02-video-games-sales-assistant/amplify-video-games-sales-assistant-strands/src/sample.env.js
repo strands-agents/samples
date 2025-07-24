@@ -15,7 +15,7 @@ const APP_SUBJECT = "Video Games Sales";
 const WELCOME_MESSAGE =
   "I'm your Video Games Sales Data Analyst, crunching data for insights.";
 
-const STRANDS_ENDPOINT = "http://<AGENT_ENDPOINT_URL>/assistant-streaming";
+const AGENT_ENDPOINT_URL = "http://<AGENT_ENDPOINT_URL>/assistant-streaming";
 
 // --------------------------------
 
@@ -73,7 +73,7 @@ ApexChartsx Rules to Avoid Known Errors:\n\
 \n\
    - Do not use Multiple Y Axis for bars, those are not supported.\n\
    - In JSON format, avoid the error: raise JSONDecodeError("Expecting value", s, err.value) from None\n\
-   - Do not use 'undefined' values\n\
+   - Do not use \'udenfined\' values\n\
 \n\
 Example Chart Configurations:\n\
 \n\
@@ -303,7 +303,7 @@ export {
   APP_NAME,
   APP_SUBJECT,
   WELCOME_MESSAGE,
-  STRANDS_ENDPOINT,
+  AGENT_ENDPOINT_URL,
   MODEL_ID_FOR_CHART,
   MAX_LENGTH_INPUT_SEARCH,
   ACCESS_KEY_ID,

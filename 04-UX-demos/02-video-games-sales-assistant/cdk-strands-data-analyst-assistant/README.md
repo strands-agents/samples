@@ -1,6 +1,6 @@
 # Generative AI Application - Data Source and Strands Agent Deployment with CDK
 
-This tutorial guides you through setting up the back-end infrastructure and agent for a Data Analyst Assistant for Video Game Sales using AWS Cloud Development Kit (CDK).
+This tutorial guides you through setting up the back-end infrastructure and agent for a Data Analyst Assistant for Video Game Sales using **[AWS Cloud Development Kit (CDK)](https://aws.amazon.com/cdk/)**.
 
 ## Overview
 
@@ -27,8 +27,8 @@ By completing this tutorial, you'll have a fully functional data analyst assista
 
 Before you begin, ensure you have:
 
-* [AWS CDK Installed](https://docs.aws.amazon.com/cdk/v2/guide/getting-started.html)
-* [Docker](https://www.docker.com)
+* **[AWS CDK Installed](https://docs.aws.amazon.com/cdk/v2/guide/getting-started.html)**
+* **[Docker](https://www.docker.com)**
 * Anthropic Claude 3.7 Sonnet model enabled in Amazon Bedrock
 * Run this command to create a service-linked role for RDS:
 
@@ -59,7 +59,7 @@ cdk deploy
 It will use the following default value parameters:
 
 - **ProjectId**: "strands-data-analyst-assistant" - Project identifier used for naming resources
-- **DatabaseName**: "video_games_sales" - Nombre de la base de datos
+- **DatabaseName**: "video_games_sales"
 - **MaxResponseSize**: 25600 - Maximum size for row query results in bytes
 - **TaskCpu**: 2048 - CPU units for Fargate task (256=0.25vCPU, 512=0.5vCPU, 1024=1vCPU, 2048=2vCPU, 4096=4vCPU)
 - **TaskMemory**: 4096 - Memory (in MiB) for Fargate task
@@ -74,7 +74,7 @@ After deployment completes, the following resources will be created:
 - DynamoDB Tables for tracking questions query details and user conversations
 
 > [!IMPORTANT] 
-> Enhance AI safety and compliance by implementing [Amazon Bedrock Guardrails](https://aws.amazon.com/bedrock/guardrails/) for your AI applications with the seamless integration offered by **[Strands Agents SDK](https://strandsagents.com/latest/user-guide/safety-security/guardrails/)**.
+> Enhance AI safety and compliance by implementing **[Amazon Bedrock Guardrails](https://aws.amazon.com/bedrock/guardrails/)** for your AI applications with the seamless integration offered by **[Strands Agents SDK](https://strandsagents.com/latest/user-guide/safety-security/guardrails/)**.
 
 ## Load Sample Data into PostgreSQL Database
 
@@ -133,7 +133,7 @@ Try these sample questions:
 - Which are the most popular consoles and why?
 - Give me a short summary and conclusion of our conversation.
 
-You can now proceed to the [Front-End Implementation - Integrating Strands Agent with a Ready-to-Use Data Analyst Assistant Application](../amplify-video-games-sales-assistant-strands/).
+You can now proceed to the **[Front-End Implementation - Integrating Strands Agent with a Ready-to-Use Data Analyst Assistant Application](../amplify-video-games-sales-assistant-strands/)**.
 
 ## Cleaning-up Resources (Optional)
 
