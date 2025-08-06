@@ -11,4 +11,4 @@ langfuse
 ragas
 langchain-aws
 pandas
-datasets
+datasets>=4.0.0
