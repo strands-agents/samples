@@ -104,7 +104,7 @@ const QueryResultsDisplay = ({ index, answer }) => {
                     label={`Result Set ${x + 1}`}
                     color="primary"
                     size="small"
-                    sx={{ mr: 1.5, fontWeight: 500 }}
+                    sx={{ mr: 1.5, fontWeight: 500, color: "white" }}
                   />
                   <Typography variant="body1" sx={{ mr: 2 }}>
                     {query_result.query_description}

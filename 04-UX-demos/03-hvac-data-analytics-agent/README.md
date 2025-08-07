@@ -139,7 +139,7 @@ After deployment, you can interact with the agent through the web interface. You
 Example queries:
 - "How many zones are on the first floor?"
 - "What was the max temperature in Zone 5 in first floor yesterday?"
-- "How does this compre with the day before yesterday?"
+- "How does this compare with the day before yesterday?"
 
 <img src="demo.gif" alt="Agent demo" width="600">
 

@@ -15,6 +15,7 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import { alpha } from "@mui/material/styles";
 import Chat from "./Chat";
 
 import { APP_NAME } from "../env";
@@ -40,10 +41,10 @@ function LayoutApp() {
   const defaultTheme = createTheme({
     palette: {
       primary: {
-        main: "#5425AF",
+        main: "#5BC167",
       },
       secondary: {
-        main: "#812C90",
+        main: "#E8734A",
       },
     },
   });
@@ -67,8 +68,20 @@ function LayoutApp() {
         color="default"
         elevation={0}
         sx={{
-          borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
-          background: "#F6F7FD",
+          background: "#FAFFFB",
+          position: "relative",
+          "&::after": {
+            content: '""',
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: "1px",
+            backgroundImage: (theme) => `linear-gradient(to right, 
+                                  ${theme.palette.divider}, 
+                                  ${alpha(theme.palette.primary.main, 0.3)}, 
+                                  ${theme.palette.divider})`,
+          },
         }}
       >
         <Toolbar sx={{ flexWrap: "wrap", p: 1, m: 0 }}>
@@ -117,19 +130,20 @@ function LayoutApp() {
         </IconButton>
       </Box>
 
-      <Dialog
-        fullWidth={true}
-        maxWidth={"xl"}
-        open={open}
-        onClose={handleClose}
-      >
-        <DialogTitle>Amazon Bedrock</DialogTitle>
+      <Dialog maxWidth={"xl"} open={open} onClose={handleClose}>
+        <DialogTitle>Data Analyst Assistant Architecture Diagram</DialogTitle>
         <DialogContent>
-          <img
-            src="/images/gen-ai-assistant-diagram.png"
-            width={"100%"}
-            alt="Powered By AWS"
-          />
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <img
+              src="/images/gen-ai-assistant-diagram.png"
+              style={{
+                maxWidth: "100%",
+                maxHeight: "80vh",
+                objectFit: "contain",
+              }}
+              alt="Powered By AWS"
+            />
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Close</Button>
