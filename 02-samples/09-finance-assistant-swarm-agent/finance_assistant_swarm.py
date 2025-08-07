@@ -2,190 +2,137 @@
 """
 Finance Assistant Swarm Agent
 
-A collaborative swarm of specialized 02-agents for comprehensive stock analysis.
+A collaborative swarm of specialized agents for comprehensive stock analysis.
 """
-
 # Standard library imports
+import logging
 import time
 from typing import Dict, Any, List
 
 # Third-party imports
-from strands import Agent
+from strands import Agent, tool
 from strands.models import BedrockModel
-from strands_tools import think, http_request
-from strands_tools.swarm import Swarm, SwarmAgent
+from strands.multiagent import Swarm
+from strands_tools import think
+import yfinance as yf
 
 from stock_price_agent import get_stock_prices, create_stock_price_agent
-from financial_metrics_agent import (
-    get_financial_metrics,
-    create_financial_metrics_agent,
+from financial_metrics_agent import get_financial_metrics, create_financial_metrics_agent
+from company_analysis_agent import get_company_info, get_stock_news, create_company_analysis_agent
+
+# Enable debug logs
+logging.getLogger("strands.multiagent").setLevel(logging.DEBUG)
+logging.basicConfig(
+    format="%(levelname)s | %(name)s | %(message)s",
+    handlers=[logging.StreamHandler()]
 )
-from company_analysis_agent import (
-    get_company_info,
-    get_stock_news,
-    create_company_analysis_agent,
-)
 
+@tool
+def get_real_stock_data(ticker: str) -> Dict[str, Any]:
+    """Get accurate stock data outside the swarm"""
+    try:
+        stock = yf.Ticker(ticker)
+        info = stock.info
+        hist = stock.history(period="5d")
+        
+        if hist.empty:
+            return {"status": "error", "message": f"No data found for {ticker}"}
+        
+        current_price = round(float(hist["Close"].iloc[-1]), 2)
+        prev_close = round(float(hist["Close"].iloc[-2]), 2) if len(hist) > 1 else current_price
+        price_change = round(current_price - prev_close, 2)
+        price_change_pct = round((price_change / prev_close) * 100, 2) if prev_close != 0 else 0
+        
+        return {
+            "status": "success",
+            "ticker": ticker.upper(),
+            "current_price": current_price,
+            "price_change": price_change,
+            "price_change_pct": price_change_pct,
+            "market_cap": info.get("marketCap"),
+            "pe_ratio": info.get("trailingPE"),
+            "52_week_high": info.get("fiftyTwoWeekHigh"),
+            "52_week_low": info.get("fiftyTwoWeekLow"),
+            "volume": int(hist["Volume"].iloc[-1]),
+            "revenue": info.get("totalRevenue"),
+            "employees": info.get("fullTimeEmployees"),
+            "sector": info.get("sector"),
+            "industry": info.get("industry")
+        }
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
 
-class StockAnalysisSwarm:
-    """A collaborative swarm of specialized 02-agents for stock analysis."""
-
-    def __init__(self):
-        """Initialize the swarm with specialized 02-agents."""
-        # Initialize Swarm with Nova Pro model
-        self.swarm = Swarm(
-            task="Analyze company stock with multiple specialized 02-agents",
-            coordination_pattern="collaborative",
+@tool
+def analyze_company_with_collaborative_swarm(query: str, stock_data: str = "") -> Dict[str, Any]:
+    """Collaborative swarm using Nova LITE to avoid streaming timeouts"""
+    try:
+        ticker = query.upper() if len(query) <= 5 else "AMZN"
+        
+        # Use NOVA LITE for all swarm agents - much faster, no timeouts
+        company_strategist = Agent(
+            name="company_strategist",
+            system_prompt=f"Analyze {ticker} business model. Use get_company_info then hand off to financial_analyst.",
+            model=BedrockModel(model_id="us.amazon.nova-lite-v1:0", region="us-east-1"),
+            tools=[get_company_info]
         )
-
-        # Create SwarmAgent instances with correct parameters
-        self.search_agent = SwarmAgent(
-            agent_id="search_agent",
-            system_prompt="""You are a company information specialist.
-            Your role is to:
-            1. Use get_company_info to find company details and ticker
-            2. Verify company identity
-            3. Share company information with other 02-agents
-            4. Ensure accuracy of company data""",
-            shared_memory=self.swarm.shared_memory,
+        
+        financial_analyst = Agent(
+            name="financial_analyst", 
+            system_prompt=f"Build on company insights. Use get_financial_metrics then hand off to market_analyst.",
+            model=BedrockModel(model_id="us.amazon.nova-lite-v1:0", region="us-east-1"),
+            tools=[get_financial_metrics]
         )
-        self.search_agent.tools = [get_company_info, think]
-
-        self.price_agent = SwarmAgent(
-            agent_id="price_agent",
-            system_prompt=create_stock_price_agent().system_prompt,  # Use the created agent's system prompt
-            shared_memory=self.swarm.shared_memory,
+        
+        market_analyst = Agent(
+            name="market_analyst",
+            system_prompt=f"Synthesize all insights. Use get_stock_news for final recommendation.",
+            model=BedrockModel(model_id="us.amazon.nova-lite-v1:0", region="us-east-1"),
+            tools=[get_stock_news]
         )
-        self.price_agent.tools = [
-            get_stock_prices,
-            http_request,
-            think,
-        ]  # Set tools directly
-
-        self.metrics_agent = SwarmAgent(
-            agent_id="metrics_agent",
-            system_prompt=create_financial_metrics_agent().system_prompt,
-            shared_memory=self.swarm.shared_memory,
+        
+        swarm = Swarm(
+            [company_strategist, financial_analyst, market_analyst],
+            max_handoffs=3,
+            max_iterations=3,
+            execution_timeout=120.0,
+            node_timeout=30.0
         )
-        self.metrics_agent.tools = [get_financial_metrics, http_request, think]
-
-        self.news_agent = SwarmAgent(
-            agent_id="news_agent",
-            system_prompt=create_company_analysis_agent().system_prompt,
-            shared_memory=self.swarm.shared_memory,
-        )
-        self.news_agent.tools = [get_company_info, get_stock_news, http_request, think]
-
-        # Add 02-agents to swarm with their system prompts
-        self.swarm.add_agent(
-            self.search_agent,
-            system_prompt="""You are the company information coordinator in the swarm.
-            Use get_company_info to find and verify company information.
-            Share verified company data with other 02-agents.
-            Focus on accuracy and completeness of information.""",
-        )
-
-        self.swarm.add_agent(
-            self.price_agent,
-            system_prompt="""You are a price analysis specialist in the swarm.
-            Analyze stock prices, trends, and patterns.
-            Share price analysis with other 02-agents.
-            Focus on recent price movements and volume analysis.""",
-        )
-
-        self.swarm.add_agent(
-            self.metrics_agent,
-            system_prompt="""You are a financial metrics specialist in the swarm.
-            Analyze company financial health and metrics.
-            Share financial insights with other 02-agents.
-            Focus on key performance indicators and growth metrics.""",
-        )
-
-        self.swarm.add_agent(
-            self.news_agent,
-            system_prompt="""You are a news analysis specialist in the swarm.
-            Analyze company news and market sentiment.
-            Share news insights with other 02-agents.
-            Focus on recent developments and market perception.""",
-        )
-
-    def analyze_company(self, query: str) -> Dict[str, Any]:
-        """Run the swarm analysis for a company."""
-        try:
-            # Initialize shared memory with query
-            self.swarm.shared_memory.store("query", query)
-
-            # Phase 1: Search for ticker
-            print("\nPhase 1: Searching for company ticker...")
-            search_result = self.swarm.process_phase()
-
-            if search_result:
-                ticker = (
-                    search_result[0]
-                    .get("result", {})
-                    .get("content", [{}])[0]
-                    .get("text", "")
-                )
-                self.swarm.shared_memory.store("ticker", ticker)
-                print(f"Found ticker: {ticker}")
-
-                # Phase 2: Parallel Analysis
-                print("\nPhase 2: Gathering data...")
-                analysis_results = self.swarm.process_phase()
-
-                return {
-                    "status": "success",
-                    "ticker": ticker,
-                    "search_results": search_result,
-                    "analysis_results": analysis_results,
-                    "shared_memory": self.swarm.shared_memory.get_all_knowledge(),
-                }
-            else:
-                return {"status": "error", "message": "Failed to find ticker symbol"}
-
-        except Exception as e:
-            return {"status": "error", "message": str(e)}
-
+        
+        result = swarm(f"Analyze {ticker}")
+        
+        return {
+            "status": "success",
+            "collaborative_analysis": result.final_response,
+            "collaboration_path": [node.node_id for node in result.node_history]
+        }
+    except Exception as e:
+        return {"status": "error", "collaborative_analysis": f"Analysis failed: {str(e)}"}
 
 def create_orchestration_agent() -> Agent:
-    """Create the main orchestration agent that coordinates the swarm."""
+    """Orchestrator with Nova Pro for deep synthesis"""
     return Agent(
-        system_prompt="""You are a stock analysis orchestrator and integrator. Your role is to:
-        1. Coordinate the swarm of specialized 02-agents
-        2. Monitor the analysis process
-        3. Integrate and synthesize all findings
-        4. Present a comprehensive analysis
-        
-        When analyzing results, structure the report as follows:
-        1. Company Overview
-           - Company name and ticker
-           - Industry and sector
-           - Basic business description
-        
-        2. Stock Price Analysis
-           - Current price and recent changes
-           - Price trends and patterns
-           - Trading volume analysis
-        
-        3. Financial Health
-           - Key financial metrics
-           - Performance indicators
-           - Growth metrics
-        
-        4. Market Sentiment
-           - Recent news analysis
-           - Market perception
-           - Key developments
-        
-        5. Integrated Insights
-           - Overall assessment
-           - Key opportunities and risks
-           - Future outlook
-           - Recommendation summary""",
-        model=BedrockModel(model_id="us.amazon.nova-pro-v1:0", region="us-east-1"),
-        tools=[StockAnalysisSwarm().analyze_company, think, http_request],
-    )
+        system_prompt="""You are a senior research director using Nova Pro.
 
+        WORKFLOW:
+        1. Get real stock data using get_real_stock_data  
+        2. Get ONE collaborative analysis using analyze_company_with_collaborative_swarm
+        3. Synthesize using think tool for deep strategic insights
+        
+        CRITICAL RULES:
+        - DO NOT call analyze_company_with_collaborative_swarm multiple times
+        - Focus on synthesis and strategic conclusions
+        - Always prominently display the current stock price
+        - Provide deep insights that demonstrate collaborative agent value
+        
+        REPORT STRUCTURE:
+        1. Executive Summary (current price + key thesis)
+        2. Strategic Business Analysis (from collaborative insights)
+        3. Financial Health Assessment (integrated metrics)
+        4. Market Sentiment Analysis (news + trends)
+        5. Investment Recommendation (buy/hold/sell with rationale)""",
+        model=BedrockModel(model_id="us.amazon.nova-pro-v1:0", region="us-east-1"),
+        tools=[get_real_stock_data, analyze_company_with_collaborative_swarm, think],
+    )
 
 def create_initial_messages() -> List[Dict]:
     """Create initial conversation messages."""
@@ -198,12 +145,11 @@ def create_initial_messages() -> List[Dict]:
             "role": "assistant",
             "content": [
                 {
-                    "text": "I'm ready to help you analyze companies. Please provide a company name you'd like to analyze."
+                    "text": "I'm ready to provide comprehensive stock analysis using real-time data and collaborative multi-agent analysis. Please provide a company name or ticker."
                 }
             ],
         },
     ]
-
 
 def main():
     """Main function to run the finance assistant swarm."""
@@ -213,7 +159,8 @@ def main():
     # Initialize messages for the orchestration agent
     orchestration_agent.messages = create_initial_messages()
 
-    print("\n🤖 Stock Analysis Swarm 📊\n")
+    print("\n🤖 Hybrid Multi-Agent Stock Analysis (Nova Lite Swarm + Nova Pro Synthesis) 📊")
+    print("Features: Real-time data + Fast collaborative swarm + Deep orchestrator synthesis\n")
 
     while True:
         query = input("\nWhat company would you like to analyze? (or 'exit' to quit)> ")
@@ -222,7 +169,7 @@ def main():
             print("\nGoodbye! 👋")
             break
 
-        print("\nInitiating swarm analysis...\n")
+        print("\nInitiating hybrid collaborative analysis...\n")
 
         try:
             # Create the user message with proper Nova format
@@ -230,7 +177,7 @@ def main():
                 "role": "user",
                 "content": [
                     {
-                        "text": f"Please analyze {query} and provide a comprehensive report integrating all findings."
+                        "text": f"Please analyze {query} using real stock data and collaborative multi-agent analysis. Ensure agents build upon each other's insights and provide a comprehensive strategic analysis. Display the current stock price prominently."
                     }
                 ],
             }
@@ -243,23 +190,22 @@ def main():
 
             # Format and print response
             if isinstance(response, dict) and "content" in response:
-                print("\nAnalysis Results:")
+                print("\nHybrid Collaborative Analysis Results:")
                 for content in response["content"]:
                     if "text" in content:
                         print(content["text"])
             else:
-                print(f"\nAnalysis Results:\n{response}\n")
+                print(f"\nHybrid Collaborative Analysis Results:\n{response}\n")
 
         except Exception as e:
             print(f"Error: {str(e)}\n")
             if "ThrottlingException" in str(e):
-                print("Rate limit reached. Waiting 5 seconds before retry...")
-                time.sleep(5)
+                print("Rate limit reached. Waiting 10 seconds before retry...")
+                time.sleep(10)
                 continue
         finally:
             # Reset conversation after each query to maintain clean context
             orchestration_agent.messages = create_initial_messages()
-
-
+            
 if __name__ == "__main__":
     main()
