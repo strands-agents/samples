@@ -64,6 +64,9 @@ class AudioRecorder:
         sd.wait()
 
 
+# Global widget cache to prevent duplication
+_audio_interface_cache = {}
+
 def create_audio_interface(recorder: AudioRecorder, base_url: str = "http://localhost:8080") -> dict:
     """
     Create an audio recording interface for speech transcription.
@@ -75,6 +78,20 @@ def create_audio_interface(recorder: AudioRecorder, base_url: str = "http://loca
     Returns:
         Dictionary containing interface widgets and handlers
     """
+    
+    # Use cached widgets if they exist to prevent duplication
+    cache_key = id(recorder)
+    if cache_key in _audio_interface_cache:
+        cached = _audio_interface_cache[cache_key]
+        # Clear existing outputs
+        cached['widgets']['recording_output'].clear_output()
+        cached['widgets']['analysis_output'].clear_output()
+        cached['widgets']['status_label'].value = "Ready to record"
+        cached['widgets']['play_button'].disabled = True
+        cached['widgets']['analyze_button'].disabled = True
+        cached['widgets']['progress_bar'].value = 0
+        cached['widgets']['progress_bar'].layout.visibility = 'hidden'
+        return cached
     
     # Basic controls
     duration_slider = widgets.IntSlider(
@@ -128,12 +145,6 @@ def create_audio_interface(recorder: AudioRecorder, base_url: str = "http://loca
         bar_style='info',
         layout=widgets.Layout(width='100%', visibility='hidden')
     )
-
-    # Remove all existing click handlers using proper API
-    record_button._click_handlers.callbacks = []
-    play_button._click_handlers.callbacks = []
-    analyze_button._click_handlers.callbacks = []
-    clear_button._click_handlers.callbacks = []
 
     def on_record_click(b):
         """Handle record button click."""
@@ -243,7 +254,8 @@ def create_audio_interface(recorder: AudioRecorder, base_url: str = "http://loca
     analyze_button.on_click(on_analyze_click)
     clear_button.on_click(on_clear_click)
 
-    return {
+    # Create interface dictionary
+    interface = {
         'widgets': {
             'duration_slider': duration_slider,
             'record_button': record_button,
@@ -262,6 +274,17 @@ def create_audio_interface(recorder: AudioRecorder, base_url: str = "http://loca
             'on_clear_click': on_clear_click,
         }
     }
+    
+    # Cache the interface
+    _audio_interface_cache[cache_key] = interface
+    
+    return interface
+
+
+def clear_audio_interface_cache():
+    """Clear the audio interface cache to force recreation of widgets."""
+    global _audio_interface_cache
+    _audio_interface_cache.clear()
 
 
 def display_audio_interface(interface_components: dict) -> None:

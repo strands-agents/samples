@@ -8,7 +8,8 @@ organized into logical modules for better code organization and reusability.
 from .audio_recorder import (
     AudioRecorder,
     create_audio_interface,
-    display_audio_interface
+    display_audio_interface,
+    clear_audio_interface_cache
 )
 from .image_utils import (
     create_test_image, 
@@ -42,6 +43,7 @@ __all__ = [
     'AudioRecorder',
     'create_audio_interface',
     'display_audio_interface',
+    'clear_audio_interface_cache',
     
     # Image utilities
     'create_test_image',
