@@ -1,0 +1,26 @@
+# Core Strands SDK
+strands-agents>=1.2.0
+
+# Web framework
+fastapi>=0.115.0
+
+# Data validation
+pydantic>=2.0.0
+
+# Numerical operations
+numpy>=1.24.0
+
+# HTTP requests
+requests>=2.31.0
+
+# Audio recording and processing
+sounddevice>=0.4.6
+scipy>=1.10.0
+soundfile>=0.12.0
+
+# Image processing
+pillow>=10.0.0
+
+# Jupyter notebook support
+jupyter>=1.0.0
+ipywidgets>=8.0.0
