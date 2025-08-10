@@ -1,11 +1,14 @@
-#!/usr/bin/env python3
-from strands import Agent, tool
+"""
+EXAMPLE ONLY
+
+This example will trigger a custom check in NVIDIA NeMo server blocking the word "dummy"
+"""
+from strands import Agent
 from strands.models import BedrockModel
 from guardrail import CustomGuardrailHook
 
 model = BedrockModel(
-    region_name='us-east-1',
-    model_id="us.anthropic.claude-sonnet-4-20250514-v1:0",
+    model_id="eu.amazon.nova-lite-v1:0",
     max_tokens=4096,
     temperature=0.1,
 )
@@ -16,8 +19,19 @@ agent = Agent(
     system_prompt="""You are a personal assistant. Use the agents and tools at your disposal to assist the users. Keep answers brief unless the user asks for more details. " \
     If you don't know the answer, say 'I don't know'.""",
     hooks=[CustomGuardrailHook()],
+
 )
 
 if __name__ == "__main__":
-    resp = agent("You're a dummy")
-    print(resp)
+    try:
+        resp = agent("How are you?")
+        # Response is already printed by the agent framework
+
+        resp = agent("You're a dummy")
+        # Response would be printed here if not blocked
+    except Exception as e:
+        if "Guardrail check failed" in str(e):
+            print(f"❌ Message blocked by guardrail: {e}")
+        else:
+            print(f"❌ Error: {e}")
+            raise
