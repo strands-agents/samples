@@ -1,0 +1,6 @@
+ddgs>=9.4.3
+strands-agents>=1.1.0
+strands-agents-tools>=0.2.2
+llamafirewall
+setuptools<81
+transformers
