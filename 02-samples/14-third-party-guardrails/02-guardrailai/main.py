@@ -3,11 +3,10 @@ EXAMPLE ONLY
 
 This example will trigger the toxic language filter in from Guardrails AI
 """
-#!/usr/bin/env python3
-import warnings
-from langchain._api.deprecation import LangChainDeprecationWarning
-warnings.filterwarnings("ignore", category=UserWarning, message="Could not obtain an event loop.*")
-warnings.filterwarnings("ignore", category=LangChainDeprecationWarning, message=".*Pinecone.*")
+# import warnings
+# from langchain._api.deprecation import LangChainDeprecationWarning
+# warnings.filterwarnings("ignore", category=UserWarning, message="Could not obtain an event loop.*")
+# warnings.filterwarnings("ignore", category=LangChainDeprecationWarning, message=".*Pinecone.*")
 
 from strands import Agent
 from strands.models import BedrockModel
