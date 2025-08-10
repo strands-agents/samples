@@ -40,6 +40,38 @@ python main.py
 The agent will communicate with the NeMo Guardrails server to validate and filter content based on the configured rules.
 On first pass, the nvivida server will download a local model.
 
+**main.py**
+```
+$ python3 main.py
+Guardrail check passed, proceeding with request.
+I'm doing well, thank you for asking! How can I assist you today?Guardrail check passed, proceeding with request.
+❌ Message blocked by guardrail: Guardrail check failed: Content not allowed - Message: 'You're a dummy' (got: 'DENY')
+```
+
+**NVIDIA NeMo server**
+```
+$ uvx nemoguardrails server --config .
+INFO:     Started server process [21327]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:nemoguardrails.server.api:Got request for config my-first-guardrail
+Entered verbose mode.
+17:55:55.287 | Registered Actions ['ClavataCheckAction', 'GetAttentionPercentageAction', 'GetCurrentDateTimeAction',
+'UpdateAttentionMaterializedViewAction', 'alignscore request', 'alignscore_check_facts', 'autoalign_factcheck_output_api',
+'autoalign_groundedness_output_api', 'autoalign_input_api', 'autoalign_output_api', 'call cleanlab api', 'call fiddler faithfulness', 'call fiddler
+safety on bot message', 'call fiddler safety on user message', 'call gcpnlp api', 'call_activefence_api', 'content_safety_check_input',
+'content_safety_check_output', 'create_event', 'detect_pii', 'detect_sensitive_data', 'injection_detection', 'jailbreak_detection_heuristics',
+'jailbreak_detection_model', 'llama_guard_check_input', 'llama_guard_check_output', 'mask_pii', 'mask_sensitive_data', 'patronus_api_check_output',
+'patronus_lynx_check_output_hallucination', 'protect_text', 'retrieve_relevant_chunks', 'self_check_facts', 'self_check_hallucination',
+'self_check_input', 'self_check_output', 'summarize_document', 'topic_safety_check_input', 'wolfram alpha request']
+...
+INFO:     127.0.0.1:43202 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43218 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43222 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+```
+
+
 ## Files
 
 - `main.py` - Strands Agent with NeMo Guardrails integration
