@@ -16,6 +16,14 @@ NeMo Guardrails provides a toolkit for creating customizable guardrails that can
 pip install -r requirements.txt
 ```
 
+Install [`uv`](https://docs.astral.sh/uv/getting-started/installation/), so that you can run the NVIDIA NeMo server seperately.
+
+You may also need build-essentials installed to run the NVIDIA NeMo server
+```
+sudo apt-get update
+sudo apt-get install -y build-essentials
+```
+
 ## Usage
 
 1. Start the NeMo Guardrails server:
@@ -30,6 +38,7 @@ python main.py
 ```
 
 The agent will communicate with the NeMo Guardrails server to validate and filter content based on the configured rules.
+On first pass, the nvivida server will download a local model.
 
 ## Files
 
@@ -46,7 +55,6 @@ The agent will communicate with the NeMo Guardrails server to validate and filte
 The example runs NeMo Guardrails in server mode and communicates via REST API. The Strands Agent sends messages to the NeMo server for validation before processing.
 
 ### Server API
-
 Send POST requests to: `http://127.0.0.1:8000/v1/chat/completions`
 
 Payload format:
@@ -59,6 +67,7 @@ Payload format:
     }]
 }
 ```
+Where `config_id` matches guardrai name.
 
 ## Configuration
 

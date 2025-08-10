@@ -3,9 +3,11 @@ EXAMPLE ONLY
 Defines a custom hook for plugging into third-party guardrails tools.
 
 The PII_DETECTION and AGENT_ALIGNMENT scanners require a `TOGETHER_API_KEY` so have been excluded from this example.
+
+Valid roles are `user` and `assistant`.
+https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html
 """
 from strands.hooks import HookProvider, HookRegistry, MessageAddedEvent
-import json
 from typing import Dict,Any
 import asyncio
 from llamafirewall import LlamaFirewall, UserMessage, AssistantMessage, Role, ScannerType
@@ -45,7 +47,6 @@ class CustomGuardrailHook(HookProvider):
             if 'text' in block:
                 text_parts.append(block['text'])
             elif 'toolResult' in block:
-                # Extract text from tool results
                 tool_result = block['toolResult']
                 if 'content' in tool_result:
                     for content in tool_result['content']:
@@ -66,7 +67,6 @@ class CustomGuardrailHook(HookProvider):
                 # Default to user message for unknown roles
                 message = UserMessage(content=text)
             
-            # Run the async scan in a new event loop
             try:
                 loop = asyncio.get_event_loop()
                 if loop.is_running():
@@ -81,7 +81,6 @@ class CustomGuardrailHook(HookProvider):
                 # Fallback to sync method if async not available
                 result = self.firewall.scan(message)
 
-            # Extract relevant information from scan result
             decision_str = str(getattr(result, 'decision', 'ALLOW'))
             is_safe = 'ALLOW' in decision_str
             

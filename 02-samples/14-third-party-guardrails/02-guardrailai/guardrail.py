@@ -42,9 +42,7 @@ class CustomGuardrailHook(HookProvider):
     def guardrail_check(self, event):
         # Get the latest message from the event
         latest_message = event.agent.messages[-1]
-        print(f"Processing message: {latest_message}")
         
-        # Only check user messages, not assistant responses
         if latest_message.get('role') == 'user':
             # Extract text content from the Bedrock Message format
             message_text = self.extract_text_from_message(latest_message)

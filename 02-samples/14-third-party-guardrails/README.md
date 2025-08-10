@@ -1,6 +1,8 @@
 # Third Party Guardrails
 Contains conceptual examples using Strands Agent hooks to integrate with third-party guardrail services for content filtering, safety checks, and compliance monitoring.
 
+Many of these examples require additional setup, but have free tiers.
+
 The following examples all use the `MessageAddedEvent`, which is called every time a message is added to the agent.
 This means the same callback is used for inputs to an LLM, and responses from the LLM.
 
