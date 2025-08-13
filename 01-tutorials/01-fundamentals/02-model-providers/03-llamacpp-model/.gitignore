@@ -1,0 +1,39 @@
+# Model files
+models/*.gguf
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Audio files
+*.wav
+*.mp3
+*.m4a
+
+# Image files 
+*.png
+*.jpg
+*.jpeg
+!docs/*.png
+
+# Logs
+*.log
+server.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
