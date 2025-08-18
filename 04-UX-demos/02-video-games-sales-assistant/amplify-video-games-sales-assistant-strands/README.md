@@ -20,7 +20,7 @@ The application consists of:
 Before you begin, ensure you have:
 
 - A deployed Strands Agent from the **Generative AI Application - Data Source and Strands Agent Deployment** tutorial
-- [Node.js version 18+](https://nodejs.org/en/download/package-manager)
+- Node.js version 18+
 - React Scripts installed:
 ``` bash
 npm install react-scripts
@@ -36,8 +36,8 @@ npm install
 
 ## Configure IAM User Access for Front-End Permissions
 
-- [Create an IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html)
-- [Create Access key and Secret access key](https://docs.aws.amazon.com/keyspaces/latest/devguide/create.keypair.html) for programmatic access
+- **[Create an IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html)**
+- **[Create Access key and Secret access key](https://docs.aws.amazon.com/keyspaces/latest/devguide/create.keypair.html)** for programmatic access
 - Add an inline policy to this user with the following JSON (replace placeholder values with your actual ARNs).
 
 Update the values with your **<agent_endpoint>**, **<account_id>** and **<question_answers_table_arn>** that you can find in the outputs from the SAM tutorial.
@@ -118,6 +118,8 @@ Try these sample questions to test the assistant:
 ## Application Features
 
 Congratulations! Your Data Analyst Assistant can provide you with the following conversational experience:
+
+![Video Games Sales Assistant](../images/preview.png)
 
 - **Conversational interface with an agent responding to user questions**
 
