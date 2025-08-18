@@ -87,7 +87,7 @@ This project provides a playground environment for developers to experiment with
 1. Clone the repository and navigate to the project directory:
    ```bash
    git clone https://github.com/strands-agents/samples.git
-   cd 04-UX-demos/05-strands-playground/
+   cd samples/04-UX-demos/05-strands-playground/
    ```
 
 2. Install Python dependencies:
@@ -125,7 +125,7 @@ This project provides a playground environment for developers to experiment with
 
 3. Open your browser and navigate to `http://localhost:8003`
 
-### Option 3: Full CDK Deployment to AWS
+### Option 2: Full CDK Deployment to AWS
 
 Deploy a complete production-ready environment to AWS using CDK:
 

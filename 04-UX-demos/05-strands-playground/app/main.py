@@ -2,16 +2,19 @@ import json
 import os
 import logging 
 import boto3
+import base64
+
 from botocore.exceptions import ClientError
 from typing import Optional
-
 from strands import Agent, tool
 from strands.models import BedrockModel
 from strands_tools import (
-    agent_graph, calculator, cron, current_time, editor, environment, 
-    file_read, file_write, generate_image, http_request, image_reader, journal, 
-    load_tool, mem0_memory, memory, nova_reels, python_repl, retrieve, shell, 
-    slack, speak, stop, swarm, think, use_aws, use_llm, workflow
+    a2a_client, agent_core_memory, agent_graph, batch, browser, calculator, 
+    code_interpreter, cron, current_time, diagram, editor, environment, 
+    file_read, file_write, generate_image, generate_image_stability, handoff_to_user, 
+    http_request, image_reader, journal, load_tool, mem0_memory, memory, 
+    nova_reels, python_repl, retrieve, rss, shell, slack, sleep, speak, 
+    stop, swarm, think, use_agent, use_aws, use_llm, workflow
 )
 
 from fastapi import FastAPI, HTTPException
@@ -50,15 +53,23 @@ def weather_forecast(city: str, days: int = 3) -> str:
 
 # Define all available tools
 available_tools = {
+    'a2a_client': a2a_client,
+    'agent_core_memory': agent_core_memory,
     'agent_graph': agent_graph,
+    'batch': batch,
+    'browser': browser,
     'calculator': calculator,
+    'code_interpreter': code_interpreter,
     'cron': cron,
     'current_time': current_time,
+    'diagram': diagram,
     'editor': editor,
     'environment': environment,
     'file_read': file_read,
     'file_write': file_write,
     'generate_image': generate_image,
+    'generate_image_stability': generate_image_stability,
+    'handoff_to_user': handoff_to_user,
     'http_request': http_request,
     'image_reader': image_reader,
     'journal': journal,
@@ -68,12 +79,15 @@ available_tools = {
     'nova_reels': nova_reels,
     'python_repl': python_repl,
     'retrieve': retrieve,
+    'rss': rss,
     'shell': shell,
     'slack': slack,
+    'sleep': sleep,
     'speak': speak,
     'stop': stop,
     'swarm': swarm,
     'think': think,
+    'use_agent': use_agent,
     'use_aws': use_aws,
     'use_llm': use_llm,
     'workflow': workflow,
@@ -82,15 +96,23 @@ available_tools = {
 
 # Tool descriptions for better user understanding
 tool_descriptions = {
+    'a2a_client': 'Enable agent-to-agent communication',
+    'agent_core_memory': 'Integration with Amazon Bedrock Agent Core Memory',
     'agent_graph': 'Create and manage graphs of agents with different topologies and communication patterns',
+    'batch': 'Call multiple tools from a single model request',
+    'browser': 'Automate web browser interactions',
     'calculator': 'Perform mathematical calculations with support for advanced operations',
+    'code_interpreter': 'Execute code in isolated sandboxes',
     'cron': 'Manage crontab entries for scheduling tasks, with special support for Strands agent jobs',
     'current_time': 'Get the current time in various timezones',
+    'diagram': 'Create cloud architecture and UML diagrams',
     'editor': 'Editor tool designed to do changes iteratively on multiple files',
     'environment': 'Manage environment variables at runtime',
     'file_read': 'File reading tool with search capabilities, various reading modes, and document mode support',
     'file_write': 'Write content to a file with proper formatting and validation based on file type',
-    'generate_image': 'Create images using Stable Diffusion models',
+    'generate_image': 'Create AI generated images with Amazon Bedrock',
+    'generate_image_stability': 'Create images with Stability AI',
+    'handoff_to_user': 'Enable human-in-the-loop workflows by pausing agent execution for user input or transferring control entirely to the user',
     'http_request': 'Make HTTP requests to external APIs with authentication support',
     'image_reader': 'Read and process image files for AI analysis',
     'journal': 'Create and manage daily journal entries with tasks and notes',
@@ -100,12 +122,15 @@ tool_descriptions = {
     'nova_reels': 'Create high-quality videos using Amazon Nova Reel',
     'python_repl': 'Execute Python code in a REPL environment with PTY support and state persistence',
     'retrieve': 'Retrieves knowledge based on the provided text from Amazon Bedrock Knowledge Bases',
+    'rss': 'Manage and process RSS feeds',
     'shell': 'Interactive shell with PTY support for real-time command execution and interaction',
     'slack': 'Comprehensive Slack integration for messaging, events, and interactions',
-    'speak': 'Generate speech from text using say command or Amazon Polly.',
+    'sleep': 'Pause execution with interrupt support',
+    'speak': 'Generate speech from text using say command or Amazon Polly',
     'stop': 'Stops the current event loop cycle by setting stop_event_loop flag',
     'swarm': 'Create and coordinate a swarm of AI agents for parallel processing and collective intelligence',
     'think': 'Process thoughts through multiple recursive cycles',
+    'use_agent': 'Run a new AI event loop with custom prompts and different model providers',
     'use_aws': 'Execute AWS service operations using boto3',
     'use_llm': 'Create isolated agent instances for specific tasks',
     'workflow': 'Advanced workflow orchestration system for parallel AI task execution',
@@ -114,6 +139,35 @@ tool_descriptions = {
 
 # Define default selected tools
 tools = [calculator, http_request, use_aws]  # Default tools
+
+# custom json seralizer to handle image bytes in response
+def json_serializer(obj):
+    if isinstance(obj, dict):
+        return {k: deserialize_bytes(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [deserialize_bytes(item) for item in obj]
+    if isinstance(obj, bytes):
+        return base64.b64encode(obj).decode('utf-8')
+    raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
+
+# deserializer for loading bytes from JSON
+def deserialize_bytes(obj):
+    if isinstance(obj, dict):
+        return {k: deserialize_bytes(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [deserialize_bytes(item) for item in obj]
+    elif isinstance(obj, str):
+        # Try to decode as base64 - if it works and looks like binary data, convert back to bytes
+        try:
+            decoded = base64.b64decode(obj)
+            # Check if it's likely base64-encoded binary (not just coincidentally valid base64)
+            if len(obj) > 100 and obj.replace('+', '').replace('/', '').replace('=', '').isalnum():
+                return decoded
+        except:
+            pass
+        return obj
+    return obj
+
 
 # Define classes
 class StrandsPlaygroundAgent(Agent):
@@ -140,7 +194,7 @@ class StrandsPlaygroundAgent(Agent):
             try:
                 with open(f"sessions/{user_id}.json", "r") as f:
                     state = json.load(f)
-                    return state["messages"]
+                    return deserialize_bytes(state["messages"])
             except FileNotFoundError:
                     logger.error("Local session file for user not found, returning empty conversation history")
                     return []
@@ -168,6 +222,7 @@ class StrandsPlaygroundAgent(Agent):
 
     # Save agent state
     def save_agent_state(self, user_id):
+        logger.debug(self.messages)
         if not table_name and not table_region:
             try:
                 logger.debug("TABLE_NAME and TABLE_REGION environment variable not set, fallback to local file session management, saving conversation to file")
@@ -177,7 +232,7 @@ class StrandsPlaygroundAgent(Agent):
                 }
                 # Store state (e.g., database, file system, cache)
                 with open(f"sessions/{user_id}.json", "w") as f:
-                    json.dump(state, f)
+                    json.dump(state, f, default=json_serializer)
             except Exception as e:
                 logger.error(f"Failed to save session to local file: {str(e)}")
         else:
@@ -263,7 +318,6 @@ def get_agent_response(request: PromptRequest):
         result = agent(request.prompt)
         logger.debug(f"Model response: {result.message}")
         agent.save_agent_state(request.userId)
-        logger.info(f"Agent state saved for user: {request.userId}")
         return {
             "messages": result.message, 
             "latencyMs": result.metrics.accumulated_metrics["latencyMs"],
