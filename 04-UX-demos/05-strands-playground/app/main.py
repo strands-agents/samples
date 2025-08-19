@@ -140,35 +140,6 @@ tool_descriptions = {
 # Define default selected tools
 tools = [calculator, http_request, use_aws]  # Default tools
 
-# custom json seralizer to handle image bytes in response
-def json_serializer(obj):
-    if isinstance(obj, dict):
-        return {k: deserialize_bytes(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [deserialize_bytes(item) for item in obj]
-    if isinstance(obj, bytes):
-        return base64.b64encode(obj).decode('utf-8')
-    raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
-
-# deserializer for loading bytes from JSON
-def deserialize_bytes(obj):
-    if isinstance(obj, dict):
-        return {k: deserialize_bytes(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [deserialize_bytes(item) for item in obj]
-    elif isinstance(obj, str):
-        # Try to decode as base64 - if it works and looks like binary data, convert back to bytes
-        try:
-            decoded = base64.b64decode(obj)
-            # Check if it's likely base64-encoded binary (not just coincidentally valid base64)
-            if len(obj) > 100 and obj.replace('+', '').replace('/', '').replace('=', '').isalnum():
-                return decoded
-        except:
-            pass
-        return obj
-    return obj
-
-
 # Define classes
 class StrandsPlaygroundAgent(Agent):
     def __init__(self, 
@@ -194,7 +165,7 @@ class StrandsPlaygroundAgent(Agent):
             try:
                 with open(f"sessions/{user_id}.json", "r") as f:
                     state = json.load(f)
-                    return deserialize_bytes(state["messages"])
+                    return state["messages"]
             except FileNotFoundError:
                     logger.error("Local session file for user not found, returning empty conversation history")
                     return []
@@ -232,7 +203,7 @@ class StrandsPlaygroundAgent(Agent):
                 }
                 # Store state (e.g., database, file system, cache)
                 with open(f"sessions/{user_id}.json", "w") as f:
-                    json.dump(state, f, default=json_serializer)
+                    json.dump(state, f)
             except Exception as e:
                 logger.error(f"Failed to save session to local file: {str(e)}")
         else:

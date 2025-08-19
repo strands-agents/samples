@@ -171,8 +171,6 @@ The Strands Playground follows a modern web application architecture:
 - **AI Integration**: Direct integration with Amazon Bedrock through the Strands SDK
 - **Deployment**: Containerized application deployable locally or on AWS infrastructure
 
-
-
 ## Usage Examples
 
 ### Basic Experimentation
@@ -260,10 +258,26 @@ When deploying this application, consider the following security best practices:
 3. **Environment Variables**: Never hardcode sensitive information; use environment variables or AWS Secrets Manager
 4. **CORS Settings**: Restrict CORS settings to specific origins in production
 5. **Network Security**: Deploy within a VPC with appropriate security groups and network ACLs
+6. **Tools permissions**: By default, certain tools that perform potentially senstive operations (like  file modifications, shell commands or code execution) will prompt for user confirmation before executing. This safety feature ensures users maintain control over actions that could modify their system.). To bypass these confirmation prompts, you can set the `BYPASS_TOOL_CONSENT` environment variable:
+
+   ```bash
+   # Set this environment variable to bypass tool confirmation prompts
+   export BYPASS_TOOL_CONSENT=true
+   ```
+
+   or you can edit `main.py`:
+
+      ```bash
+      import os
+
+      os.environ["BYPASS_TOOL_CONSENT"] = "true"
+      ```
+
 
 ## Version History
 
 - **1.0.0** - Initial release with core playground functionality
+- **1.0.1** - Update tools list, dependencies and README
 
 ## License
 
