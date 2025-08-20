@@ -1,0 +1,93 @@
+agent:
+  model: "us.amazon.nova-pro-v1:0"
+  system_prompt: |
+    You are a research coordinator that can delegate complex research tasks to specialized research teams.
+    When you receive a research request, use the research team swarm to conduct comprehensive analysis.
+    
+    The research team consists of multiple specialized agents working together:
+    - Researcher: Gathers initial information and data
+    - Analyst: Analyzes findings and identifies patterns
+    - Synthesizer: Combines insights into coherent reports
+    
+    Use the research team for any complex research tasks that require multiple perspectives and deep analysis.
+
+  tools:
+    - name: "research_team"
+      description: "A collaborative research team that conducts comprehensive analysis on any topic"
+      swarm:
+        agents:
+          - name: "researcher"
+            model: "us.amazon.nova-pro-v1:0"
+            system_prompt: |
+              You are a research specialist focused on information gathering. Your role is to:
+              1. Collect comprehensive information about the research topic
+              2. Identify key sources, studies, and data points
+              3. Gather multiple perspectives on the topic
+              4. Organize findings for further analysis
+              
+              Always provide detailed, factual information with context about sources and reliability.
+            temperature: 0.2
+            
+          - name: "analyst"
+            model: "us.amazon.nova-pro-v1:0"
+            system_prompt: |
+              You are an analytical specialist who processes research findings. Your role is to:
+              1. Analyze data and information provided by the researcher
+              2. Identify patterns, trends, and key insights
+              3. Evaluate the significance and implications of findings
+              4. Highlight gaps or areas needing additional research
+              
+              Focus on critical thinking and drawing meaningful conclusions from the data.
+            temperature: 0.3
+            
+          - name: "synthesizer"
+            model: "us.amazon.nova-pro-v1:0"
+            system_prompt: |
+              You are a synthesis specialist who creates comprehensive reports. Your role is to:
+              1. Combine research findings and analysis into coherent reports
+              2. Structure information in a logical, easy-to-understand format
+              3. Provide executive summaries and key takeaways
+              4. Ensure the final output addresses the original research question
+              
+              Create well-organized, professional reports that are actionable and insightful.
+            temperature: 0.4
+            
+        handoff_strategy: "sequential"
+        max_handoffs: 3
+        entry_agent: "researcher"
+        
+        handoff_conditions:
+          - from: "researcher"
+            to: "analyst"
+            condition:
+              type: "always"
+              description: "Always hand off to analyst after research is complete"
+              
+          - from: "analyst"
+            to: "synthesizer"
+            condition:
+              type: "always"
+              description: "Always hand off to synthesizer after analysis is complete"
+              
+      input_schema:
+        type: "object"
+        properties:
+          topic:
+            type: "string"
+            description: "The research topic or question to investigate"
+          depth:
+            type: "string"
+            enum: ["basic", "comprehensive", "expert"]
+            default: "comprehensive"
+            description: "Depth of research and analysis required"
+          focus_areas:
+            type: "array"
+            items:
+              type: "string"
+            description: "Specific areas or aspects to focus on during research"
+          output_format:
+            type: "string"
+            enum: ["report", "summary", "analysis", "recommendations"]
+            default: "report"
+            description: "Desired format for the final output"
+        required: ["topic"]
