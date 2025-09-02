@@ -29,7 +29,7 @@ class AmazonDynamoDB:
         self._region = self._boto_session.region_name
         self._dynamodb_client = boto3.client("dynamodb", region_name=self._region)
         self._dynamodb_resource = boto3.resource("dynamodb", region_name=self._region)
-        self._smm_client = boto3.client("ssm")
+        self._smm_client = boto3.client("ssm", region_name=self._region)
         print(self._dynamodb_client, self._dynamodb_resource)
 
     def create_dynamodb(
