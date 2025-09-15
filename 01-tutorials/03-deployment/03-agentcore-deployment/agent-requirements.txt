@@ -1,0 +1,5 @@
+boto3>=1.40.0
+strands-agents>=0.1.0
+strands-agents-tools>=0.1.0
+awscli
+botocore
