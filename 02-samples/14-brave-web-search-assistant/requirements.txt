@@ -1,0 +1,3 @@
+mcp
+strands-agents>=1.8.0
+python-dotenv>=1.0.0
