@@ -6,7 +6,8 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.5.2",
-    "axios": "^1.6.2",
+    "@xyflow/react": "^12.8.4",
+    "axios": "^1.12.2",
     "d3": "^7.9.0",
     "lucide-react": "^0.263.1",
     "react": "^18.2.0",
@@ -16,19 +17,22 @@
     "react-scripts": "5.0.1",
     "react-syntax-highlighter": "^15.6.1",
     "react-tree-graph": "^8.0.3",
+    "reactflow": "^11.11.4",
+    "recharts": "^3.2.1",
     "web-vitals": "^3.5.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",
-    "postcss": "^8.4.45",
-    "tailwindcss": "^3.3.6"
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17"
   },
   "overrides": {
     "prismjs": "^1.30.0",
     "refractor": "^4.7.0",
     "nth-check": "^2.1.1",
-    "webpack-dev-server": "^4.15.1",
-    "svgo": "^3.2.0"
+    "webpack-dev-server": "^4.15.2",
+    "svgo": "^3.2.0",
+    "form-data": "^4.0.4"
   },
   "scripts": {
     "start": "react-scripts start",
