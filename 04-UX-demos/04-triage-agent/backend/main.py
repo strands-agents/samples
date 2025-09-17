@@ -966,7 +966,7 @@ async def initialize_mcp():
         return {"message": "MCP servers initialized", "status": "success"}
     except Exception as e:
         add_server_log("system", f"Initialization error: {str(e)}")
-        return {"message": f"Initialization failed: {str(e)}", "status": "error"}
+        return {"message": "Initialization failed", "status": "error"}
 
 @app.get("/mcp/tools")
 async def get_mcp_tools_endpoint():
@@ -990,7 +990,7 @@ async def get_mcp_tools_endpoint():
             "last_updated": tools_last_updated.isoformat() if tools_last_updated else None
         }
     except Exception as e:
-        return {"error": str(e), "tools": [], "count": 0}
+        return {"error": "Failed to retrieve MCP tools", "tools": [], "count": 0}
 
 @app.get("/agents/status")
 async def get_agents_status():
@@ -1070,7 +1070,7 @@ async def get_session_history(session_id: str, model_id: str = "us.anthropic.cla
         
     except Exception as e:
         add_server_log("system", f"Error getting session history: {str(e)}")
-        return {"messages": [], "session_id": session_id, "exists": False, "error": str(e)}
+        return {"messages": [], "session_id": session_id, "exists": False, "error": "Failed to retrieve session history"}
 
 @app.post("/chat")
 async def chat_endpoint(chat_message: ChatMessage, request: Request):
@@ -1266,7 +1266,7 @@ async def get_triage_system_status():
         add_server_log("triage", f"Triage system error: {str(e)}", level="error")
         return {
             "status": "offline", 
-            "message": f"Triage system unavailable: {str(e)}",
+            "message": "Triage system unavailable",
             "nodes_loaded": 0,
             "tree": None
         }
