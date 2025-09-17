@@ -450,24 +450,14 @@ def get_all_mcp_tools():
 # Available models with new Claude versions
 AVAILABLE_MODELS = [
     {
-        "id": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
-        "name": "Claude 3.7 Sonnet",
-        "description": "Latest version with enhanced capabilities"
-    },
-    {
-        "id": "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
-        "name": "Claude 3.5 Sonnet",
-        "description": "Advanced reasoning and analysis"
-    },
-    {
         "id": "us.anthropic.claude-sonnet-4-20250514-v1:0",
         "name": "Claude Sonnet 4",
         "description": "Most advanced Claude model with superior reasoning"
     },
     {
-        "id": "anthropic.claude-3-haiku-20240307-v1:0",
-        "name": "Claude 3 Haiku",
-        "description": "Fast and efficient responses"
+        "id": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+        "name": "Claude 3.7 Sonnet",
+        "description": "Claude model with enhanced reasoning capabilities"
     },
     {
         "id": "us.amazon.nova-pro-v1:0",
@@ -478,11 +468,6 @@ AVAILABLE_MODELS = [
         "id": "us.amazon.nova-lite-v1:0",
         "name": "Amazon Nova Lite",
         "description": "Balanced performance and cost-effectiveness"
-    },
-    {
-        "id": "us.amazon.nova-micro-v1:0",
-        "name": "Amazon Nova Micro", 
-        "description": "Lightweight model for simple tasks"
     }
 ]
 
@@ -601,7 +586,7 @@ class ChatMessage(BaseModel):
     model_config = {"protected_namespaces": ()}
     
     message: str
-    model_id: Optional[str] = "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+    model_id: Optional[str] = "us.anthropic.claude-sonnet-4-20250514-v1:0"
     session_id: Optional[str] = "default"
     images: Optional[List[ImageData]] = None
     history: Optional[List[Dict[str, Any]]] = None
@@ -1062,7 +1047,7 @@ async def get_sessions():
     return {"sessions": sessions, "count": len(sessions)}
 
 @app.get("/sessions/{session_id}/history")
-async def get_session_history(session_id: str, model_id: str = "us.anthropic.claude-3-7-sonnet-20250219-v1:0"):
+async def get_session_history(session_id: str, model_id: str = "us.anthropic.claude-sonnet-4-20250514-v1:0"):
     """Get message history for a specific session"""
     
     # Check if the session exists in our in-memory store

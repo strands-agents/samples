@@ -623,13 +623,10 @@ const ChatInterface = ({
   const formatModelName = (modelId) => {
     // Define custom names for specific models
     const modelNames = {
-      'us.anthropic.claude-3-7-sonnet-20250219-v1:0': 'Claude 3.7 Sonnet',
       'us.anthropic.claude-sonnet-4-20250514-v1:0': 'Claude Sonnet 4',
-      'anthropic.claude-3-5-sonnet-20241022-v2:0': 'Claude 3.5 Sonnet',
-      'anthropic.claude-3-haiku-20240307-v1:0': 'Claude 3 Haiku',
+      'us.anthropic.claude-3-7-sonnet-20250219-v1:0': 'Claude 3.7 Sonnet',
       'us.amazon.nova-pro-v1:0': 'Nova Pro',
-      'us.amazon.nova-lite-v1:0': 'Nova Lite',
-      'us.amazon.nova-micro-v1:0': 'Nova Micro'
+      'us.amazon.nova-lite-v1:0': 'Nova Lite'
     };
 
     // Return custom name if available
