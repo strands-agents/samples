@@ -506,7 +506,8 @@ def create_mcp_agent_tools():
                     else:
                         return f"No tools available on {server_name} server"
             except Exception as e:
-                return f"Error accessing {server_name} server: {str(e)}"
+                add_server_log("mcp", f"Error accessing {server_name} server: {str(e)}", level="error")
+                return f"Error accessing {server_name} server"
         
         # Set the tool name dynamically
         mcp_server_tool.__name__ = f"{server_name}_tool"
@@ -849,13 +850,13 @@ Respond with guidance followed by EXACTLY this XML format:
 
             except Exception as llm_error:
                 add_server_log("triage", f"LLM STREAM ERROR: {session_id} - {str(llm_error)}", level="error")
-                yield f"data: {json.dumps({'type': 'content', 'content': f'Error: {str(llm_error)}'})}\n\n"
+                yield f"data: {json.dumps({'type': 'content', 'content': 'An internal error occurred.'})}\n\n"
 
         yield "data: [DONE]\n\n"
 
     except Exception as e:
         logger.error(f"Error in chat stream: {e}")
-        yield f"data: {json.dumps({'type': 'content', 'content': f'Error: {str(e)}'})}\n\n"
+        yield f"data: {json.dumps({'type': 'content', 'content': 'An internal error occurred.'})}\n\n"
         yield "data: [DONE]\n\n"
 
 async def stream_plain_response(message: str, model_id: str):
@@ -891,7 +892,7 @@ async def stream_plain_response(message: str, model_id: str):
                 await asyncio.sleep(0.08)  # Small delay for streaming effect
                 
     except Exception as e:
-        error_msg = f"Error: {str(e)}"
+        error_msg = "An internal error occurred."
         add_server_log("system", f"Plain text streaming error: {str(e)[:50]}...")
         yield error_msg
 
