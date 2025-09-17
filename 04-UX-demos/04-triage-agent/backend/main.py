@@ -344,8 +344,8 @@ def load_mcp_config():
         return mcp_servers
         
     except Exception as e:
-        logger.error(f"Error loading MCP config: {e}")
-        add_server_log("system", f"Error loading MCP config: {e}")
+        logger.error(f"Error loading MCP config: {str(e)}")
+        add_server_log("system", f"Error loading MCP config: {str(e)}")
         return {}
 
 def save_mcp_config(servers_config):
@@ -372,8 +372,8 @@ def save_mcp_config(servers_config):
         add_server_log("system", "Configuration saved")
         
     except Exception as e:
-        logger.error(f"Error saving MCP config: {e}")
-        add_server_log("system", f"Error saving config: {e}")
+        logger.error(f"Error saving MCP config: {str(e)}")
+        add_server_log("system", f"Error saving config: {str(e)}")
 
 def estimate_tokens(text: str) -> int:
     """Estimate token count (rough approximation: ~4 chars per token)"""
@@ -507,7 +507,7 @@ def create_mcp_agent_tools():
                         return f"No tools available on {server_name} server"
             except Exception as e:
                 add_server_log("mcp", f"Error accessing {server_name} server: {str(e)}", level="error")
-                return f"Error accessing {server_name} server"
+                return "Error accessing MCP server"
         
         # Set the tool name dynamically
         mcp_server_tool.__name__ = f"{server_name}_tool"
@@ -550,7 +550,7 @@ and determine which tools would be most helpful to provide a complete response."
         return agent
         
     except Exception as e:
-        logger.error(f"Error creating Strands agent for {model_id}: {e}")
+        logger.error(f"Error creating Strands agent for {model_id}: {str(e)}")
         add_server_log("system", f"Agent error: {str(e)[:50]}...")
         raise
 
@@ -855,7 +855,7 @@ Respond with guidance followed by EXACTLY this XML format:
         yield "data: [DONE]\n\n"
 
     except Exception as e:
-        logger.error(f"Error in chat stream: {e}")
+        logger.error(f"Error in chat stream: {str(e)}")
         yield f"data: {json.dumps({'type': 'content', 'content': 'An internal error occurred.'})}\n\n"
         yield "data: [DONE]\n\n"
 
@@ -991,6 +991,7 @@ async def get_mcp_tools_endpoint():
             "last_updated": tools_last_updated.isoformat() if tools_last_updated else None
         }
     except Exception as e:
+        logger.error(f"Error retrieving MCP tools: {str(e)}")
         return {"error": "Failed to retrieve MCP tools", "tools": [], "count": 0}
 
 @app.get("/agents/status")
@@ -1127,9 +1128,9 @@ async def chat_endpoint(chat_message: ChatMessage, request: Request):
             )
         
     except Exception as e:
-        logger.error(f"Chat endpoint error: {e}")
+        logger.error(f"Chat endpoint error: {str(e)}")
         add_server_log("system", f"Chat error: {str(e)[:50]}...")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 # Decision Tree Graph and Triage APIs
 @app.get("/api/decision-tree")
@@ -1161,7 +1162,7 @@ async def get_decision_tree():
         
     except Exception as e:
         add_server_log("triage", f"Error getting decision tree: {str(e)}", level="error")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="Failed to retrieve decision tree")
 
 @app.get("/api/triage/session/{session_id}")
 async def get_triage_session_state(session_id: str):
@@ -1224,7 +1225,7 @@ async def get_triage_session_state(session_id: str):
         
     except Exception as e:
         add_server_log("triage", f"Error getting triage session: {str(e)}", level="error")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="Failed to retrieve triage session")
 
 @app.get("/api/triage/status")
 async def get_triage_system_status():

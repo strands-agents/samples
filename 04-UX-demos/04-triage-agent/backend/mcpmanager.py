@@ -98,12 +98,12 @@ class MCPClientManager:
                     )
 
                 except Exception as e:
-                    logger.error(f"Failed to initialize MCP client {server_name}: {e}")
+                    logger.error(f"Failed to initialize MCP client {server_name}: {str(e)}")
 
             logger.info(f"Active MCP clients: {self.active_clients}")
 
         except Exception as e:
-            logger.error(f"Failed to initialize MCP clients: {e}")
+            logger.error(f"Failed to initialize MCP clients: {str(e)}")
 
     def get_all_tools(self, active_only: bool = True) -> List[Any]:
         """Get all tools from active MCP clients"""
@@ -127,7 +127,7 @@ class MCPClientManager:
                         all_tools.extend(tools)
                         logger.info(f"Loaded {len(tools)} tools from {client_name}")
             except Exception as e:
-                logger.error(f"Error loading tools from {client_name}: {e}")
+                logger.error(f"Error loading tools from {client_name}: {str(e)}")
 
         return all_tools
 
@@ -145,7 +145,7 @@ class MCPClientManager:
                         stack.enter_context(self.clients[client_name])
                         contexts.append(client_name)
                     except Exception as e:
-                        logger.error(f"Failed to enter context for {client_name}: {e}")
+                        logger.error(f"Failed to enter context for {client_name}: {str(e)}")
 
             logger.info(f"Entering context with active clients: {contexts}")
             yield contexts
