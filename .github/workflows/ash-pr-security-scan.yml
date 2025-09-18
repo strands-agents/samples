@@ -1,0 +1,117 @@
+name: ASH PR Scan (Baseline)
+
+# Trigger: Run this workflow when PRs are opened/updated against main branch
+on:
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - '**/*.md'
+      - '.github/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ash-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  ASH_VERSION: v3.0.0
+  PYTHON_VERSION: '3.11'
+  FAIL_ON_SEVERITY: 'high'   # none|low|medium|high|critical
+
+jobs:
+  pr-scan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install ASH
+        run: |
+          python -m pip install --upgrade pip
+          pip install "git+https://github.com/awslabs/automated-security-helper.git@${ASH_VERSION}"
+
+      - name: Write ASH config
+        run: |
+          cat > .ash_config.yaml << 'EOF'
+          reporters:
+            json:
+              enabled: true
+              options:
+                output_path: .ash/ash_output/reports/ash.summary.json
+            markdown:
+              enabled: true
+              options:
+                include_detailed_findings: true
+                max_detailed_findings: 500
+          EOF
+
+      - name: Run ASH
+        run: |
+          set -o pipefail
+          ash --mode container --config .ash_config.yaml 2>&1 | tee ash-output.log
+
+      - name: Summarize & decide pass/fail
+        id: summarize
+        run: |
+          python - << 'PY'
+          import json, os, pathlib, sys
+          p = pathlib.Path(".ash/ash_output/reports/ash.summary.json")
+          sev = dict(critical=0, high=0, medium=0, low=0, info=0)
+          if p.exists():
+            d = json.load(open(p))
+            totals = d.get("totals", {})
+            for k in sev: sev[k] = int(totals.get(k, 0))
+          order = ["critical","high","medium","low","info"]
+          idx = {k:i for i,k in enumerate(order)}
+          threshold = os.getenv("FAIL_ON_SEVERITY","none").lower()
+          fail = any(sev[k] > 0 for k in order if idx[k] <= idx.get(threshold, 99))
+          with open("ash-summary.md","w") as f:
+            f.write("## ASH PR Scan Results\n\n")
+            f.write("| Critical | High | Medium | Low | Info |\n|---:|---:|---:|---:|---:|\n")
+            f.write(f"| {sev['critical']} | {sev['high']} | {sev['medium']} | {sev['low']} | {sev['info']} |\n")
+            f.write(f"\nThreshold: **{threshold.title()}**\n")
+            f.write("\nSee artifacts for full logs and details.\n")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as g:
+            g.write(f"fail={'true' if fail else 'false'}\n")
+          PY
+
+      - name: Sticky PR comment
+        if: always()
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          path: ash-summary.md
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ash-pr-${{ github.run_id }}
+          path: |
+            .ash/
+            ash-output.log
+            ash-summary.md
+          retention-days: 21
+
+      - name: Job summary
+        if: always()
+        run: |
+          echo "## ASH Scan Results" >> $GITHUB_STEP_SUMMARY
+          [ -f ash-summary.md ] && cat ash-summary.md >> $GITHUB_STEP_SUMMARY || echo "_No summary generated_" >> $GITHUB_STEP_SUMMARY
+
+      - name: Enforce severity threshold
+        if: steps.summarize.outputs.fail == 'true'
+        run: |
+          echo "Findings at/above ${FAIL_ON_SEVERITY}. Failing PR."
+          exit 1
