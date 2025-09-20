@@ -60,9 +60,10 @@ jobs:
       - name: Run ASH
         run: |
           set -o pipefail
-          ash --mode container --config .ash_config.yaml 2>&1 | tee ash-output.log
+          ash --mode container --config .ash_config.yaml 2>&1 | tee ash-output.log || true
 
       - name: Summarize & decide pass/fail
+        if: always()
         id: summarize
         run: |
           python - << 'PY'
@@ -91,7 +92,10 @@ jobs:
         if: always()
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          path: ash-summary.md
+          recreate: true
+          message: |
+            ${{ steps.summarize.conclusion == 'success' && '## ASH PR Scan Results' || '⚠️ ASH scan incomplete. Check workflow logs for details.' }}
+          path: ${{ steps.summarize.conclusion == 'success' && 'ash-summary.md' || '' }}
 
       - name: Upload artifacts
         if: always()
