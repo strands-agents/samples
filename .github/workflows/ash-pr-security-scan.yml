@@ -113,14 +113,14 @@ jobs:
           find .ash -type f -name "*.sarif" -o -name "*.json" -o -name "*.md" | head -20
 
           echo -e "\n=== SARIF File Sample (first 100 lines) ==="
-          if [ -f ".ash/ash_output/reports/ash.sarif" ]; then
-            head -100 .ash/ash_output/reports/ash.sarif
+          if [ -f "pr-scan-dir/.ash/ash_output/reports/ash.sarif" ]; then
+            head -100 pr-scan-dir/.ash/ash_output/reports/ash.sarif
           else
             echo "SARIF file not found!"
           fi
 
           echo -e "\n=== Files in reports directory ==="
-          ls -la .ash/ash_output/reports/ || echo "Reports directory not found"
+          ls -la pr-scan-dir/.ash/ash_output/reports/ || echo "Reports directory not found"
 
       - name: Summarize & decide pass/fail
         if: always()
@@ -267,9 +267,9 @@ jobs:
         with:
           name: ash-pr-${{ github.run_id }}
           path: |
-            .ash/ash_output/reports/**
-            .ash/ash_output/scanners/**
-            .ash/ash_output/*.json
+            pr-scan-dir/.ash/ash_output/reports/**
+            pr-scan-dir/.ash/ash_output/scanners/**
+            pr-scan-dir/.ash/ash_output/*.json
             ash-output.log
             ash-summary.md
           retention-days: 21
