@@ -252,26 +252,32 @@ jobs:
             g.write(f"fail={'true' if fail else 'false'}\n")
           PY
 
-      - name: Sticky PR comment
+      - name: Save PR metadata for comment workflow
         if: always()
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          recreate: true
-          message: |
-            ${{ steps.summarize.conclusion == 'success' && '## ASH PR Scan Results' || '⚠️ ASH scan incomplete. Check workflow logs for details.' }}
-          path: ${{ steps.summarize.conclusion == 'success' && 'ash-summary.md' || '' }}
+        run: |
+          echo "${{ github.event.pull_request.number }}" > pr_number.txt
+          echo "${{ github.event.pull_request.head.sha }}" > pr_sha.txt
+          if [ -f ash-summary.md ]; then
+            cp ash-summary.md pr_comment.md
+          else
+            echo "## ⚠️ ASH Security Scan Incomplete" > pr_comment.md
+            echo "Check workflow logs for details." >> pr_comment.md
+          fi
 
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ash-pr-${{ github.run_id }}
+          name: ash-security-results
           path: |
             pr-scan-dir/.ash/ash_output/reports/**
             pr-scan-dir/.ash/ash_output/scanners/**
             pr-scan-dir/.ash/ash_output/*.json
             ash-output.log
             ash-summary.md
+            pr_number.txt
+            pr_sha.txt
+            pr_comment.md
           retention-days: 21
 
       - name: Job summary
