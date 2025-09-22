@@ -1,4 +1,4 @@
-name: ASH PR Scan (Baseline)
+name: ASH PR Scan
 
 # Trigger: Run this workflow when PRs are opened/updated against main branch
 on:
@@ -58,27 +58,6 @@ jobs:
                 max_detailed_findings: 500
           EOF
 
-      - name: Run ASH
-        run: |
-          set -o pipefail
-          ash --mode container --config .ash_config.yaml 2>&1 | tee ash-output.log || true
-
-      - name: Debug ASH Output Structure
-        if: always()
-        run: |
-          echo "=== ASH Directory Structure ==="
-          find .ash -type f -name "*.sarif" -o -name "*.json" -o -name "*.md" | head -20
-
-          echo -e "\n=== SARIF File Sample (first 100 lines) ==="
-          if [ -f ".ash/ash_output/reports/ash.sarif" ]; then
-            head -100 .ash/ash_output/reports/ash.sarif
-          else
-            echo "SARIF file not found!"
-          fi
-
-          echo -e "\n=== Files in reports directory ==="
-          ls -la .ash/ash_output/reports/ || echo "Reports directory not found"
-
       - name: Get PR changed files
         if: always()
         id: get-files
@@ -89,6 +68,60 @@ jobs:
           echo "Changed files:"
           cat changed-files.txt
 
+      - name: Create PR files directory for scanning
+        if: always()
+        run: |
+          mkdir -p pr-scan-dir
+
+          # Copy only changed files to scan directory
+          if [ -s changed-files.txt ]; then
+            while IFS= read -r file; do
+              if [ -f "$file" ]; then
+                # Create directory structure
+                mkdir -p "pr-scan-dir/$(dirname "$file")"
+                # Copy the file
+                cp "$file" "pr-scan-dir/$file"
+                echo "Copied: $file"
+              fi
+            done < changed-files.txt
+          else
+            echo "No files changed in this PR"
+          fi
+
+          echo "Files to scan:"
+          find pr-scan-dir -type f 2>/dev/null | wc -l
+
+      - name: Run ASH
+        run: |
+          set -o pipefail
+          file_count=$(find pr-scan-dir -type f 2>/dev/null | wc -l)
+          if [ "$file_count" -gt 0 ]; then
+            echo "Scanning $file_count files in PR..."
+            cd pr-scan-dir  # Scan only the PR files directory
+            ash --mode container --config ../.ash_config.yaml 2>&1 | tee ../ash-output.log || true
+          else
+            echo "No files to scan, skipping ASH"
+            mkdir -p .ash/ash_output/reports
+            echo '{"runs": [{"results": []}]}' > .ash/ash_output/reports/ash.sarif
+            echo "No files changed - skipping security scan" > ash-output.log
+          fi
+
+      - name: Debug ASH Output Structure
+        if: always()
+        run: |
+          echo "=== ASH Directory Structure ==="
+          find .ash -type f -name "*.sarif" -o -name "*.json" -o -name "*.md" | head -20
+
+          echo -e "\n=== SARIF File Sample (first 100 lines) ==="
+          if [ -f "pr-scan-dir/.ash/ash_output/reports/ash.sarif" ]; then
+            head -100 pr-scan-dir/.ash/ash_output/reports/ash.sarif
+          else
+            echo "SARIF file not found!"
+          fi
+
+          echo -e "\n=== Files in reports directory ==="
+          ls -la pr-scan-dir/.ash/ash_output/reports/ || echo "Reports directory not found"
+
       - name: Summarize & decide pass/fail
         if: always()
         id: summarize
@@ -96,24 +129,27 @@ jobs:
           python - << 'PY'
           import json, os, pathlib, sys, re
 
-          # Read changed files
+          # Read changed files for display
           changed_files = []
           if os.path.exists("changed-files.txt"):
             with open("changed-files.txt", "r") as f:
               changed_files = [line.strip() for line in f if line.strip()]
 
-          # Read ASH results
-          sarif_path = pathlib.Path(".ash/ash_output/reports/ash.sarif")
-          agg_path = pathlib.Path(".ash/ash_output/ash_aggregated_results.json")
+          # Read ASH results - since we only scanned PR files, all findings are PR-related
+          sarif_path = pathlib.Path("pr-scan-dir/.ash/ash_output/reports/ash.sarif")
+          agg_path = pathlib.Path("pr-scan-dir/.ash/ash_output/ash_aggregated_results.json")
 
           sev = dict(critical=0, high=0, medium=0, low=0, info=0)
-          pr_sev = dict(critical=0, high=0, medium=0, low=0, info=0)
-          pr_findings = []
+          findings = []
 
           # Try to read SARIF file first (more detailed)
           if sarif_path.exists():
-            with open(sarif_path) as f:
-              sarif = json.load(f)
+            try:
+              with open(sarif_path) as f:
+                sarif = json.load(f)
+            except json.JSONDecodeError as e:
+              print(f"Warning: Could not parse SARIF file: {e}")
+              sarif = {"runs": []}  # Use empty default
 
             for run in sarif.get("runs", []):
               for result in run.get("results", []):
@@ -121,83 +157,81 @@ jobs:
                 if severity == "warning": severity = "medium"
                 elif severity == "error": severity = "high"
 
-                # Get file path from result
-                file_path = None
-                for location in result.get("locations", []):
-                  uri = location.get("physicalLocation", {}).get("artifactLocation", {}).get("uri", "")
-                  if uri:
-                    file_path = uri.lstrip("./")
-                    break
-
                 sev[severity] = sev.get(severity, 0) + 1
 
-                # Check if finding is in changed files
-                if file_path and any(file_path in cf or cf in file_path for cf in changed_files):
-                  pr_sev[severity] = pr_sev.get(severity, 0) + 1
+                # Get file path and details for high/critical findings
+                if severity in ["critical", "high"]:
+                  file_path = "unknown"
+                  line_num = 1
+                  for location in result.get("locations", []):
+                    uri = location.get("physicalLocation", {}).get("artifactLocation", {}).get("uri", "")
+                    if uri:
+                      file_path = uri.lstrip("./")
+                      line_num = location.get("physicalLocation", {}).get("region", {}).get("startLine", 1)
+                      break
 
-                  if severity in ["critical", "high"]:
-                    rule_id = result.get("ruleId", "")
-                    message = result.get("message", {}).get("text", "Security issue detected")
-                    line_num = location.get("physicalLocation", {}).get("region", {}).get("startLine", 1)
+                  rule_id = result.get("ruleId", "")
+                  message = result.get("message", {}).get("text", "Security issue detected")
 
-
-                    pr_findings.append({
-                      "file": file_path,
-                      "line": line_num,
-                      "severity": severity,
-                      "rule": rule_id,
-                      "message": message
-                    })
+                  findings.append({
+                    "file": file_path,
+                    "line": line_num,
+                    "severity": severity,
+                    "rule": rule_id,
+                    "message": message
+                  })
 
           # Fallback to aggregated results if no SARIF
           elif agg_path.exists():
-            with open(agg_path) as f:
-              d = json.load(f)
-            totals = d.get("totals", {})
-            for k in sev: sev[k] = int(totals.get(k, 0))
+            try:
+              with open(agg_path) as f:
+                d = json.load(f)
+              totals = d.get("totals", {})
+              for k in sev: sev[k] = int(totals.get(k, 0))
+            except (json.JSONDecodeError, ValueError) as e:
+              print(f"Warning: Could not parse aggregated results file: {e}")
+              # Keep default sev values (all zeros)
 
-          # Determine failure
+          # Determine failure based on threshold
           order = ["critical","high","medium","low","info"]
           idx = {k:i for i,k in enumerate(order)}
           threshold = os.getenv("FAIL_ON_SEVERITY","none").lower()
-          fail = any(pr_sev[k] > 0 for k in order if idx[k] <= idx.get(threshold, 99))
+          fail = any(sev[k] > 0 for k in order if idx[k] <= idx.get(threshold, 99))
 
           # Generate markdown report
           with open("ash-summary.md","w") as f:
             # Determine status icon based on findings
-            if pr_sev['critical'] > 0 or pr_sev['high'] > 0:
+            if sev['critical'] > 0 or sev['high'] > 0:
               status_icon = "❌"
-            elif pr_sev['medium'] > 0 or pr_sev['low'] > 0:
+            elif sev['medium'] > 0 or sev['low'] > 0:
               status_icon = "⚠️"
             else:
               status_icon = "✅"
 
-            f.write(f"## {status_icon} Security Scan Report\n\n")
+            f.write(f"## {status_icon} Security Scan Report (PR Files Only)\n\n")
 
             if changed_files:
-              f.write("### Changed Files\n")
+              f.write("### Scanned Files\n")
               for cf in changed_files[:10]:  # Limit to first 10 files
                 f.write(f"- `{cf}`\n")
               if len(changed_files) > 10:
                 f.write(f"- ... and {len(changed_files) - 10} more files\n")
               f.write("\n---\n\n")
 
-            f.write("### Security Scan Summary\n")
-            f.write("| Scope | Critical | High | Medium | Low | Info |\n")
-            f.write("|-------|----------|------|--------|-----|---------|\n")
-            f.write(f"| Your Changes | {pr_sev['critical']} | {pr_sev['high']} | {pr_sev['medium']} | {pr_sev['low']} | {pr_sev['info']} |\n")
-            f.write(f"| Full Repository | {sev['critical']} | {sev['high']} | {sev['medium']} | {sev['low']} | {sev['info']} |\n\n")
+            f.write("### Security Scan Results\n")
+            f.write("| Critical | High | Medium | Low | Info |\n")
+            f.write("|----------|------|--------|-----|---------|\n")
+            f.write(f"| {sev['critical']} | {sev['high']} | {sev['medium']} | {sev['low']} | {sev['info']} |\n\n")
 
             f.write(f"**Threshold:** {threshold.title()}\n\n")
 
-            # Show critical and high issues from PR files
-            if pr_findings:
+            # Show critical and high issues
+            if findings:
               f.write("---\n\n### Security Findings\n\n")
               f.write("| Severity | Location | Description |\n")
               f.write("|----------|----------|--------------|\n")
 
-              # Show all critical and high findings in table format
-              for finding in pr_findings:
+              for finding in findings:
                 severity = finding['severity'].title()
                 file_line = f"{finding['file']}:{finding['line']}"
                 message = finding['message'].replace('|', '\\|').replace('\n', ' ')  # Escape pipes and newlines for table
@@ -206,13 +240,13 @@ jobs:
 
               f.write("\n")
 
-            if not pr_findings and (pr_sev['critical'] > 0 or pr_sev['high'] > 0):
+            if not findings and (sev['critical'] > 0 or sev['high'] > 0):
               f.write("Issues detected but detailed information not available. Check workflow artifacts.\n\n")
 
-            if pr_sev['critical'] == 0 and pr_sev['high'] == 0 and pr_sev['medium'] == 0 and pr_sev['low'] == 0:
+            if sev['critical'] == 0 and sev['high'] == 0 and sev['medium'] == 0 and sev['low'] == 0:
               f.write("No security issues detected in your changes. Great job!\n\n")
 
-            f.write("*Full scan details available in workflow artifacts.*\n")
+            f.write("*This scan only covers files changed in this PR.*\n")
 
           with open(os.environ["GITHUB_OUTPUT"], "a") as g:
             g.write(f"fail={'true' if fail else 'false'}\n")
@@ -233,9 +267,9 @@ jobs:
         with:
           name: ash-pr-${{ github.run_id }}
           path: |
-            .ash/ash_output/reports/**
-            .ash/ash_output/scanners/**
-            .ash/ash_output/*.json
+            pr-scan-dir/.ash/ash_output/reports/**
+            pr-scan-dir/.ash/ash_output/scanners/**
+            pr-scan-dir/.ash/ash_output/*.json
             ash-output.log
             ash-summary.md
           retention-days: 21
