@@ -28,24 +28,10 @@ const setCookie = (name, value, days = 30) => {
   document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
 };
 
-const getCookie = (name) => {
-  const nameEQ = name + "=";
-  const ca = document.cookie.split(';');
-  for (let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-  }
-  return null;
-};
+
 
 const App = () => {
   const [messages, setMessages] = useState([]);
-  const [mcpLogs, setMcpLogs] = useState({});
-  const [backendStatus, setBackendStatus] = useState('checking');
-  const [mcpStatus, setMcpStatus] = useState('checking');
-
-  const logoPath = './aws-logo.png';
   const homePath = '/';
 
   // UI state
@@ -54,7 +40,7 @@ const App = () => {
   const [leftSidebarWidth, setLeftSidebarWidth] = useState(320);
   const [rightSidebarWidth, setRightSidebarWidth] = useState(350);
   // Initialize selectedModel from cookie or use default
-  const [selectedModel, setSelectedModel] = useState('us.anthropic.claude-3-7-sonnet-20250219-v1:0');
+  const [selectedModel, setSelectedModel] = useState('us.anthropic.claude-sonnet-4-20250514-v1:0');
   const [tokenCount, setTokenCount] = useState(0);
   const [isResizing, setIsResizing] = useState(null);
   const [currentSessionId, setCurrentSessionId] = useState(null);
@@ -68,51 +54,7 @@ const App = () => {
     console.log(`Model selection saved to cookie: ${selectedModel}`);
   }, [selectedModel]);
 
-  // Check backend health
-  useEffect(() => {
-    const checkHealth = async () => {
-      try {
-        const response = await fetch('/health');
-        if (response.ok) {
-          setBackendStatus('online');
-        } else {
-          setBackendStatus('offline');
-        }
-      } catch (error) {
-        setBackendStatus('offline');
-      }
-    };
 
-    checkHealth();
-    const healthInterval = setInterval(checkHealth, 5000);
-    return () => clearInterval(healthInterval);
-  }, []);
-
-  // Check MCP servers status
-  useEffect(() => {
-    const checkMcpStatus = async () => {
-      try {
-        const response = await fetch('/mcp/servers');
-        if (response.ok) {
-          setMcpStatus('online');
-        } else {
-          setMcpStatus('offline');
-        }
-      } catch (error) {
-        setMcpStatus('offline');
-      }
-    };
-
-    checkMcpStatus();
-    const mcpInterval = setInterval(checkMcpStatus, 5000);
-    return () => clearInterval(mcpInterval);
-  }, []);
-
-  // Remove duplicate log fetching - RightSidebar handles its own logs
-
-  const clearLogs = () => {
-    setMcpLogs({});
-  };
 
   // Handle mouse down for resizing
   const handleMouseDown = (side) => (e) => {
@@ -153,13 +95,13 @@ const App = () => {
     };
   }, [isResizing]);
 
-  const toggleLeftSidebar = () => {
+  const toggleLeftSidebar = React.useCallback(() => {
     setLeftSidebarOpen(!leftSidebarOpen);
-  };
+  }, [leftSidebarOpen]);
 
-  const toggleRightSidebar = () => {
+  const toggleRightSidebar = React.useCallback(() => {
     setRightSidebarOpen(!rightSidebarOpen);
-  };
+  }, [rightSidebarOpen]);
 
   // Register global functions for sidebar components
   useEffect(() => {
@@ -170,7 +112,7 @@ const App = () => {
       delete window.toggleLeftSidebar;
       delete window.toggleRightSidebar;
     };
-  }, [leftSidebarOpen, rightSidebarOpen]);
+  }, [leftSidebarOpen, rightSidebarOpen, toggleLeftSidebar, toggleRightSidebar]);
 
   return (
     <div className="app">

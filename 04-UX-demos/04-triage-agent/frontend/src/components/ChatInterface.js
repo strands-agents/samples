@@ -39,15 +39,20 @@ const ChatInterface = ({
   const [totalTokens, setTotalTokens] = useState({ input: 0, output: 0, total: 0 });
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [selectedImages, setSelectedImages] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [quickOptions, setQuickOptions] = useState([]);
   const [isFirstInteraction, setIsFirstInteraction] = useState(true);
   const [decisionTreeOptions, setDecisionTreeOptions] = useState([]);
   
-  // Generate or get session ID
+  // Generate or get session ID using crypto.getRandomValues for security
   const [sessionId] = useState(() => {
     let id = localStorage.getItem('chat_session_id');
     if (!id) {
-      id = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      // Use crypto.getRandomValues for cryptographically secure random generation
+      const array = new Uint8Array(16);
+      crypto.getRandomValues(array);
+      const randomString = Array.from(array, byte => byte.toString(36)).join('').substr(0, 9);
+      id = `session_${Date.now()}_${randomString}`;
       localStorage.setItem('chat_session_id', id);
     }
     return id;
@@ -188,8 +193,12 @@ const ChatInterface = ({
     imageFiles.forEach(file => {
       const reader = new FileReader();
       reader.onload = (e) => {
+        // Use crypto.getRandomValues for secure ID generation
+        const array = new Uint8Array(4);
+        crypto.getRandomValues(array);
+        const randomId = Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
         const imageData = {
-          id: Date.now() + Math.random(),
+          id: `${Date.now()}_${randomId}`,
           file: file,
           url: e.target.result,
           name: file.name
@@ -205,24 +214,6 @@ const ChatInterface = ({
     if (e.target.files.length > 0) {
       handleImageSelect(e.target.files);
       e.target.value = ''; // Reset file input
-    }
-  };
-
-  // Handle paste event for images
-  const handlePaste = (e) => {
-    const items = e.clipboardData?.items;
-    if (!items) return;
-
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i];
-      if (item.type.startsWith('image/')) {
-        e.preventDefault();
-        const file = item.getAsFile();
-        if (file) {
-          handleImageSelect([file]);
-        }
-        break;
-      }
     }
   };
 
@@ -424,45 +415,44 @@ const ChatInterface = ({
               
               if (parsed.type === 'content') {
                 accumulatedContent += parsed.content;
-                // Update UI immediately for each chunk, preserving formatting
+                const currentContent = accumulatedContent;
                 setMessages(prev => prev.map(msg => 
                   msg.id === aiMessageId 
-                    ? { ...msg, content: accumulatedContent }
+                    ? { ...msg, content: currentContent }
                     : msg
                 ));
                 
-                // Real-time option parsing during streaming
-                const currentOptions = parseQuickOptionsStreaming(accumulatedContent);
+                const currentOptions = parseQuickOptionsStreaming(currentContent);
                 if (currentOptions.length > 0) {
                   setQuickOptions(currentOptions);
                 }
                 
               } else if (parsed.type === 'tool_use') {
-                // Show tool usage with input details
                 const toolInfo = parsed.input ? ` (${JSON.stringify(parsed.input).slice(0, 50)}...)` : '';
                 accumulatedContent += `\n`;
+                const currentContent = accumulatedContent;
                 setMessages(prev => prev.map(msg => 
                   msg.id === aiMessageId 
-                    ? { ...msg, content: accumulatedContent + `\n\nUsing tool: ${parsed.tool_name}${toolInfo}` }
+                    ? { ...msg, content: currentContent + `\n\nUsing tool: ${parsed.tool_name}${toolInfo}` }
                     : msg
                 ));
               } else if (parsed.type === 'tool_result') {
-                // Tool result received with details
                 const resultInfo = parsed.result;
                 console.log(`${resultInfo}`)
                 accumulatedContent += `${resultInfo}\n\n`;
+                const currentContent = accumulatedContent;
                 setMessages(prev => prev.map(msg => 
                   msg.id === aiMessageId 
-                    ? { ...msg, content: accumulatedContent }
+                    ? { ...msg, content: currentContent }
                     : msg
                 ));
               } else if (parsed.type === 'image') {
-                // Handle image from event_loop_metrics
+                const currentContent = accumulatedContent;
                 setMessages(prev => prev.map(msg => 
                   msg.id === aiMessageId 
                     ? { 
                         ...msg, 
-                        content: accumulatedContent + `\n\n![Generated Image](${parsed.url})`,
+                        content: currentContent + `\n\n![Generated Image](${parsed.url})`,
                         images: [...(msg.images || []), { url: parsed.url, filename: parsed.filename }]
                       }
                     : msg
@@ -619,8 +609,11 @@ const ChatInterface = ({
     setTotalTokens({ input: 0, output: 0, total: 0 });
     setTokenCount(0);
     
-    // Generate new session ID
-    const newId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    // Generate new session ID using crypto.getRandomValues for security
+    const array = new Uint8Array(16);
+    crypto.getRandomValues(array);
+    const randomString = Array.from(array, byte => byte.toString(36)).join('').substr(0, 9);
+    const newId = `session_${Date.now()}_${randomString}`;
     localStorage.setItem('chat_session_id', newId);
     
     // Force re-render with new session (would need to lift state up to parent)
@@ -630,13 +623,10 @@ const ChatInterface = ({
   const formatModelName = (modelId) => {
     // Define custom names for specific models
     const modelNames = {
-      'us.anthropic.claude-3-7-sonnet-20250219-v1:0': 'Claude 3.7 Sonnet',
       'us.anthropic.claude-sonnet-4-20250514-v1:0': 'Claude Sonnet 4',
-      'anthropic.claude-3-5-sonnet-20241022-v2:0': 'Claude 3.5 Sonnet',
-      'anthropic.claude-3-haiku-20240307-v1:0': 'Claude 3 Haiku',
+      'us.anthropic.claude-3-7-sonnet-20250219-v1:0': 'Claude 3.7 Sonnet',
       'us.amazon.nova-pro-v1:0': 'Nova Pro',
-      'us.amazon.nova-lite-v1:0': 'Nova Lite',
-      'us.amazon.nova-micro-v1:0': 'Nova Micro'
+      'us.amazon.nova-lite-v1:0': 'Nova Lite'
     };
 
     // Return custom name if available
