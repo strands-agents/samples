@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 concurrency:
   group: ash-${{ github.workflow }}-${{ github.ref }}
@@ -60,29 +61,159 @@ jobs:
       - name: Run ASH
         run: |
           set -o pipefail
-          ash --mode container --config .ash_config.yaml 2>&1 | tee ash-output.log
+          ash --mode container --config .ash_config.yaml 2>&1 | tee ash-output.log || true
+
+      - name: Debug ASH Output Structure
+        if: always()
+        run: |
+          echo "=== ASH Directory Structure ==="
+          find .ash -type f -name "*.sarif" -o -name "*.json" -o -name "*.md" | head -20
+
+          echo -e "\n=== SARIF File Sample (first 100 lines) ==="
+          if [ -f ".ash/ash_output/reports/ash.sarif" ]; then
+            head -100 .ash/ash_output/reports/ash.sarif
+          else
+            echo "SARIF file not found!"
+          fi
+
+          echo -e "\n=== Files in reports directory ==="
+          ls -la .ash/ash_output/reports/ || echo "Reports directory not found"
+
+      - name: Get PR changed files
+        if: always()
+        id: get-files
+        run: |
+          echo "Getting changed files for PR..."
+          git fetch origin ${{ github.base_ref }}
+          git diff --name-only origin/${{ github.base_ref }}...HEAD > changed-files.txt
+          echo "Changed files:"
+          cat changed-files.txt
 
       - name: Summarize & decide pass/fail
+        if: always()
         id: summarize
         run: |
           python - << 'PY'
-          import json, os, pathlib, sys
-          p = pathlib.Path(".ash/ash_output/reports/ash.summary.json")
+          import json, os, pathlib, sys, re
+
+          # Read changed files
+          changed_files = []
+          if os.path.exists("changed-files.txt"):
+            with open("changed-files.txt", "r") as f:
+              changed_files = [line.strip() for line in f if line.strip()]
+
+          # Read ASH results
+          sarif_path = pathlib.Path(".ash/ash_output/reports/ash.sarif")
+          agg_path = pathlib.Path(".ash/ash_output/ash_aggregated_results.json")
+
           sev = dict(critical=0, high=0, medium=0, low=0, info=0)
-          if p.exists():
-            d = json.load(open(p))
+          pr_sev = dict(critical=0, high=0, medium=0, low=0, info=0)
+          pr_findings = []
+
+          # Try to read SARIF file first (more detailed)
+          if sarif_path.exists():
+            with open(sarif_path) as f:
+              sarif = json.load(f)
+
+            for run in sarif.get("runs", []):
+              for result in run.get("results", []):
+                severity = result.get("level", "info").lower()
+                if severity == "warning": severity = "medium"
+                elif severity == "error": severity = "high"
+
+                # Get file path from result
+                file_path = None
+                for location in result.get("locations", []):
+                  uri = location.get("physicalLocation", {}).get("artifactLocation", {}).get("uri", "")
+                  if uri:
+                    file_path = uri.lstrip("./")
+                    break
+
+                sev[severity] = sev.get(severity, 0) + 1
+
+                # Check if finding is in changed files
+                if file_path and any(file_path in cf or cf in file_path for cf in changed_files):
+                  pr_sev[severity] = pr_sev.get(severity, 0) + 1
+
+                  if severity in ["critical", "high"]:
+                    rule_id = result.get("ruleId", "")
+                    message = result.get("message", {}).get("text", "Security issue detected")
+                    line_num = location.get("physicalLocation", {}).get("region", {}).get("startLine", 1)
+
+
+                    pr_findings.append({
+                      "file": file_path,
+                      "line": line_num,
+                      "severity": severity,
+                      "rule": rule_id,
+                      "message": message
+                    })
+
+          # Fallback to aggregated results if no SARIF
+          elif agg_path.exists():
+            with open(agg_path) as f:
+              d = json.load(f)
             totals = d.get("totals", {})
             for k in sev: sev[k] = int(totals.get(k, 0))
+
+          # Determine failure
           order = ["critical","high","medium","low","info"]
           idx = {k:i for i,k in enumerate(order)}
           threshold = os.getenv("FAIL_ON_SEVERITY","none").lower()
-          fail = any(sev[k] > 0 for k in order if idx[k] <= idx.get(threshold, 99))
+          fail = any(pr_sev[k] > 0 for k in order if idx[k] <= idx.get(threshold, 99))
+
+          # Generate markdown report
           with open("ash-summary.md","w") as f:
-            f.write("## ASH PR Scan Results\n\n")
-            f.write("| Critical | High | Medium | Low | Info |\n|---:|---:|---:|---:|---:|\n")
-            f.write(f"| {sev['critical']} | {sev['high']} | {sev['medium']} | {sev['low']} | {sev['info']} |\n")
-            f.write(f"\nThreshold: **{threshold.title()}**\n")
-            f.write("\nSee artifacts for full logs and details.\n")
+            # Determine status icon based on findings
+            if pr_sev['critical'] > 0 or pr_sev['high'] > 0:
+              status_icon = "❌"
+            elif pr_sev['medium'] > 0 or pr_sev['low'] > 0:
+              status_icon = "⚠️"
+            else:
+              status_icon = "✅"
+
+            f.write(f"## {status_icon} Security Scan Report\n\n")
+
+            if changed_files:
+              f.write("### Changed Files\n")
+              for cf in changed_files[:10]:  # Limit to first 10 files
+                f.write(f"- `{cf}`\n")
+              if len(changed_files) > 10:
+                f.write(f"- ... and {len(changed_files) - 10} more files\n")
+              f.write("\n---\n\n")
+
+            f.write("### Security Scan Summary\n")
+            f.write("| Scope | Critical | High | Medium | Low | Info |\n")
+            f.write("|-------|----------|------|--------|-----|---------|\n")
+            f.write(f"| Your Changes | {pr_sev['critical']} | {pr_sev['high']} | {pr_sev['medium']} | {pr_sev['low']} | {pr_sev['info']} |\n")
+            f.write(f"| Full Repository | {sev['critical']} | {sev['high']} | {sev['medium']} | {sev['low']} | {sev['info']} |\n\n")
+
+            f.write(f"**Threshold:** {threshold.title()}\n\n")
+
+            # Show critical and high issues from PR files
+            if pr_findings:
+              f.write("---\n\n### Security Findings\n\n")
+              f.write("| Severity | Location | Description |\n")
+              f.write("|----------|----------|--------------|\n")
+
+              # Show all critical and high findings in table format
+              for finding in pr_findings:
+                severity = finding['severity'].title()
+                file_line = f"{finding['file']}:{finding['line']}"
+                message = finding['message'].replace('|', '\\|').replace('\n', ' ')  # Escape pipes and newlines for table
+
+                f.write(f"| {severity} | {file_line} | {message} |\n")
+
+              f.write("\n")
+
+            if not pr_findings and (pr_sev['critical'] > 0 or pr_sev['high'] > 0):
+              f.write("Issues detected but detailed information not available. Check workflow artifacts.\n\n")
+
+            if pr_sev['critical'] == 0 and pr_sev['high'] == 0 and pr_sev['medium'] == 0 and pr_sev['low'] == 0:
+              f.write("No security issues detected in your changes. Great job!\n\n")
+
+            f.write("*Full scan details available in workflow artifacts.*\n")
+
           with open(os.environ["GITHUB_OUTPUT"], "a") as g:
             g.write(f"fail={'true' if fail else 'false'}\n")
           PY
@@ -91,7 +222,10 @@ jobs:
         if: always()
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          path: ash-summary.md
+          recreate: true
+          message: |
+            ${{ steps.summarize.conclusion == 'success' && '## ASH PR Scan Results' || '⚠️ ASH scan incomplete. Check workflow logs for details.' }}
+          path: ${{ steps.summarize.conclusion == 'success' && 'ash-summary.md' || '' }}
 
       - name: Upload artifacts
         if: always()
@@ -99,7 +233,9 @@ jobs:
         with:
           name: ash-pr-${{ github.run_id }}
           path: |
-            .ash/
+            .ash/ash_output/reports/**
+            .ash/ash_output/scanners/**
+            .ash/ash_output/*.json
             ash-output.log
             ash-summary.md
           retention-days: 21
