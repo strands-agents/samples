@@ -6,95 +6,25 @@ const LeftSidebar = ({ selectedModel, setSelectedModel, sessionId, onClose }) =>
   const [models, setModels] = useState([]);
   const [mcpServers, setMcpServers] = useState({});
   const [loading, setLoading] = useState(true);
-  const [isTriageSectionOpen, setIsTriageSectionOpen] = useState(true);
   const [triageStatus, setTriageStatus] = useState({});
   const [currentSession, setCurrentSession] = useState(null);
   const currentNodeRef = useRef(null);
-  const updateIntervalRef = useRef(null);
 
-  useEffect(() => {
-    fetchModels();
-    fetchMcpServers();
-    fetchTriageStatus();
-    fetchCurrentSession();
-  }, [selectedModel, sessionId]);
-  
-  // Separate effect for sessionId changes to force reload
-  useEffect(() => {
-    if (sessionId) {
-      console.log('SessionId changed, reloading triage data:', sessionId);
-      fetchCurrentSession();
-      fetchTriageStatus();
-    }
-  }, [sessionId]);
-  
-  // Add event listener for triage status reload
-  useEffect(() => {
-    const handleTriageStatusReload = (event) => {
-      console.log('Triage status reload event received:', event.detail);
-      // Force reload with a small delay to ensure backend is updated
-      setTimeout(() => {
-        fetchCurrentSession();
-        fetchTriageStatus();
-      }, 100);
-    };
-    
-    window.addEventListener('triageStatusReload', handleTriageStatusReload);
-    
-    return () => {
-      window.removeEventListener('triageStatusReload', handleTriageStatusReload);
-    };
-  }, [sessionId]);
-
-  const fetchCurrentSession = async () => {
-    if (!sessionId) return;
-    
+  const fetchModels = React.useCallback(async () => {
     try {
       const apiBase = window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
-      const response = await fetch(`${apiBase}/api/triage/session/${sessionId}`);
-      if (response.ok) {
-        const data = await response.json();
-        if (data.exists) {
-          setCurrentSession(data);
-          
-          // Handle scroll focus when current node changes
-          if (currentNodeRef.current && 
-              data.current_node_id && 
-              (!currentSession || currentSession.current_node_id !== data.current_node_id)) {
-            setTimeout(() => {
-              const nodeElement = document.querySelector('.current-node');
-              if (nodeElement) {
-                nodeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              }
-            }, 100);
-          }
-        } else {
-          setCurrentSession(null);
-        }
-      } else {
-        setCurrentSession(null);
-      }
-    } catch (error) {
-      console.error('Error fetching current session:', error);
-      setCurrentSession(null);
-    }
-  };
-
-  const fetchModels = async () => {
-    try {
-          const apiBase = window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
-    const response = await fetch(`${apiBase}/models`);
+      const response = await fetch(`${apiBase}/models`);
       const data = await response.json();
       setModels(data);
     } catch (error) {
       console.error('Error fetching models:', error);
     }
-  };
+  }, []);
 
-  const fetchMcpServers = async () => {
+  const fetchMcpServers = React.useCallback(async () => {
     try {
-          const apiBase = window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
-    const response = await fetch(`${apiBase}/mcp/servers`);
+      const apiBase = window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
+      const response = await fetch(`${apiBase}/mcp/servers`);
       const data = await response.json();
       const transformedData = Object.keys(data).reduce((acc, serverName) => {
         acc[serverName] = {
@@ -110,9 +40,9 @@ const LeftSidebar = ({ selectedModel, setSelectedModel, sessionId, onClose }) =>
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const fetchTriageStatus = async () => {
+  const fetchTriageStatus = React.useCallback(async () => {
     try {
       const apiBase = window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
       const response = await fetch(`${apiBase}/api/triage/status`);
@@ -126,7 +56,75 @@ const LeftSidebar = ({ selectedModel, setSelectedModel, sessionId, onClose }) =>
       console.error('Error fetching triage status:', error);
       setTriageStatus({ status: 'offline', nodes_loaded: 0, tree: null });
     }
-  };
+  }, []);
+
+  const fetchCurrentSession = React.useCallback(async () => {
+    if (!sessionId) return;
+    
+    try {
+      const apiBase = window.location.hostname === 'localhost' ? 'http://localhost:8000' : '';
+      const response = await fetch(`${apiBase}/api/triage/session/${sessionId}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.exists) {
+          setCurrentSession(prevSession => {
+            // Handle scroll focus when current node changes
+            if (currentNodeRef.current && 
+                data.current_node_id && 
+                (!prevSession || prevSession.current_node_id !== data.current_node_id)) {
+              setTimeout(() => {
+                const nodeElement = document.querySelector('.current-node');
+                if (nodeElement) {
+                  nodeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+              }, 100);
+            }
+            return data;
+          });
+        } else {
+          setCurrentSession(null);
+        }
+      } else {
+        setCurrentSession(null);
+      }
+    } catch (error) {
+      console.error('Error fetching current session:', error);
+      setCurrentSession(null);
+    }
+  }, [sessionId]);
+
+  // Initial load effect - only run once
+  useEffect(() => {
+    fetchModels();
+    fetchMcpServers();
+    fetchTriageStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  
+  // Session-specific effect - only when sessionId changes
+  useEffect(() => {
+    if (sessionId) {
+      fetchCurrentSession();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionId]);
+  
+  // Add event listener for triage status reload
+  useEffect(() => {
+    const handleTriageStatusReload = () => {
+      setTimeout(() => {
+        fetchCurrentSession();
+        fetchTriageStatus();
+      }, 100);
+    };
+    
+    window.addEventListener('triageStatusReload', handleTriageStatusReload);
+    
+    return () => {
+      window.removeEventListener('triageStatusReload', handleTriageStatusReload);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const toggleServer = async (serverName, enabled) => {
     try {
@@ -163,9 +161,7 @@ const LeftSidebar = ({ selectedModel, setSelectedModel, sessionId, onClose }) =>
       .join(' ');
   };
 
-  const handleResetSession = () => {
-    // Implementation of handleResetSession function
-  };
+
 
   return (
     <div className="left-sidebar">

@@ -1,0 +1,293 @@
+name: ASH PR Scan
+
+# Trigger: Run this workflow when PRs are opened/updated against main branch
+on:
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - '**/*.md'
+      - '.github/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: ash-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  ASH_VERSION: v3.0.0
+  PYTHON_VERSION: '3.11'
+  FAIL_ON_SEVERITY: 'high'   # none|low|medium|high|critical
+
+jobs:
+  pr-scan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install ASH
+        run: |
+          python -m pip install --upgrade pip
+          pip install "git+https://github.com/awslabs/automated-security-helper.git@${ASH_VERSION}"
+
+      - name: Write ASH config
+        run: |
+          cat > .ash_config.yaml << 'EOF'
+          reporters:
+            json:
+              enabled: true
+              options:
+                output_path: .ash/ash_output/reports/ash.summary.json
+            markdown:
+              enabled: true
+              options:
+                include_detailed_findings: true
+                max_detailed_findings: 500
+          EOF
+
+      - name: Get PR changed files
+        if: always()
+        id: get-files
+        run: |
+          echo "Getting changed files for PR..."
+          git fetch origin ${{ github.base_ref }}
+          git diff --name-only origin/${{ github.base_ref }}...HEAD > changed-files.txt
+          echo "Changed files:"
+          cat changed-files.txt
+
+      - name: Create PR files directory for scanning
+        if: always()
+        run: |
+          mkdir -p pr-scan-dir
+
+          # Copy only changed files to scan directory
+          if [ -s changed-files.txt ]; then
+            while IFS= read -r file; do
+              if [ -f "$file" ]; then
+                # Create directory structure
+                mkdir -p "pr-scan-dir/$(dirname "$file")"
+                # Copy the file
+                cp "$file" "pr-scan-dir/$file"
+                echo "Copied: $file"
+              fi
+            done < changed-files.txt
+          else
+            echo "No files changed in this PR"
+          fi
+
+          echo "Files to scan:"
+          find pr-scan-dir -type f 2>/dev/null | wc -l
+
+      - name: Run ASH
+        run: |
+          set -o pipefail
+          file_count=$(find pr-scan-dir -type f 2>/dev/null | wc -l)
+          if [ "$file_count" -gt 0 ]; then
+            echo "Scanning $file_count files in PR..."
+            cd pr-scan-dir  # Scan only the PR files directory
+            ash --mode container --config ../.ash_config.yaml 2>&1 | tee ../ash-output.log || true
+          else
+            echo "No files to scan, skipping ASH"
+            mkdir -p .ash/ash_output/reports
+            echo '{"runs": [{"results": []}]}' > .ash/ash_output/reports/ash.sarif
+            echo "No files changed - skipping security scan" > ash-output.log
+          fi
+
+      - name: Debug ASH Output Structure
+        if: always()
+        run: |
+          echo "=== ASH Directory Structure ==="
+          find .ash -type f -name "*.sarif" -o -name "*.json" -o -name "*.md" | head -20
+
+          echo -e "\n=== SARIF File Sample (first 100 lines) ==="
+          if [ -f "pr-scan-dir/.ash/ash_output/reports/ash.sarif" ]; then
+            head -100 pr-scan-dir/.ash/ash_output/reports/ash.sarif
+          else
+            echo "SARIF file not found!"
+          fi
+
+          echo -e "\n=== Files in reports directory ==="
+          ls -la pr-scan-dir/.ash/ash_output/reports/ || echo "Reports directory not found"
+
+      - name: Summarize & decide pass/fail
+        if: always()
+        id: summarize
+        run: |
+          python - << 'PY'
+          import json, os, pathlib, sys, re
+
+          # Read changed files for display
+          changed_files = []
+          if os.path.exists("changed-files.txt"):
+            with open("changed-files.txt", "r") as f:
+              changed_files = [line.strip() for line in f if line.strip()]
+
+          # Read ASH results - since we only scanned PR files, all findings are PR-related
+          sarif_path = pathlib.Path("pr-scan-dir/.ash/ash_output/reports/ash.sarif")
+          agg_path = pathlib.Path("pr-scan-dir/.ash/ash_output/ash_aggregated_results.json")
+
+          sev = dict(critical=0, high=0, medium=0, low=0, info=0)
+          findings = []
+
+          # Try to read SARIF file first (more detailed)
+          if sarif_path.exists():
+            try:
+              with open(sarif_path) as f:
+                sarif = json.load(f)
+            except json.JSONDecodeError as e:
+              print(f"Warning: Could not parse SARIF file: {e}")
+              sarif = {"runs": []}  # Use empty default
+
+            for run in sarif.get("runs", []):
+              for result in run.get("results", []):
+                severity = result.get("level", "info").lower()
+                if severity == "warning": severity = "medium"
+                elif severity == "error": severity = "high"
+
+                sev[severity] = sev.get(severity, 0) + 1
+
+                # Get file path and details for high/critical findings
+                if severity in ["critical", "high"]:
+                  file_path = "unknown"
+                  line_num = 1
+                  for location in result.get("locations", []):
+                    uri = location.get("physicalLocation", {}).get("artifactLocation", {}).get("uri", "")
+                    if uri:
+                      file_path = uri.lstrip("./")
+                      line_num = location.get("physicalLocation", {}).get("region", {}).get("startLine", 1)
+                      break
+
+                  rule_id = result.get("ruleId", "")
+                  message = result.get("message", {}).get("text", "Security issue detected")
+
+                  findings.append({
+                    "file": file_path,
+                    "line": line_num,
+                    "severity": severity,
+                    "rule": rule_id,
+                    "message": message
+                  })
+
+          # Fallback to aggregated results if no SARIF
+          elif agg_path.exists():
+            try:
+              with open(agg_path) as f:
+                d = json.load(f)
+              totals = d.get("totals", {})
+              for k in sev: sev[k] = int(totals.get(k, 0))
+            except (json.JSONDecodeError, ValueError) as e:
+              print(f"Warning: Could not parse aggregated results file: {e}")
+              # Keep default sev values (all zeros)
+
+          # Determine failure based on threshold
+          order = ["critical","high","medium","low","info"]
+          idx = {k:i for i,k in enumerate(order)}
+          threshold = os.getenv("FAIL_ON_SEVERITY","none").lower()
+          fail = any(sev[k] > 0 for k in order if idx[k] <= idx.get(threshold, 99))
+
+          # Generate markdown report
+          with open("ash-summary.md","w") as f:
+            # Determine status icon based on findings
+            if sev['critical'] > 0 or sev['high'] > 0:
+              status_icon = "❌"
+            elif sev['medium'] > 0 or sev['low'] > 0:
+              status_icon = "⚠️"
+            else:
+              status_icon = "✅"
+
+            f.write(f"## {status_icon} Security Scan Report (PR Files Only)\n\n")
+
+            if changed_files:
+              f.write("### Scanned Files\n")
+              for cf in changed_files[:10]:  # Limit to first 10 files
+                f.write(f"- `{cf}`\n")
+              if len(changed_files) > 10:
+                f.write(f"- ... and {len(changed_files) - 10} more files\n")
+              f.write("\n---\n\n")
+
+            f.write("### Security Scan Results\n")
+            f.write("| Critical | High | Medium | Low | Info |\n")
+            f.write("|----------|------|--------|-----|---------|\n")
+            f.write(f"| {sev['critical']} | {sev['high']} | {sev['medium']} | {sev['low']} | {sev['info']} |\n\n")
+
+            f.write(f"**Threshold:** {threshold.title()}\n\n")
+
+            # Show critical and high issues
+            if findings:
+              f.write("---\n\n### Security Findings\n\n")
+              f.write("| Severity | Location | Description |\n")
+              f.write("|----------|----------|--------------|\n")
+
+              for finding in findings:
+                severity = finding['severity'].title()
+                file_line = f"{finding['file']}:{finding['line']}"
+                message = finding['message'].replace('|', '\\|').replace('\n', ' ')  # Escape pipes and newlines for table
+
+                f.write(f"| {severity} | {file_line} | {message} |\n")
+
+              f.write("\n")
+
+            if not findings and (sev['critical'] > 0 or sev['high'] > 0):
+              f.write("Issues detected but detailed information not available. Check workflow artifacts.\n\n")
+
+            if sev['critical'] == 0 and sev['high'] == 0 and sev['medium'] == 0 and sev['low'] == 0:
+              f.write("No security issues detected in your changes. Great job!\n\n")
+
+            f.write("*This scan only covers files changed in this PR.*\n")
+
+          with open(os.environ["GITHUB_OUTPUT"], "a") as g:
+            g.write(f"fail={'true' if fail else 'false'}\n")
+          PY
+
+      - name: Save PR metadata for comment workflow
+        if: always()
+        run: |
+          echo "${{ github.event.pull_request.number }}" > pr_number.txt
+          echo "${{ github.event.pull_request.head.sha }}" > pr_sha.txt
+          if [ -f ash-summary.md ]; then
+            cp ash-summary.md pr_comment.md
+          else
+            echo "## ⚠️ ASH Security Scan Incomplete" > pr_comment.md
+            echo "Check workflow logs for details." >> pr_comment.md
+          fi
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ash-security-results
+          path: |
+            pr-scan-dir/.ash/ash_output/reports/**
+            pr-scan-dir/.ash/ash_output/scanners/**
+            pr-scan-dir/.ash/ash_output/*.json
+            ash-output.log
+            ash-summary.md
+            pr_number.txt
+            pr_sha.txt
+            pr_comment.md
+          retention-days: 21
+
+      - name: Job summary
+        if: always()
+        run: |
+          echo "## ASH Scan Results" >> $GITHUB_STEP_SUMMARY
+          [ -f ash-summary.md ] && cat ash-summary.md >> $GITHUB_STEP_SUMMARY || echo "_No summary generated_" >> $GITHUB_STEP_SUMMARY
+
+      - name: Enforce severity threshold
+        if: steps.summarize.outputs.fail == 'true'
+        run: |
+          echo "Findings at/above ${FAIL_ON_SEVERITY}. Failing PR."
+          exit 1
