@@ -10,7 +10,6 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write
 
 concurrency:
   group: ash-${{ github.workflow }}-${{ github.ref }}
@@ -60,22 +59,23 @@ jobs:
 
       - name: Get PR changed files
         if: always()
-        id: get-files
-        run: |
-          echo "Getting changed files for PR..."
-          git fetch origin ${{ github.base_ref }}
-          git diff --name-only origin/${{ github.base_ref }}...HEAD > changed-files.txt
-          echo "Changed files:"
-          cat changed-files.txt
+        id: changed-files
+        uses: tj-actions/changed-files@v46
 
       - name: Create PR files directory for scanning
         if: always()
         run: |
           mkdir -p pr-scan-dir
 
-          # Copy only changed files to scan directory
-          if [ -s changed-files.txt ]; then
-            while IFS= read -r file; do
+          # Save changed files list for Python script
+          changed_files="${{ steps.changed-files.outputs.all_changed_files }}"
+          if [ -n "$changed_files" ]; then
+            echo "$changed_files" | tr ' ' '\n' > changed-files.txt
+            echo "Changed files:"
+            cat changed-files.txt
+
+            # Copy only changed files to scan directory
+            for file in $changed_files; do
               if [ -f "$file" ]; then
                 # Create directory structure
                 mkdir -p "pr-scan-dir/$(dirname "$file")"
@@ -83,9 +83,10 @@ jobs:
                 cp "$file" "pr-scan-dir/$file"
                 echo "Copied: $file"
               fi
-            done < changed-files.txt
+            done
           else
             echo "No files changed in this PR"
+            touch changed-files.txt
           fi
 
           echo "Files to scan:"
