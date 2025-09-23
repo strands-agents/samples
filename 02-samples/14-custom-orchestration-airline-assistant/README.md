@@ -211,6 +211,16 @@ This script:
 
 Note: This script requires AWS credentials with access to Bedrock. Make sure your AWS credentials are properly configured before running this script.
 
+After all the above steps to setup the dataset and GT, you must replace the following files in mabench (./data/ma-bench/mabench/environments/airline/tools/) with the files in ./mabench_tool_replacements
+
+**search_direct_flight.py**
+Original returns: json.dumps(results)
+Replacement returns: json.dumps({'flights':results})
+
+**search_onestop_flight.py**
+Original returns: json.dumps(results)
+Replacement returns: json.dumps({'flights':results})
+
 ## How to Run
 
 Each notebook is **standalone and self-contained** - you can open any pattern and run it independently to explore different orchestration approaches.
