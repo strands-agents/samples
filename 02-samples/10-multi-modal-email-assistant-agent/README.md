@@ -53,7 +53,13 @@ The assistant creates professional emails with:
 1. Run the notebooks in [Multi-modal-data-ingest/audio-video-rag/](./Multi-modal-data-ingest/audio-video-rag/) folder to process audio files
 2. Create a Bedrock Knowledge Base and note the KB ID
 
-### Step 2: Run the Email Assistant
+### Step 2: Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### Step 3: Run the Email Assistant
 
 ```bash
 python email_assistant.py --kb-id YOUR_KB_ID --region replace_your_region
