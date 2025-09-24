@@ -44,6 +44,9 @@ jobs:
       - name: Post comment on PR
         if: steps.pr-info.outputs.pr_number
         uses: actions/github-script@v7
+        env:
+          PR_NUMBER: ${{ steps.pr-info.outputs.pr_number }}
+          PR_SHA: ${{ steps.pr-info.outputs.pr_sha }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -56,8 +59,8 @@ jobs:
             }
 
             const commentBody = fs.readFileSync(commentPath, 'utf8');
-            const prNumber = parseInt('${{ steps.pr-info.outputs.pr_number }}');
-            const prSha = '${{ steps.pr-info.outputs.pr_sha }}';
+            const prNumber = parseInt(process.env.PR_NUMBER);
+            const prSha = process.env.PR_SHA;
 
             if (!prNumber) {
               console.log('Invalid PR number');
