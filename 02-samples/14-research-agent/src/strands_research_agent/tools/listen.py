@@ -753,7 +753,7 @@ def listen(
         pause_duration: Seconds of silence to consider the segment finished.
         use_vad: If True and webrtcvad is installed, use it; otherwise fallback to energy threshold.
         transcripts_limit: For get_transcripts, how many recent items to return (max 50).
-        trigger_keyword: Optional trigger keyword to activate use_agent (e.g., "hey maxs").
+        trigger_keyword: Optional trigger keyword to activate use_agent (e.g., "hey research agent").
         agent: Parent agent instance for trigger functionality.
         auto_mode: Enable auto stealth mode - triggers agent on long text (50+ chars) without speaking.
         length_threshold: Character threshold for auto mode trigger (default: 50).

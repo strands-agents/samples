@@ -4,15 +4,15 @@ build-backend = "hatchling.build"
 
 [project]
 name = "strands-research-agent"
-version = "0.1.0"
-description = "Advanced AI Research Agent powered by Strands Agents framework"
+version = "0.1.1"
+description = "Sample Research Agent powered by Strands Agents SDK"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
     {name = "AWS", email = "opensource@amazon.com"},
     {name = "Cagatay Cali", email = "cagataycali@icloud.com"}
 ]
-keywords = ["ai", "agent", "research", "strands", "automation", "github", "knowledge-base"]
+keywords = ["ai", "agent", "research", "strands", "automation", "github", "knowledge-base", "aws", "strands-agents"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -31,24 +31,25 @@ classifiers = [
 requires-python = ">=3.10"
 dependencies = [
     "strands-agents>=1.0.0",
+    "strands-agents[otel]",
     "strands-agents-tools>=0.1.0",
+    "strands-agents-tools[diagram]",
     "requests>=2.25.0",
     "beautifulsoup4>=4.9.0",
     "colorama>=0.4.0",
     "rich>=10.0.0",
     "prompt_toolkit>=3.0.0",
+    "halo",
+    "numpy"
 ]
 
 [project.optional-dependencies]
 # Core Strands extensions
 strands = [
-    "strands-agents-tools[diagram]",
     "strands-agents[a2a]",
-    "strands-agents[otel]",
 ]
 
 # Model providers
-bedrock = ["strands-agents[bedrock]"]
 openai = ["strands-agents[openai]"]
 anthropic = ["strands-agents[anthropic]"]
 ollama = ["strands-agents[ollama]"]
@@ -89,7 +90,7 @@ binary = [
 
 # All providers and features
 all = [
-    "strands-research-agent[strands,bedrock,openai,anthropic,ollama,llamaapi,litellm,mistral,audio,ml]"
+    "strands-research-agent[strands,openai,anthropic,ollama,llamaapi,litellm,mistral,audio,ml]"
 ]
 
 [project.urls]

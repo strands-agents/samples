@@ -7,6 +7,9 @@ import os
 import sys
 import datetime
 import json
+import tempfile
+import atexit
+import shutil
 from typing import Any
 import uuid
 from pathlib import Path
@@ -26,12 +29,56 @@ hostname = socket.gethostname()
 timestamp = str(int(time.time()))
 instance_id = f"research-agent-{hostname}-{timestamp[-6:]}"
 
+# Global secure temp directory - will be cleaned up on exit
+_secure_temp_dir = None
+
+
+def get_secure_temp_dir():
+    """Get or create a secure temporary directory with proper permissions."""
+    global _secure_temp_dir
+
+    if _secure_temp_dir is None:
+        # Create secure temporary directory with restrictive permissions (700)
+        _secure_temp_dir = tempfile.mkdtemp(prefix="research_agent_", suffix="_secure")
+
+        # Ensure only the current user can access it
+        os.chmod(_secure_temp_dir, 0o700)
+
+        # Register cleanup function to run on exit
+        atexit.register(cleanup_temp_dir)
+
+    return _secure_temp_dir
+
+
+def cleanup_temp_dir():
+    """Clean up the secure temporary directory on exit."""
+    global _secure_temp_dir
+
+    if _secure_temp_dir and os.path.exists(_secure_temp_dir):
+        try:
+            shutil.rmtree(_secure_temp_dir)
+        except Exception as e:
+            print(
+                f"Warning: Could not clean up temporary directory {_secure_temp_dir}: {e}"
+            )
+
+
+def get_secure_research_dir():
+    """Get secure research directory path within the temp directory."""
+    secure_temp = get_secure_temp_dir()
+    research_dir = Path(secure_temp) / ".research"
+
+    # Create with secure permissions if it doesn't exist
+    research_dir.mkdir(mode=0o700, exist_ok=True)
+
+    return research_dir
+
 
 def read_prompt_file():
-    """Read system prompt text from .prompt file if it exists (repo or /tmp/.research/.prompt)."""
+    """Read system prompt text from .prompt file if it exists (repo or secure temp/.prompt)."""
     prompt_paths = [
         Path(".prompt"),
-        Path("/tmp/.research/.prompt"),
+        get_secure_research_dir() / ".prompt",
         Path("README.md"),
     ]
     for path in prompt_paths:
@@ -45,9 +92,14 @@ def read_prompt_file():
 
 
 def get_shell_history_file():
-    """Get the research-specific history file path."""
-    # Use /tmp/.research_history as requested
-    research_history = Path("/tmp/.research_history")
+    """Get the research-specific history file path in secure temp directory."""
+    secure_temp = get_secure_temp_dir()
+    research_history = Path(secure_temp) / ".research_history"
+
+    # Create with secure permissions if it doesn't exist
+    if not research_history.exists():
+        research_history.touch(mode=0o600)
+
     return str(research_history)
 
 
@@ -55,8 +107,8 @@ def get_shell_history_files():
     """Get available shell history file paths."""
     history_files = []
 
-    # research history (primary)
-    research_history = Path("/tmp/.research_history")
+    # research history (primary) - now in secure temp directory
+    research_history = Path(get_shell_history_file())
     if research_history.exists():
         history_files.append(("research", str(research_history)))
 
@@ -257,14 +309,13 @@ def publish_conversation_turn(agent, query, response, event_type="conversation_t
 
 
 def get_messages_dir():
-    """Get the research messages directory path."""
-    messages_dir = Path("/tmp/.research")
-    messages_dir.mkdir(exist_ok=True)
+    """Get the research messages directory path in secure temp directory."""
+    messages_dir = get_secure_research_dir()
     return messages_dir
 
 
 def get_session_file():
-    """Get or create session file path."""
+    """Get or create session file path in secure temp directory."""
     messages_dir = get_messages_dir()
 
     # Generate session ID based on date and UUID
@@ -276,7 +327,7 @@ def get_session_file():
 
 
 def save_agent_messages(agent, session_file):
-    """Save agent.messages to JSON file."""
+    """Save agent.messages to JSON file with secure permissions."""
     try:
         # Convert messages to serializable format
         messages_data = {
@@ -305,9 +356,12 @@ def save_agent_messages(agent, session_file):
                 # Fallback: convert to string
                 messages_data["messages"].append(str(msg))
 
-        # Write to file
+        # Write to file with secure permissions
         with open(session_file, "w", encoding="utf-8") as f:
             json.dump(messages_data, f, indent=2, ensure_ascii=False)
+
+        # Ensure secure permissions
+        os.chmod(session_file, 0o600)
 
     except Exception as e:
         # Silently fail if we can't save messages
@@ -508,13 +562,14 @@ def store_conversation_in_kb(agent, query, result):
 
 
 def append_to_shell_history(query, response):
-    """Append the interaction to research shell history."""
+    """Append the interaction to research shell history in secure temp directory."""
     try:
         history_file = get_shell_history_file()
 
         # Format the entry for shell history
         # Use a comment format that's shell-compatible
-        timestamp = os.popen("date +%s").read().strip()
+        # Use a more secure way to get timestamp instead of shell command
+        timestamp = str(int(time.time()))
 
         with open(history_file, "a", encoding="utf-8") as f:
             # Add the query
@@ -527,6 +582,9 @@ def append_to_shell_history(query, response):
                 + "..."
             )
             f.write(f": {timestamp}:0;# research_result: {response_summary}\n")
+
+        # Ensure secure permissions
+        os.chmod(history_file, 0o600)
 
     except Exception as e:
         # Silently fail if we can't write to history
@@ -843,7 +901,7 @@ def main():
 
         # Enhanced system prompt with history context and self-modification instructions
         base_prompt = "i'm research agent. minimalist agent. welcome to chat."
-        # Read .prompt or /tmp/.research/.prompt if present
+        # Read .prompt or secure temp/.prompt if present
         prompt_file_content, prompt_file_path = read_prompt_file()
         if prompt_file_content and prompt_file_path:
             prompt_file_note = f"\n\n[Loaded system prompt from: {prompt_file_path}]\n{prompt_file_content}\n"
@@ -861,6 +919,7 @@ def main():
 - **Hostname:** {socket.gethostname()}
 - **Session ID:** {instance_id}
 - **Timestamp:** {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+- **Secure Temp Directory:** {get_secure_temp_dir()}
 
 ## 📚 Knowledge Base Integration:
 - **Dual storage** - Conversations stored in both SQLite memory and knowledge base
@@ -933,9 +992,9 @@ def weather_tool(action: str, location: str = None, **kwargs) -> Dict[str, Any]:
 """
         self_modify_note = (
             "\n\nNote: The system prompt for research is built from your base instructions, "
-            "conversation history, and the .prompt file (in this directory or /tmp/.research/.prompt). "
+            "conversation history, and the .prompt file (in this directory or secure temp/.prompt). "
             "You can modify the system prompt in multiple ways:\n"
-            "1. **Edit .prompt file** - Create/modify .prompt in current directory or /tmp/.research/.prompt\n"
+            "1. **Edit .prompt file** - Create/modify .prompt in current directory or secure temp/.prompt\n"
             "2. **SYSTEM_PROMPT environment variable** - Set SYSTEM_PROMPT env var to extend the system prompt\n"
             "3. **Environment tool** - Use environment(action='set', name='SYSTEM_PROMPT', value='additional text')\n"
             "4. **Runtime modification** - The SYSTEM_PROMPT env var is appended to every system prompt automatically"
@@ -985,7 +1044,7 @@ def weather_tool(action: str, location: str = None, **kwargs) -> Dict[str, Any]:
 
         print("💡 Type 'exit', 'quit', or 'bye' to quit, or Ctrl+C")
 
-        # Set up prompt_toolkit with history
+        # Set up prompt_toolkit with history in secure temp directory
         history_file = get_shell_history_file()
         history = FileHistory(history_file)
 
@@ -1012,10 +1071,7 @@ def weather_tool(action: str, location: str = None, **kwargs) -> Dict[str, Any]:
                 if q.startswith("!"):
                     shell_command = q[1:]  # Remove the ! prefix
                     try:
-                        # Execute shell command directly using the shell tool
-                        result = agent.tool.shell(
-                            command=shell_command, timeout=900, shell=True
-                        )
+                        result = agent.tool.shell(command=shell_command, timeout=900)
                         append_to_shell_history(q, result["content"][0]["text"])
                         save_agent_messages(agent, session_file)
                         # Store shell command in SQLite memory for future reference
@@ -1044,7 +1100,7 @@ def weather_tool(action: str, location: str = None, **kwargs) -> Dict[str, Any]:
 
                 # Enhanced system prompt with history context and self-modification instructions
                 base_prompt = "i'm research. minimalist agent. welcome to chat."
-                # Read .prompt or /tmp/.research/.prompt if present
+                # Read .prompt or secure temp/.prompt if present
                 prompt_file_content, prompt_file_path = read_prompt_file()
                 if prompt_file_content and prompt_file_path:
                     prompt_file_note = f"\n\n[Loaded system prompt from: {prompt_file_path}]\n{prompt_file_content}\n"
@@ -1053,9 +1109,9 @@ def weather_tool(action: str, location: str = None, **kwargs) -> Dict[str, Any]:
 
                 self_modify_note = (
                     "\n\nNote: The system prompt for research is built from your base instructions, "
-                    "conversation history, and the .prompt file (in this directory or /tmp/.research/.prompt). "
+                    "conversation history, and the .prompt file (in this directory or secure temp/.prompt). "
                     "You can modify the system prompt in multiple ways:\n"
-                    "1. **Edit .prompt file** - Create/modify .prompt in current directory or /tmp/.research/.prompt\n"
+                    "1. **Edit .prompt file** - Create/modify .prompt in current directory or secure temp/.prompt\n"
                     "2. **SYSTEM_PROMPT environment variable** - Set SYSTEM_PROMPT env var to extend the system prompt\n"
                     "3. **Environment tool** - Use environment(action='set', name='SYSTEM_PROMPT', value='additional text')\n"
                     "4. **Runtime modification** - The SYSTEM_PROMPT env var is appended to every system prompt automatically"

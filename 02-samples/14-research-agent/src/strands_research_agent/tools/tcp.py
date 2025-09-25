@@ -14,7 +14,7 @@ Usage with Strands Agent:
 
 ```python
 from strands import Agent
-from maxs.tools import tcp
+from strands_research_agent.tools import tcp
 
 agent = Agent(tools=[tcp])
 

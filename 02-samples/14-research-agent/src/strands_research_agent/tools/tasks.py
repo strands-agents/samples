@@ -17,7 +17,7 @@ Features:
 Usage with Strands Agent:
 ```python
 from strands import Agent
-from maxs.tools import tasks
+from strands_research_agent.tools import tasks
 
 agent = Agent(tools=[tasks])
 
