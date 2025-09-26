@@ -24,6 +24,7 @@ def generate_request(
     res = requests.post(
         url,
         json=args,
+        timeout=30,
     )
     res.raise_for_status()
     json_res = res.json()
