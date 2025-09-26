@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "strands-research-agent"
-version = "0.1.2"
+version = "0.1.3"
 description = "Sample Research Agent powered by Strands Agents SDK"
 readme = "README.md"
 license = {text = "MIT"}
@@ -43,11 +43,6 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-# Core Strands extensions
-strands = [
-    "strands-agents[a2a]",
-]
-
 # Model providers
 openai = ["strands-agents[openai]"]
 anthropic = ["strands-agents[anthropic]"]
@@ -74,7 +69,7 @@ binary = [
 
 # All providers and features
 all = [
-    "strands-research-agent[strands,openai,anthropic,ollama,llamaapi,litellm,mistral]"
+    "strands-research-agent[openai,anthropic,ollama,llamaapi,litellm,mistral]"
 ]
 
 [project.urls]

@@ -170,3 +170,4 @@ cython_debug/
 diagrams
 visualizations
 *.bak
+sessions/

@@ -58,7 +58,7 @@ import traceback
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Any, List, Optional
+from typing import Any
 
 from strands import Agent
 from strands.telemetry.metrics import metrics_to_string
@@ -140,7 +140,7 @@ class TaskState:
         task_id: str,
         prompt: str,
         system_prompt: str,
-        tools: List[str] = None,
+        tools: list[str] = None,
         timeout: int = 900,
     ):
         self.task_id = task_id
@@ -225,7 +225,7 @@ class TaskState:
             task_message_queues[self.task_id].put(message)
             logger.debug(f"Added message to queue for task {self.task_id}")
 
-    def update_message_history(self, messages: List[dict]):
+    def update_message_history(self, messages: list[dict]):
         """Update the complete message history and save it."""
         self.message_history = messages.copy()
         self.save_messages()
@@ -242,7 +242,7 @@ class TaskState:
         if not state_path.exists():
             return None
 
-        with open(state_path, "r") as f:
+        with open(state_path) as f:
             state_data = json.load(f)
 
         task_state = cls(
@@ -259,13 +259,13 @@ class TaskState:
         task_state.paused = state_data.get("paused", False)
 
         if messages_path.exists():
-            with open(messages_path, "r") as f:
+            with open(messages_path) as f:
                 task_state.message_history = json.load(f)
 
         return task_state
 
 
-def run_task(task_state: TaskState, parent_agent: Optional[Agent] = None):
+def run_task(task_state: TaskState, parent_agent: Agent | None = None):
     """Run a task in the background with message queue processing."""
     start_time = time.time()
 
@@ -459,7 +459,7 @@ def run_task(task_state: TaskState, parent_agent: Optional[Agent] = None):
                 logger.error(f"Failed to send task error notification: {notify_err}")
 
 
-def run_task_with_timeout(task_state: TaskState, parent_agent: Optional[Agent] = None):
+def run_task_with_timeout(task_state: TaskState, parent_agent: Agent | None = None):
     """Run a task with timeout handling."""
 
     def timeout_handler():
@@ -822,7 +822,7 @@ def tasks(tool: ToolUse, **kwargs: Any) -> ToolResult:
             }
 
         # Read result file
-        with open(result_path, "r") as f:
+        with open(result_path) as f:
             result_content = f.read()
 
         return {

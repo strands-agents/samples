@@ -48,8 +48,8 @@ import logging
 import os
 import platform
 import re
-import subprocess
 import shutil
+import subprocess
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -278,7 +278,7 @@ def _log_notification(notification_data):
             json_line = json.dumps(notification_data, ensure_ascii=False)
             f.write(json_line + "\n")
 
-    except (IOError, OSError, json.JSONEncodeError) as e:
+    except (OSError, json.JSONEncodeError) as e:
         logger.error(f"Failed to log notification to history file: {e}")
     except Exception as e:
         logger.error(f"Unexpected error logging notification: {e}")
@@ -309,7 +309,7 @@ def _get_notification_history(limit=None, category=None, min_priority=None):
         max_lines_to_read = 10000
         lines_read = 0
 
-        with open(history_file_path, "r", encoding="utf-8") as f:
+        with open(history_file_path, encoding="utf-8") as f:
             for line in f:
                 lines_read += 1
                 if lines_read > max_lines_to_read:
@@ -362,7 +362,7 @@ def _get_notification_history(limit=None, category=None, min_priority=None):
 
         return notifications
 
-    except (IOError, OSError) as e:
+    except OSError as e:
         logger.error(f"Failed to read notification history: {e}")
         return []
     except Exception as e:

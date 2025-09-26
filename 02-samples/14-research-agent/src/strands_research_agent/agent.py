@@ -1,25 +1,26 @@
 #!/usr/bin/env python3
-import time
-import socket
 import argparse
 import base64
-import os
-import sys
 import datetime
 import json
-from typing import Any
+import os
+import socket
+import sys
+import time
 from pathlib import Path
+from typing import Any
 
-from strands import Agent
-from strands.session.file_session_manager import FileSessionManager
-from strands.tools.mcp import MCPClient
-from mcp import stdio_client, StdioServerParameters
-from strands.telemetry import StrandsTelemetry
+from mcp import StdioServerParameters, stdio_client
 from prompt_toolkit import prompt
-from prompt_toolkit.history import FileHistory
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.completion import WordCompleter
+from prompt_toolkit.history import FileHistory
+from strands import Agent
+from strands.session.file_session_manager import FileSessionManager
+from strands.telemetry import StrandsTelemetry
+from strands.tools.mcp import MCPClient
 from strands_tools.utils.models.model import create_model
+
 from strands_research_agent.handlers.callback_handler import callback_handler
 
 hostname = socket.gethostname()
@@ -36,7 +37,7 @@ def read_prompt_file():
     for path in prompt_paths:
         if path.is_file():
             try:
-                with open(path, "r", encoding="utf-8") as f:
+                with open(path, encoding="utf-8") as f:
                     return f.read(), str(path)
             except Exception:
                 continue
@@ -86,7 +87,7 @@ def extract_commands_from_history():
 
     for history_type, history_file in history_files:
         try:
-            with open(history_file, "r", encoding="utf-8") as f:
+            with open(history_file, encoding="utf-8") as f:
                 lines = f.readlines()
 
             # Take recent commands for better relevance
@@ -101,7 +102,6 @@ def extract_commands_from_history():
                 if not line:
                     continue
 
-                command = None
 
                 if history_type == "research":
                     # Extract research commands
@@ -143,7 +143,7 @@ def extract_commands_from_history():
                     if first_word and len(first_word) > 1:  # Only meaningful commands
                         commands.add(first_word.lower())
 
-        except Exception as e:
+        except Exception:
             # Skip files that can't be read
             continue
 
@@ -238,7 +238,7 @@ def get_retrieve_context(agent, user_query):
         context += str(result) + "\n"
 
         return context
-    except Exception as e:
+    except Exception:
         # Silently fail if knowledge retrieval fails
         return ""
 
@@ -256,7 +256,7 @@ def get_last_messages(agent=None, user_query=""):
 
         for history_type, history_file in history_files:
             try:
-                with open(history_file, "r", encoding="utf-8") as f:
+                with open(history_file, encoding="utf-8") as f:
                     lines = f.readlines()
 
                 # For bash history, only take recent lines since there are no timestamps
@@ -268,17 +268,9 @@ def get_last_messages(agent=None, user_query=""):
                     parsed = parse_history_line(line, history_type)
                     if parsed:
                         all_entries.append(parsed)
-            except Exception as e:
+            except Exception:
                 # Skip files that can't be read
                 continue
-
-        # Get distributed events if agent is available
-        if agent:
-            try:
-                get_distributed_events(agent)
-            except Exception as e:
-                # Skip distributed events if they can't be fetched
-                pass
 
         # Take the last N entries
         recent_entries = (
@@ -331,7 +323,7 @@ def store_conversation_in_kb(agent, query, result):
             knowledge_base_id=knowledge_base_id,
             record_direct_tool_call=False,
         )
-    except Exception as e:
+    except Exception:
         # Silently fail if knowledge base storage fails
         pass
 
@@ -390,11 +382,11 @@ from strands import tool
 @tool
 def calculate_tip(amount: float, percentage: float = 15.0) -> str:
     \"\"\"Calculate tip and total for a bill.
-    
+
     Args:
         amount: Bill amount in dollars
         percentage: Tip percentage (default: 15.0)
-        
+
     Returns:
         str: Formatted tip calculation result
     \"\"\"
@@ -412,12 +404,12 @@ from strands import tool
 @tool
 def weather_tool(action: str, location: str = None, **kwargs) -> Dict[str, Any]:
     \"\"\"Comprehensive weather information tool.
-    
+
     Args:
         action: Action to perform (current, forecast, alerts)
         location: City name (required)
         **kwargs: Additional parameters
-        
+
     Returns:
         Dict containing status and response content
     \"\"\"
@@ -430,7 +422,7 @@ def weather_tool(action: str, location: str = None, **kwargs) -> Dict[str, Any]:
 ```
 
 **Response Format:**
-- Tool calls: **MAXIMUM PARALLELISM - ALWAYS** 
+- Tool calls: **MAXIMUM PARALLELISM - ALWAYS**
 - Communication: **MINIMAL WORDS**
 - Efficiency: **Speed is paramount**
 """
@@ -482,7 +474,7 @@ def append_to_shell_history(query, response):
         # Ensure secure permissions
         os.chmod(history_file, 0o600)
 
-    except Exception as e:
+    except Exception:
         # Silently fail if we can't write to history
         pass
 
@@ -538,17 +530,7 @@ def _get_all_tools() -> dict[str, Any]:
 
     try:
         # Strands tools
-        from strands_research_agent.tools import (
-            scraper,
-            tasks,
-            use_github,
-            store_in_kb,
-            system_prompt,
-            notify,
-        )
-
         from strands_tools import (
-            python_repl,
             calculator,
             current_time,
             editor,
@@ -558,16 +540,26 @@ def _get_all_tools() -> dict[str, Any]:
             http_request,
             image_reader,
             journal,
-            mcp_client,
             load_tool,
+            mcp_client,
+            python_repl,
             retrieve,
             shell,
             stop,
             swarm,
             think,
+            use_agent,
             use_aws,
             workflow,
-            use_agent,
+        )
+
+        from strands_research_agent.tools import (
+            notify,
+            scraper,
+            store_in_kb,
+            system_prompt,
+            tasks,
+            use_github,
         )
 
         tools = {
@@ -694,11 +686,13 @@ def create_agent(model_provider="bedrock"):
         print(f"⚠️  Warning: Could not load MCP tools: {e}")
         mcp_tools = []
 
-    # Create session manager with daily session ID
-    today = datetime.datetime.now().strftime("%Y-%m-%d")
+    # Create session manager with hourly session ID
+    today = datetime.datetime.now().strftime("%Y-%m-%d-%H")
     session_id = f"research-{today}"
 
-    session_manager = FileSessionManager(session_id=session_id)
+    session_manager = FileSessionManager(
+        session_id=session_id, storage_dir=Path.cwd() / "sessions"
+    )
 
     # Create the agent with combined tools and session manager
     agent = Agent(
@@ -728,11 +722,13 @@ def parse_args():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  research                              # Interactive mode
-  research hello world                  # Single query mode
-  research "what can you do"            # Single query with quotes
-  research "hello world" --interactive  # Query then stay interactive
-  research --version                    # Show version information
+  research-agent                                    # Interactive mode
+  research-agent hello world                        # Single query mode
+  research-agent "what can you do"                  # Single query with quotes
+  research-agent "hello world" --interactive        # Query then stay interactive
+  echo "analyze this data" | research-agent         # Piped input
+  INPUT_TASK="search papers" research-agent        # Environment variable
+  echo "task1" | INPUT_TASK="task2" research "task3"  # Multi-input (all 3 methods)
         """,
     )
 
@@ -777,26 +773,77 @@ def main():
         # Construct and set the system prompt
         agent.system_prompt = construct_system_prompt(recent_context)
 
-        # Check if query provided as arguments
-        if args.query:
-            # Single query mode - join all arguments as the query
-            query = " ".join(args.query)
-            print(f"\n# {query}")
+        # Multi-input task collection (similar to strands-action)
+        tasks = {}
+        has_piped_input = False
 
+        # Priority 1: Check for piped input (stdin) - HIGHEST PRIORITY
+        if not sys.stdin.isatty():
             try:
-                result = agent(query)
-                append_to_shell_history(query, result)
-                # Store conversation in knowledge base if available
-                store_conversation_in_kb(agent, query, result)
-            except Exception as e:
-                print(f"❌ Error: {e}")
-                sys.exit(1)
+                pipe_task = sys.stdin.read().strip()
+                if pipe_task:
+                    tasks["pipe"] = pipe_task
+                    has_piped_input = True
+            except Exception:
+                # Handle case where stdin is closed or unavailable
+                pass
+
+        # Priority 2: Check command line arguments
+        if args.query:
+            cmd_task = " ".join(args.query)
+            if cmd_task:
+                tasks["command_line"] = cmd_task
+
+        # Priority 3: Environment variable INPUT_TASK (not TASK to avoid conflicts)
+        env_task = os.getenv("INPUT_TASK")
+        if env_task:
+            tasks["environment"] = env_task
+
+        # Execute collected tasks
+        if tasks:
+            task_list = list(tasks.values())
+            print(f"🚀 Found {len(task_list)} task(s) to execute:")
+            for source, task in tasks.items():
+                print(f"  - {source}: {task[:50]}{'...' if len(task) > 50 else ''}")
+            print()
+
+            # Process each task
+            for i, task in enumerate(task_list, 1):
+                print(f"\n# Task {i}/{len(task_list)}: {task}")
+
+                try:
+                    # Get updated context for each task
+                    recent_context = get_last_messages(agent, task)
+                    agent.system_prompt = construct_system_prompt(recent_context, task)
+
+                    result = agent(task)
+                    append_to_shell_history(task, result)
+                    store_conversation_in_kb(agent, task, result)
+                except Exception as e:
+                    print(f"❌ Error: {e}")
+                    if not args.interactive:
+                        sys.exit(1)
 
             # If --interactive flag is set, continue to interactive mode
             if not args.interactive:
                 return
 
+            # If we had piped input, we need to reset stdin for interactive mode
+            if has_piped_input:
+                # Reopen stdin to the terminal
+                try:
+                    sys.stdin = open("/dev/tty")
+                except Exception:
+                    print(
+                        "⚠️  Cannot enter interactive mode after piped input on this system."
+                    )
+                    return
+
         print("💡 Type 'exit', 'quit', or 'bye' to quit, or Ctrl+C")
+
+        # Check if we can run interactive mode
+        if has_piped_input and not sys.stdin.isatty():
+            print("⚠️  Interactive mode may not work properly with piped input.")
 
         # Set up prompt_toolkit with history in secure temp directory
         history_file = get_shell_history_file()
