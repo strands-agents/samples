@@ -81,10 +81,6 @@ aws configure
 
 For non-AWS setups:
 ```bash
-# Use OpenAI instead
-export MODEL_PROVIDER="openai" 
-export OPENAI_API_KEY="your_key_here"
-
 # Use local Ollama models
 export MODEL_PROVIDER="ollama"
 # (requires ollama installed locally)
