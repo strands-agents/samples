@@ -87,9 +87,7 @@ builder.set_entry_point("planner")
 │   ├── reWoo_singleTurn.ipynb      # REWOO pattern
 │   ├── reWoo-reAct_singleTurn.ipynb # Hybrid pattern
 │   ├── reflexion-singleTurn.ipynb  # Reflexion pattern
-│   ├── modifyToolsStrands.py       # Tool conversion script
-│   ├── createGT.py                 # Ground truth generator
-|   ├── requirements.txt
+│   ├── requirements.txt
 |
 │── helpers/
 │   ├── rewoo_helper_funcs.py      
@@ -104,122 +102,6 @@ builder.set_entry_point("planner")
 * Python 3.8 or higher
 * pip (Python package installer)
 
-
-## Setup Instructions for Taubench Dataset
-
-### Step 0: Create Python Virtual Environment
-```bash
-# Create a virtual environment
-python -m venv strands-env
-
-# Activate the virtual environment
-# On macOS/Linux:
-source strands-env/bin/activate
-# On Windows:
-strands-env\Scripts\activate
-
-# Upgrade pip
-pip install --upgrade pip
-
-# Install project dependencies
-pip install -r src/requirements.txt
-
-Note: Using a virtual environment isolates project dependencies from your system Python, preventing version conflicts and ensuring reproducible installations across different machines.
-```
-
-
-### Step 1: Clone the Custom Orchestration Repository
-```bash
-# Clone the custom orchestration repository and navigate to custom orchestration folder
-git clone https://github.com/strands-samples.git
-cd ./02-samples/14-custom-orchestration-airline-assistant
-```
-
-### Step 2: Clone the Taubench and Mabench Repository
-```bash
-# Clone the taubench repository
-git clone https://github.com/sierra-research/tau-bench.git
-git clone https://github.com/hinthornw/mabench.git
-```
-
-### Step 3: Create Directory in Custom Orchestration Repository
-```bash
-# Navigate back to the custom orchestration repo
-mkdir -p data/tau-bench
-mkdir -p data/ma-bench
-```
-
-### Step 4: Copy Taubench and Mabench Content (Excluding Git Files)
-```bash
-# Copy all non-git related files to our repository
-# Make sure to exclude .git, .github, .gitignore, etc.
-rsync -av --exclude='.git*' --exclude='.github' tau-bench/ data/tau-bench/
-rsync -av --exclude='.git*' --exclude='.github' mabench/ data/ma-bench/
-```
-
-### Step 5: Delete Taubench and Mabench Content (Excluding Git Files)
-```bash
-# Copy all non-git related files to our repository
-# Make sure to exclude .git, .github, .gitignore, etc.
-rm -rf tau-bench
-rm -rf mabench
-```
-
-### Step 5: Install from source
-```bash
-# Install in development mode
-pip install -e data/tau-bench
-```
-
-## Running Tools Modification Script
-
-To prepare tool files for use with the Strands framework, you need to run the modifyToolsStrands.py script which adds the necessary imports, decorators, and data loading code:
-
-```bash
-# Navigate to the src directory
-cd src
-
-# Run the script for the airline domain (default)
-python modifyToolsStrands.py
-
-# Or run for a different domain if needed
-python modifyToolsStrands.py [domain_name]
-```
-
-This script will:
-1. Add `from strands import tool` import if not present
-2. Add `from mabench.environments.airline.data import load_data` import if needed
-3. Add `@tool` decorator to tool functions if not present
-4. Replace `data = get_data()` calls with `data = load_data()`
-
-## Creating Ground Truth Data
-
-To generate ground truth data for the airline tasks, you can run the createGT_airline.py script:
-
-```bash
-# Navigate to the src directory
-cd src
-
-# Run the script to generate ground truth data
-python createGT_airline.py
-```
-
-This script:
-1. Converts task instructions into natural language questions using the Claude model via AWS Bedrock
-2. Generates appropriate tool outputs for each action in the tasks
-3. Saves the updated tasks with questions and action results to `tasks_singleturn.json`
-
-Note: This script requires AWS credentials with access to Bedrock. Make sure your AWS credentials are properly configured before running this script.
-
-After all the above steps to setup the dataset and GT, you must replace the following files in mabench (./data/ma-bench/mabench/environments/airline/tools/) with the files in ./mabench_tool_replacements
-
-**search_direct_flight.py**
-Original returns: json.dumps(results)
-Replacement returns: json.dumps({'flights':results})
-
-**search_onestop_flight.py**
-Original returns: json.dumps(results)
-Replacement returns: json.dumps({'flights':results})
 
 ## How to Run
 
