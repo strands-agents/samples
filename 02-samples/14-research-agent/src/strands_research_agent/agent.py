@@ -102,7 +102,6 @@ def extract_commands_from_history():
                 if not line:
                     continue
 
-
                 if history_type == "research":
                     # Extract research commands
                     if "# research:" in line:
@@ -722,27 +721,19 @@ def parse_args():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  research-agent                                    # Interactive mode
+  research-agent                                    # Interactive mode (default)
   research-agent hello world                        # Single query mode
   research-agent "what can you do"                  # Single query with quotes
-  research-agent "hello world" --interactive        # Query then stay interactive
   echo "analyze this data" | research-agent         # Piped input
   INPUT_TASK="search papers" research-agent        # Environment variable
-  echo "task1" | INPUT_TASK="task2" research "task3"  # Multi-input (all 3 methods)
+  echo "task1" | INPUT_TASK="task2" research "task3"  # Multi-input
         """,
     )
 
     parser.add_argument(
         "query",
         nargs="*",
-        help="Query to ask the agent (if provided, runs once and exits unless --interactive is used)",
-    )
-
-    parser.add_argument(
-        "--interactive",
-        "-i",
-        action="store_true",
-        help="Keep the conversation active after processing the initial query (useful in tmux)",
+        help="Query to ask the agent (if provided, runs once and exits)",
     )
 
     parser.add_argument(
@@ -775,7 +766,6 @@ def main():
 
         # Multi-input task collection (similar to strands-action)
         tasks = {}
-        has_piped_input = False
 
         # Priority 1: Check for piped input (stdin) - HIGHEST PRIORITY
         if not sys.stdin.isatty():
@@ -783,7 +773,6 @@ def main():
                 pipe_task = sys.stdin.read().strip()
                 if pipe_task:
                     tasks["pipe"] = pipe_task
-                    has_piped_input = True
             except Exception:
                 # Handle case where stdin is closed or unavailable
                 pass
@@ -799,7 +788,7 @@ def main():
         if env_task:
             tasks["environment"] = env_task
 
-        # Execute collected tasks
+        # Execute collected tasks if any
         if tasks:
             task_list = list(tasks.values())
             print(f"🚀 Found {len(task_list)} task(s) to execute:")
@@ -821,31 +810,11 @@ def main():
                     store_conversation_in_kb(agent, task, result)
                 except Exception as e:
                     print(f"❌ Error: {e}")
-                    if not args.interactive:
-                        sys.exit(1)
-
-            # If --interactive flag is set, continue to interactive mode
-            if not args.interactive:
-                return
-
-            # If we had piped input, we need to reset stdin for interactive mode
-            if has_piped_input:
-                # Reopen stdin to the terminal
-                try:
-                    sys.stdin = open("/dev/tty")
-                except Exception:
-                    print(
-                        "⚠️  Cannot enter interactive mode after piped input on this system."
-                    )
-                    return
+                    continue
 
         print("💡 Type 'exit', 'quit', or 'bye' to quit, or Ctrl+C")
 
-        # Check if we can run interactive mode
-        if has_piped_input and not sys.stdin.isatty():
-            print("⚠️  Interactive mode may not work properly with piped input.")
-
-        # Set up prompt_toolkit with history in secure temp directory
+        # Set up prompt_toolkit with history
         history_file = get_shell_history_file()
         history = FileHistory(history_file)
 

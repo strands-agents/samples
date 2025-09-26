@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "strands-research-agent"
-version = "0.1.3"
+version = "0.1.5"
 description = "Sample Research Agent powered by Strands Agents SDK"
 readme = "README.md"
 license = {text = "MIT"}
