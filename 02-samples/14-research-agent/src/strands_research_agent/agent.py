@@ -7,14 +7,11 @@ import os
 import sys
 import datetime
 import json
-import tempfile
-import atexit
-import shutil
 from typing import Any
-import uuid
 from pathlib import Path
 
 from strands import Agent
+from strands.session.file_session_manager import FileSessionManager
 from strands.tools.mcp import MCPClient
 from mcp import stdio_client, StdioServerParameters
 from strands.telemetry import StrandsTelemetry
@@ -29,56 +26,11 @@ hostname = socket.gethostname()
 timestamp = str(int(time.time()))
 instance_id = f"research-agent-{hostname}-{timestamp[-6:]}"
 
-# Global secure temp directory - will be cleaned up on exit
-_secure_temp_dir = None
-
-
-def get_secure_temp_dir():
-    """Get or create a secure temporary directory with proper permissions."""
-    global _secure_temp_dir
-
-    if _secure_temp_dir is None:
-        # Create secure temporary directory with restrictive permissions (700)
-        _secure_temp_dir = tempfile.mkdtemp(prefix="research_agent_", suffix="_secure")
-
-        # Ensure only the current user can access it
-        os.chmod(_secure_temp_dir, 0o700)
-
-        # Register cleanup function to run on exit
-        atexit.register(cleanup_temp_dir)
-
-    return _secure_temp_dir
-
-
-def cleanup_temp_dir():
-    """Clean up the secure temporary directory on exit."""
-    global _secure_temp_dir
-
-    if _secure_temp_dir and os.path.exists(_secure_temp_dir):
-        try:
-            shutil.rmtree(_secure_temp_dir)
-        except Exception as e:
-            print(
-                f"Warning: Could not clean up temporary directory {_secure_temp_dir}: {e}"
-            )
-
-
-def get_secure_research_dir():
-    """Get secure research directory path within the temp directory."""
-    secure_temp = get_secure_temp_dir()
-    research_dir = Path(secure_temp) / ".research"
-
-    # Create with secure permissions if it doesn't exist
-    research_dir.mkdir(mode=0o700, exist_ok=True)
-
-    return research_dir
-
 
 def read_prompt_file():
-    """Read system prompt text from .prompt file if it exists (repo or secure temp/.prompt)."""
+    """Read system prompt text from .prompt file if it exists."""
     prompt_paths = [
         Path(".prompt"),
-        get_secure_research_dir() / ".prompt",
         Path("README.md"),
     ]
     for path in prompt_paths:
@@ -92,9 +44,8 @@ def read_prompt_file():
 
 
 def get_shell_history_file():
-    """Get the research-specific history file path in secure temp directory."""
-    secure_temp = get_secure_temp_dir()
-    research_history = Path(secure_temp) / ".research_history"
+    """Get the research-specific history file path."""
+    research_history = Path.home() / ".research_history"
 
     # Create with secure permissions if it doesn't exist
     if not research_history.exists():
@@ -259,146 +210,6 @@ def parse_history_line(line, history_type):
     return None
 
 
-def get_distributed_events(agent):
-    """Get recent distributed events using the event_bridge tool."""
-    try:
-        # Check if event_bridge tool is available
-        if not hasattr(agent.tool, "event_bridge"):
-            return
-
-        # Get distributed event count from environment variable, default to 25
-        event_count = int(os.getenv("RESEARCH_DISTRIBUTED_EVENT_COUNT", "25"))
-
-        # Subscribe to distributed events using the event_bridge tool
-        agent.tool.event_bridge(action="subscribe", limit=event_count)
-
-    except Exception as e:
-        # Silently fail if distributed events can't be fetched
-        return
-
-
-def publish_conversation_turn(agent, query, response, event_type="conversation_turn"):
-    """Publish a conversation turn to the distributed event bridge."""
-    message_count = int(os.getenv("RESEARCH_LAST_MESSAGE_COUNT", "200"))
-
-    try:
-        # Check if event_bridge tool is available
-        if not hasattr(agent.tool, "event_bridge"):
-            return
-
-        # Create a summary of the conversation turn
-        response_summary = (
-            str(response).replace("\n", " ")[:message_count] + "..."
-            if len(str(response)) > message_count
-            else str(response)
-        )
-
-        message = f"Q: {query}\nA: {response_summary}"
-
-        # Publish the event using the event_bridge tool
-        agent.tool.event_bridge(
-            action="publish",
-            message=message,
-            event_type=event_type,
-            record_direct_tool_call=False,
-        )
-
-    except Exception as e:
-        # Silently fail if event publishing fails
-        pass
-
-
-def get_messages_dir():
-    """Get the research messages directory path in secure temp directory."""
-    messages_dir = get_secure_research_dir()
-    return messages_dir
-
-
-def get_session_file():
-    """Get or create session file path in secure temp directory."""
-    messages_dir = get_messages_dir()
-
-    # Generate session ID based on date and UUID
-    today = datetime.datetime.now().strftime("%Y-%m-%d")
-    session_id = str(uuid.uuid4())[:8]  # Short UUID
-
-    session_file = messages_dir / f"{today}-{session_id}.json"
-    return str(session_file)
-
-
-def save_agent_messages(agent, session_file):
-    """Save agent.messages to JSON file with secure permissions."""
-    try:
-        # Convert messages to serializable format
-        messages_data = {
-            "timestamp": datetime.datetime.now().isoformat(),
-            "messages": [],
-        }
-
-        # Handle different message formats
-        for msg in agent.messages:
-            if hasattr(msg, "to_dict"):
-                # If message has to_dict method
-                messages_data["messages"].append(msg.to_dict())
-            elif hasattr(msg, "__dict__"):
-                # If message is an object with attributes
-                msg_dict = {}
-                for key, value in msg.__dict__.items():
-                    try:
-                        # Try to serialize the value
-                        json.dumps(value)
-                        msg_dict[key] = value
-                    except (TypeError, ValueError):
-                        # If not serializable, convert to string
-                        msg_dict[key] = str(value)
-                messages_data["messages"].append(msg_dict)
-            else:
-                # Fallback: convert to string
-                messages_data["messages"].append(str(msg))
-
-        # Write to file with secure permissions
-        with open(session_file, "w", encoding="utf-8") as f:
-            json.dump(messages_data, f, indent=2, ensure_ascii=False)
-
-        # Ensure secure permissions
-        os.chmod(session_file, 0o600)
-
-    except Exception as e:
-        # Silently fail if we can't save messages
-        print(f"⚠️  Warning: Could not save messages: {e}")
-
-
-def get_sqlite_memory_context(agent, user_query):
-    """Get relevant context from SQLite memory based on user query."""
-    try:
-        if not hasattr(agent.tool, "sqlite_memory"):
-            return ""
-
-        # Search for relevant memories using full-text search
-        result = agent.tool.sqlite_memory(
-            action="search",
-            query=user_query,
-            search_type="fulltext",
-            limit=5,
-            record_direct_tool_call=False,
-        )
-
-        if "No memories found" in str(result):
-            return ""
-
-        # Extract and format context from memories
-        context = "\n\n## 🧠 Relevant Memory Context:\n"
-        context += (
-            "Based on your query, here are relevant past conversations and knowledge:\n"
-        )
-        context += str(result) + "\n"
-
-        return context
-    except Exception as e:
-        # Silently fail if memory search fails
-        return ""
-
-
 def get_retrieve_context(agent, user_query):
     """Get relevant context from Bedrock Knowledge Base using retrieve tool."""
     try:
@@ -433,7 +244,7 @@ def get_retrieve_context(agent, user_query):
 
 
 def get_last_messages(agent=None, user_query=""):
-    """Get the last N messages from multiple shell histories, distributed events, and SQLite memory for context."""
+    """Get the last N messages from multiple shell histories, distributed events for context."""
     try:
         # Get message count from environment variable, default to 200
         message_count = int(os.getenv("RESEARCH_LAST_MESSAGE_COUNT", "200"))
@@ -484,11 +295,7 @@ def get_last_messages(agent=None, user_query=""):
             for speaker, timestamp, content in recent_entries:
                 context += f"[{timestamp}] {speaker}: {content}\n"
 
-        # Add SQLite memory context if user query is provided
         if agent and user_query:
-            memory_context = get_sqlite_memory_context(agent, user_query)
-            context += memory_context
-
             # Add retrieve context from knowledge base if available
             retrieve_context = get_retrieve_context(agent, user_query)
             context += retrieve_context
@@ -497,38 +304,6 @@ def get_last_messages(agent=None, user_query=""):
 
     except Exception:
         return ""
-
-
-def store_conversation_in_sqlite_memory(agent, query, result):
-    """Store conversation turn in SQLite memory for future retrieval."""
-    try:
-        if not hasattr(agent.tool, "sqlite_memory"):
-            return
-
-        # Create conversation content by combining user input and agent result
-        conversation_content = f"User Query: {query}\n\nAgent Response: {str(result)}"
-
-        # Create title with research prefix, current date, and user query (truncated)
-        query_preview = query[:50] + "..." if len(query) > 50 else query
-        conversation_title = f"Research Conversation: {datetime.datetime.now().strftime('%Y-%m-%d')} | {query_preview}"
-
-        # Store in SQLite memory with relevant tags
-        agent.tool.sqlite_memory(
-            action="store",
-            content=conversation_content,
-            title=conversation_title,
-            tags=["conversation", "research", "user_interaction"],
-            metadata={
-                "query_length": len(query),
-                "response_length": len(str(result)),
-                "timestamp": datetime.datetime.now().isoformat(),
-                "session_id": instance_id,
-            },
-            record_direct_tool_call=False,
-        )
-    except Exception as e:
-        # Silently fail if storage fails
-        pass
 
 
 def store_conversation_in_kb(agent, query, result):
@@ -561,8 +336,129 @@ def store_conversation_in_kb(agent, query, result):
         pass
 
 
+def construct_system_prompt(recent_context="", user_query=""):
+    """Construct the system prompt with all necessary components.
+
+    Args:
+        recent_context: Recent conversation context string
+        user_query: Current user query for context (optional)
+
+    Returns:
+        str: Complete system prompt
+    """
+    # Enhanced system prompt with history context and self-modification instructions
+    base_prompt = "i'm research. minimalist agent. welcome to chat."
+
+    # Read .prompt or secure temp/.prompt if present
+    prompt_file_content, prompt_file_path = read_prompt_file()
+    if prompt_file_content and prompt_file_path:
+        prompt_file_note = f"\n\n[Loaded system prompt from: {prompt_file_path}]\n{prompt_file_content}\n"
+    else:
+        prompt_file_note = ""
+
+    # Runtime and Environment Information
+    runtime_info = f"""
+
+## 🚀 Runtime Environment:
+- **Current Directory:** {Path.cwd()}
+- **Python Version:** {sys.version.split()[0]}
+- **Platform:** {os.name} ({sys.platform})
+- **User:** {os.getenv('USER', 'unknown')}
+- **Hostname:** {socket.gethostname()}
+- **Session ID:** {instance_id}
+- **Timestamp:** {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+- **Context awareness** - Agent has access to historical conversations and knowledge
+
+**Note:** Tool availability depends on RESEARCH_STRANDS_TOOLS environment variable. Current filter: {os.getenv('RESEARCH_STRANDS_TOOLS', 'ALL')}
+
+## Tool Creation & Hot Reload System:
+### **CRITICAL: You have FULL tool creation capabilities enabled!**
+
+**🔧 Hot Reload System Active:**
+- **Instant Tool Creation** - Save any .py file in `./tools/` and it becomes immediately available
+- **No Restart Needed** - Tools are auto-loaded and ready to use instantly
+- **Live Development** - Modify existing tools while running and test immediately
+- **Full Python Access** - Create any Python functionality as a tool
+
+**🛠️ Tool Creation Patterns:**
+
+### **1. Simple @tool Decorator (Recommended):**
+```python
+# ./tools/my_tool.py
+from strands import tool
+
+@tool
+def calculate_tip(amount: float, percentage: float = 15.0) -> str:
+    \"\"\"Calculate tip and total for a bill.
+    
+    Args:
+        amount: Bill amount in dollars
+        percentage: Tip percentage (default: 15.0)
+        
+    Returns:
+        str: Formatted tip calculation result
+    \"\"\"
+    tip = amount * (percentage / 100)
+    total = amount + tip
+    return f"Tip: tip:.2f, Total: total:.2f"
+```
+
+### **2. Advanced Action-Based Pattern:**
+```python
+# ./tools/weather.py
+from typing import Dict, Any
+from strands import tool
+
+@tool
+def weather_tool(action: str, location: str = None, **kwargs) -> Dict[str, Any]:
+    \"\"\"Comprehensive weather information tool.
+    
+    Args:
+        action: Action to perform (current, forecast, alerts)
+        location: City name (required)
+        **kwargs: Additional parameters
+        
+    Returns:
+        Dict containing status and response content
+    \"\"\"
+    if action == "current":
+        return "status": "success", "content": "text": f"Weather for location"
+    elif action == "forecast":
+        return "status": "success", "content": "text": f"Forecast for location"
+    else:
+        return "status": "error", "content": "text": f"Unknown action: action"
+```
+
+**Response Format:**
+- Tool calls: **MAXIMUM PARALLELISM - ALWAYS** 
+- Communication: **MINIMAL WORDS**
+- Efficiency: **Speed is paramount**
+"""
+
+    self_modify_note = (
+        "\n\nNote: The system prompt for research is built from your base instructions, "
+        "conversation history, and the .prompt file (in this directory or secure temp/.prompt). "
+        "You can modify the system prompt in multiple ways:\n"
+        "1. **Edit .prompt file** - Create/modify .prompt in current directory or secure temp/.prompt\n"
+        "2. **SYSTEM_PROMPT environment variable** - Set SYSTEM_PROMPT env var to extend the system prompt\n"
+        "3. **Environment tool** - Use environment(action='set', name='SYSTEM_PROMPT', value='additional text')\n"
+        "4. **Runtime modification** - The SYSTEM_PROMPT env var is appended to every system prompt automatically"
+    )
+
+    system_prompt = (
+        base_prompt
+        + recent_context
+        + prompt_file_note
+        + runtime_info
+        + self_modify_note
+        + os.getenv("SYSTEM_PROMPT", ".")
+    )
+
+    return system_prompt
+
+
 def append_to_shell_history(query, response):
-    """Append the interaction to research shell history in secure temp directory."""
+    """Append the interaction to research shell history."""
     try:
         history_file = get_shell_history_file()
 
@@ -643,17 +539,9 @@ def _get_all_tools() -> dict[str, Any]:
     try:
         # Strands tools
         from strands_research_agent.tools import (
-            event_bridge,
-            tcp,
             scraper,
             tasks,
-            dialog,
-            graphql,
             use_github,
-            fetch_github_tool,
-            s3_memory,
-            listen,
-            sqlite_memory,
             store_in_kb,
             system_prompt,
             notify,
@@ -667,18 +555,12 @@ def _get_all_tools() -> dict[str, Any]:
             environment,
             file_read,
             file_write,
-            generate_image,
             http_request,
             image_reader,
             journal,
-            diagram,
             mcp_client,
             load_tool,
-            memory,
-            nova_reels,
             retrieve,
-            slack,
-            speak,
             shell,
             stop,
             swarm,
@@ -689,20 +571,14 @@ def _get_all_tools() -> dict[str, Any]:
         )
 
         tools = {
-            "listen": listen,
             "notify": notify,
             "store_in_kb": store_in_kb,
-            "graphql": graphql,
             "use_github": use_github,
-            "fetch_github_tool": fetch_github_tool,
-            "event_bridge": event_bridge,
-            "tcp": tcp,
             "use_agent": use_agent,
             "shell": shell,
             "scraper": scraper,
             "tasks": tasks,
             "environment": environment,
-            "dialog": dialog,
             "mcp_client": mcp_client,
             "python_repl": python_repl,
             "calculator": calculator,
@@ -710,20 +586,12 @@ def _get_all_tools() -> dict[str, Any]:
             "editor": editor,
             "file_read": file_read,
             "file_write": file_write,
-            "generate_image": generate_image,
             "http_request": http_request,
             "image_reader": image_reader,
             "journal": journal,
-            "diagram": diagram,
             "load_tool": load_tool,
             "system_prompt": system_prompt,
-            "s3_memory": s3_memory,
-            "sqlite_memory": sqlite_memory,
-            "memory": memory,
-            "nova_reels": nova_reels,
             "retrieve": retrieve,
-            "slack": slack,
-            "speak": speak,
             "stop": stop,
             "swarm": swarm,
             "think": think,
@@ -795,7 +663,7 @@ def _filter_tools(all_tools: dict[str, Any]) -> dict[str, Any]:
 
 def create_agent(model_provider="bedrock"):
     """
-    Create a Strands Agent with MCP integration.
+    Create a Strands Agent with MCP integration and file session persistence.
 
     Args:
         model_provider: Model provider, default bedrock (default: sonnet-4)
@@ -826,12 +694,19 @@ def create_agent(model_provider="bedrock"):
         print(f"⚠️  Warning: Could not load MCP tools: {e}")
         mcp_tools = []
 
-    # Create the agent with combined tools
+    # Create session manager with daily session ID
+    today = datetime.datetime.now().strftime("%Y-%m-%d")
+    session_id = f"research-{today}"
+
+    session_manager = FileSessionManager(session_id=session_id)
+
+    # Create the agent with combined tools and session manager
     agent = Agent(
         model=model,
         tools=list(tools.values()) + mcp_tools,
         callback_handler=callback_handler,
         load_tools_from_directory=True,
+        session_manager=session_manager,
         trace_attributes={
             "session.id": instance_id,
             "user.id": "strands-agent@users.noreply.github.com",
@@ -896,126 +771,11 @@ def main():
 
     # Use MCP client context manager to keep MCP tools alive
     with mcp_client:
-        # Get recent conversation context (including distributed events and SQLite memory)
+        # Get recent conversation context (including distributed events)
         recent_context = get_last_messages(agent)
 
-        # Enhanced system prompt with history context and self-modification instructions
-        base_prompt = "i'm research agent. minimalist agent. welcome to chat."
-        # Read .prompt or secure temp/.prompt if present
-        prompt_file_content, prompt_file_path = read_prompt_file()
-        if prompt_file_content and prompt_file_path:
-            prompt_file_note = f"\n\n[Loaded system prompt from: {prompt_file_path}]\n{prompt_file_content}\n"
-        else:
-            prompt_file_note = ""
-
-        # Runtime and Environment Information
-        runtime_info = f"""
-
-## 🚀 Runtime Environment:
-- **Current Directory:** {Path.cwd()}
-- **Python Version:** {sys.version.split()[0]}
-- **Platform:** {os.name} ({sys.platform})
-- **User:** {os.getenv('USER', 'unknown')}
-- **Hostname:** {socket.gethostname()}
-- **Session ID:** {instance_id}
-- **Timestamp:** {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-- **Secure Temp Directory:** {get_secure_temp_dir()}
-
-## 📚 Knowledge Base Integration:
-- **Dual storage** - Conversations stored in both SQLite memory and knowledge base
-- **Context awareness** - Agent has access to historical conversations and knowledge
-
-**Note:** Tool availability depends on RESEARCH_STRANDS_TOOLS environment variable. Current filter: {os.getenv('RESEARCH_STRANDS_TOOLS', 'ALL')}
-
-## Tool Creation & Hot Reload System:
-### **CRITICAL: You have FULL tool creation capabilities enabled!**
-
-**🔧 Hot Reload System Active:**
-- **Instant Tool Creation** - Save any .py file in `./tools/` and it becomes immediately available
-- **No Restart Needed** - Tools are auto-loaded and ready to use instantly
-- **Live Development** - Modify existing tools while running and test immediately
-- **Full Python Access** - Create any Python functionality as a tool
-
-**🛠️ Tool Creation Patterns:**
-
-### **1. Simple @tool Decorator (Recommended):**
-```python
-# ./tools/my_tool.py
-from strands import tool
-
-@tool
-def calculate_tip(amount: float, percentage: float = 15.0) -> str:
-    \"\"\"Calculate tip and total for a bill.
-    
-    Args:
-        amount: Bill amount in dollars
-        percentage: Tip percentage (default: 15.0)
-        
-    Returns:
-        str: Formatted tip calculation result
-    \"\"\"
-    tip = amount * (percentage / 100)
-    total = amount + tip
-    return f"Tip: tip:.2f, Total: total:.2f"
-```
-
-### **2. Advanced Action-Based Pattern:**
-```python
-# ./tools/weather.py
-from typing import Dict, Any
-from strands import tool
-
-@tool
-def weather_tool(action: str, location: str = None, **kwargs) -> Dict[str, Any]:
-    \"\"\"Comprehensive weather information tool.
-    
-    Args:
-        action: Action to perform (current, forecast, alerts)
-        location: City name (required)
-        **kwargs: Additional parameters
-        
-    Returns:
-        Dict containing status and response content
-    \"\"\"
-    if action == "current":
-        return "status": "success", "content": "text": f"Weather for location"
-    elif action == "forecast":
-        return "status": "success", "content": "text": f"Forecast for location"
-    else:
-        return "status": "error", "content": "text": f"Unknown action: action"
-```
-
-**Response Format:**
-- Tool calls: **MAXIMUM PARALLELISM - ALWAYS** 
-- Communication: **MINIMAL WORDS**
-- Efficiency: **Speed is paramount**
-"""
-        self_modify_note = (
-            "\n\nNote: The system prompt for research is built from your base instructions, "
-            "conversation history, and the .prompt file (in this directory or secure temp/.prompt). "
-            "You can modify the system prompt in multiple ways:\n"
-            "1. **Edit .prompt file** - Create/modify .prompt in current directory or secure temp/.prompt\n"
-            "2. **SYSTEM_PROMPT environment variable** - Set SYSTEM_PROMPT env var to extend the system prompt\n"
-            "3. **Environment tool** - Use environment(action='set', name='SYSTEM_PROMPT', value='additional text')\n"
-            "4. **Runtime modification** - The SYSTEM_PROMPT env var is appended to every system prompt automatically"
-        )
-
-        system_prompt = (
-            base_prompt
-            + recent_context
-            + prompt_file_note
-            + runtime_info
-            + self_modify_note
-            # add own codebase fs read here - should work even in package shared and downloaded over pypi or pipx
-            + os.getenv("SYSTEM_PROMPT", ".")
-        )
-
-        # Set system prompt
-        agent.system_prompt = system_prompt
-
-        # Get session file for storing messages
-        session_file = get_session_file()
-        print(f"📝 Session messages will be saved to: {session_file}")
+        # Construct and set the system prompt
+        agent.system_prompt = construct_system_prompt(recent_context)
 
         # Check if query provided as arguments
         if args.query:
@@ -1026,14 +786,8 @@ def weather_tool(action: str, location: str = None, **kwargs) -> Dict[str, Any]:
             try:
                 result = agent(query)
                 append_to_shell_history(query, result)
-                save_agent_messages(agent, session_file)
-                # Store conversation in SQLite memory for future context retrieval
-                store_conversation_in_sqlite_memory(agent, query, result)
                 # Store conversation in knowledge base if available
                 store_conversation_in_kb(agent, query, result)
-                # Store conversation in knowledge base if kb exists and store_in_kb exists
-                # Publish conversation turn to distributed event bridge
-                publish_conversation_turn(agent, query, result)
             except Exception as e:
                 print(f"❌ Error: {e}")
                 sys.exit(1)
@@ -1073,17 +827,8 @@ def weather_tool(action: str, location: str = None, **kwargs) -> Dict[str, Any]:
                     try:
                         result = agent.tool.shell(command=shell_command, timeout=900)
                         append_to_shell_history(q, result["content"][0]["text"])
-                        save_agent_messages(agent, session_file)
-                        # Store shell command in SQLite memory for future reference
-                        store_conversation_in_sqlite_memory(
-                            agent, q, result["content"][0]["text"]
-                        )
                         # Store shell command in knowledge base if available
                         store_conversation_in_kb(agent, q, result["content"][0]["text"])
-                        # Publish shell command to distributed event bridge
-                        publish_conversation_turn(
-                            agent, q, result["content"][0]["text"], "shell_command"
-                        )
                     except Exception as e:
                         print(f"Shell command execution error: {str(e)}")
                     continue
@@ -1095,51 +840,20 @@ def weather_tool(action: str, location: str = None, **kwargs) -> Dict[str, Any]:
                 if not q.strip():
                     continue
 
-                # Get recent conversation context (including distributed events and SQLite memory)
+                # Get recent conversation context (including distributed events)
                 recent_context = get_last_messages(agent, q)
 
-                # Enhanced system prompt with history context and self-modification instructions
-                base_prompt = "i'm research. minimalist agent. welcome to chat."
-                # Read .prompt or secure temp/.prompt if present
-                prompt_file_content, prompt_file_path = read_prompt_file()
-                if prompt_file_content and prompt_file_path:
-                    prompt_file_note = f"\n\n[Loaded system prompt from: {prompt_file_path}]\n{prompt_file_content}\n"
-                else:
-                    prompt_file_note = ""
-
-                self_modify_note = (
-                    "\n\nNote: The system prompt for research is built from your base instructions, "
-                    "conversation history, and the .prompt file (in this directory or secure temp/.prompt). "
-                    "You can modify the system prompt in multiple ways:\n"
-                    "1. **Edit .prompt file** - Create/modify .prompt in current directory or secure temp/.prompt\n"
-                    "2. **SYSTEM_PROMPT environment variable** - Set SYSTEM_PROMPT env var to extend the system prompt\n"
-                    "3. **Environment tool** - Use environment(action='set', name='SYSTEM_PROMPT', value='additional text')\n"
-                    "4. **Runtime modification** - The SYSTEM_PROMPT env var is appended to every system prompt automatically"
-                )
-
-                system_prompt = (
-                    base_prompt
-                    + recent_context
-                    + prompt_file_note
-                    + runtime_info
-                    + self_modify_note
-                    + os.getenv("SYSTEM_PROMPT", ".")
-                )
-                agent.system_prompt = system_prompt
+                # Construct and set the updated system prompt
+                agent.system_prompt = construct_system_prompt(recent_context, q)
 
                 result = agent(q)
 
                 append_to_shell_history(q, result)
-                save_agent_messages(agent, session_file)
-                # Store conversation in SQLite memory for future context retrieval
-                store_conversation_in_sqlite_memory(agent, q, result)
                 # Store conversation in knowledge base if available
                 store_conversation_in_kb(agent, q, result)
-                # Publish conversation turn to distributed event bridge
-                publish_conversation_turn(agent, q, result)
 
             except KeyboardInterrupt:
-                print("\n\n👋 Goodbye!")
+                print("\n\n...\n")
                 break
             except EOFError:
                 print("\n👋 Goodbye!")

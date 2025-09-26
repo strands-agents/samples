@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "strands-research-agent"
-version = "0.1.1"
+version = "0.1.2"
 description = "Sample Research Agent powered by Strands Agents SDK"
 readme = "README.md"
 license = {text = "MIT"}
@@ -33,7 +33,6 @@ dependencies = [
     "strands-agents>=1.0.0",
     "strands-agents[otel]",
     "strands-agents-tools>=0.1.0",
-    "strands-agents-tools[diagram]",
     "requests>=2.25.0",
     "beautifulsoup4>=4.9.0",
     "colorama>=0.4.0",
@@ -57,21 +56,6 @@ llamaapi = ["strands-agents[llamaapi]"]
 litellm = ["strands-agents[litellm]"]
 mistral = ["strands-agents[mistral]"]
 
-# Audio/Speech capabilities
-audio = [
-    "openai-whisper",
-    "sounddevice",
-    "webrtcvad",
-    "soundfile",
-]
-
-# ML/AI tools
-ml = [
-    "torch>=2.0.0",
-    "torchaudio>=2.0.0",
-    "transformers>=4.40.0",
-    "numpy",
-]
 
 # Development tools
 dev = [
@@ -90,14 +74,14 @@ binary = [
 
 # All providers and features
 all = [
-    "strands-research-agent[strands,openai,anthropic,ollama,llamaapi,litellm,mistral,audio,ml]"
+    "strands-research-agent[strands,openai,anthropic,ollama,llamaapi,litellm,mistral]"
 ]
 
 [project.urls]
 Homepage = "https://github.com/strands-agents/samples"
 Repository = "https://github.com/strands-agents/samples"
 Issues = "https://github.com/strands-agents/samples/issues"
-Documentation = "https://docs.strands.ai"
+Documentation = "https://strandsagents.com"
 
 [project.scripts]
 strands-research-agent = "strands_research_agent.agent:main"

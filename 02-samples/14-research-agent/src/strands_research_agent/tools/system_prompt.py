@@ -5,10 +5,11 @@ It helps with dynamic adaptation of the agent's behavior and capabilities.
 
 Key Features:
 1. View current system prompt from any environment variable
-2. Update system prompt (in-memory)
+2. Update system prompt (in-memory and .prompt file)
 3. Add context information to system prompt
 4. Reset system prompt to default
 5. Support for custom variable names (SYSTEM_PROMPT, TOOL_BUILDER_SYSTEM_PROMPT, etc.)
+6. Simple current directory .prompt file storage (consistent with FileSessionManager)
 
 Usage Examples:
 ```python
@@ -35,100 +36,26 @@ result = agent.tool.system_prompt(
 """
 
 import os
-import tempfile
-import atexit
 from pathlib import Path
 from strands import tool
 
 
-# Global variable to store the secure temporary directory
-_secure_temp_dir = None
-
-
-def _get_secure_temp_dir() -> Path:
-    """Get or create a secure temporary directory for prompt files.
-
-    This uses tempfile.mkdtemp() to create a secure temporary directory
-    with proper permissions (0o700) that only the current user can access.
-    The directory is automatically cleaned up on program exit.
-    """
-    global _secure_temp_dir
-
-    if _secure_temp_dir is None:
-        # Create secure temporary directory with restrictive permissions
-        temp_dir_str = tempfile.mkdtemp(prefix="strands_research_", suffix="_prompts")
-        _secure_temp_dir = Path(temp_dir_str)
-
-        # Ensure only owner has access (redundant but explicit)
-        _secure_temp_dir.chmod(0o700)
-
-        # Register cleanup function to remove temp directory on exit
-        atexit.register(_cleanup_temp_dir)
-
-    return _secure_temp_dir
-
-
-def _cleanup_temp_dir():
-    """Clean up the secure temporary directory."""
-    global _secure_temp_dir
-
-    if _secure_temp_dir and _secure_temp_dir.exists():
-        try:
-            # Remove all files in the directory first
-            for file_path in _secure_temp_dir.iterdir():
-                if file_path.is_file():
-                    file_path.unlink()
-            # Remove the directory itself
-            _secure_temp_dir.rmdir()
-        except (OSError, PermissionError):
-            # If cleanup fails, it's not critical - OS will eventually clean up
-            pass
-        finally:
-            _secure_temp_dir = None
-
-
 def _get_prompt_file_path() -> Path:
-    """Get the appropriate .prompt file path.
+    """Get the .prompt file path in current directory.
 
-    Priority order:
-    1. Current directory .prompt file (if exists)
-    2. Secure temporary directory .prompt file (fallback)
-
-    This replaces the insecure /tmp/.research/ usage with secure tempfile patterns.
+    Simplified to only use current directory .prompt file for consistency
+    with FileSessionManager approach - no temp directory fallback.
     """
-    # Check current directory first (highest priority)
-    current_dir_prompt = Path(".prompt")
-    if current_dir_prompt.exists():
-        return current_dir_prompt
-
-    # Use secure temporary directory as fallback
-    secure_temp_dir = _get_secure_temp_dir()
-    research_dir_prompt = secure_temp_dir / ".prompt"
-
-    if research_dir_prompt.exists():
-        return research_dir_prompt
-
-    # Default to current directory if neither exists
-    return current_dir_prompt
+    return Path(".prompt")
 
 
 def _write_prompt_file(prompt: str) -> None:
-    """Write prompt to .prompt file using secure file creation patterns.
+    """Write prompt to .prompt file in current directory.
 
-    This function uses secure file creation to prevent race conditions
+    Uses secure file creation to prevent race conditions
     and ensures proper permissions are set.
     """
     prompt_file = _get_prompt_file_path()
-
-    # If we're writing to the secure temp directory, ensure it exists
-    if not prompt_file.parent.exists():
-        if str(prompt_file.parent).startswith(str(_get_secure_temp_dir())):
-            # This is our secure temp dir, it should already exist
-            # but create it with proper permissions if needed
-            prompt_file.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-        else:
-            # This is current directory or other location
-            prompt_file.parent.mkdir(parents=True, exist_ok=True)
 
     # Use secure file creation pattern to prevent race conditions
     try:
@@ -140,7 +67,7 @@ def _write_prompt_file(prompt: str) -> None:
             opener=lambda path, flags: os.open(path, flags, 0o600),
         ) as f:
             f.write(prompt)
-    except (OSError, PermissionError) as e:
+    except (OSError, PermissionError):
         # If secure creation fails, fall back to regular creation
         # but still try to set restrictive permissions
         try:
