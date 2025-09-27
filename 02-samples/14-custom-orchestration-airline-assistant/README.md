@@ -102,6 +102,20 @@ builder.set_entry_point("planner")
 * Python 3.8 or higher
 * pip (Python package installer)
 
+## Dataset
+
+In this tutorial, we use the **τ-Bench airline domain dataset** (https://github.com/sierra-research/tau-bench), which features:
+
+- **300+ flight entries** - Comprehensive flight database with routes, schedules, and pricing
+- **500 synthetic user profiles** - Diverse customer personas with booking histories and preferences  
+- **2,000+ pre-generated bookings** - Realistic reservation data for testing scenarios
+- **Detailed airline policies** - Complete business rules for upgrades, changes, and cancellations
+- **Simulated APIs** - Full reservation operation endpoints (book, cancel, modify, search)
+- **50 structured real-world scenarios** - Complex customer service situations requiring multi-step reasoning
+
+This comprehensive benchmark provides a controlled yet realistic testbed for assessing how agents interpret policies, execute appropriate API calls, and maintain consistency across complex airline operations including upgrades, itinerary changes, and cancellations. 
+
+**Note**: While the original dataset presents each task as a multi-turn conversation, we've simplified them into single-turn queries for this tutorial to better showcase the orchestration patterns without conversational complexity.
 
 ## How to Run
 
