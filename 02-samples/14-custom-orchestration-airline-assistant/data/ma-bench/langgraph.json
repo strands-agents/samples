@@ -1,7 +1,0 @@
-{
-  "python_version": "3.12",
-  "dependencies": ["."],
-  "graphs": {
-    "graphs": "./mabench/server/graphs.py:graphs"
-  }
-}
