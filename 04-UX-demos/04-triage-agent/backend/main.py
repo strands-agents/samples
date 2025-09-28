@@ -344,8 +344,8 @@ def load_mcp_config():
         return mcp_servers
         
     except Exception as e:
-        logger.error(f"Error loading MCP config: {e}")
-        add_server_log("system", f"Error loading MCP config: {e}")
+        logger.error(f"Error loading MCP config: {str(e)}")
+        add_server_log("system", f"Error loading MCP config: {str(e)}")
         return {}
 
 def save_mcp_config(servers_config):
@@ -372,8 +372,8 @@ def save_mcp_config(servers_config):
         add_server_log("system", "Configuration saved")
         
     except Exception as e:
-        logger.error(f"Error saving MCP config: {e}")
-        add_server_log("system", f"Error saving config: {e}")
+        logger.error(f"Error saving MCP config: {str(e)}")
+        add_server_log("system", f"Error saving config: {str(e)}")
 
 def estimate_tokens(text: str) -> int:
     """Estimate token count (rough approximation: ~4 chars per token)"""
@@ -450,24 +450,14 @@ def get_all_mcp_tools():
 # Available models with new Claude versions
 AVAILABLE_MODELS = [
     {
-        "id": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
-        "name": "Claude 3.7 Sonnet",
-        "description": "Latest version with enhanced capabilities"
-    },
-    {
-        "id": "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
-        "name": "Claude 3.5 Sonnet",
-        "description": "Advanced reasoning and analysis"
-    },
-    {
         "id": "us.anthropic.claude-sonnet-4-20250514-v1:0",
         "name": "Claude Sonnet 4",
         "description": "Most advanced Claude model with superior reasoning"
     },
     {
-        "id": "anthropic.claude-3-haiku-20240307-v1:0",
-        "name": "Claude 3 Haiku",
-        "description": "Fast and efficient responses"
+        "id": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+        "name": "Claude 3.7 Sonnet",
+        "description": "Claude model with enhanced reasoning capabilities"
     },
     {
         "id": "us.amazon.nova-pro-v1:0",
@@ -478,11 +468,6 @@ AVAILABLE_MODELS = [
         "id": "us.amazon.nova-lite-v1:0",
         "name": "Amazon Nova Lite",
         "description": "Balanced performance and cost-effectiveness"
-    },
-    {
-        "id": "us.amazon.nova-micro-v1:0",
-        "name": "Amazon Nova Micro", 
-        "description": "Lightweight model for simple tasks"
     }
 ]
 
@@ -521,7 +506,8 @@ def create_mcp_agent_tools():
                     else:
                         return f"No tools available on {server_name} server"
             except Exception as e:
-                return f"Error accessing {server_name} server: {str(e)}"
+                add_server_log("mcp", f"Error accessing {server_name} server: {str(e)}", level="error")
+                return "Error accessing MCP server"
         
         # Set the tool name dynamically
         mcp_server_tool.__name__ = f"{server_name}_tool"
@@ -564,7 +550,7 @@ and determine which tools would be most helpful to provide a complete response."
         return agent
         
     except Exception as e:
-        logger.error(f"Error creating Strands agent for {model_id}: {e}")
+        logger.error(f"Error creating Strands agent for {model_id}: {str(e)}")
         add_server_log("system", f"Agent error: {str(e)[:50]}...")
         raise
 
@@ -601,7 +587,7 @@ class ChatMessage(BaseModel):
     model_config = {"protected_namespaces": ()}
     
     message: str
-    model_id: Optional[str] = "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+    model_id: Optional[str] = "us.anthropic.claude-sonnet-4-20250514-v1:0"
     session_id: Optional[str] = "default"
     images: Optional[List[ImageData]] = None
     history: Optional[List[Dict[str, Any]]] = None
@@ -864,13 +850,13 @@ Respond with guidance followed by EXACTLY this XML format:
 
             except Exception as llm_error:
                 add_server_log("triage", f"LLM STREAM ERROR: {session_id} - {str(llm_error)}", level="error")
-                yield f"data: {json.dumps({'type': 'content', 'content': f'Error: {str(llm_error)}'})}\n\n"
+                yield f"data: {json.dumps({'type': 'content', 'content': 'An internal error occurred.'})}\n\n"
 
         yield "data: [DONE]\n\n"
 
     except Exception as e:
-        logger.error(f"Error in chat stream: {e}")
-        yield f"data: {json.dumps({'type': 'content', 'content': f'Error: {str(e)}'})}\n\n"
+        logger.error(f"Error in chat stream: {str(e)}")
+        yield f"data: {json.dumps({'type': 'content', 'content': 'An internal error occurred.'})}\n\n"
         yield "data: [DONE]\n\n"
 
 async def stream_plain_response(message: str, model_id: str):
@@ -906,7 +892,7 @@ async def stream_plain_response(message: str, model_id: str):
                 await asyncio.sleep(0.08)  # Small delay for streaming effect
                 
     except Exception as e:
-        error_msg = f"Error: {str(e)}"
+        error_msg = "An internal error occurred."
         add_server_log("system", f"Plain text streaming error: {str(e)[:50]}...")
         yield error_msg
 
@@ -981,7 +967,7 @@ async def initialize_mcp():
         return {"message": "MCP servers initialized", "status": "success"}
     except Exception as e:
         add_server_log("system", f"Initialization error: {str(e)}")
-        return {"message": f"Initialization failed: {str(e)}", "status": "error"}
+        return {"message": "Initialization failed", "status": "error"}
 
 @app.get("/mcp/tools")
 async def get_mcp_tools_endpoint():
@@ -1005,7 +991,8 @@ async def get_mcp_tools_endpoint():
             "last_updated": tools_last_updated.isoformat() if tools_last_updated else None
         }
     except Exception as e:
-        return {"error": str(e), "tools": [], "count": 0}
+        logger.error(f"Error retrieving MCP tools: {str(e)}")
+        return {"error": "Failed to retrieve MCP tools", "tools": [], "count": 0}
 
 @app.get("/agents/status")
 async def get_agents_status():
@@ -1062,7 +1049,7 @@ async def get_sessions():
     return {"sessions": sessions, "count": len(sessions)}
 
 @app.get("/sessions/{session_id}/history")
-async def get_session_history(session_id: str, model_id: str = "us.anthropic.claude-3-7-sonnet-20250219-v1:0"):
+async def get_session_history(session_id: str, model_id: str = "us.anthropic.claude-sonnet-4-20250514-v1:0"):
     """Get message history for a specific session"""
     
     # Check if the session exists in our in-memory store
@@ -1085,7 +1072,7 @@ async def get_session_history(session_id: str, model_id: str = "us.anthropic.cla
         
     except Exception as e:
         add_server_log("system", f"Error getting session history: {str(e)}")
-        return {"messages": [], "session_id": session_id, "exists": False, "error": str(e)}
+        return {"messages": [], "session_id": session_id, "exists": False, "error": "Failed to retrieve session history"}
 
 @app.post("/chat")
 async def chat_endpoint(chat_message: ChatMessage, request: Request):
@@ -1141,9 +1128,9 @@ async def chat_endpoint(chat_message: ChatMessage, request: Request):
             )
         
     except Exception as e:
-        logger.error(f"Chat endpoint error: {e}")
+        logger.error(f"Chat endpoint error: {str(e)}")
         add_server_log("system", f"Chat error: {str(e)[:50]}...")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 # Decision Tree Graph and Triage APIs
 @app.get("/api/decision-tree")
@@ -1175,7 +1162,7 @@ async def get_decision_tree():
         
     except Exception as e:
         add_server_log("triage", f"Error getting decision tree: {str(e)}", level="error")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="Failed to retrieve decision tree")
 
 @app.get("/api/triage/session/{session_id}")
 async def get_triage_session_state(session_id: str):
@@ -1238,7 +1225,7 @@ async def get_triage_session_state(session_id: str):
         
     except Exception as e:
         add_server_log("triage", f"Error getting triage session: {str(e)}", level="error")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="Failed to retrieve triage session")
 
 @app.get("/api/triage/status")
 async def get_triage_system_status():
@@ -1281,7 +1268,7 @@ async def get_triage_system_status():
         add_server_log("triage", f"Triage system error: {str(e)}", level="error")
         return {
             "status": "offline", 
-            "message": f"Triage system unavailable: {str(e)}",
+            "message": "Triage system unavailable",
             "nodes_loaded": 0,
             "tree": None
         }

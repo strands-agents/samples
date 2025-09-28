@@ -319,7 +319,10 @@ def bucket_exists(bucket_name):
         s3_client.head_bucket(Bucket=bucket_name)
         return True
     except ClientError as e:
-        if e.response["Error"]["Code"] == "404":
+        error_code = e.response["Error"]["Code"]
+        if error_code in ["404", "403"]:
+            # 404: Bucket doesn't exist
+            # 403: Bucket exists but we don't have permission (owned by another account)
             return False
         else:
             raise e  # Raise other unexpected errors
