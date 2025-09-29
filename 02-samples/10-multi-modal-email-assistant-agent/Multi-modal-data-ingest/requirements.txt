@@ -10,7 +10,8 @@ opensearch-py
 botocore
 awscli
 retrying
-ragas>=0.1.9,<0.2.0
+ragas>=0.1.22
+langchain-community>=0.3.27
 ipywidgets
 iprogress
 s3fs
