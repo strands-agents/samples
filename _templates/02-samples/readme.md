@@ -14,10 +14,11 @@ A sample README must include:
 
 - Refer to [`structure.md`](./structure.md) for choosing the appropriate project structure
 - Be concise and actionable
-- Focus on what users need to do, not unnecessary explanations
+- Focus on actionable steps for users rather than lengthy explanations
+- Commands are illustrative—adapt them to your implementation. Structure matters most.
 - Test all commands before documenting
 - Use code blocks for all terminal commands
-- Adapt complexity based on your sample type 
+- Adapt complexity based on your sample type
 - Add optional sections as needed based on your sample's requirements (see below)
 
 ---
