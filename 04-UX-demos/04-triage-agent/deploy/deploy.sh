@@ -11,6 +11,12 @@ ASSETS_BUCKET="triage-assets-$ACCOUNT_ID"
 PACKAGE_NAME="triage-ui-package.zip"
 TEMP_DIR="triage_temp"
 
+if [ $? -ne 0 ] || [ -z "$ACCOUNT_ID" ] || [ "$ACCOUNT_ID" = "None" ]; then
+    echo "❌ Failed to get AWS Account ID. Please check your AWS credentials and network connectivity."
+    echo "Error: $ACCOUNT_ID"
+    exit 1
+fi
+
 echo "🚀 Deploying AI Triage Agent..."
 
 # Create assets bucket if not exists
