@@ -26,16 +26,18 @@ Contributions via pull requests are much appreciated. Before sending us a pull r
 1. You are working against the latest source on the *main* branch.
 2. You check existing open, and recently merged, pull requests to make sure someone else hasn't addressed the problem already.
 3. You open an issue to discuss any significant work - we would hate for your time to be wasted.
+4. For new samples, follow the project structure guidelines in [`.github/templates/02-samples/structure.md`](.github/templates/02-samples/structure.md) and use the README template in [`.github/templates/02-samples/readme.md`](.github/templates/02-samples/readme.md).
 
 To send us a pull request, please:
 
 1. Fork the repository.
 2. Modify the source; please focus on the specific change you are contributing. If you also reformat all the code, it will be hard for us to focus on your change.
-3. Ensure local tests pass.
+3. Ensure local tests pass and run the code end-to-end. Execute the Python scripts or notebooks to verify they work as expected and produce the correct output.
 4. Commit to your fork using clear commit messages.
 5. Send us a pull request, answering any default questions in the pull request interface.
 6. When opening a PR that fixes an issue, please include `Fixes #<issue-number>` in the PR description so GitHub automatically closes the issue on merge.
 7. Pay attention to any automated CI failures reported in the pull request, and stay involved in the conversation.
+8. Address any security scan findings reported in the PR. Review the scan results and resolve issues based on the feedback provided in PR comments.
 
 
 GitHub provides additional document on [forking a repository](https://help.github.com/articles/fork-a-repo/) and
