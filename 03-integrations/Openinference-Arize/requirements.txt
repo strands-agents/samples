@@ -1,5 +1,5 @@
-strands-agents
-strands-agents-tools
+strands-agents==1.8.0
+strands-agents-tools==0.2.0
 arize-otel
 arize-toolkit
 opentelemetry-api
