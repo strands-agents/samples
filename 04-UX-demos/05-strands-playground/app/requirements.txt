@@ -4,4 +4,10 @@ pydantic==2.11.4
 strands-agents
 strands-agents-tools
 strands-agents-tools[mem0_memory]
+strands-agents-tools[local_chromium_browser]
+strands-agents-tools[agent_core_browser]
+strands-agents-tools[agent_core_code_interpreter]
+strands-agents-tools[a2a_client]
+strands-agents-tools[diagram]
+strands-agents-tools[rss]
 uv

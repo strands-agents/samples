@@ -87,7 +87,7 @@ This project provides a playground environment for developers to experiment with
 1. Clone the repository and navigate to the project directory:
    ```bash
    git clone https://github.com/strands-agents/samples.git
-   cd 04-UX-demos/05-strands-playground/
+   cd samples/04-UX-demos/05-strands-playground/
    ```
 
 2. Install Python dependencies:
@@ -125,7 +125,7 @@ This project provides a playground environment for developers to experiment with
 
 3. Open your browser and navigate to `http://localhost:8003`
 
-### Option 3: Full CDK Deployment to AWS
+### Option 2: Full CDK Deployment to AWS
 
 Deploy a complete production-ready environment to AWS using CDK:
 
@@ -170,8 +170,6 @@ The Strands Playground follows a modern web application architecture:
 - **Session Storage**: Flexible storage options (local files or DynamoDB)
 - **AI Integration**: Direct integration with Amazon Bedrock through the Strands SDK
 - **Deployment**: Containerized application deployable locally or on AWS infrastructure
-
-
 
 ## Usage Examples
 
@@ -260,10 +258,26 @@ When deploying this application, consider the following security best practices:
 3. **Environment Variables**: Never hardcode sensitive information; use environment variables or AWS Secrets Manager
 4. **CORS Settings**: Restrict CORS settings to specific origins in production
 5. **Network Security**: Deploy within a VPC with appropriate security groups and network ACLs
+6. **Tools permissions**: By default, certain tools that perform potentially senstive operations (like  file modifications, shell commands or code execution) will prompt for user confirmation before executing. This safety feature ensures users maintain control over actions that could modify their system.). To bypass these confirmation prompts, you can set the `BYPASS_TOOL_CONSENT` environment variable:
+
+   ```bash
+   # Set this environment variable to bypass tool confirmation prompts
+   export BYPASS_TOOL_CONSENT=true
+   ```
+
+   or you can edit `main.py`:
+
+      ```bash
+      import os
+
+      os.environ["BYPASS_TOOL_CONSENT"] = "true"
+      ```
+
 
 ## Version History
 
 - **1.0.0** - Initial release with core playground functionality
+- **1.0.1** - Update tools list, dependencies and README
 
 ## License
 
