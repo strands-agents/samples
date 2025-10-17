@@ -25,7 +25,7 @@ A comprehensive GenAI-powered wealth and financial tools built with **Strands Ag
 Overall architecture in multi-agent collaboration with MCP and tools.
 ![architecture](./assets/architecture.png)
 
-Autonomous agents are a current market trend. Complex inquiries will take time to complete. Here is the process flow for financial advisors to complete complex tasks using Strands Agents **Graph pattern**
+Autonomous agents are a current market trend. Complex inquiries will take time to complete. Here is the process flow for financial advisors to complete complex tasks using **Strands Agents Graph pattern**
 
 ![architecture](./assets/architecture_graph.png)
 

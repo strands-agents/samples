@@ -1,3 +1,8 @@
+"""
+This sample application is powered by Strands Agent, Amazon Bedrock, MCP, and Tools and is intended for demonstration purposes and technical knowledge sharing only. 
+The information, responses, and suggestions provided by this sample application do NOT constitute financial advice, investment recommendations, or professional financial guidance of any kind.
+"""
+
 import logging
 import sys
 import html
