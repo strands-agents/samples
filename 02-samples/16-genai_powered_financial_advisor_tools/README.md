@@ -26,6 +26,7 @@ Overall architecture in multi-agent collaboration with MCP and tools.
 ![architecture](./assets/architecture.png)
 
 Autonomous agents are a current market trend. Complex inquiries will take time to complete. Here is the process flow for financial advisors to complete complex tasks using Strands Agents **Graph pattern**
+
 ![architecture](./assets/architecture_graph.png)
 
 ### Core Components
@@ -83,7 +84,7 @@ The application includes specialized MCP servers for different data sources:
 - **AWS CLI** configured with credentials
 - **Required AWS Services**:
   - Amazon Bedrock (Claude models v3.7 and v4.0, follow instructions [here](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html))
-  - Amazon Bedrock Knowledge Bases (fir doucment queries)
+  - Amazon Bedrock Knowledge Bases (for doucment queries)
   - AWS Athena (for database queries)
   - Amazon S3 (for data storage)
 
@@ -126,7 +127,7 @@ The application includes specialized MCP servers for different data sources:
 
 6. **Create Tavily API key and add in the .env file**:
    
-   Visit [Travily](https://www.tavily.com/) and create API key post sign-up. update your tavily api key in .env file :
+   Visit [Travily](https://www.tavily.com/) and create API key post sign-up. Update your tavily api key in .env file :
    ```bash
    TAVILY_API_KEY="your_tavily_api_key" 
    ```
@@ -181,7 +182,7 @@ Retrieves comprehensive portfolio information including holdings, performance me
 ### Client Meeting Analysis
 ```
 "client meeting summary of knowledge base ID kb-12345"
-"using knowledge base Financial_advisor_Sarah_Johnson, Provide a complete customer report"
+"using knowledge base Financial advisor Sarah Johnson, Provide a complete customer report"
 ```
 
 ### Market Research
@@ -222,8 +223,8 @@ Contributions are welcome! Please:
 
 For support and questions:
 
-1. **Check the troubleshooting section** above
-2. **Review AWS service status** in your region
+1. **Review your permission** on AWS 
+2. **Tavily API KEY** is added on .env file
 3. **Verify model access** in Bedrock console
 4. **Test basic functionality** with simple queries
 5. **Check application logs** for detailed error information
