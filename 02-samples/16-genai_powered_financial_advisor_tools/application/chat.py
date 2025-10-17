@@ -4,10 +4,11 @@ import os
 import re
 import sys
 import traceback
+
 import yaml
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import List, Dict, Any, Optional, Tuple
 
 from botocore.config import Config
 from mcp import StdioServerParameters, stdio_client
@@ -25,6 +26,7 @@ from strands_tools import retrieve
 from strands.models import BedrockModel
 from strands.multiagent import GraphBuilder
 from strands.tools.mcp import MCPClient
+
 
 import info
 import prompt
@@ -60,14 +62,12 @@ def load_config():
         return {}
 
 def update(modelName, reasoningMode):
-    global model_name, model_id, model_type, reasoning_mode, models
+    global model_name, model_id, model_type, reasoning_mode
 
     if model_name != modelName:
         model_name = modelName
         logger.info(f"model_name: {model_name}")
 
-        # Get updated model info for the new model
-        models = info.get_model_info(model_name)
         model_id = models[0]["model_id"]
         model_type = models[0]["model_type"]
 
@@ -230,7 +230,12 @@ def get_kb_id(query: Optional[str] = None) -> Tuple[Optional[str], str]:
     
     return None, None
 
-# Backward compatibility helper
+# Backward compatibility helpers
+def extract_kb_id_from_query(query: str) -> Optional[str]:
+    """Extract KB ID from query only (for backward compatibility)"""
+    kb_id, source = get_kb_id(query)
+    return kb_id if source == "query" else None
+
 def get_kb_id_from_config() -> Optional[str]:
     """Get KB ID from config only (for backward compatibility)"""
     kb_id, source = get_kb_id(None)
@@ -618,6 +623,7 @@ def stock_agent(query: str, search_type: str = "general") -> str:
             - Volume analysis and trading information
             - Market performance comparisons
             - Charts and visualizations when requested
+            - Display the data in table format if it is comparison data
 
     Raises:
         Returns error message string if stock service unavailable or query fails
@@ -682,7 +688,7 @@ def stock_agent(query: str, search_type: str = "general") -> str:
         try:
             response_str = str(response)
             # Check if the response mentions chart creation
-            if any(keyword in response_str.lower() for keyword in ["chart", "graph", "plot", "visualization"]):
+            if any(keyword in response_str.lower() for keyword in ["chart", "performance", "return", "graph", "plot", "visualization"]):
                 # Look for the most recent chart file in the outputs/charts directory
                 charts_dir = "outputs/charts"
                 if os.path.exists(charts_dir):
@@ -1090,7 +1096,7 @@ def clear_chart_image_path():
     chart_image_path = None
 
 # ============================================================================
-# Triage the query, simple agent vs graph agent
+# Triage the query, sinple agent vs graph agent
 # ============================================================================
 def triage_query(question, history_mode, st):
     message_placeholder = st.empty()
@@ -1099,7 +1105,6 @@ def triage_query(question, history_mode, st):
 
     async def process_streaming_response():
         nonlocal full_response
-        
         try:
             # Open all client sessions at once and manage them
             with tavily_mcp_client as tavily_client, kb_mcp_client as kb_client, athena_mcp_client as database_client, stock_mcp_client as stock_client:
@@ -1214,6 +1219,7 @@ def triage_query(question, history_mode, st):
                 # Log the final response
                 logger.info(f"Final response: {repr(full_response)}")
                 logger.info(f"Tool usage summary: {tool_usage_count}")
+
         except Exception as e:
             logger.error(f"Error in streaming response: {e}")
             message_placeholder.markdown(
