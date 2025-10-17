@@ -1,0 +1,9 @@
+database_name: financial_advisor_20251005_173926
+knowledge_base_description: financial advisor
+knowledge_base_id: IVT62NZFJK
+knowledge_base_name: kb-kb-20251005173531
+project_name: financial-advisor
+project_short_name: fa
+region_name: us-west-2
+s3_bucket_name_for_athena: financial-advisor-athena-20251005-173924
+s3_bucket_name_for_kb: kb-kb-20251005173531-20251005173531
