@@ -4,11 +4,10 @@ import os
 import re
 import sys
 import traceback
-
 import yaml
 from datetime import datetime
 from pathlib import Path
-from typing import List, Dict, Any, Optional, Tuple
+from typing import Optional, Tuple
 
 from botocore.config import Config
 from mcp import StdioServerParameters, stdio_client
@@ -29,7 +28,6 @@ from strands.tools.mcp import MCPClient
 
 import info
 import prompt
-import retrieve_schema
 
 model_name = "Claude 3.7 Sonnet"
 model_type = "claude"
@@ -49,55 +47,27 @@ logging.basicConfig(
 )
 logger = logging.getLogger("chat")
 
-# Load database schema at module initialization
-def _initialize_database_schema():
-    """Initialize database schema when module is loaded"""
-    
-    # Check if schema is already loaded in prompt module
-    if prompt.fa_db_schema:
-        logger.info("✅ Database schema already loaded, skipping initialization")
-        return prompt.fa_db_schema
-    
-    try:
-        logger.info("📊 Initializing database schema...")
-        from retrieve_schema import boto3_clients, get_database_schema_via_athena, DATABASE
-        
-        athena_client, _ = boto3_clients()
-        schema = get_database_schema_via_athena(athena_client, database=DATABASE)
-        
-        # Store schema in prompt module for use by get_database_query_prompt()
-        prompt.fa_db_schema = schema
-        
-        logger.info(f"✅ Database schema loaded: {len(schema)} tables")
-        logger.info("📋 Schema available in agent prompts for TEXT2SQL generation")
-        
-        return schema
-    except Exception as e:
-        logger.warning(f"⚠️ Could not load database schema at initialization: {e}")
-        return None
-
-# Initialize schema at module load time
-_initialize_database_schema()
-
 def load_config():
     """Load configuration from prereqs_config.yaml"""
     config_path = Path(__file__).parent / "prerequisites" / "prereqs_config.yaml"
     try:
         with open(config_path, 'r') as f:
             config = yaml.safe_load(f)
-            logger.info(f"✅ Loaded config with {len(config)} keys")
+            #logger.info(f"✅ Loaded config with {len(config)} keys")
             return config
     except Exception as e:
         logger.warning(f"❌Could not load config from {config_path}: {e}")
         return {}
 
 def update(modelName, reasoningMode):
-    global model_name, model_id, model_type, reasoning_mode
+    global model_name, model_id, model_type, reasoning_mode, models
 
     if model_name != modelName:
         model_name = modelName
         logger.info(f"model_name: {model_name}")
 
+        # Get updated model info for the new model
+        models = info.get_model_info(model_name)
         model_id = models[0]["model_id"]
         model_type = models[0]["model_type"]
 
@@ -252,7 +222,7 @@ def get_kb_id(query: Optional[str] = None) -> Tuple[Optional[str], str]:
         kb_id = config.get("knowledge_base_id", "").strip()
         
         if is_valid(kb_id):
-            logger.info(f"✅ Valid KB ID from config: {kb_id}")
+            #logger.info(f"✅ Valid KB ID from config: {kb_id}")
             return kb_id, "config"
         logger.error(f"❌ Invalid config KB ID: '{kb_id}'")
     except Exception as e:
@@ -1250,12 +1220,6 @@ def triage_query(question, history_mode, st):
                 "Sorry, an error occurred while generating the response."
             )
             logger.error(traceback.format_exc())  # Detailed error logging
-        except Exception as e:
-            logger.error(f"Error in streaming response: {e}")
-            message_placeholder.markdown(
-                "Sorry, an error occurred while generating the response."
-            )
-            logger.error(traceback.format_exc())
     
     asyncio.run(process_streaming_response())
     return full_response

@@ -7,13 +7,63 @@ from typing import Dict, List, Optional, Tuple
 
 import streamlit as st
 
-# Show loading indicator while schema is being loaded
+# Show loading indicator while schema is being loaded with streaming updates
 if not hasattr(st.session_state, 'schema_loaded'):
-    with st.spinner('🔄 Loading database schema... Please wait.'):
+    status_placeholder = st.empty()
+    progress_placeholder = st.empty()
+    
+    status_placeholder.info('🔄 Loading database schema... Please wait.')
+    
+    # Import retrieve_schema to access schema loading functions
+    from retrieve_schema import boto3_clients, get_database_tables_via_athena, describe_table_via_athena, DATABASE
+    
+    try:
+        # Initialize Athena client
+        athena_client, _ = boto3_clients()
+        
+        # Get list of tables
+        status_placeholder.info('📋 Retrieving table list...')
+        tables = get_database_tables_via_athena(athena_client, database=DATABASE)
+        
+        # Create schema dictionary
+        schema = {}
+        total_tables = len(tables)
+        
+        # Stream table information as it loads
+        for idx, table in enumerate(tables, 1):
+            status_placeholder.info(f'📊 Loading table {idx}/{total_tables}: **{table}**')
+            progress_placeholder.progress(idx / total_tables)
+            
+            try:
+                columns = describe_table_via_athena(athena_client, table, database=DATABASE)
+                schema[table] = columns
+                status_placeholder.success(f'✓ Loaded **{table}**: {len(columns)} columns')
+            except Exception as e:
+                schema[table] = {"error": str(e)}
+                status_placeholder.warning(f'⚠️ Error loading **{table}**: {str(e)}')
+        
+        # Store schema in prompt module
+        import prompt
+        prompt.fa_db_schema = schema
+        
+        # Now import chat which will use the loaded schema
         import chat
+        
+        # Mark as loaded
         st.session_state.schema_loaded = True
-        st.success('✅ Database schema loaded successfully!')
+        
+        # Show final success message
+        status_placeholder.success(f'✅ Database schema loaded successfully! ({total_tables} tables)')
+        progress_placeholder.empty()
+        
+        # Small delay to show success message
+        import time
+        time.sleep(1)
         st.rerun()
+        
+    except Exception as e:
+        status_placeholder.error(f'❌ Failed to load database schema: {str(e)}')
+        st.stop()
 else:
     import chat
 
@@ -63,32 +113,13 @@ st.set_page_config(
 # SIDEBAR CONFIGURATION
 # ============================================================================
 def render_sidebar() -> tuple[str, str]:
-    """
-    Render the sidebar with model selection and configuration options.
-    
-    Returns:
-        tuple: (model_name, reasoning_mode)
-    """
+    """Render the sidebar with model selection and configuration options."""
     with st.sidebar:
         st.title("🔧 Configuration")
 
-        # Application description
-        st.markdown(
-            """
-            **Financial Advisor AI**
-            
-            Automate client support processes with intelligent AI assistance.
-            Supports portfolio analysis, market research, and client interactions.
-            
-            For detailed documentation, visit our [GitHub repository](https://github.com/strands-agents/samples/tree/main/02-samples/16-genai_powered_financial_advisor_tools).
-            """
-        )
-
-        st.divider()
-
         # Model selection
         model_name = st.selectbox(
-            "🤖 Choose Foundation Model",
+            "🤖 Foundation Model",
             options=AVAILABLE_MODELS,
             index=0,
             help="Select the AI model for processing your queries"
@@ -96,23 +127,16 @@ def render_sidebar() -> tuple[str, str]:
 
         # Reasoning mode configuration
         enable_reasoning = st.checkbox(
-            "Enable Advanced Reasoning",
+            "Advanced Reasoning",
             value=False,
-            help="Enhanced thinking capabilities for Claude models (may increase response time)",
+            help="Enhanced thinking capabilities (may increase response time)",
             disabled=model_name not in REASONING_SUPPORTED_MODELS
         )
         
-        reasoning_mode = (
-            "Enable" 
-            if enable_reasoning and model_name in REASONING_SUPPORTED_MODELS
-            else "Disable"
-        )
+        reasoning_mode = "Enable" if enable_reasoning and model_name in REASONING_SUPPORTED_MODELS else "Disable"
         
         logger.info(f"Model: {model_name}, Reasoning: {reasoning_mode}")
-
-        # Update chat configuration
         chat.update(model_name, reasoning_mode)
-
         
         return model_name, reasoning_mode
 
@@ -134,54 +158,34 @@ def initialize_session_state() -> None:
         st.session_state.example_query = ""
     if "chart_to_display" not in st.session_state:
         st.session_state.chart_to_display = []
+    if "is_processing" not in st.session_state:
+        st.session_state.is_processing = False
+    if "pending_prompt" not in st.session_state:
+        st.session_state.pending_prompt = None
 
 def display_chat_messages() -> None:
-    """
-    Display chat message history with support for HTML/CSS styling and images.
-    
-    Handles:
-    - Text messages with HTML formatting
-    - Image attachments with captions
-    - HTML entity unescaping for proper display
-    - Stock charts generated by the system
-    """
-    for i, message in enumerate(st.session_state.messages):
+    """Display chat message history with HTML/CSS styling, images, and charts."""
+    for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             # Handle image attachments
             if "images" in message:
                 for image_url in message["images"]:
-                    logger.info(f"Displaying image: {image_url}")
                     file_name = image_url[image_url.rfind("/") + 1:]
                     st.image(image_url, caption=file_name, use_container_width=True)
             
             # Process and display message content
-            content = message["content"]
-            
-            # Unescape HTML entities if present
-            if "&lt;" in content and "&gt;" in content:
-                content = html.unescape(content)
-                logger.debug(f"Unescaped HTML content: {repr(content[:100])}...")
-            
-            # Render content with HTML support
+            content = html.unescape(message["content"]) if "&lt;" in message["content"] else message["content"]
             st.markdown(content, unsafe_allow_html=True)
             
-            # Display chart if this is an assistant message and there's a chart to show
+            # Display chart if available
             if (message["role"] == "assistant" and 
                 "chart_path" in message and 
                 message["chart_path"] and 
                 os.path.exists(message["chart_path"])):
                 
                 chart_filename = os.path.basename(message["chart_path"])
-                st.image(message["chart_path"], 
-                        caption=f"📊 {chart_filename}", 
-                        use_container_width=True)
-                logger.info(f"Displayed chart: {message['chart_path']}")
-                
-                # Clear chart data after display to prevent re-display
-                chart_filename = ""
+                st.image(message["chart_path"], caption=f"📊 {chart_filename}", use_container_width=True)
                 message["chart_path"] = None
-                if "chart_path" in message:
-                    del message["chart_path"]
 
 # Initialize session state and display messages
 initialize_session_state()
@@ -193,199 +197,125 @@ display_chat_messages()
 def display_welcome_message() -> None:
     """Display the initial welcome message to new users."""
     if not st.session_state.greetings:
+        welcome_message = """
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; 
+                    padding: 20px; border-radius: 12px; border-left: 5px solid #4CAF50; 
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.15);">
+            <h3 style="margin: 0 0 12px 0; font-size: 18px;">🏦 Welcome to Financial Advisor AI</h3>
+            <p style="margin: 0; font-size: 15px;">Your intelligent assistant for:</p>
+            <ul style="margin: 10px 0 0 20px; font-size: 14px;">
+                <li>Client meeting analysis and reporting</li>
+                <li>Portfolio analysis and performance tracking</li>
+                <li>Market research and investment insights</li>
+                <li>Stock data and financial metrics</li>
+            </ul>
+            <p style="margin: 10px 0 0 0; font-size: 14px; font-style: italic;">
+                Try the example queries below to get started!
+            </p>
+        </div>
+        """
         with st.chat_message("assistant"):
-            welcome_message = """
-            <div style="
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
-                padding: 20px;
-                border-radius: 12px;
-                border-left: 5px solid #4CAF50;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-                margin-bottom: 8px;
-            ">
-                <h3 style="margin: 0 0 12px 0; color: #fff; font-size: 18px;">
-                    🏦 Welcome to Financial Advisor AI
-                </h3>
-                <p style="margin: 0; font-size: 15px; line-height: 1.4;">
-                    Your intelligent assistant for financial advisory services. I can help with:
-                </p>
-                <ul style="margin: 10px 0 0 20px; font-size: 14px;">
-                    <li>Client meeting analysis and reporting</li>
-                    <li>Portfolio analysis and performance tracking</li>
-                    <li>Market research and investment insights</li>
-                    <li>Stock data and financial metrics</li>
-                </ul>
-                <p style="margin: 10px 0 0 0; font-size: 14px; font-style: italic;">
-                    How may I assist you today? Try the example queries below!
-                </p>
-            </div>
-            """
             st.markdown(welcome_message, unsafe_allow_html=True)
-            
-            # Add to chat history
-            st.session_state.messages.append({
-                "role": "assistant", 
-                "content": welcome_message
-            })
-            st.session_state.greetings = True
+        
+        st.session_state.messages.append({"role": "assistant", "content": welcome_message})
+        st.session_state.greetings = True
 
 def display_example_buttons() -> None:
-    """Display example query buttons that are always visible."""
-    # Add example query buttons with custom styling
-    st.markdown("""
-    <div style="margin-top: 1px; padding: 1px; background-color: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
-        <h4 style="margin: 0 0 1px 0; color: #495057; font-size: 16px;">📝 Try these example queries:</h4>
-    </div>
-    """, unsafe_allow_html=True)
+    """Display example query buttons."""
+    is_disabled = st.session_state.get("is_processing", False)
+    
+    st.markdown('<div style="padding: 8px; background-color: #f8f9fa; border-radius: 8px; margin-bottom: 10px;">'
+                '<h4 style="margin: 0; color: #495057; font-size: 16px;">📝 Example Queries</h4></div>', 
+                unsafe_allow_html=True)
+    
+    if is_disabled:
+        st.info("⏳ Processing your request...")
     
     col1, col2 = st.columns(2)
     
+    examples = [
+        ("📈 US Stock Market Prospects", "The prospects for the US stock market for remaining 2025", "example3"),
+        ("💰 Amazon Stock Price", "Amazon stock pricing today", "example4"),
+        ("🔍 Compare AMZN vs MSFT", "Compare Amazon and Microsoft stock performance over the last year", "example6"),
+        ("📋 Complete Customer Report", f"Using knowledge base id {chat.get_kb_id_from_config()}, provide a complete customer report including meeting summary, action items, research answers for each action item, portfolio analysis, security performance, and market trend overview", "example8"),
+    ]
+    
+    examples_col2 = [
+        ("📊 Portfolio Summary", "Michael Chen's Portfolio Summary", "example1"),
+        ("🏦 Knowledge Base List", "provide me knowledge base list", "example2"),
+        ("📝 Client Meeting Analysis", f"client meeting analysis and summary using knowledge base id {chat.get_kb_id_from_config()}", "example5"),
+    ]
+    
     with col1:
-        if st.button("📈 US Stock Market Prospects", 
-                   key="example3", 
-                   use_container_width=True):
-            st.session_state.example_query = "The prospects for the US stock market for remaining 2025"
-            st.rerun()
-
-        if st.button("💰 Amazon Stock Price Today", 
-                   key="example4", 
-                   use_container_width=True):
-            st.session_state.example_query = "Amazon stock pricing today"
-            st.rerun()
-        
-        if st.button("🔍 Compare AMZN vs MSFT", 
-                   key="example6", 
-                   use_container_width=True):
-            st.session_state.example_query = "Compare Amazon and Microsoft stock performance over the last year"
-            st.rerun()
-        
-        if st.button("🔍 Generate a complete customer report", 
-                   key="example8", 
-                   use_container_width=True):
-            kb_id = chat.get_kb_id_from_config()
-            st.session_state.example_query = f"Using knowledge base id {kb_id}, provide a complete customer report including meeting summary, action items, research answers for each action item, portfolio analysis, security performance, and market trend overview"
-            st.rerun()
-
-
+        for label, query, key in examples:
+            if st.button(label, key=key, disabled=is_disabled, use_container_width=True):
+                st.session_state.example_query = query
+                st.session_state.is_processing = True
+                st.rerun()
+    
     with col2:
-        if st.button("📊 Michael Chen's Portfolio Summary", 
-                   key="example1", 
-                   use_container_width=True):
-            st.session_state.example_query = "Michael Chen's Portfolio Summary"
-            st.rerun()
-        
-        if st.button("🏦 Get Knowledge Base List", 
-                   key="example2", 
-                   use_container_width=True):
-            st.session_state.example_query = "provide me knowledge base list"
-            st.rerun()
-        
-        if st.button("📝 Client Meeting Analysis ", 
-                   key="example5", 
-                   use_container_width=True):
-            
-            kb_id = chat.get_kb_id_from_config()
-            st.session_state.example_query = f"client meeting analysis and summary using knowledge base id {kb_id}"
-            st.rerun()
+        for label, query, key in examples_col2:
+            if st.button(label, key=key, disabled=is_disabled, use_container_width=True):
+                st.session_state.example_query = query
+                st.session_state.is_processing = True
+                st.rerun()
 
 display_welcome_message()
-
-# Display example buttons (always visible)
 display_example_buttons()
 
 # ============================================================================
 # CHAT INPUT AND PROCESSING
 # ============================================================================
-
 def sanitize_user_input(user_input: str) -> str:
-    """
-    Sanitize user input to prevent issues with quote characters.
-    
-    Args:
-        user_input: Raw user input string
-        
-    Returns:
-        Sanitized input string
-    """
+    """Sanitize user input to prevent issues with quote characters."""
     return user_input.replace('"', "").replace("'", "")
 
 def process_user_input(user_prompt: str) -> str:
-    """
-    Process user input and generate AI response with error handling.
-    
-    Args:
-        user_prompt: The user's input message
-        
-    Returns:
-        The AI assistant's response or error message
-    """
+    """Process user input and generate AI response with error handling."""
     try:
-        # Sanitize input
         sanitized_prompt = sanitize_user_input(user_prompt)
-        logger.info(f"Processing user prompt: {sanitized_prompt}")
+        logger.info(f"Processing: {sanitized_prompt}")
         
-        # Reset chat references and images for new query
+        # Reset chat state
         if hasattr(chat, 'references'):
             chat.references = []
         if hasattr(chat, 'image_url'):
             chat.image_url = []
         
+        
         # Generate response using the chat triage system
         with st.spinner("🤔 Analyzing your request..."):
             response = chat.triage_query(sanitized_prompt, "Enable", st)
-        
-        # Check if there's a chart to display
+                
+        # Handle chart display
         chart_path = chat.get_chart_image_path()
         if chart_path and os.path.exists(chart_path):
-            # Store chart path in session state for display
             if "chart_to_display" not in st.session_state:
                 st.session_state.chart_to_display = []
             st.session_state.chart_to_display.append(chart_path)
-            # Clear the chart path after storing it
             chat.clear_chart_image_path()
         
         return response
         
     except Exception as e:
-        error_message = f"An error occurred while processing your request: {str(e)}"
-        logger.error(f"Error processing user input: {error_message}")
-        logger.error(f"Traceback: {traceback.format_exc()}")
-        
-        # Return user-friendly error message
-        return f"""
-        <div style="
-            background-color: #ffebee;
-            border: 1px solid #f44336;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 10px 0;
-        ">
+        logger.error(f"Error: {str(e)}\n{traceback.format_exc()}")
+        return """
+        <div style="background-color: #ffebee; border: 1px solid #f44336; border-radius: 8px; padding: 15px;">
             <h4 style="color: #d32f2f; margin: 0 0 10px 0;">⚠️ Processing Error</h4>
             <p style="margin: 0; color: #666;">
-                I encountered an issue while processing your request. Please try again or 
-                rephrase your question. If the problem persists, please contact support.
+                I encountered an issue. Please try again or rephrase your question.
             </p>
         </div>
         """
 
 def validate_user_input(user_input: str) -> Tuple[bool, str]:
-    """
-    Validate user input for basic requirements.
-    
-    Args:
-        user_input: The user's input string
-        
-    Returns:
-        Tuple of (is_valid, error_message)
-    """
+    """Validate user input for basic requirements."""
     if not user_input or not user_input.strip():
         return False, "Please enter a question or request."
     
     if len(user_input.strip()) > MAX_INPUT_LENGTH:
-        return False, f"Input too long. Please limit to {MAX_INPUT_LENGTH} characters."
+        return False, f"Input too long. Limit to {MAX_INPUT_LENGTH} characters."
     
-    # Check for potentially harmful content (basic check)
     suspicious_patterns = ['<script', 'javascript:', 'eval(', 'exec(']
     if any(pattern in user_input.lower() for pattern in suspicious_patterns):
         return False, "Input contains potentially harmful content."
@@ -393,88 +323,70 @@ def validate_user_input(user_input: str) -> Tuple[bool, str]:
     return True, ""
 
 def handle_chat_interaction() -> None:
-    """Handle the main chat interaction flow with validation and error handling."""
-    # Check if an example query was selected
-    user_prompt = None
-    if st.session_state.example_query:
-        user_prompt = st.session_state.example_query
-        st.session_state.example_query = ""  # Clear the example query
-    
-    # Chat input field with helpful placeholder
-    if not user_prompt:
-        user_prompt = st.chat_input(
-            "💬 Ask me about portfolios, market trends, financial analysis, or customer meeting summary...",
-            key="chat_input"
-        )
-    
-    if user_prompt:
+    """Handle the main chat interaction flow."""
+    # Process pending prompt
+    if st.session_state.pending_prompt:
+        user_prompt = st.session_state.pending_prompt
+        st.session_state.pending_prompt = None
+        
         # Validate input
         is_valid, error_message = validate_user_input(user_prompt)
         if not is_valid:
             st.error(error_message)
+            st.session_state.is_processing = False
             return
         
         # Display user message
         with st.chat_message("user"):
             st.markdown(user_prompt)
         
-        # Add user message to history
-        st.session_state.messages.append({
-            "role": "user", 
-            "content": user_prompt
-        })
+        st.session_state.messages.append({"role": "user", "content": user_prompt})
         
-        # Generate assistant response
+        # Generate response
         try:
             response = process_user_input(user_prompt)
         except Exception as e:
-            logger.error(f"Unexpected error in chat interaction: {e}")
+            logger.error(f"Chat error: {e}")
             response = """
-            <div style="background-color: #ffebee; border: 1px solid #f44336; 
-                       border-radius: 8px; padding: 15px; margin: 10px 0;">
+            <div style="background-color: #ffebee; border: 1px solid #f44336; border-radius: 8px; padding: 15px;">
                 <h4 style="color: #d32f2f; margin: 0 0 10px 0;">⚠️ System Error</h4>
-                <p style="margin: 0; color: #666;">
-                    An unexpected error occurred. Please try again or contact support if the issue persists.
-                </p>
+                <p style="margin: 0; color: #666;">An unexpected error occurred. Please try again.</p>
             </div>
             """
+        finally:
+            st.session_state.is_processing = False
         
-        # Check if there are charts to display
+        # Handle chart display
         chart_path = None
         if "chart_to_display" in st.session_state and st.session_state.chart_to_display:
-            chart_path = st.session_state.chart_to_display.pop(0)  # Get and remove the first chart
+            chart_path = st.session_state.chart_to_display.pop(0)
         
-        # Add assistant response to history with chart information
-        message_data = {
-            "role": "assistant", 
-            "content": response
-        }
-        
+        message_data = {"role": "assistant", "content": response}
         if chart_path:
             message_data["chart_path"] = chart_path
         
         st.session_state.messages.append(message_data)
-        
-        # Rerun to display the new message
+        st.rerun()
+        return
+    
+    # Handle example query or chat input
+    user_prompt = st.session_state.example_query if st.session_state.example_query else None
+    if st.session_state.example_query:
+        st.session_state.example_query = ""
+    
+    if not user_prompt:
+        user_prompt = st.chat_input(
+            "💬 Ask about portfolios, market trends, or client meetings...",
+            key="chat_input",
+            disabled=st.session_state.get("is_processing", False)
+        )
+    
+    if user_prompt:
+        st.session_state.pending_prompt = user_prompt
+        st.session_state.is_processing = True
         st.rerun()
 
 # ============================================================================
 # MAIN APPLICATION EXECUTION
 # ============================================================================
-
-def main() -> None:
-    """Main application execution function."""
-    try:
-        # Handle chat interaction
-        handle_chat_interaction()
-        
-    except Exception as e:
-        logger.error(f"Critical application error: {e}")
-        st.error("A critical error occurred. Please refresh the page and try again.")
-
-# Execute main application
-if __name__ == "__main__":
-    main()
-else:
-    # When imported as module, still run the main components
-    handle_chat_interaction()
+handle_chat_interaction()
