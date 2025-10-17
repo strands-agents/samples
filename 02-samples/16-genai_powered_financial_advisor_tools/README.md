@@ -190,11 +190,6 @@ Retrieves comprehensive portfolio information including holdings, performance me
 "Federal Reserve interest rate impact on tech stocks"
 ```
 
-## 📊 Sample Outputs
-
-### Demo Video will be added here (TH to update)
-
-
 ## 📚 Dependencies
 
 ### Core Dependencies
