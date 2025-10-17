@@ -1,6 +1,5 @@
 """
-This sample application is powered by Strands Agent, Amazon Bedrock, MCP, and Tools and is intended for demonstration purposes and technical knowledge sharing only. 
-The information, responses, and suggestions provided by this sample application do NOT constitute financial advice, investment recommendations, or professional financial guidance of any kind.
+This sample application is intended solely for educational and knowledge-sharing purposes. It is not designed to provide investment guidance or financial advice.
 """
 
 import logging
@@ -249,6 +248,7 @@ def display_example_buttons() -> None:
         ("📊 Portfolio Summary", "Michael Chen's Portfolio Summary", "example1"),
         ("🏦 Knowledge Base List", "provide me knowledge base list", "example2"),
         ("📝 Client Meeting Analysis", f"client meeting analysis and summary using knowledge base id {chat.get_kb_id_from_config()}", "example5"),
+        ("📋 Advisor Follow-up Analysis", f"Using knowledge base id {chat.get_kb_id_from_config()}, Identify specific action items to financial advisor discussed during the client meeting, for each identified action item, conduct a web search to find relevant and up-to-date information.", "example7"),
     ]
     
     with col1:

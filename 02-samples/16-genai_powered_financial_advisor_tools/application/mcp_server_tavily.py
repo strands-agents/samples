@@ -23,8 +23,8 @@ logging.basicConfig(
 )
 logger = logging.getLogger("tavily_mcp")
 
-# Load environment variables from .env file
-load_dotenv()
+# Load environment variables from .env.example file
+load_dotenv(dotenv_path=".env.example")
 
 api_key = os.getenv("TAVILY_API_KEY")
 if not api_key:

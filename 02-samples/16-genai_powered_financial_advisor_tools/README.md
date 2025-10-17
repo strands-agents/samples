@@ -54,7 +54,7 @@ GenAI_powered_financial_advisor_tools/
 │   └── reports/         # PDF reports and analysis documents
 ├── requirements.txt     # Python dependencies
 ├── README.md
-├── .env
+├── .env.example
 └── deploy_prereqs.sh
 ```
 ### MCP (Model Context Protocol) Servers

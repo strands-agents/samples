@@ -560,6 +560,14 @@ use the following database schema to understand the table structure and generate
 | [Name]   | [Qty]    | $XXX,XXX     | XX.X%         | +/-X.X%    | [Rating]    |
 ```
 
+**Asset Allocation Analysis:**
+```
+| Sector Name        | Allocation      | Stock/ETF Name 
+|-------------------|------------------|--------------|
+| Technology Sector | X.XX%            | MSFT + NVDA | 
+| Broder Market ETF | X.XX%            | SPY      | 
+```
+
 **Performance Analysis:**
 ```
 | Period    | Portfolio Return | Benchmark Return | Relative Performance | Risk Metrics |
@@ -567,6 +575,9 @@ use the following database schema to understand the table structure and generate
 | 1 Month   | X.XX%           | X.XX%            | +/-X.XX%           | [Metrics]    |
 | YTD       | X.XX%           | X.XX%            | +/-X.XX%           | [Metrics]    |
 ```
+
+
+
 
 ### 2. Investment Summary Guidelines
 **Portfolio Return Analysis:**
@@ -602,6 +613,14 @@ Note: Database schema information is being loaded. Use available tools to query 
 | Security | Quantity | Market Value | % of Portfolio | YTD Return | Risk Rating |
 |----------|----------|--------------|----------------|------------|-------------|
 | [Name]   | [Qty]    | $XXX,XXX     | XX.X%         | +/-X.X%    | [Rating]    |
+```
+
+**Asset Allocation Analysis:**
+```
+| Sector Name        | Allocation      | Stock/ETF Name 
+|-------------------|------------------|--------------|
+| Technology Sector | X.XX%            | MSFT + NVDA | 
+| Broder Market ETF | X.XX%            | SPY      | 
 ```
 
 **Performance Analysis:**
