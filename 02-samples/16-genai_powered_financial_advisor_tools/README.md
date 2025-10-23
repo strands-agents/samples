@@ -129,7 +129,7 @@ The application includes specialized MCP servers for different data sources:
    
    Visit [Travily](https://www.tavily.com/) and create API key post sign-up. Update your tavily api key in .env file :
    ```bash
-   TAVILY_API_KEY="your_tavily_api_key" 
+   TAVILY_API_KEY="" 
    ```
 
 6. **Start the application**:
