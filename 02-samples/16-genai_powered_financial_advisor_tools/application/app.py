@@ -78,16 +78,16 @@ else:
 APP_TITLE = "Financial Advisor AI"
 APP_VERSION = "1.0"
 MAX_INPUT_LENGTH = 5000
-DEFAULT_MODEL = "Claude 4 Sonnet"
+DEFAULT_MODEL = "Claude 3.7 Sonnet"
 
 # Available AI models
 AVAILABLE_MODELS = [
-    "Claude 4 Sonnet",
     "Claude 3.7 Sonnet",
+    "Claude 4 Sonnet",
 ]
 
 # Models that support advanced reasoning
-REASONING_SUPPORTED_MODELS = ["Claude 4 Sonnet", "Claude 3.7 Sonnet"]
+REASONING_SUPPORTED_MODELS = ["Claude 3.7 Sonnet", "Claude 4 Sonnet"]
 
 # Configure logging for the application
 logging.basicConfig(
@@ -245,10 +245,10 @@ def display_example_buttons() -> None:
     ]
     
     examples_col2 = [
-        ("📊 Portfolio Summary", "Michael Chen's Portfolio Summary", "example1"),
+        ("📊 Client Portfolio Summary", "Michael Chen's Portfolio Summary", "example1"),
         ("🏦 Knowledge Base List", "provide me knowledge base list", "example2"),
         ("📝 Client Meeting Analysis", f"client meeting analysis and summary using knowledge base id {chat.get_kb_id_from_config()}", "example5"),
-        ("📋 Advisor Follow-up Analysis", f"Using knowledge base id {chat.get_kb_id_from_config()}, Identify specific action items to financial advisor discussed during the client meeting, for each identified action item, conduct a web search to find relevant and up-to-date information.", "example7"),
+        ("👨‍💼 Advisor Follow-up Analysis", f"Using knowledge base id {chat.get_kb_id_from_config()}, Identify specific action items to financial advisor discussed during the client meeting, for each identified action item, conduct a web search to find relevant and up-to-date information.", "example7"),
     ]
     
     with col1:

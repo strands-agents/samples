@@ -36,6 +36,7 @@ except Exception as e:
     err_msg = f"Error: {str(e)}"
     logger.error(f"{err_msg}")
 
+#Get stock pricing infomration
 @mcp.tool()
 async def get_stock_prices(ticker: str) -> Union[Dict, str]:
     """Fetches current and historical stock price data for a given ticker.
@@ -55,18 +56,15 @@ async def get_stock_prices(ticker: str) -> Union[Dict, str]:
         get_stock_prices("AMZN") returns current Apple stock data with price movements
     """
     try:
-        # Verify ticker is not empty
         if not ticker.strip():
             return {"status": "error", "message": "Ticker symbol is required"}
 
-        # Get stock data
         stock = yf.Ticker(ticker)
         data = stock.history(period="3mo")
 
         if data.empty:
             return {"status": "error", "message": f"No data found for ticker {ticker}"}
 
-        # Calculate metrics
         current_price = float(data["Close"].iloc[-1])
         previous_close = float(data["Close"].iloc[-2])
         price_change = current_price - previous_close
@@ -90,6 +88,7 @@ async def get_stock_prices(ticker: str) -> Union[Dict, str]:
     except Exception as e:
         return {"status": "error", "message": f"Error fetching price data: {str(e)}"}
 
+#Get financial metrics data of the selected stock
 @mcp.tool()
 async def get_financial_metrics(ticker: str) -> Union[Dict, str]:
     """Fetches comprehensive financial metrics and ratios for a given stock ticker.
@@ -116,7 +115,6 @@ async def get_financial_metrics(ticker: str) -> Union[Dict, str]:
         stock = yf.Ticker(ticker)
         info = stock.info
 
-        # Get financial data
         try:
             metrics = {
                 "status": "success",
@@ -138,7 +136,6 @@ async def get_financial_metrics(ticker: str) -> Union[Dict, str]:
                 },
             }
 
-            # Convert values to percentages where appropriate
             for key in [
                 "dividend_yield",
                 "profit_margins",
@@ -165,6 +162,7 @@ async def get_financial_metrics(ticker: str) -> Union[Dict, str]:
             "message": f"Error fetching financial metrics: {str(e)}",
         }
 
+#download dialy historycal stock pricing data that will be used for creating stock chart
 @mcp.tool()
 async def download_daily_historical_stock_data(ticker: str, period: Optional[str] = None) -> Union[Dict, str]:
     """Downloads daily stock pricing data for a specified ticker and period.
@@ -177,22 +175,18 @@ async def download_daily_historical_stock_data(ticker: str, period: Optional[str
         Dictionary containing daily stock data with OHLCV information
     """
     try:
-        # Verify ticker is not empty
         if not ticker.strip():
             return {"status": "error", "message": "Ticker symbol is required"}
         
-        # Set default period to 1 year if not provided
         if not period:
             period = "1y"
         
-        # Get stock data
         stock = yf.Ticker(ticker)
         data = stock.history(period=period)
         
         if data.empty:
             return {"status": "error", "message": f"No data found for ticker {ticker} with period {period}"}
         
-        # Convert data to dictionary format
         daily_data = []
         for date, row in data.iterrows():
             daily_data.append({
@@ -219,7 +213,7 @@ async def download_daily_historical_stock_data(ticker: str, period: Optional[str
     except Exception as e:
         return {"status": "error", "message": f"Error downloading daily stock data: {str(e)}"}
 
-
+# Create a chart that has single stock
 @mcp.tool()
 async def create_chart(ticker: str, period: Optional[str] = None, chart_type: Optional[str] = "line") -> Union[Dict, str]:
     """Creates and saves a stock price chart for a given ticker and period.
@@ -233,26 +227,21 @@ async def create_chart(ticker: str, period: Optional[str] = None, chart_type: Op
         Dictionary containing chart creation status and file path
     """
     try:
-        # Clear any existing chart storage before creating new chart
         _chart_storage["filename"] = None
         _chart_storage["filepath"] = None
         
-        # Get historical data first
         data_result = await download_daily_historical_stock_data(ticker, period)
  
         if data_result.get("status") != "success":
             return data_result
         
-        # Extract data
         stock_data = data_result["data"]
         daily_prices = stock_data["daily_prices"]
         
-        # Convert to DataFrame for easier plotting
         df = pd.DataFrame(daily_prices)
         df['date'] = pd.to_datetime(df['date'])
         df.set_index('date', inplace=True)
         
-        # Create the chart based on type
         plt.style.use('default')
         fig, ax = plt.subplots(figsize=(12, 8))
         
@@ -262,12 +251,9 @@ async def create_chart(ticker: str, period: Optional[str] = None, chart_type: Op
             ax.set_title(f'{ticker} Stock Price - {period or "1y"}', fontsize=16, fontweight='bold')
             
         elif chart_type.lower() == "candlestick":
-            # Simple OHLC bars (matplotlib doesn't have built-in candlesticks)
             for i, (date, row) in enumerate(df.iterrows()):
                 color = 'green' if row['close'] >= row['open'] else 'red'
-                # High-low line
                 ax.plot([date, date], [row['low'], row['high']], color='black', linewidth=1)
-                # Open-close rectangle
                 height = abs(row['close'] - row['open'])
                 bottom = min(row['open'], row['close'])
                 ax.bar(date, height, bottom=bottom, width=pd.Timedelta(days=0.6), 
@@ -286,7 +272,6 @@ async def create_chart(ticker: str, period: Optional[str] = None, chart_type: Op
             ax.set_title(f'{ticker} OHLC Chart - {period or "1y"}', fontsize=16, fontweight='bold')
             
         elif chart_type.lower() == "volume":
-            # Create dual axis for price and volume
             ax2 = ax.twinx()
             ax.plot(df.index, df['close'], linewidth=2, color='#1f77b4', label=f'{ticker} Price')
             ax2.bar(df.index, df['volume'], alpha=0.3, color='orange', label='Volume')
@@ -295,22 +280,18 @@ async def create_chart(ticker: str, period: Optional[str] = None, chart_type: Op
             ax2.set_ylabel('Volume', fontsize=12, color='orange')
             ax.set_title(f'{ticker} Price & Volume - {period or "1y"}', fontsize=16, fontweight='bold')
             
-            # Add legends
             lines1, labels1 = ax.get_legend_handles_labels()
             lines2, labels2 = ax2.get_legend_handles_labels()
             ax.legend(lines1 + lines2, labels1 + labels2, loc='upper left')
         
-        # Format x-axis
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
         ax.xaxis.set_major_locator(mdates.MonthLocator(interval=1))
         plt.xticks(rotation=45)
         
-        # Add grid and styling
         ax.grid(True, alpha=0.3)
         ax.spines['top'].set_visible(False)
         ax.spines['right'].set_visible(False)
         
-        # Add some stats to the chart
         current_price = df['close'].iloc[-1]
         price_change = df['close'].iloc[-1] - df['close'].iloc[0]
         price_change_pct = (price_change / df['close'].iloc[0]) * 100
@@ -321,7 +302,6 @@ async def create_chart(ticker: str, period: Optional[str] = None, chart_type: Op
         
         plt.tight_layout()
         
-        # Save the chart
         os.makedirs("outputs/charts", exist_ok=True)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"{ticker.lower()}_{chart_type}_{period or '1y'}_{timestamp}.png"
@@ -330,7 +310,6 @@ async def create_chart(ticker: str, period: Optional[str] = None, chart_type: Op
         plt.savefig(filepath, dpi=300, bbox_inches='tight')
         plt.close()
         
-        # Store chart information in global variable for Streamlit display
         _chart_storage["filename"] = filename
         _chart_storage["filepath"] = filepath
         
@@ -351,6 +330,7 @@ async def create_chart(ticker: str, period: Optional[str] = None, chart_type: Op
     except Exception as e:
         return {"status": "error", "message": f"Error creating stock chart: {str(e)}"}
 
+# Create a chart that has multiple stocks
 @mcp.tool()
 async def create_comparison_chart(tickers: str, period: Optional[str] = None) -> Union[Dict, str]:
     """Creates a comparison chart for multiple stock tickers.
@@ -371,7 +351,6 @@ async def create_comparison_chart(tickers: str, period: Optional[str] = None) ->
         if len(ticker_list) > 5:
             return {"status": "error", "message": "Maximum 5 tickers allowed for comparison"}
         
-        # Get data for all tickers
         all_data = {}
         for ticker in ticker_list:
             data_result = await download_daily_historical_stock_data(ticker, period)
@@ -380,7 +359,6 @@ async def create_comparison_chart(tickers: str, period: Optional[str] = None) ->
             else:
                 return {"status": "error", "message": f"Failed to get data for {ticker}"}
         
-        # Create comparison chart (normalized to percentage change)
         plt.style.use('default')
         fig, ax = plt.subplots(figsize=(12, 8))
         
@@ -391,14 +369,12 @@ async def create_comparison_chart(tickers: str, period: Optional[str] = None) ->
             df = pd.DataFrame(data)
             df['date'] = pd.to_datetime(df['date'])
             
-            # Calculate percentage change from first day
             first_price = df['close'].iloc[0]
             pct_change = ((df['close'] - first_price) / first_price) * 100
             
             ax.plot(df['date'], pct_change, linewidth=2, color=colors[i], 
                    label=f'{ticker}', marker='o', markersize=1)
             
-            # Store stats
             comparison_stats[ticker] = {
                 "total_return": f"{pct_change.iloc[-1]:+.2f}%",
                 "volatility": f"{pct_change.std():.2f}%",
@@ -411,15 +387,12 @@ async def create_comparison_chart(tickers: str, period: Optional[str] = None) ->
         ax.set_title(f'Stock Comparison - {", ".join(ticker_list)} ({period or "1y"})', 
                     fontsize=16, fontweight='bold')
         
-        # Format x-axis
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
         ax.xaxis.set_major_locator(mdates.MonthLocator(interval=1))
         plt.xticks(rotation=45)
         
-        # Add horizontal line at 0%
         ax.axhline(y=0, color='black', linestyle='--', alpha=0.5)
         
-        # Add grid and legend
         ax.grid(True, alpha=0.3)
         ax.legend(loc='best')
         ax.spines['top'].set_visible(False)
@@ -427,7 +400,6 @@ async def create_comparison_chart(tickers: str, period: Optional[str] = None) ->
         
         plt.tight_layout()
         
-        # Save the chart
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"comparison_{'_'.join(ticker_list)}_{period or '1y'}_{timestamp}.png"
         filepath = os.path.join("outputs/charts/", filename)
@@ -436,7 +408,6 @@ async def create_comparison_chart(tickers: str, period: Optional[str] = None) ->
         plt.savefig(filepath, dpi=300, bbox_inches='tight')
         plt.close()
         
-        # Store chart information in global variable for Streamlit display
         _chart_storage["filename"] = filename
         _chart_storage["filepath"] = filepath
         

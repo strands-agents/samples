@@ -36,11 +36,39 @@ def load_config():
 
 config = load_config()
 
+# Validate required configuration
+def validate_config(config: dict) -> None:
+    """Validate that required configuration values are present"""
+    s3_bucket = (config.get("s3_bucket_name_for_athena") or "").strip()
+    database = (config.get("database_name") or "").strip()
+    
+    missing_configs = []
+    if not s3_bucket:
+        missing_configs.append("s3_bucket_name_for_athena")
+    if not database:
+        missing_configs.append("database_name")
+    
+    if missing_configs:
+        error_msg = (
+            f"\n{'='*80}\n"
+            f"❌ ERROR: Missing required configuration values in prereqs_config.yaml:\n"
+            f"   - {', '.join(missing_configs)}\n\n"
+            f"📋 Action Required:\n"
+            f"   Please setup and configure the database by running:\n"
+            f"   application/prerequisites/prereqs_config.yaml\n"
+            f"{'='*80}\n"
+        )
+        logger.error(error_msg)
+        raise ValueError(error_msg)
+
+# Validate configuration before proceeding
+validate_config(config)
+
 # Configuration constants
 AWS_REGION = os.environ.get("AWS_REGION", config.get("region_name", "us-west-2"))
 S3_BUCKET_ATHENA = config.get("s3_bucket_name_for_athena", "")
-S3_OUTPUT = os.environ.get("S3_OUTPUT", f"s3://{S3_BUCKET_ATHENA}/" if S3_BUCKET_ATHENA else "s3://default-athena-bucket/")
-DATABASE = config.get("database_name", "financial_advisor")
+S3_OUTPUT = os.environ.get("S3_OUTPUT", f"s3://{S3_BUCKET_ATHENA}/")
+DATABASE = config.get("database_name", "")
 ATHENA_WORKGROUP = os.environ.get("ATHENA_WORKGROUP")
 POLL_INTERVAL_SECONDS = 1
 
@@ -155,6 +183,16 @@ def get_database_schema_via_athena(athena_client, database: str = DATABASE) -> D
         Dictionary mapping table names to column information
     """
     global fa_db_schema
+    
+    # Validate database parameter
+    if not database or not database.strip():
+        error_msg = (
+            "\n❌ ERROR: Database name is empty or not configured.\n"
+            "📋 Please setup and configure the database by running:\n"
+            "   python application/prerequisites/retrieve_schema.py\n"
+        )
+        logger.error(error_msg)
+        raise ValueError(error_msg)
     
     schema = {}
     tables = get_database_tables_via_athena(athena_client, database=database)

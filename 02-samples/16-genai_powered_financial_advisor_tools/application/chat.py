@@ -5,6 +5,7 @@ import re
 import sys
 import traceback
 
+import nest_asyncio
 import yaml
 from datetime import datetime
 from pathlib import Path
@@ -27,15 +28,10 @@ from strands.models import BedrockModel
 from strands.multiagent import GraphBuilder
 from strands.tools.mcp import MCPClient
 
-
 import info
 import prompt
 
 model_name = "Claude 3.7 Sonnet"
-model_type = "claude"
-
-model_id = "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
-models = info.get_model_info(model_name)
 reasoning_mode = "Disable"
 os.environ["BYPASS_TOOL_CONSENT"] = "true"  # Bypass consent for file_write
 
@@ -43,12 +39,13 @@ os.environ["BYPASS_TOOL_CONSENT"] = "true"  # Bypass consent for file_write
 chart_image_path = None
 
 logging.basicConfig(
-    level=logging.INFO,  # Default to INFO level
+    level=logging.INFO,  
     format="%(filename)s:%(lineno)d | %(message)s",
     handlers=[logging.StreamHandler(sys.stderr)],
 )
 logger = logging.getLogger("chat")
 
+# Load prereqs_config.yaml data
 def load_config():
     """Load configuration from prereqs_config.yaml"""
     config_path = Path(__file__).parent / "prerequisites" / "prereqs_config.yaml"
@@ -62,14 +59,11 @@ def load_config():
         return {}
 
 def update(modelName, reasoningMode):
-    global model_name, model_id, model_type, reasoning_mode
+    global model_name, reasoning_mode
 
     if model_name != modelName:
         model_name = modelName
         logger.info(f"model_name: {model_name}")
-
-        model_id = models[0]["model_id"]
-        model_type = models[0]["model_type"]
 
     if reasoningMode != reasoning_mode:
         reasoning_mode = reasoningMode
@@ -79,10 +73,18 @@ def update(modelName, reasoningMode):
 # Strands Agent Model Configuration
 # ============================================================================
 def get_model():
+    # Get fresh model info based on current model_name
+    models = info.get_model_info(model_name)
+    if not models:
+        raise ValueError(f"No model configuration found for: {model_name}")
+    
     profile = models[0]
-    if profile["model_type"] == "nova":
+    model_type = profile["model_type"]
+    model_id = profile["model_id"]
+    
+    if model_type == "nova":
         STOP_SEQUENCE = '"\n\n<thinking>", "\n<thinking>", " <thinking>"'
-    elif profile["model_type"] == "claude":
+    elif model_type == "claude":
         STOP_SEQUENCE = "\n\nHuman:"
 
     if model_type == "claude":
@@ -102,7 +104,6 @@ def get_model():
 
         additional_fields = {"thinking": thinking_config}
 
-        # Add interleaved thinking for Claude 4 Sonnet using anthropic_beta parameter
         if model_name == "Claude 4 Sonnet":
             additional_fields["anthropic_beta"] = ["interleaved-thinking-2025-05-14"]
 
@@ -172,8 +173,6 @@ stock_mcp_client = MCPClient(
 # ============================================================================
 # A specialized agent for client meeting analysis based on Amazon Bedrock Knowledge Bases ID.
 # ============================================================================
-
-# Configuration
 INVALID_KB_IDS = {"<UNKNOWN>", "UNKNOWN", "NULL", "NONE", "N/A"}
 MIN_KB_ID_LENGTH = 3
 
@@ -230,7 +229,6 @@ def get_kb_id(query: Optional[str] = None) -> Tuple[Optional[str], str]:
     
     return None, None
 
-# Backward compatibility helpers
 def extract_kb_id_from_query(query: str) -> Optional[str]:
     """Extract KB ID from query only (for backward compatibility)"""
     kb_id, source = get_kb_id(query)
@@ -264,7 +262,6 @@ def client_meeting_analysis(query: str) -> str:
     Raises:
         Returns error message string if knowledge base unavailable or analysis fails
     """
-    # Input validation
     if not query or not query.strip():
         return "Error: Meeting analysis query cannot be empty."
     
@@ -273,7 +270,6 @@ def client_meeting_analysis(query: str) -> str:
         return "Error: Query too long. Please limit to 2000 characters."
 
     try:
-        # Get KB ID from query or config
         logger.info(f"🔍 Resolving KB ID from query: '{sanitized_query[:50]}...'")
         kb_id, kb_source = get_kb_id(sanitized_query)
         
@@ -282,13 +278,11 @@ def client_meeting_analysis(query: str) -> str:
         
         logger.info(f"📋 Using KB ID: {kb_id} (source: {kb_source})")
 
-        # Set up environment for knowledge base access
         os.environ.update({
             "BYPASS_TOOL_CONSENT": "true", 
             "KNOWLEDGE_BASE_ID": kb_id
         })
         
-        # Get model and create meeting analysis agent
         model = get_model()
         if not model:
             return "Error: Meeting analysis model unavailable."
@@ -301,7 +295,6 @@ def client_meeting_analysis(query: str) -> str:
         
         logger.info(f"🚀 Executing meeting analysis with KB: {kb_id}")
         
-        # Execute analysis
         response = meeting_agent(sanitized_query)
         
         if not response:
@@ -344,17 +337,14 @@ def web_search_agent(query: str, search_type: str = "general") -> str:
     Raises:
         Returns error message string if client unavailable or search fails
     """
-    # Input validation and sanitization
     if not query or not query.strip():
         return "Error: Search query cannot be empty. Please provide a specific question or search term."
     
-    # Validate search type parameter
     valid_search_types = ["general", "news", "answer"]
     if search_type.lower() not in valid_search_types:
         logger.warning(f"Invalid search_type '{search_type}', defaulting to 'general'")
         search_type = "general"
     
-    # Get Tavily client session
     client = _session_manager.get_client("tavily")
     if client is None:
         error_msg = "Error: Tavily web search service is currently unavailable. Please try again later."
@@ -362,7 +352,6 @@ def web_search_agent(query: str, search_type: str = "general") -> str:
         return error_msg
 
     try:
-        # Validate client session and available tools
         tavily_tools = client.list_tools_sync()
         if not tavily_tools:
             error_msg = "Error: Web search tools are currently unavailable. Please contact support if this persists."
@@ -371,34 +360,28 @@ def web_search_agent(query: str, search_type: str = "general") -> str:
 
         logger.info(f"Web search initiated - Query: '{query[:50]}...', Type: {search_type}, Tools: {len(tavily_tools)}")
 
-        # Get configured model for search agent
         model = get_model()
         if not model:
             error_msg = "Error: Search model configuration unavailable. Please try again."
             logger.error("Failed to get model configuration for web search agent")
             return error_msg
 
-        # Create specialized web search agent with enhanced prompt
         web_agent = Agent(
             name="web_search_agent",
-            model=model, 
+            model=model,
             system_prompt=prompt.web_search_prompt, 
             tools=tavily_tools
         )
 
-        # Enhance query based on search type for better results
         enhanced_query = _enhance_search_query(query, search_type)
         
         logger.info(f"Executing web search with enhanced query: '{enhanced_query[:100]}...'")
 
-        # Execute the search with error handling
         response = web_agent(enhanced_query)
         
-        # Validate and process response
         if not response:
             return "Error: Search completed but no results were returned. Please try rephrasing your query."
         
-        # Log successful search completion
         logger.info(f"Web search completed successfully for query: '{query[:50]}...'")
         
         return str(response)
@@ -407,7 +390,6 @@ def web_search_agent(query: str, search_type: str = "general") -> str:
         error_msg = f"Error during web search execution: {str(e)}"
         logger.error(f"Web search agent error - Query: '{query}', Error: {error_msg}")
         
-        # Return user-friendly error message
         return (
             "Error: An issue occurred while searching the web. This could be due to "
             "network connectivity, service availability, or query complexity. "
@@ -427,25 +409,19 @@ def _enhance_search_query(query: str, search_type: str) -> str:
     """
     query = query.strip()
     
-    # Apply search type-specific enhancements
     if search_type.lower() == "news":
-        # Focus on recent news and current events
         enhanced_query = f"RECENT NEWS AND CURRENT EVENTS: {query}"
-        # Add temporal context for better news results
         if "recent" not in query.lower() and "latest" not in query.lower():
             enhanced_query += " (focus on latest developments and recent updates)"
             
     elif search_type.lower() == "answer":
-        # Direct answer-focused search
         enhanced_query = f"PROVIDE DIRECT ANSWER: {query}"
-        # Add specificity request for better targeted results
         if "?" not in query:
             enhanced_query += " - provide specific, factual answer with sources"
             
     else:  # general search
-        # Comprehensive search across multiple sources
+
         enhanced_query = f"COMPREHENSIVE RESEARCH: {query}"
-        # Add context for thorough analysis
         enhanced_query += " (provide detailed analysis with multiple perspectives and sources)"
     
     return enhanced_query
@@ -464,11 +440,9 @@ def knowledge_bases_agent(query: str) -> str:
     Returns:
         response from the MCP server
     """
-    # Validate that active_client is provided and valid
     if not query or not query.strip():
         return "Error: Knowledge base query cannot be empty. Please provide a specific search term or question."
 
-    # Get knowledge base client session
     client = _session_manager.get_client("kb")
     if client is None:
         error_msg = "Error: Active kb client session is required but not provided"
@@ -476,7 +450,6 @@ def knowledge_bases_agent(query: str) -> str:
         return error_msg
 
     try:
-        # Validate client session is usable
         kb_tools = client.list_tools_sync()
         if not kb_tools:
             error_msg = (
@@ -487,7 +460,6 @@ def knowledge_bases_agent(query: str) -> str:
 
         logger.info(f"kb_tools: {kb_tools}")
 
-        # Create a specialized kb research agent
         kb_system_prompt = """
             Specialized agent for returning list of Bedrock Knowledge Bases
             """
@@ -523,16 +495,13 @@ def database_query_agent(query: str) -> str:
             If the response includes underlying assets such as securities, they will be displayed in a table format.
             If portfolio return is included, provide summary of overall investments.
     """
-    # Input validation
     if not query or not query.strip():
         return "Error: Database query cannot be empty. Please provide a specific search query for investment data."
     
-    # Sanitize input
     sanitized_query = query.strip()
     if len(sanitized_query) > 1000:  # Reasonable limit for database queries
         return "Error: Query too long. Please limit database queries to 1000 characters."
 
-    # Get database client session
     client = _session_manager.get_client("database")
     if client is None:
         error_msg = "Error: Database client session not available"
@@ -540,7 +509,6 @@ def database_query_agent(query: str) -> str:
         return error_msg
 
     try:
-        # Validate client session is usable
         database_tools = client.list_tools_sync()
         if not database_tools:
             error_msg = (
@@ -551,14 +519,12 @@ def database_query_agent(query: str) -> str:
 
         logger.info(f"Database query initiated - Query: '{sanitized_query[:50]}...', Tools: {len(database_tools)}")
 
-        # Get configured model for database queries
         model = get_model()
         if not model:
             error_msg = "Error: Database query model configuration unavailable. Please try again."
             logger.error("Failed to get model configuration for database agent")
             return error_msg
 
-        # Get database prompt with schema
         db_prompt = prompt.get_database_query_prompt()
         
         database_agent = Agent(
@@ -569,11 +535,9 @@ def database_query_agent(query: str) -> str:
         )
         
         logger.info(f"Executing database query: '{sanitized_query}'")
-        
-        # Execute the database query
+
         response = database_agent(sanitized_query)
         
-        # Validate response
         if not response:
             return "Error: Database query completed but no results were returned. Please verify your query parameters and try again."
         
@@ -584,8 +548,7 @@ def database_query_agent(query: str) -> str:
     except Exception as e:
         error_msg = f"Error in database query agent: {str(e)}"
         logger.error(f"Database agent error - Query: '{sanitized_query}', Error: {error_msg}")
-        
-        # Return user-friendly error message
+
         return (
             "Error: An issue occurred during database query execution. This could be due to "
             "database connectivity, query syntax, or data access permissions. "
@@ -628,22 +591,18 @@ def stock_agent(query: str, search_type: str = "general") -> str:
     Raises:
         Returns error message string if stock service unavailable or query fails
     """
-    # Input validation
     if not query or not query.strip():
         return "Error: Stock query cannot be empty. Please provide a stock ticker symbol or analysis request."
     
-    # Sanitize input
     sanitized_query = query.strip()
     if len(sanitized_query) > 500:  # Reasonable limit for stock queries
         return "Error: Query too long. Please limit stock analysis requests to 500 characters."
     
-    # Validate search type parameter
     valid_search_types = ["general", "pricing", "metrics", "chart"]
     if search_type.lower() not in valid_search_types:
         logger.warning(f"Invalid search_type '{search_type}' for stock agent, defaulting to 'general'")
         search_type = "general"
 
-    # Get stock client session
     client = _session_manager.get_client("stock")
     if client is None:
         error_msg = "Error: Stock data service is currently unavailable. Please try again later."
@@ -651,7 +610,6 @@ def stock_agent(query: str, search_type: str = "general") -> str:
         return error_msg
 
     try:
-        # Validate client session is usable
         stock_tools = client.list_tools_sync()
         if not stock_tools:
             error_msg = "Error: Stock analysis tools are currently unavailable. Please contact support if this persists."
@@ -660,14 +618,12 @@ def stock_agent(query: str, search_type: str = "general") -> str:
 
         logger.info(f"Stock analysis initiated - Query: '{sanitized_query[:50]}...', Type: {search_type}, Tools: {len(stock_tools)}")
 
-        # Get configured model for stock analysis
         model = get_model()
         if not model:
             error_msg = "Error: Stock analysis model configuration unavailable. Please try again."
             logger.error("Failed to get model configuration for stock agent")
             return error_msg
 
-        # Create the stock analysis agent
         stock_analysis_agent = Agent(
             name="stock_analysis_agent",
             model=model, 
@@ -677,10 +633,8 @@ def stock_agent(query: str, search_type: str = "general") -> str:
         
         logger.info(f"Executing stock analysis for: '{sanitized_query}'")
 
-        # Execute stock analysis
         response = stock_analysis_agent(sanitized_query)
         
-        # Validate response
         if not response:
             return "Error: Stock analysis completed but no results were returned. Please verify the stock ticker symbol and try again."
         
@@ -689,21 +643,17 @@ def stock_agent(query: str, search_type: str = "general") -> str:
             response_str = str(response)
             # Check if the response mentions chart creation
             if any(keyword in response_str.lower() for keyword in ["chart", "performance", "return", "graph", "plot", "visualization"]):
-                # Look for the most recent chart file in the outputs/charts directory
                 charts_dir = "outputs/charts"
                 if os.path.exists(charts_dir):
                     chart_files = [f for f in os.listdir(charts_dir) if f.endswith('.png')]
                     if chart_files:
-                        # Get the most recent chart file
                         chart_files.sort(key=lambda x: os.path.getmtime(os.path.join(charts_dir, x)), reverse=True)
                         latest_chart = chart_files[0]
                         chart_filepath = os.path.join(charts_dir, latest_chart)
                         
-                        # Store chart info in global variables for Streamlit display
                         global chart_image_path
                         chart_image_path = chart_filepath
                         
-                        # Add chart information to response
                         chart_info = f"\n\n📊 **Chart Generated**: {latest_chart}\n*Chart will be displayed below the response.*"
                         response = response_str + chart_info
                         
@@ -720,7 +670,6 @@ def stock_agent(query: str, search_type: str = "general") -> str:
         error_msg = f"Error in stock analysis: {str(e)}"
         logger.error(f"Stock agent error - Query: '{sanitized_query}', Error: {error_msg}")
         
-        # Return user-friendly error message
         return (
             "Error: An issue occurred during stock analysis. This could be due to "
             "invalid ticker symbol, service availability, or data complexity. "
@@ -767,7 +716,6 @@ def market_search_agent(query: str, search_type: str = "news") -> str:
     if not query or not query.strip():
         return "Error: Market research query cannot be empty. Please provide a specific market or economic question."
     
-    # Validate search type parameter
     valid_search_types = ["general", "news", "answer"]
     if search_type.lower() not in valid_search_types:
         logger.warning(f"Invalid search_type '{search_type}' for market search, defaulting to 'news'")
@@ -790,14 +738,12 @@ def market_search_agent(query: str, search_type: str = "news") -> str:
 
         logger.info(f"Market research initiated - Query: '{query[:50]}...', Type: {search_type}, Tools: {len(tavily_tools)}")
 
-        # Get configured model for market search agent
         model = get_model()
         if not model:
             error_msg = "Error: Market research model configuration unavailable. Please try again."
             logger.error("Failed to get model configuration for market search agent")
             return error_msg
 
-        # Create specialized market research agent with market-focused prompt
         market_agent = Agent(
             name="market_search_agent",
             model=model, 
@@ -810,14 +756,11 @@ def market_search_agent(query: str, search_type: str = "news") -> str:
         
         logger.info(f"Executing market research with enhanced query: '{enhanced_query[:100]}...'")
 
-        # Execute the market research with error handling
         response = market_agent(enhanced_query)
         
-        # Validate and process response
         if not response:
             return "Error: Market research completed but no results were returned. Please try rephrasing your query with more specific market terms."
         
-        # Log successful market research completion
         logger.info(f"Market research completed successfully for query: '{query[:50]}...'")
         
         return str(response)
@@ -826,7 +769,6 @@ def market_search_agent(query: str, search_type: str = "news") -> str:
         error_msg = f"Error during market research execution: {str(e)}"
         logger.error(f"Market search agent error - Query: '{query}', Error: {error_msg}")
         
-        # Return user-friendly error message
         return (
             "Error: An issue occurred while conducting market research. This could be due to "
             "network connectivity, service availability, or query complexity. "
@@ -848,23 +790,17 @@ def _enhance_market_query(query: str, search_type: str) -> str:
     
     # Apply market-specific enhancements based on search type
     if search_type.lower() == "news":
-        # Focus on recent market news and financial events
         enhanced_query = f"LATEST MARKET NEWS AND FINANCIAL DEVELOPMENTS: {query}"
-        # Add market-specific temporal context
         if not any(term in query.lower() for term in ["recent", "latest", "current", "today"]):
             enhanced_query += " (focus on recent market movements, earnings, and economic announcements)"
             
     elif search_type.lower() == "answer":
-        # Direct market analysis and specific financial answers
         enhanced_query = f"MARKET ANALYSIS AND FINANCIAL ANSWER: {query}"
-        # Add specificity for market data and analysis
         if "?" not in query:
             enhanced_query += " - provide specific market data, financial metrics, and analytical insights with sources"
             
     else:  # general market search
-        # Comprehensive market and economic research
         enhanced_query = f"COMPREHENSIVE MARKET AND ECONOMIC RESEARCH: {query}"
-        # Add context for thorough market analysis
         enhanced_query += " (provide detailed market analysis, economic indicators, sector trends, and multiple expert perspectives)"
     
     # Add market-specific context keywords for better targeting
@@ -1019,7 +955,9 @@ def generate_pdf_report(report_content: str, filename: str) -> str:
 
         return f"PDF report generated successfully: {filepath}"
     except Exception as e:
-        logger.error(f"Error generating PDF: {e}")
+        error_msg = f"Error generating PDF: {e}"
+        logger.error(error_msg)
+        return f"Error: Failed to generate PDF report. {str(e)}"
 
 # ============================================================================
 # MCP Client Session Distribution Mechanism
@@ -1062,10 +1000,8 @@ class MCPClientSessionManager:
         """
         if client_type in self._active_clients:
             client = self._active_clients[client_type]
-            # Update last used timestamp
-            import datetime
 
-            self._session_status[client_type]["last_used"] = datetime.datetime.now()
+            self._session_status[client_type]["last_used"] = datetime.now()
             return client
         return None
 
@@ -1082,6 +1018,7 @@ class MCPClientSessionManager:
     def get_session_status(self) -> dict:
         """Get status information for all client sessions"""
         return self._session_status.copy()
+
 # Global session manager instance
 _session_manager = MCPClientSessionManager()
 
@@ -1109,7 +1046,6 @@ def triage_query(question, history_mode, st):
             # Open all client sessions at once and manage them
             with tavily_mcp_client as tavily_client, kb_mcp_client as kb_client, athena_mcp_client as database_client, stock_mcp_client as stock_client:
 
-                # Create client session dictionary for distribution
                 client_sessions = {
                     "tavily": tavily_client,
                     "kb": kb_client,
@@ -1120,7 +1056,6 @@ def triage_query(question, history_mode, st):
                 # Distribute active client sessions to specialized agent tools
                 _session_manager.set_active_clients(client_sessions)
 
-                # Log session distribution status
                 session_status = _session_manager.get_session_status()
                 logger.info(
                     f"MCP client session distribution status: {list(session_status.keys())}"
@@ -1131,92 +1066,89 @@ def triage_query(question, history_mode, st):
                 triage_response = triage_agent(question)
 
                 try:
-                    # Try to parse the response as JSON
                     response_text = str(triage_response)
-                    # Check if the response is a valid JSON
                     if response_text == "graph":
                         agent = create_graph_agent()
                     else:
                         agent = create_qna_agent()
                 except Exception as e:
-                    # Default to simple if parsing fails
                     logger.error(f"Error parsing triage response: {e}")
                     agent = create_qna_agent()
 
-                # Stream the response in real-time
-                async for item in agent.stream_async(question):
-                    # Handle tool use messages
-                    if "message" in item and "content" in item["message"] and "role" in item["message"] and item["message"]["role"] == "assistant":
-                        for content_item in item['message']['content']:
-                            if "toolUse" in content_item:
-                                tool_name = content_item["toolUse"].get('name', 'unknown')
-                                tool_id = content_item["toolUse"].get('toolUseId', '')
-                                tool_input = content_item["toolUse"].get('input', {})
-                                
-                                # Track tool usage count
-                                if tool_name not in tool_usage_count:
-                                    tool_usage_count[tool_name] = 0
-                                tool_usage_count[tool_name] += 1
-                                
-                                # Ensure we're on a new line
-                                if full_response and not full_response.endswith('\n\n'):
-                                    full_response += '\n\n'
-                                
-                                # Display tool usage information with count
-                                count_suffix = f" (#{tool_usage_count[tool_name]})" if tool_usage_count[tool_name] > 1 else ""
-                                
-                                if tool_name == 'execute_sql_query' and 'description' in tool_input:
-                                    tool_info = f"🔍 {tool_input['description']}{count_suffix}\n\n"
-                                elif tool_name == 'get_tables_information':
-                                    tool_info = f"⚙️ Retrieving table information{count_suffix}...\n\n"
-                                elif tool_name == 'current_time':
-                                    tool_info = f"⚙️ Getting current time{count_suffix}...\n\n"
-                                elif tool_name == 'client_meeting_analysis':
-                                    tool_info = f"📋 Analyzing client meeting{count_suffix}...\n\n"
-                                elif tool_name == 'web_search_agent':
-                                    query_preview = str(tool_input.get('query', ''))[:50]
-                                    tool_info = f"🌐 Searching web{count_suffix}: {query_preview}...\n\n"
-                                elif tool_name == 'market_search_agent':
-                                    query_preview = str(tool_input.get('query', ''))[:50]
-                                    tool_info = f"📈 Researching market{count_suffix}: {query_preview}...\n\n"
-                                elif tool_name == 'database_query_agent':
-                                    query_preview = str(tool_input.get('query', ''))[:50]
-                                    tool_info = f"⚙️ Querying database{count_suffix}: {query_preview}...\n\n"
-                                elif tool_name == 'stock_agent':
-                                    query_preview = str(tool_input.get('query', ''))[:50]
-                                    tool_info = f"📊 Fetching stock data{count_suffix}: {query_preview}...\n\n"
-                                elif tool_name == 'knowledge_bases_agent':
-                                    tool_info = f"📚 Searching knowledge bases{count_suffix}...\n\n"
-                                elif tool_name == 'generate_pdf_report':
-                                    tool_info = f"📄 Generating PDF report{count_suffix}...\n\n"
-                                else:
-                                    # Generic tool use notification for all other tools
-                                    tool_info = f"🛠️ Using tool: {tool_name}{count_suffix}\n\n"
-                                
-                                full_response += tool_info
-                                message_placeholder.markdown(full_response, unsafe_allow_html=True)
-                                logger.info(f"Tool used: {tool_name}{count_suffix} (ID: {tool_id[:8]}...)")
-                    
-                    # Handle tool results
-                    elif "message" in item and "content" in item["message"] and "role" in item["message"] and item["message"]["role"] == "user":
-                        for content_item in item['message']['content']:
-                            if "toolResult" in content_item:
-                                tool_result = content_item["toolResult"]
-                                tool_id = tool_result.get('toolUseId', '')
-                                status = tool_result.get('status', 'unknown')
-                                
-                                # Log tool completion
-                                if status == "success":
-                                    logger.info(f"✅ Tool completed successfully (ID: {tool_id[:8]}...)")
-                                else:
-                                    logger.warning(f"❌ Tool failed (ID: {tool_id[:8]}...)")
-                    
-                    # Handle streaming data chunks
-                    elif "data" in item:
-                        full_response += item['data']
-                        message_placeholder.markdown(full_response, unsafe_allow_html=True)
+                # Stream the response in real-time with timeout protection
+                try:
+                    async with asyncio.timeout(1200):  # 20 minute timeout for long operations
+                        async for item in agent.stream_async(question):
+                            if "message" in item and "content" in item["message"] and "role" in item["message"] and item["message"]["role"] == "assistant":
+                                for content_item in item['message']['content']:
+                                    if "toolUse" in content_item:
+                                        tool_name = content_item["toolUse"].get('name', 'unknown')
+                                        tool_id = content_item["toolUse"].get('toolUseId', '')
+                                        tool_input = content_item["toolUse"].get('input', {})
+                                        
+                                        if tool_name not in tool_usage_count:
+                                            tool_usage_count[tool_name] = 0
+                                        tool_usage_count[tool_name] += 1
+                                        
+                                        if full_response and not full_response.endswith('\n\n'):
+                                            full_response += '\n\n'
 
-                # Log the final response
+                                        count_suffix = f" (#{tool_usage_count[tool_name]})" if tool_usage_count[tool_name] > 1 else ""
+                                        
+                                        if tool_name == 'execute_sql_query' and 'description' in tool_input:
+                                            tool_info = f"🔍 {tool_input['description']}{count_suffix}\n\n"
+                                        elif tool_name == 'get_tables_information':
+                                            tool_info = f"⚙️ Retrieving table information{count_suffix}...\n\n"
+                                        elif tool_name == 'current_time':
+                                            tool_info = f"⚙️ Getting current time{count_suffix}...\n\n"
+                                        elif tool_name == 'client_meeting_analysis':
+                                            tool_info = f"📋 Analyzing client meeting{count_suffix}...\n\n"
+                                        elif tool_name == 'web_search_agent':
+                                            query_preview = str(tool_input.get('query', ''))[:50]
+                                            tool_info = f"🌐 Searching web{count_suffix}: {query_preview}...\n\n"
+                                        elif tool_name == 'market_search_agent':
+                                            query_preview = str(tool_input.get('query', ''))[:50]
+                                            tool_info = f"📈 Researching market{count_suffix}: {query_preview}...\n\n"
+                                        elif tool_name == 'database_query_agent':
+                                            query_preview = str(tool_input.get('query', ''))[:50]
+                                            tool_info = f"⚙️ Querying database{count_suffix}: {query_preview}...\n\n"
+                                        elif tool_name == 'stock_agent':
+                                            query_preview = str(tool_input.get('query', ''))[:50]
+                                            tool_info = f"📊 Fetching stock data{count_suffix}: {query_preview}...\n\n"
+                                        elif tool_name == 'knowledge_bases_agent':
+                                            tool_info = f"📚 Searching knowledge bases{count_suffix}...\n\n"
+                                        elif tool_name == 'generate_pdf_report':
+                                            tool_info = f"📄 Generating PDF report{count_suffix}...\n\n"
+                                        else:
+                                            # Generic tool use notification for all other tools
+                                            tool_info = f"🛠️ Using tool: {tool_name}{count_suffix}\n\n"
+                                        
+                                        full_response += tool_info
+                                        message_placeholder.markdown(full_response, unsafe_allow_html=True)
+                                        logger.info(f"Tool used: {tool_name}{count_suffix} (ID: {tool_id[:8]}...)")
+                            
+                            # Handle tool results
+                            elif "message" in item and "content" in item["message"] and "role" in item["message"] and item["message"]["role"] == "user":
+                                for content_item in item['message']['content']:
+                                    if "toolResult" in content_item:
+                                        tool_result = content_item["toolResult"]
+                                        tool_id = tool_result.get('toolUseId', '')
+                                        status = tool_result.get('status', 'unknown')
+                                        
+                                        if status == "success":
+                                            logger.info(f"✅ Tool completed successfully (ID: {tool_id[:8]}...)")
+                                        else:
+                                            logger.warning(f"❌ Tool failed (ID: {tool_id[:8]}...)")
+                            
+                            # Handle streaming data chunks
+                            elif "data" in item:
+                                full_response += item['data']
+                                message_placeholder.markdown(full_response, unsafe_allow_html=True)
+                except asyncio.TimeoutError:
+                    logger.error("Streaming response timed out after 10 minutes")
+                    full_response += "\n\n⚠️ Response generation timed out. Please try again with a simpler query."
+                    message_placeholder.markdown(full_response, unsafe_allow_html=True)
+
                 logger.info(f"Final response: {repr(full_response)}")
                 logger.info(f"Tool usage summary: {tool_usage_count}")
 
@@ -1225,9 +1157,17 @@ def triage_query(question, history_mode, st):
             message_placeholder.markdown(
                 "Sorry, an error occurred while generating the response."
             )
-            logger.error(traceback.format_exc())  # Detailed error logging
+            logger.error(traceback.format_exc()) 
     
-    asyncio.run(process_streaming_response())
+    # Handle event loop properly to avoid conflicts with existing loops (e.g., Streamlit)
+    try:
+        
+        loop = asyncio.get_running_loop()
+        nest_asyncio.apply()
+        loop.run_until_complete(process_streaming_response())
+    except RuntimeError:
+        asyncio.run(process_streaming_response())
+    
     return full_response
 
 # ============================================================================
@@ -1355,4 +1295,5 @@ def create_graph_agent(system_prompt: str = None):
         
     except Exception as e:
         logger.error(f"Error creating graph agent: {e}")
-        return triage_query()
+        logger.warning("Falling back to QnA agent due to graph creation failure")
+        return create_qna_agent()
