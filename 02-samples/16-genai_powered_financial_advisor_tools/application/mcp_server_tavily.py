@@ -8,7 +8,9 @@ import json
 import logging
 import os
 import sys
+import yaml
 from typing import List, Literal, Optional
+from pathlib import Path
 
 from dotenv import load_dotenv
 from mcp.server.fastmcp import FastMCP
@@ -23,14 +25,45 @@ logging.basicConfig(
 )
 logger = logging.getLogger("tavily_mcp")
 
-# Load environment variables from .env.example file
-load_dotenv(dotenv_path=".env.example")
+# Load configuration
+def load_config():
+    """Load configuration from prereqs_config.yaml"""
+    config_path = Path(__file__).parent / "prerequisites" / "prereqs_config.yaml"
+    try:
+        with open(config_path, 'r') as f:
+            return yaml.safe_load(f)
+    except Exception as e:
+        logger.warning(f"⚠️ Could not load config: {e}")
+        return {}
 
-api_key = os.getenv("TAVILY_API_KEY")
-if not api_key:
-    err_msg = "TAVILY_API_KEY environment variable is required"
-    logger.error(f"{err_msg}")
-    raise ValueError(err_msg)
+config = load_config()
+
+# Load environment variables from .env.example file as fallback
+env_path = Path(__file__).parent.parent / ".env.example"
+load_dotenv(dotenv_path=env_path)
+
+# Validate required configuration
+def validate_config(config: dict) -> None:
+    """Validate that required configuration values are present"""
+    # Try config first, then environment variable
+    tavily_api_key = (config.get("tavily_api_key") or os.getenv("TAVILY_API_KEY") or "").strip()
+    
+    if not tavily_api_key:
+        error_msg = (
+            f"\n{'='*80}\n"
+            f"❌ ERROR: Missing required Tavily API key\n\n"
+            f"📋 Action Required:\n"
+            f"   Please add your Tavily API key to either:\n"
+            f"   .env.example file (TAVILY_API_KEY)\n"
+            f"{'='*80}\n"
+        )
+        logger.error(error_msg)
+        raise ValueError(error_msg)
+    
+    return tavily_api_key
+
+# Validate configuration and get API key
+api_key = validate_config(config)
 
 try:
     mcp = FastMCP(
