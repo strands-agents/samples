@@ -145,6 +145,23 @@ claude_4_sonnet_models = [  # Claude 4 Sonnet
     },
 ]
 
+claude_4_5_sonnet_models = [  # Claude 4.5 Sonnet
+    {
+        "bedrock_region": "us-west-2",  # Oregon
+        "model_type": "claude",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+    },
+    {
+        "bedrock_region": "us-east-1",  # N.Virginia
+        "model_type": "claude",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+    },
+    {
+        "bedrock_region": "us-east-2",  # Ohio
+        "model_type": "claude",
+        "model_id": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+    },
+]
 
 def get_model_info(model_name):
     """
@@ -170,7 +187,8 @@ def get_model_info(model_name):
         models = claude_3_7_sonnet_models
     elif model_name == "Nova Premier":
         models = nova_premier
-
+    elif model_name == "Claude 4.5 Sonnet":
+        models = claude_4_5_sonnet_models
     return models
 
 

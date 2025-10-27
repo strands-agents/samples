@@ -82,12 +82,13 @@ DEFAULT_MODEL = "Claude 3.7 Sonnet"
 
 # Available AI models
 AVAILABLE_MODELS = [
-    "Claude 3.7 Sonnet",
+    "Claude 4.5 Sonnet",
     "Claude 4 Sonnet",
+    "Claude 3.7 Sonnet",
 ]
 
 # Models that support advanced reasoning
-REASONING_SUPPORTED_MODELS = ["Claude 3.7 Sonnet", "Claude 4 Sonnet"]
+REASONING_SUPPORTED_MODELS = ["Claude 4.5 Sonnet","Claude 3.7 Sonnet", "Claude 4 Sonnet"]
 
 # Configure logging for the application
 logging.basicConfig(
@@ -239,7 +240,7 @@ def display_example_buttons() -> None:
     
     examples = [
         ("📈 US Stock Market Prospects", "The prospects for the US stock market for remaining 2025", "example3"),
-        ("💰 Amazon Stock Price", "Amazon stock pricing today", "example4"),
+        ("💰 Amazon Stock Price", "The latest Amazon stock pricing", "example4"),
         ("🔍 Compare AMZN vs MSFT", "Compare Amazon and Microsoft stock performance over the last year", "example6"),
         ("📋 Complete Customer Report", f"Using knowledge base id {chat.get_kb_id_from_config()}, provide a complete customer report including meeting summary, action items, research answers for each action item, portfolio analysis, security performance, and market trend overview", "example8"),
     ]

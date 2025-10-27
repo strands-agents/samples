@@ -104,7 +104,7 @@ def get_model():
 
         additional_fields = {"thinking": thinking_config}
 
-        if model_name == "Claude 4 Sonnet":
+        if model_name in ["Claude 4 Sonnet", "Claude 4.5 Sonnet"]:
             additional_fields["anthropic_beta"] = ["interleaved-thinking-2025-05-14"]
 
         model = BedrockModel(
@@ -130,7 +130,7 @@ def get_model():
             max_tokens=maxOutputTokens,
             stop_sequences=[STOP_SEQUENCE],
             temperature=0.1,
-            top_p=0.9,
+            #top_p=0.9,
             additional_request_fields={"thinking": {"type": "disabled"}},
         )
     return model

@@ -32,7 +32,7 @@ Autonomous agents are a current market trend. Complex inquiries will take time t
 ### Core Components
 
 ```
-GenAI_powered_financial_advisor_tools/
+17-genai-powered-financial-advisor-tools/
 ├── application/           # Main application code
 │   ├── app.py            # Streamlit web interface
 │   ├── chat.py           # Core chat logic and agent 
@@ -42,7 +42,7 @@ GenAI_powered_financial_advisor_tools/
 │   ├── mcp_server_*.py   # MCP server implementations
 │   └── prerequisites/    # Setup and configuration
 │       ├── athena_database_setup.py
-│       ├── create_knowledge_base.py
+│       ├── bedrock_knowledge_base_setup.py
 │       ├── prereqs_config.yaml
 │       └── client_meeting_note.txt
 ├── assets/              # Application assets (fonts, images)
@@ -61,10 +61,10 @@ GenAI_powered_financial_advisor_tools/
 
 The application includes specialized MCP servers for different data sources:
 
-- **Knowledge Base List Server** (`mcp_server_kb.py`): Amazon Bedrock Knowledge Bases integration
 - **Stock Data Server** (`mcp_server_stock.py`): Yahoo Finance API integration for stock data
 - **Athena Server** (`mcp_server_athena.py`): AWS Athena database queries for portfolio data
 - **Tavily Server** (`mcp_server_tavily.py`): Web search capabilities for market research
+- **Knowledge Base List Server** (`mcp_server_kb.py`): Amazon Bedrock Knowledge Bases integration
 
 ### Specialized AI Agents
 
@@ -93,7 +93,7 @@ The application includes specialized MCP servers for different data sources:
 1. **Clone and navigate to the GenAI_powered_financial_advisor_tools directory**:
    ```bash
    git clone https://github.com/strands-agents/samples.git
-   cd 16-GenAI_powered_financial_advisor_tools
+   cd 17-genai-powered-financial-advisor-tools
    ```
 
 2. **Set up Python virtual environment**:
@@ -134,13 +134,13 @@ The application includes specialized MCP servers for different data sources:
 
 6. **Start the application**:
    ```bash
-   cd 16-GenAI_powered_financial_advisor_tools
+   cd 17-genai-powered-financial-advisor-tools
 
    streamlit run application/app.py
    ```
 
 7. **Access the application**:
-   - Open your browser to `http://localhost:8501` (port number can be same or different)
+   - Open your browser to `http://localhost:8501` 
    - Select your preferred AI model from the sidebar
    - Start interacting with the Financial Advisor AI
 
@@ -181,7 +181,7 @@ Retrieves comprehensive portfolio information including holdings, performance me
 
 ### Client Meeting Analysis
 ```
-"client meeting summary of knowledge base ID kb-12345"
+"client meeting summary of knowledge base ID kb-12345" (your knowledge base id)
 "using knowledge base Financial advisor Sarah Johnson, Provide a complete customer report"
 ```
 
@@ -203,7 +203,25 @@ Retrieves comprehensive portfolio information including holdings, performance me
 - **yfinance**: Stock market data
 - **tavily-python**: Web search capabilities
 - **mcp**: Model Context Protocol implementation
-### Specialized Libraries
+
+
+
+7. **Access the application**:
+   - Open your browser to `http://localhost:8501` (port number can be same or different)
+   - Select your preferred AI model from the sidebar
+   - Start interacting with the Financial Advisor AI
+
+## 🔧 Cleanup
+
+Clean up created resources by executing the scripts in the application/prerequisites/ directory:
+
+```yaml
+#Delete knowledge base relavent resources
+python bedrock_knowledge_base_setup.py --mode delete
+
+#Delete database relavent resources
+python athena_database_setup.py --mode delete
+```
 
 ## 📄 License
 
