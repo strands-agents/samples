@@ -2033,49 +2033,247 @@ class AthenaDatabaseSetup:
             logger.error(f"❌ Unexpected error during setup: {e}")
             return False
 
+    def delete_athena_resources(self):
+        """Delete Athena database and all its tables"""
+        try:
+            logger.info(f"🗑️  Deleting Athena database: {self.database_name}")
+            
+            # List all tables in the database
+            try:
+                response = self.athena_client.list_table_metadata(
+                    CatalogName='AwsDataCatalog',
+                    DatabaseName=self.database_name
+                )
+                
+                tables = [table['Name'] for table in response.get('TableMetadataList', [])]
+                logger.info(f"Found {len(tables)} tables to delete: {tables}")
+                
+                # Drop each table
+                for table_name in tables:
+                    try:
+                        logger.info(f"Dropping table: {table_name}")
+                        query = f"DROP TABLE IF EXISTS {table_name}"
+                        response = self.athena_client.start_query_execution(
+                            QueryString=query,
+                            QueryExecutionContext={'Database': self.database_name},
+                            ResultConfiguration={
+                                'OutputLocation': f's3://{self.bucket_name}/athena-results/'
+                            }
+                        )
+                        query_execution_id = response['QueryExecutionId']
+                        self._wait_for_query_completion(query_execution_id)
+                        logger.info(f"✅ Table dropped: {table_name}")
+                    except Exception as e:
+                        logger.warning(f"⚠️  Failed to drop table {table_name}: {e}")
+                        
+            except Exception as e:
+                logger.warning(f"⚠️  Failed to list tables: {e}")
+            
+            # Drop the database
+            try:
+                logger.info(f"Dropping database: {self.database_name}")
+                query = f"DROP DATABASE IF EXISTS {self.database_name} CASCADE"
+                response = self.athena_client.start_query_execution(
+                    QueryString=query,
+                    ResultConfiguration={
+                        'OutputLocation': f's3://{self.bucket_name}/athena-results/'
+                    }
+                )
+                query_execution_id = response['QueryExecutionId']
+                self._wait_for_query_completion(query_execution_id)
+                logger.info(f"✅ Database dropped: {self.database_name}")
+            except Exception as e:
+                logger.error(f"❌ Failed to drop database: {e}")
+                
+        except Exception as e:
+            logger.error(f"❌ Failed to delete Athena resources: {e}")
+            raise AthenaSetupError(f"Failed to delete Athena resources: {e}")
+    
+    def delete_s3_bucket(self):
+        """Delete S3 bucket and all its contents"""
+        try:
+            logger.info(f"🗑️  Deleting S3 bucket: {self.bucket_name}")
+            
+            # Delete all objects in the bucket
+            try:
+                logger.info("Listing objects in bucket...")
+                paginator = self.s3_client.get_paginator('list_objects_v2')
+                pages = paginator.paginate(Bucket=self.bucket_name)
+                
+                objects_deleted = 0
+                for page in pages:
+                    if 'Contents' in page:
+                        objects = [{'Key': obj['Key']} for obj in page['Contents']]
+                        if objects:
+                            logger.info(f"Deleting {len(objects)} objects...")
+                            self.s3_client.delete_objects(
+                                Bucket=self.bucket_name,
+                                Delete={'Objects': objects}
+                            )
+                            objects_deleted += len(objects)
+                
+                logger.info(f"✅ Deleted {objects_deleted} objects from bucket")
+                
+            except ClientError as e:
+                if e.response['Error']['Code'] != 'NoSuchBucket':
+                    logger.warning(f"⚠️  Error deleting objects: {e}")
+            
+            # Delete all object versions (if versioning is enabled)
+            try:
+                logger.info("Checking for object versions...")
+                paginator = self.s3_client.get_paginator('list_object_versions')
+                pages = paginator.paginate(Bucket=self.bucket_name)
+                
+                versions_deleted = 0
+                for page in pages:
+                    # Delete versions
+                    if 'Versions' in page:
+                        versions = [{'Key': v['Key'], 'VersionId': v['VersionId']} 
+                                   for v in page['Versions']]
+                        if versions:
+                            logger.info(f"Deleting {len(versions)} object versions...")
+                            self.s3_client.delete_objects(
+                                Bucket=self.bucket_name,
+                                Delete={'Objects': versions}
+                            )
+                            versions_deleted += len(versions)
+                    
+                    # Delete delete markers
+                    if 'DeleteMarkers' in page:
+                        markers = [{'Key': m['Key'], 'VersionId': m['VersionId']} 
+                                  for m in page['DeleteMarkers']]
+                        if markers:
+                            logger.info(f"Deleting {len(markers)} delete markers...")
+                            self.s3_client.delete_objects(
+                                Bucket=self.bucket_name,
+                                Delete={'Objects': markers}
+                            )
+                            versions_deleted += len(markers)
+                
+                if versions_deleted > 0:
+                    logger.info(f"✅ Deleted {versions_deleted} object versions/markers")
+                    
+            except ClientError as e:
+                if e.response['Error']['Code'] != 'NoSuchBucket':
+                    logger.warning(f"⚠️  Error deleting versions: {e}")
+            
+            # Delete the bucket
+            try:
+                logger.info(f"Deleting bucket: {self.bucket_name}")
+                self.s3_client.delete_bucket(Bucket=self.bucket_name)
+                logger.info(f"✅ S3 bucket deleted: {self.bucket_name}")
+            except ClientError as e:
+                if e.response['Error']['Code'] == 'NoSuchBucket':
+                    logger.warning(f"⚠️  Bucket {self.bucket_name} does not exist")
+                else:
+                    raise
+                    
+        except Exception as e:
+            logger.error(f"❌ Failed to delete S3 bucket: {e}")
+            raise AthenaSetupError(f"Failed to delete S3 bucket: {e}")
+    
+    def delete_resources(self) -> bool:
+        """Delete all Athena and S3 resources"""
+        try:
+            logger.info("🚀 Starting Athena Database Deletion")
+            
+            # Initialize AWS clients
+            self._initialize_aws_clients()
+            
+            # Delete Athena resources
+            self.delete_athena_resources()
+            
+            # Delete S3 bucket
+            self.delete_s3_bucket()
+            
+            logger.info("🎉 All resources deleted successfully!")
+            return True
+            
+        except AthenaSetupError as e:
+            logger.error(f"❌ Deletion failed: {e}")
+            return False
+        except Exception as e:
+            logger.error(f"❌ Unexpected error during deletion: {e}")
+            return False
+
 def main():
     """Main function to run the setup"""
     import argparse
     
     parser = argparse.ArgumentParser(description='Amazon Athena Database Setup Script')
-    parser.add_argument('--test-config', action='store_true', 
-                       help='Test configuration loading without AWS operations')
+    parser.add_argument('--mode', type=str, required=True,
+                       choices=['create', 'delete'],
+                       help='Mode: create or delete Athena database resources')
     parser.add_argument('--config-path', type=str, 
                        help='Path to configuration file (default: auto-detect)')
     
     args = parser.parse_args()
     
     try:
-        # Test configuration loading
-        if args.test_config:
-            config_path = args.config_path
-            setup = AthenaDatabaseSetup(config_path)
-            print("🎉 Configuration test successful!")
-            print(f"📋 Loaded config: {setup.config}")
-            
-            # Show what the generated names would look like
-            print(f"\n🔮 Generated names preview:")
-            print(f"  • S3 Bucket: {setup._generate_bucket_name()}")
-            print(f"  • Database: {setup._generate_database_name()}")
-            return
-        
-        # Run full setup
         config_path = args.config_path
-        setup = AthenaDatabaseSetup(config_path)
-        success = setup.run_setup()
         
-        if success:
-            print("\n🎉 Database setup completed successfully!")
-            sys.exit(0)
-        else:
-            print("\n❌ Database setup failed. Check logs for details.")
-            sys.exit(1)
+        if args.mode == 'create':
+            logger.info("🎯 Mode: CREATE")
+            setup = AthenaDatabaseSetup(config_path)
+            success = setup.run_setup()
+            
+            if success:
+                print("\n🎉 Database setup completed successfully!")
+                sys.exit(0)
+            else:
+                print("\n❌ Database setup failed. Check logs for details.")
+                sys.exit(1)
+                
+        elif args.mode == 'delete':
+            logger.info("🎯 Mode: DELETE")
+            
+            # Load config to get the bucket and database names
+            setup = AthenaDatabaseSetup(config_path)
+            
+            # Get the names from config
+            bucket_name = setup.config.get('s3_bucket_name_for_athena')
+            database_name = setup.config.get('database_name')
+            
+            if not bucket_name or not database_name:
+                logger.error("❌ Missing s3_bucket_name_for_athena or database_name in config file")
+                logger.error("   Please ensure these values are set in prereqs_config.yaml")
+                sys.exit(1)
+            
+            logger.info(f"📋 S3 Bucket to delete: {bucket_name}")
+            logger.info(f"📋 Database to delete: {database_name}")
+            
+            # Confirm deletion
+            print(f"\n⚠️  WARNING: This will delete the following resources:")
+            print(f"   • Athena Database: {database_name}")
+            print(f"   • S3 Bucket: {bucket_name}")
+            print(f"   • All tables and data in the database")
+            print(f"   • All objects in the S3 bucket")
+            
+            confirmation = input("\nType 'DELETE' to confirm deletion: ")
+            if confirmation != 'DELETE':
+                print("❌ Deletion cancelled")
+                sys.exit(0)
+            
+            # Set the names from config
+            setup.bucket_name = bucket_name
+            setup.database_name = database_name
+            
+            # Delete resources
+            success = setup.delete_resources()
+            
+            if success:
+                print("\n🎉 Resources deleted successfully!")
+                sys.exit(0)
+            else:
+                print("\n❌ Deletion failed. Check logs for details.")
+                sys.exit(1)
             
     except KeyboardInterrupt:
-        print("\n⚠️  Setup interrupted by user")
+        print("\n⚠️  Operation interrupted by user")
         sys.exit(1)
     except Exception as e:
         print(f"\n💥 Fatal error: {e}")
+        logger.error(f"Fatal error: {e}", exc_info=True)
         sys.exit(1)
 
 if __name__ == "__main__":

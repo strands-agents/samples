@@ -15,8 +15,8 @@ if [ ! -f "application/prerequisites/prereqs_config.yaml" ]; then
 fi
 
 # Verify required scripts exist
-if [ ! -f "application/prerequisites/create_knowledge_base.py" ]; then
-    echo "❌ Error: create_knowledge_base.py not found in application/prerequisites/"
+if [ ! -f "application/prerequisites/bedrock_knowledge_base_setup.py" ]; then
+    echo "❌ Error: bedrock_knowledge_base_setup.py not found in application/prerequisites/"
     exit 1
 fi
 
@@ -29,7 +29,7 @@ fi
 echo ""
 echo "📚 Step 1: Deploying Knowledge Base..."
 echo "--------------------------------------"
-python application/prerequisites/create_knowledge_base.py --mode create
+python application/prerequisites/bedrock_knowledge_base_setup.py --mode create
 
 if [ $? -eq 0 ]; then
     echo "✅ Knowledge Base deployment completed successfully"
@@ -42,7 +42,7 @@ fi
 echo ""
 echo "🗄️  Step 2: Deploying Database and Tables using Amazon Athena..."
 echo "---------------------------------------------------------------"
-python application/prerequisites/athena_database_setup.py
+python application/prerequisites/athena_database_setup.py --mode create
 
 if [ $? -eq 0 ]; then
     echo "✅ Athena database deployment completed successfully"
