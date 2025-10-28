@@ -1,5 +1,4 @@
-FROM public.ecr.aws/docker/library/python:3.12-slim
-
+FROM public.ecr.aws/docker/library/python:3.13-slim
 WORKDIR /app
 
 # Install system dependencies
@@ -10,23 +9,27 @@ RUN apt-get update && apt-get install -y \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
-# Copy requirements file
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy entire project (respecting .dockerignore)
+COPY . .
 
-# Copy application code
-COPY app/ .
+# Install dependencies
+
+# Install from requirements file
+RUN python -m pip install --no-cache-dir -r requirements.txt
+
+# Signal that this is running in Docker for host binding logic
+ENV DOCKER_CONTAINER=1
+
+#RUN python -m pip install aws_opentelemetry_distro_genai_beta>=0.1.2
 
 # Create a non-root user to run the application
 RUN useradd -m appuser
 USER appuser
 
-# Expose the port the app runs on
-EXPOSE 8000
+EXPOSE 8080
 
-# Command to run the application with Uvicorn
-# - workers: 2 worker processes (adjust based on container resources)
-# - host: Listen on all interfaces
-# - port: 8000
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
+# Use the full module path from src directory
+WORKDIR /app/src
+
+#CMD ["opentelemetry-instrument", "python", "-m", "app"]
+CMD ["python", "app.py"]

@@ -1,8 +1,6 @@
-fastapi==0.115.12
-uvicorn==0.34.2
-pydantic==2.11.4
-strands-agents
-strands-agents-tools
-boto3
-psycopg2
-typing
+strands-agents==1.13.0
+strands-agents-tools==0.2.12
+fastapi==0.120.1
+uvicorn==0.38.0
+pydantic==2.12.3
+pyjwt[crypto]

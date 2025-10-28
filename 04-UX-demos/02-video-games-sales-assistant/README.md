@@ -1,5 +1,10 @@
 # Deploying a Conversational Data Analyst Assistant Solution with Strands Agents SDK
 
+> [!IMPORTANT]
+> **⚡ Enhanced Deployment Option**: This solution can also be deployed using **Amazon AgentCore** - Agentic platform to build, deploy and operate agents securely at scale using any framework and model.
+> 
+> **🔥 [Deploy with Amazon AgentCore →](https://github.com/awslabs/amazon-bedrock-agentcore-samples/tree/main/02-use-cases/video-games-sales-assistant)**
+
 This solution provides a Generative AI application reference that allows users to interact with data through a natural language interface. The solution leverages **[Strands Agents SDK](https://strandsagents.com/)** to build an agent that connects to a PostgreSQL database, providing data analysis capabilities through a Web Application interface. The infrastructure is deployed using AWS CDK.
 
 <div align="center">
@@ -32,7 +37,7 @@ The following architecture diagram illustrates a reference solution for a genera
 > [!IMPORTANT]
 > This sample application is meant for demo purposes and is not production ready. Please make sure to validate the code with your organizations security best practices.
 > 
-> Cost Alert: This solution will cost approximately $230 USD per month, mainly for Aurora Serverless, RDS Proxy, Application Load Balanceer, Fargate container and VPC NAT Gateway, plus the usage of on-demand services like Amazon Bedrock. Please ensure you understand these costs before deployment.
+> Cost Alert: This solution will cost approximately $375 USD per month, mainly for Aurora Serverless, RDS Proxy, Application Load Balancer, Fargate container and VPC NAT Gateway, plus the usage of on-demand services like Amazon Bedrock. Please ensure you understand these costs before deployment.
 
 The solution deploys the following AWS services through AWS CDK:
 
@@ -44,16 +49,22 @@ The solution deploys the following AWS services through AWS CDK:
         - get_tables_information
     - Strands tool:
         - current_time
-- **Aurora Serverless PostgreSQL**: Stores the video game sales data
-- **Amazon DynamoDB**: Tracks users' conversations and raw query results
-- **AWS Secrets Manager**: Securely stores database credentials
-- **Amazon VPC**: Provides network isolation for the database
-- **React Web Application**: Delivers the user interface for the assistant
+- **Amazon Aurora PostgreSQL Serverless v2**: Stores the video game sales data with Data API enabled for secure access
+- **Amazon ECS on Fargate**: Hosts the Strands Agent service with container insights and auto-scaling capabilities
+- **Amazon DynamoDB**: Two tables for tracking users' conversations and raw query results
+- **Amazon S3**: Bucket for importing data into Aurora using the aws_s3 extension
+- **AWS Secrets Manager**: Securely stores database credentials with automatic rotation support
+- **AWS Systems Manager Parameter Store**: Stores configuration parameters for the application (database ARNs, table names, and runtime settings)
+- **Amazon VPC**: Custom VPC with public and private subnets, NAT Gateway, and VPC endpoints for S3 and DynamoDB
+- **Security Groups**: Network security configurations for database, Fargate service, and load balancer
+- **Amazon Cognito**: Provides user authentication and authorization with User Pool and Identity Pool for secure access
+- **React Web Application**: Delivers the user interface for the assistant with integrated authentication
     - The application invokes the agent built with Strands Agents SDK for interacting with the assistant
-    - For chart generation, the application directly invokes the Claude 3.5 Sonnet model
+    - Includes user sign-up, sign-in, and JWT token-based authentication
+    - For chart generation, the application directly invokes the Claude 3.7 Sonnet model
 
 > [!NOTE]
-> This solution references the use of AWS IAM credentials to connect to Amazon DynamoDB. 🚀 For production deployment, consider integrating Amazon Cognito or another identity provider for proper authentication and authorization instead of using IAM user credentials.
+> This solution includes **Amazon Cognito authentication** for secure user access. The backend validates JWT tokens from authenticated users, ensuring only authorized users can interact with the Data Analyst Assistant. The solution supports both development (authentication disabled) and production (authentication enabled) configurations.
 
 > [!TIP]
 > You can also change the data source to connect to your preferred database engine by adapting the Agent's instructions and tool implementations.
@@ -67,7 +78,7 @@ The **user interaction workflow** operates as follows:
 - The agent (powered by Claude 3.7 Sonnet) processes natural language and determines when to execute database queries
 - The agent's built-in tools execute SQL queries against the Aurora PostgreSQL database and formulate an answer to the question
 - After the agent's response is received by the web application, the raw data query results are retrieved from the DynamoDB table to display both the answer and the corresponding records
-- For chart generation, the application invokes a model (powered by Claude 3.5 Sonnet) to analyze the agent's answer and raw data query results to generate the necessary data to render an appropriate chart visualization
+- For chart generation, the application invokes a model (powered by Claude 3.7 Sonnet) to analyze the agent's answer and raw data query results to generate the necessary data to render an appropriate chart visualization
 
 ### Strands Agent Architecture
 

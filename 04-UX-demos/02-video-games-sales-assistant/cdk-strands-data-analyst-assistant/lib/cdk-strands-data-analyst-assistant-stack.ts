@@ -11,11 +11,15 @@ import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as path from "path";
 import { Duration } from "aws-cdk-lib";
+import * as ssm from 'aws-cdk-lib/aws-ssm';
 
+
+// Strands Data Analyst Assistant Stack
 export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    // Parameters
     const projectId = new cdk.CfnParameter(this, "ProjectId", {
       type: "String",
       description: "Project identifier used for naming resources",
@@ -24,18 +28,18 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
 
     const databaseName = new cdk.CfnParameter(this, "DatabaseName", {
       type: "String",
-      description: "Nombre de la base de datos",
+      description: "Database name for video games sales data",
       default: "video_games_sales",
     });
 
-    // Add a new parameter for max response size in bytes
+    // Query response size limit
     const maxResponseSize = new cdk.CfnParameter(this, "MaxResponseSize", {
       type: "Number",
       description: "Maximum size for row query results in bytes",
       default: 25600, // 25K default
     });
 
-    // Add new parameters for Fargate task configuration
+    // Fargate configuration
     const taskCpu = new cdk.CfnParameter(this, "TaskCpu", {
       type: "Number",
       description:
@@ -61,8 +65,33 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
       }
     );
 
-    // Create the DynamoDB table for raw query results
-    const rawQueryResults = new dynamodb.Table(this, "RawQueryResults", {
+    const lastNumberOfMessages = new cdk.CfnParameter(
+      this,
+      "LastNumberOfMessages",
+      {
+        type: "Number",
+        description: "Number of last messages to retrieve from chat history",
+        default: 20,
+        minValue: 1,
+        maxValue: 100,
+      }
+    );
+
+    const webApplicationUrl = new cdk.CfnParameter(this, "WebApplicationUrl", {
+      type: "String",
+      description: "URL of the web application frontend",
+      default: "http://localhost:3000",
+    });
+
+    // Cognito parameter
+    const cognitoUserPoolId = new cdk.CfnParameter(this, "CognitoUserPoolId", {
+      type: "String",
+      description: "Cognito User Pool ID for frontend authentication",
+      default: "N/A",
+    });
+
+    // DynamoDB tables
+    const rawQueryResultsTable = new dynamodb.Table(this, "rawQueryResultsTableTable", {
       partitionKey: {
         name: "id",
         type: dynamodb.AttributeType.STRING,
@@ -76,7 +105,7 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY
     });
 
-    // Create the conversation table
+    // Conversation table
     const conversationTable = new dynamodb.Table(this, 'ConversationTable', {
       partitionKey: {
         name: 'session_id',
@@ -91,6 +120,7 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY
     });
 
+    // VPC
     const vpc = new ec2.Vpc(this, "AssistantVPC", {
       vpcName: `${projectId.valueAsString}-vpc`,
       ipAddresses: ec2.IpAddresses.cidr("10.0.0.0/21"),
@@ -110,7 +140,7 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
       ],
     });
 
-    // Keep only gateway endpoints, removing all interface endpoints
+    // VPC endpoints
     vpc.addGatewayEndpoint("S3Endpoint", {
       service: ec2.GatewayVpcEndpointAwsService.S3,
       subnets: [{ subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS }],
@@ -121,19 +151,15 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
       subnets: [{ subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS }],
     });
 
-    const sg_db_proxy = new ec2.SecurityGroup(
+    // Database security group
+    const sg_db = new ec2.SecurityGroup(
       this,
       "AssistantDBSecurityGroup",
       {
         vpc: vpc,
         allowAllOutbound: true,
+        description: "Security group for Aurora PostgreSQL cluster"
       }
-    );
-
-    sg_db_proxy.addIngressRule(
-      sg_db_proxy,
-      ec2.Port.tcp(5432),
-      "Allow PostgreSQL connections"
     );
 
     const databaseUsername = "postgres";
@@ -143,7 +169,7 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
       secretName: `${projectId.valueAsString}-db-secret`,
     });
 
-    // Create IAM role for Aurora to access S3
+    // Aurora S3 role
     const auroraS3Role = new iam.Role(this, "AuroraS3Role", {
       assumedBy: new iam.ServicePrincipal("rds.amazonaws.com"),
     });
@@ -160,14 +186,15 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
       vpcSubnets: {
         subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
       },
-      securityGroups: [sg_db_proxy],
+      securityGroups: [sg_db],
       credentials: rds.Credentials.fromSecret(secret),
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       enableDataApi: true,
       s3ImportRole: auroraS3Role,
+      storageEncrypted: true,
     });
 
-    // Grant S3 access to the role
+    // S3 permissions
     auroraS3Role.addToPolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
@@ -179,7 +206,7 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
       })
     );
 
-    // Add additional RDS permissions similar to your CloudFormation template
+    // RDS permissions
     auroraS3Role.addToPolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
@@ -195,45 +222,93 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
       })
     );
 
-    const proxy = cluster.addProxy("AssistantProxy", {
-      dbProxyName: `${projectId.valueAsString}-db-proxy`,
-      secrets: [secret],
-      debugLogging: true,
-      vpc,
-      securityGroups: [sg_db_proxy],
-      requireTLS: false,
-      iamAuth: false,
-    });
-
-    // S3 bucket for temporal resources to use with aws_s3.table_import_from_s3
+    // S3 import bucket
     const importBucket = new s3.Bucket(this, "ImportBucket", {
       bucketName: `${projectId.valueAsString}-${this.region}-${this.account}-import`,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
       lifecycleRules: [
         {
-          expiration: cdk.Duration.days(7), // Auto-delete objects after 7 days
+          expiration: cdk.Duration.days(7),
         },
       ],
     });
 
-    // =================== FARGATE SERVICE SETUP ===================
+    // SSM parameters
 
-    // Create ECS Cluster
+    new ssm.CfnParameter(this, 'SecretArnParameter', {
+      name: cdk.Fn.sub('/${ProjectId}/SECRET_ARN', { ProjectId: projectId.valueAsString }),
+      value: secret.secretArn,
+      description: 'ARN of the database credentials secret',
+      type: 'String'
+    });
+
+    new ssm.CfnParameter(this, 'ClusterArnParameter', {
+      name: cdk.Fn.sub('/${ProjectId}/CLUSTER_ARN', { ProjectId: projectId.valueAsString }),
+      value: cluster.clusterArn,
+      description: 'ARN of the Aurora Serverless DB Cluster',
+      type: 'String'
+    });
+
+    new ssm.CfnParameter(this, 'DatabaseNameParameter', {
+      name: cdk.Fn.sub('/${ProjectId}/DATABASE_NAME', { ProjectId: projectId.valueAsString }),
+      value: databaseName.valueAsString,
+      description: 'Database name for video games sales data',
+      type: 'String'
+    });
+
+    new ssm.CfnParameter(this, 'DatabaseUsernameParameter', {
+      name: cdk.Fn.sub('/${ProjectId}/DATABASE_USERNAME', { ProjectId: projectId.valueAsString }),
+      value: databaseUsername,
+      description: 'Database username for IAM authentication',
+      type: 'String'
+    });
+
+    new ssm.CfnParameter(this, 'rawQueryResultsTableTableParameter', {
+      name: cdk.Fn.sub('/${ProjectId}/RAW_QUERY_RESULTS_TABLE_NAME', { ProjectId: projectId.valueAsString }),
+      value: rawQueryResultsTable.tableName,
+      description: 'DynamoDB table name for storing query results',
+      type: 'String'
+    });
+
+    new ssm.CfnParameter(this, 'ConversationTableParameter', {
+      name: cdk.Fn.sub('/${ProjectId}/CONVERSATION_TABLE_NAME', { ProjectId: projectId.valueAsString }),
+      value: conversationTable.tableName,
+      description: 'DynamoDB table name for storing conversation history',
+      type: 'String'
+    });
+
+    new ssm.CfnParameter(this, 'MaxResponseSizeParameter', {
+      name: cdk.Fn.sub('/${ProjectId}/MAX_RESPONSE_SIZE_BYTES', { ProjectId: projectId.valueAsString }),
+      value: maxResponseSize.valueAsString,
+      description: 'Maximum size for row query results in bytes',
+      type: 'String'
+    });
+
+    new ssm.CfnParameter(this, 'LastNumberOfMessagesParameter', {
+      name: cdk.Fn.sub('/${ProjectId}/LAST_NUMBER_OF_MESSAGES', { ProjectId: projectId.valueAsString }),
+      value: lastNumberOfMessages.valueAsString,
+      description: 'Number of last messages to retrieve from chat history',
+      type: 'String'
+    });
+
+
+
+    // ECS cluster
     const ecsCluster = new ecs.Cluster(this, "AgentCluster", {
       vpc: vpc,
       clusterName: `${projectId.valueAsString}-cluster`,
       containerInsightsV2: ecs.ContainerInsights.ENHANCED,
     });
 
-    // Create log group for Fargate service
+    // Log group
     const logGroup = new logs.LogGroup(this, "AgentLogGroup", {
       logGroupName: `/ecs/${projectId.valueAsString}-agent-service`,
       retention: logs.RetentionDays.ONE_MONTH,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
-    // Create execution role for Fargate task
+    // Task execution role
     const executionRole = new iam.Role(this, "AgentTaskExecutionRole", {
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
       roleName: `${projectId.valueAsString}-task-execution-role`,
@@ -244,13 +319,13 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
       ],
     });
 
-    // Create task role for Fargate task
+    // Task role
     const taskRole = new iam.Role(this, "AgentTaskRole", {
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
       roleName: `${projectId.valueAsString}-task-role`,
     });
 
-    // Add Bedrock permissions to task role
+    // Bedrock permissions
     taskRole.addToPolicy(
       new iam.PolicyStatement({
         actions: [
@@ -261,18 +336,26 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
       })
     );
 
-    // Add permissions to access the database
+    // RDS Data API permissions
     taskRole.addToPolicy(
       new iam.PolicyStatement({
-        actions: ["rds-db:connect", "secretsmanager:GetSecretValue"],
+        actions: [
+          "rds-data:ExecuteStatement",
+          "rds-data:BatchExecuteStatement",
+          "rds-data:BeginTransaction",
+          "rds-data:CommitTransaction",
+          "rds-data:RollbackTransaction",
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:DescribeSecret"
+        ],
         resources: [
           secret.secretArn,
-          `arn:aws:rds-db:${this.region}:${this.account}:dbuser:*/${databaseUsername}`,
+          cluster.clusterArn,
         ],
       })
     );
 
-    // Add permissions to put/update items in DynamoDB
+    // DynamoDB permissions
     taskRole.addToPolicy(
       new iam.PolicyStatement({
         actions: [
@@ -282,11 +365,24 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
           "dynamodb:GetItem",
           "dynamodb:Query"
         ],
-        resources: [rawQueryResults.tableArn, conversationTable.tableArn],
+        resources: [rawQueryResultsTable.tableArn, conversationTable.tableArn],
       })
     );
 
-    // Create a task definition with parameterized CPU and memory
+    // SSM permissions
+    taskRole.addToPolicy(
+      new iam.PolicyStatement({
+        sid: 'SSMParameterAccess',
+        effect: iam.Effect.ALLOW,
+        actions: [
+          'ssm:GetParameter',
+          'ssm:GetParameters'
+        ],
+        resources: [`arn:aws:ssm:${this.region}:${this.account}:parameter/${projectId.valueAsString}/*`]
+      })
+    );
+
+    // Task definition
     const taskDefinition = new ecs.FargateTaskDefinition(
       this,
       "AgentTaskDefinition",
@@ -302,17 +398,17 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
       }
     );
 
-    // This will use the Dockerfile in the docker directory
+    // Docker image
     const dockerAsset = new ecrAssets.DockerImageAsset(this, "AgentImage", {
       directory: path.join(__dirname, "../docker"),
       file: "./Dockerfile",
       platform: ecrAssets.Platform.LINUX_ARM64,
     });
 
-    // Define the container port
+    // Container port
     const containerPort = 8000;
 
-    // Add container to the task definition
+    // Container
     const container = taskDefinition.addContainer("AgentContainer", {
       image: ecs.ContainerImage.fromDockerImageAsset(dockerAsset),
       logging: ecs.LogDrivers.awsLogs({
@@ -320,14 +416,10 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
         logGroup,
       }),
       environment: {
-        // Add any environment variables needed by your application
-        SECRET_NAME: `${projectId.valueAsString}-db-secret`,
-        DATABASE_NAME: databaseName.valueAsString,
-        POSTGRESQL_HOST: proxy.endpoint,
         AWS_REGION: this.region,
-        RAW_QUERY_RESULTS_TABLE_NAME: rawQueryResults.tableName,
-        CONVERSATION_TABLE_NAME: conversationTable.tableName,
-        MAX_RESPONSE_SIZE_BYTES: maxResponseSize.valueAsString,
+        PROJECT_ID: projectId.valueAsString,
+        COGNITO_USER_POOL_ID: cognitoUserPoolId.valueAsString,
+        WEB_APPLICATION_URL: webApplicationUrl.valueAsString,
       },
       portMappings: [
         {
@@ -338,20 +430,16 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
       ],
     });
 
-    // Create a security group for the Fargate service
+    // Fargate security group
     const agentServiceSG = new ec2.SecurityGroup(this, "AgentServiceSG", {
       vpc,
       description: "Security group for Agent Fargate Service",
       allowAllOutbound: true,
     });
 
-    sg_db_proxy.addIngressRule(
-      agentServiceSG,
-      ec2.Port.tcp(5432),
-      "Allow PostgreSQL connections"
-    );
 
-    // Create a Fargate service with parameterized desired count
+
+    // Fargate service
     const service = new ecs.FargateService(this, "AgentService", {
       cluster: ecsCluster,
       taskDefinition,
@@ -367,42 +455,47 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
       healthCheckGracePeriod: Duration.seconds(60),
     });
 
-    // =================== ADD APPLICATION LOAD BALANCER ===================
-
-    // Create a security group for the ALB
+    // ALB security group
     const albSG = new ec2.SecurityGroup(this, "AlbSecurityGroup", {
       vpc,
       description: "Security group for Agent Application Load Balancer",
       allowAllOutbound: true,
     });
 
-    // Allow inbound HTTP traffic to the ALB on port 80
+    // HTTP access
     albSG.addIngressRule(
       ec2.Peer.anyIpv4(),
       ec2.Port.tcp(80),
       "Allow HTTP traffic on port 80 from anywhere"
     );
 
-    // Allow the ALB to communicate with the Fargate service
+    // HTTPS access
+    albSG.addIngressRule(
+      ec2.Peer.anyIpv4(),
+      ec2.Port.tcp(443),
+      "Allow HTTPS traffic on port 443 from anywhere"
+    );
+
+    // ALB to Fargate access
     agentServiceSG.addIngressRule(
       albSG,
       ec2.Port.tcp(containerPort),
       `Allow traffic from ALB to Fargate service on port ${containerPort}`
     );
 
-    // Create an Application Load Balancer
+    // Load balancer
     const lb = new elbv2.ApplicationLoadBalancer(this, "AgentLB", {
       vpc,
       internetFacing: true,
     });
 
-    // Create a listener
+    // HTTP listener
     const listener = lb.addListener("AgentListener", {
       port: 80,
     });
 
-    // Add target group to the listener
-    listener.addTargets("AgentTargets", {
+    // Target group
+    const targetGroup = listener.addTargets("AgentTargets", {
       port: containerPort,
       targets: [service],
       healthCheck: {
@@ -411,10 +504,18 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
         timeout: Duration.seconds(5),
         healthyHttpCodes: "200",
       },
-      deregistrationDelay: Duration.seconds(30), 
+      deregistrationDelay: Duration.seconds(30),
     });
 
-    // Stack outputs
+    // Configure target group attributes for streaming responses
+    targetGroup.setAttribute("load_balancing.algorithm.type", "least_outstanding_requests");
+    targetGroup.setAttribute("target_group_health.unhealthy_state_routing.minimum_healthy_targets.count", "1");
+    targetGroup.setAttribute("target_group_health.unhealthy_state_routing.minimum_healthy_targets.percentage", "off");
+    targetGroup.setAttribute('stickiness.enabled', 'true');
+    targetGroup.setAttribute('stickiness.type', 'lb_cookie');
+    targetGroup.setAttribute('stickiness.lb_cookie.duration_seconds', '86400');
+
+    // Outputs
 
     new cdk.CfnOutput(this, "AuroraServerlessDBClusterARN", {
       value: cluster.clusterArn,
@@ -427,7 +528,7 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
       description: "The ARN of the database credentials secret",
       exportName: `${projectId.valueAsString}-SecretArn`,
     });
-  
+
     new cdk.CfnOutput(this, "DataSourceBucketName", {
       value: importBucket.bucketName,
       description:
@@ -436,9 +537,15 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
     });
 
     new cdk.CfnOutput(this, "QuestionAnswersTableName", {
-      value: rawQueryResults.tableName,
+      value: rawQueryResultsTable.tableName,
       description: "The name of the DynamoDB table for storing query results",
       exportName: `${projectId.valueAsString}-QuestionAnswersTableName`,
+    });
+
+    new cdk.CfnOutput(this, "ConversationTableName", {
+      value: conversationTable.tableName,
+      description: "The name of the DynamoDB table for storing conversation history",
+      exportName: `${projectId.valueAsString}-ConversationTableName`,
     });
 
     new cdk.CfnOutput(this, "AgentEndpointURL", {
@@ -446,5 +553,6 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
       description: "The DNS name of the Application Load Balancer for the Strands Agent",
       exportName: `${projectId.valueAsString}-LoadBalancerDnsName`,
     });
+
   }
 }

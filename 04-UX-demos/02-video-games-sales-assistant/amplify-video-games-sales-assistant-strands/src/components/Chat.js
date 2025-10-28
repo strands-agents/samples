@@ -133,12 +133,28 @@ const Chat = ({ userName = "Guest User" }) => {
         };
         console.log(params);
 
+        // Get JWT token for authentication
+        let authHeaders = {
+          "Content-Type": "application/json",
+        };
+
+        try {
+          const { fetchAuthSession } = await import("aws-amplify/auth");
+          const session = await fetchAuthSession();
+          const authToken = session.tokens?.idToken?.toString();
+
+          if (authToken) {
+            authHeaders["Authorization"] = `Bearer ${authToken}`;
+          }
+        } catch (authError) {
+          console.warn("Could not get auth token:", authError);
+          // Continue without auth token - backend will handle unauthenticated requests
+        }
+
         // Initiate streaming response
         const response = await fetch(AGENT_ENDPOINT_URL, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: authHeaders,
           body: JSON.stringify(params),
         });
 
@@ -563,50 +579,61 @@ const Chat = ({ userName = "Guest User" }) => {
           </ul>
         ) : (
           <Box
-            textAlign={"center"}
             sx={{
-              pl: 1,
-              pt: 1,
-              pr: 1,
-              pb: 6,
               height: height,
               display: "flex",
-              alignItems: "flex-end",
+              alignItems: "center",
+              justifyContent: "center",
+              px: 3,
             }}
           >
-            <div style={{ width: "100%" }}>
-              <img
-                src="/images/strands-logo.svg"
-                alt="Strands Agents SDK"
-                height={128}
-              />
+            <Box sx={{ textAlign: "center", maxWidth: 600 }}>
+              <Box sx={{ mb: 4 }}>
+                <img
+                  src="images/strands-logo.svg"
+                  alt="Strands Agents SDK"
+                  height={128}
+                  style={{ opacity: 0.9 }}
+                />
+              </Box>
+
               <Typography
-                variant="h5"
-                sx={(theme) => ({
-                  pb: 1,
-                  fontWeight: 500,
-                  background: `linear-gradient(to right, 
-                  ${theme.palette.text.primary}, 
-                  ${theme.palette.primary.dark}, 
-                  ${theme.palette.text.primary})`,
-                  backgroundClip: "text",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  textFillColor: "transparent",
-                })}
+                variant="body1"
+                sx={{
+                  color: "text.secondary",
+                  fontSize: "1.1rem",
+                  lineHeight: 1.5,
+                  mb: 3,
+                  fontWeight: 400,
+                }}
               >
-                Strands Agents SDK
-              </Typography>
-              <Typography sx={{ pb: 4, fontWeight: 400 }}>
                 Open-source framework leveraging modern language models to build powerful AI agents through minimal, model-driven code.
               </Typography>
-              <Typography
-                color="primary"
-                sx={{ fontSize: "1.1rem", pb: 1, fontWeight: 500 }}
+
+              <Box
+                sx={(theme) => ({
+                  borderRadius: 2,
+                  px: 3,
+                  py: 2,
+                  border: `1px solid ${alpha(
+                    theme.palette.secondary.main,
+                    0.15
+                  )}`,
+                  backgroundColor: alpha(theme.palette.secondary.main, 0.1),
+                })}
               >
-                {WELCOME_MESSAGE}
-              </Typography>
-            </div>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "secondary.main",
+                    fontWeight: 500,
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {WELCOME_MESSAGE}
+                </Typography>
+              </Box>
+            </Box>
           </Box>
         )}
       </Box>
