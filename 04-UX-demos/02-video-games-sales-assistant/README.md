@@ -6,7 +6,7 @@
 > **🔥 [Deploy with Amazon AgentCore →](https://github.com/awslabs/amazon-bedrock-agentcore-samples/tree/main/02-use-cases/video-games-sales-assistant)**
 
 > [!IMPORTANT]
-> **🚀 Agentic System Foundation**: Use this solution as a starting point for other agentic use cases. Extend the agent by adding custom tools for different business workflows and adapt the architecture to various agentic system requirements.
+> **🚀 Agentic System Foundation**: Use this reference solution as a starting point to develop anoother agentic use cases across different industries. Extend the agent capabilities by adding custom tools for specific industry workflows and adapt it to various business domains.
 
 This solution provides a Generative AI application reference that allows users to interact with data through a natural language interface. The solution leverages **[Strands Agents SDK](https://strandsagents.com/)** to build an agent that connects to a PostgreSQL database, providing data analysis capabilities through a Web Application interface. The infrastructure is deployed using AWS CDK.
 
