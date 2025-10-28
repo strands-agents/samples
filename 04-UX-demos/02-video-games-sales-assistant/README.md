@@ -1,7 +1,7 @@
 # Deploying a Conversational Data Analyst Assistant Solution with Strands Agents SDK
 
 > [!IMPORTANT]
-> **⚡ Enhanced Deployment Option**: This solution can also be deployed using **Amazon AgentCore** - Agentic platform to build, deploy and operate agents securely at scale using any framework and model.
+> **⚡ Enhanced Deployment Option**: This solution can also be deployed using **Amazon Bedrock AgentCore** - Agentic platform to build, deploy and operate agents securely at scale using any framework and model.
 > 
 > **🔥 [Deploy with Amazon AgentCore →](https://github.com/awslabs/amazon-bedrock-agentcore-samples/tree/main/02-use-cases/video-games-sales-assistant)**
 

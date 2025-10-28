@@ -54,11 +54,10 @@ Initialize the Amplify project:
 amplify init
 ```
 
-- Do you want to continue with Amplify Gen 1? *yes*
-- Why would you like to use Amplify Gen 1? *Prefer not to answer*
+- Do you want to continue with Amplify Gen 1? **`Yes`**
+- Why would you like to use Amplify Gen 1? **`Prefer not to answer`**
 
 Use the following configuration:
-
 - ? Enter a name for the project: **`daastrandsagent`**
 
 Use the following default configuration:
