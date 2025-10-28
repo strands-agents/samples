@@ -1,0 +1,107 @@
+{
+  "valid_user": {
+    "user_data": {
+      "email": "john.doe@example.com",
+      "profile": {
+        "name": "John Doe"
+      },
+      "age": 30,
+      "initial_deposit": 5000,
+      "registration_date": "2024-01-15",
+      "settings": {
+        "preferences": {
+          "notifications": ["email", "sms", "push"]
+        }
+      }
+    }
+  },
+  "missing_email": {
+    "user_data": {
+      "profile": {
+        "name": "Jane Smith"
+      },
+      "age": 25
+    }
+  },
+  "null_email": {
+    "user_data": {
+      "email": null,
+      "profile": {
+        "name": "Bob Johnson"
+      }
+    }
+  },
+  "missing_profile": {
+    "user_data": {
+      "email": "alice.williams@example.com",
+      "age": 28
+    }
+  },
+  "single_name": {
+    "user_data": {
+      "email": "alex.morgan@example.com",
+      "profile": {
+        "name": "Alex Morgan"
+      },
+      "age": 35,
+      "registration_date": "2024-01-15",
+      "settings": {
+        "preferences": {
+          "notifications": ["email"]
+        }
+      }
+    }
+  },
+  "invalid_age": {
+    "user_data": {
+      "email": "chris.davis@example.com",
+      "profile": {
+        "name": "Chris Davis"
+      },
+      "age": "unknown",
+      "registration_date": "2024-01-15"
+    }
+  },
+  "zero_age": {
+    "user_data": {
+      "email": "taylor.brown@example.com",
+      "profile": {
+        "name": "Taylor Brown"
+      },
+      "age": 0,
+      "initial_deposit": 1000,
+      "registration_date": "2024-01-15",
+      "settings": {
+        "preferences": {
+          "notifications": ["email"]
+        }
+      }
+    }
+  },
+  "invalid_date_format": {
+    "user_data": {
+      "email": "sam.wilson@example.com",
+      "profile": {
+        "name": "Sam Wilson"
+      },
+      "age": 25,
+      "registration_date": "01/15/2024",
+      "settings": {
+        "preferences": {
+          "notifications": []
+        }
+      }
+    }
+  },
+  "missing_nested_settings": {
+    "user_data": {
+      "email": "jordan.lee@example.com",
+      "profile": {
+        "name": "Jordan Lee"
+      },
+      "age": 30,
+      "registration_date": "2024-01-15",
+      "settings": {}
+    }
+  }
+}

@@ -40,26 +40,68 @@ The examples in this repository are for **demonstration and educational purposes
 
 - [📚 Table of Contents](#-table-of-contents)
 - [🏁 Getting Started](#-getting-started)
-  - [Step 1: Install Required Packages](#step-1-install-required-packages)
-  - [Step 2: Setup Model Provider](#step-2-setup-model-provider)
-  - [Step 3: Build Your First Strands Agent](#step-3-build-your-first-strands-agent)
-  - [Step 4: Getting Started with the SDK](#step-4-getting-started-with-the-sdk)
-  - [Step 5: Explore More Samples](#step-5-explore-more-samples)
+  - [Prerequisites](#prerequisites)
+  - [Step 1: Create Virtual Environment](#step-1-create-virtual-environment)
+  - [Step 2: Install Required Packages](#step-2-install-required-packages)
+  - [Step 3: Setup Model Provider](#step-3-setup-model-provider)
+  - [Step 4: Build Your First Strands Agent](#step-4-build-your-first-strands-agent)
+  - [Step 5: Getting Started with the SDK](#step-5-getting-started-with-the-sdk)
+  - [Step 6: Explore More Samples](#step-6-explore-more-samples)
 
 ## 🏁 Getting Started
 
-### Step 1: Install Required Packages
+### Prerequisites
+
+- **Python 3.10 or higher**
+
+- **pip package manager**
+  - Verify with: `pip --version` or `pip3 --version`
+  - Usually comes bundled with Python 3.4+ installers from python.org
+  - If pip is missing, install using one of these methods:
+    ```bash
+    # Method 1 - Use Python's built-in module
+    python -m ensurepip --upgrade
+
+    # Method 2 - Download and run the official installer
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    python get-pip.py
+    ```
+
+### Step 1: Create Virtual Environment
 
 ```bash
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+# On macOS/Linux:
+source venv/bin/activate
+# On Windows:
+venv\Scripts\activate
+```
+
+### Step 2: Install Required Packages
+
+```bash
+# Install Strands core packages (required for all examples)
 pip install strands-agents
 pip install strands-agents-tools
 ```
 
-### Step 2: Setup Model Provider
+> **Additional Dependencies:** Individual examples throughout this repository may require extra packages. When working with a specific example, check for its `requirements.txt` file:
+> ```bash
+> # Navigate to the example folder you want to run
+> cd [example-directory]
+>
+> # Install dependencies if requirements.txt exists
+> pip install -r requirements.txt
+> ```
+
+### Step 3: Setup Model Provider
 
 Follow the instructions [here](https://strandsagents.com/latest/user-guide/quickstart/#model-providers) to configure your model provider and model access.
 
-### Step 3: Build Your First Strands Agent
+### Step 4: Build Your First Strands Agent
 
 ```python
 from strands import Agent, tool
@@ -91,15 +133,20 @@ I have 4 requests:
 agent(message)
 ```
 
-### Step 4: Getting Started with the SDK
+### Step 5: Getting Started with the SDK
 
 Start with the [01-tutorials](./01-tutorials/) directory.
 Create your [first agent](./01-tutorials/01-fundamentals/01-first-agent/) and explore notebook-based examples covering core functionalities.
 
-### Step 5: Explore More Samples
+### Step 6: Explore the Repository
 
-Looking for inspiration?
-Check out more examples in the [02-samples](./02-samples/) folder for real-world use cases.
+This repository is organized to help you progress from basics to advanced implementations:
+
+- **[01-tutorials](./01-tutorials/)** - Step-by-step guides covering fundamentals, deployment, and best practices
+- **[02-samples](./02-samples/)** - Real-world use cases and industry-specific examples
+- **[03-integrations](./03-integrations/)** - Integration examples with AWS services and third-party tools
+- **[04-UX-demos](./04-UX-demos/)** - Full-stack applications with user interfaces
+- **[05-agentic-rag](./05-agentic-rag/)** - Advanced Agentic RAG patterns
 
 ## Contributing ❤️
 

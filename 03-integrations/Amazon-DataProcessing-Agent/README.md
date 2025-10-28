@@ -10,13 +10,13 @@ The **Amazon Data Processing Agent** is an intelligent conversational AI assista
 
 ### Agent Features
 
-| Feature | Description |
-|---------|-------------|
-| Agent Structure | Multi-agent architecture with specialized components |
-| Custom Tools | send_email, manage_s3_table_buckets, manage_s3_namespaces, manage_s3_tables | 
-| MCP Servers | [AWS Data Processing MCP Server](https://pypi.org/project/awslabs.aws-dataprocessing-mcp-server/) |
-| Model Provider | Amazon Bedrock (Claude 3.7 Sonnet, Claude 4.0 Sonnet) |
-| UI Framework | Streamlit with real-time streaming |
+| Feature         | Description                                                                                       |
+| --------------- | ------------------------------------------------------------------------------------------------- |
+| Agent Structure | Multi-agent architecture with specialized components                                              |
+| Custom Tools    | send_email, manage_s3_table_buckets, manage_s3_namespaces, manage_s3_tables                       |
+| MCP Servers     | [AWS Data Processing MCP Server](https://pypi.org/project/awslabs.aws-dataprocessing-mcp-server/) |
+| Model Provider  | Amazon Bedrock (Claude 3.7 Sonnet, Claude 4.0 Sonnet)                                             |
+| UI Framework    | Streamlit with real-time streaming                                                                |
 
 ### What We're Building
 
@@ -61,24 +61,28 @@ The agent leverages the **Model Context Protocol (MCP)** to connect with the `aw
 ### Key Capabilities
 
 #### **AWS Glue Integration**
+
 - **Data Catalog Management**: Create, update, and manage databases, tables, and partitions
 - **ETL Job Development**: Generate optimized PySpark scripts using Glue Version 5 (Spark 3.5.1)
 - **Crawler Operations**: Automate schema discovery and metadata management
 - **Workflow Orchestration**: Design and manage complex ETL workflows with triggers
 
 #### **Amazon Athena Integration**
+
 - **Natural Language to SQL**: Convert business questions into optimized SQL queries
 - **Query Optimization**: Analyze and improve query performance
 - **Cost Management**: Monitor and optimize query costs
 - **Schema Discovery**: Automatically understand table structures and relationships
 
 #### **Amazon EMR-EC2 Integration**
+
 - **Cluster Management**: Create, configure, and manage EMR clusters
 - **Big Data Processing**: Handle large-scale data processing workloads
 - **Cost Optimization**: Implement spot instances and auto-scaling strategies
 - **Performance Tuning**: Optimize cluster configurations for specific workloads
 
 #### **Intelligent Features**
+
 - **Real-time Streaming**: Live responses with tool execution visibility
 - **Context Awareness**: Maintains conversation history for complex multi-step operations
 - **Cost Analysis**: Provides detailed cost breakdowns and optimization recommendations
@@ -121,12 +125,24 @@ src/amazon_dataprocessing_agent/
 
 ### Installation
 
+#### macOS Installation
+
 1. **Install uv** (if not already installed):
-   Follow uv [installation guidelines](https://docs.astral.sh/uv/getting-started/installation/).
+
+   ```bash
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   ```
+
+   Or using Homebrew:
+
+   ```bash
+   brew install uv
+   ```
 
 2. **Configure AWS credentials** following instructions [here](https://strandsagents.com/latest/user-guide/quickstart/#configuring-credentials).
 
 3. **Install dependencies using uv**:
+
    ```bash
    uv sync
    ```
@@ -137,15 +153,105 @@ src/amazon_dataprocessing_agent/
    # Edit .env with your configuration
    ```
 
+#### Windows Installation
+
+Many of the newer MCP offerings are primarily supported on macOS and specific Linux environments, including AppImage and Ubuntu. To run effectively on a Windows machine, we need to install and run this MCP project using the Windows Subsystem for Linux (wsl). For more information on wsl, refer to the Microsoft documentation [here](https://learn.microsoft.com/en-us/windows/wsl/setup/environment).
+
+1. **Install Windows Subsystem for Linux (wsl)** on your windows machine
+
+   ```powershell
+   wsl --install
+   ```
+
+2. **Download and install a virtual Ubuntu instnce in your wsl environment**:
+
+   ```powershell
+   wsl -d Ubuntu
+   ```
+
+3. **Create a user account**: After installing Ubuntu, you will be asked to create a default user account (that will typically copy the name of the Windows user you are logged in as), and then enter a password.
+
+4. **Navigate to the home directory**
+
+   ```powershell
+   cd
+   ```
+
+5. **Install uv** (if not already installed):
+
+   ```bash
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   ```
+
+6. **Install unzip** to support the AWS CLI installation next. You may need to use your password for the default user account created earlier to approve the install.
+
+   ```bash
+   sudo apt install unzip
+   ```
+
+7. **Install the AWS CLI**: Given we are using a fresh Ubuntu instance, you will likely need to reinstall the AWS cli in your Linux environment.
+
+   ```powershell
+   # Download the AWS CLI installer
+   curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+
+   # Unzip the installer
+   unzip awscliv2.zip
+
+   # Run the install script
+   sudo ./aws/install
+
+   # Verify the installation
+   aws --version
+   ```
+
+8. **Configure AWS credentials**: You will reference this profile (aws-dp-mcp) in your environment variables later
+
+   ```powershell
+   # Using AWS CLI
+   aws configure --profile aws-dp-mcp
+   ```
+
+9. **Clone the repo** into the wsl environment and navigate to the project directory
+
+   ```powershell
+   # Clone the repo
+   git clone https://github.com/strands-agents/samples.git
+
+   # Navigate to the project directory
+   cd samples/03-integrations/Amazon-DataProcessing-Agent
+   ```
+
+10. **Install dependencies using uv**:
+
+```powershell
+uv sync
+```
+
+11. **Set up environment variables**: Copy the sample env.template to a new .env file and update the **AWS_PROFILE** to the profile you configured earlier (aws-dp-mcp). Update the **AWS_REGION** to align with your associated resources.
+
+```powershell
+# Copy the sample file to a new .env file
+copy .env.template .env
+
+# (OPTION A) Open the new .env file and update with your AWS profile
+nano .env
+
+# (OPTION B) Open a file explorer to review the .env file and update with an editor of your choice
+explorer.exe .
+```
+
 ### Running the Application
 
-#### Option 1: Using uv (Recommended)
+**Option 1: Using uv (Recommended)**
+
 ```bash
 # Run the Streamlit application
 uv run streamlit run app.py
 ```
 
-#### Option 2: Using the installed package
+**Option 2: Using the installed package**
+
 ```bash
 # Install in development mode
 uv pip install -e .
@@ -154,7 +260,8 @@ uv pip install -e .
 uv run dataprocessing-agent
 ```
 
-#### Option 3: Direct execution
+**Option 3: Direct execution**
+
 ```bash
 # Activate the virtual environment and run
 uv run python -m streamlit run app.py
@@ -189,24 +296,28 @@ uv run python -m streamlit run app.py
 ### Example Conversations
 
 #### **Data Catalog Management**
+
 ```
 User: "Look at all the tables from my account federated across Glue Data Catalog"
 Agent: Goes over glue databases and tables and provide summary of different databases, tables and it schema
 ```
 
 #### **ETL Job Development**
+
 ```
 User: "Help me create a Glue job to transform JSON data from S3 to Parquet format"
 Agent: Generates optimized PySpark script, uploads to S3, creates Glue job with best practices
 ```
 
 #### **Natural Language to SQL**
+
 ```
 User: "Show me the top 10 customers by revenue for the month of July"
 Agent: Converts to SQL, executes via Athena, provides results with cost analysis
 ```
 
 #### **EMR Cluster Management**
+
 ```
 User: "Identify EMR clusters which are sitting idle and can be terminated"
 Agent: Recommends optimal cluster configuration, creates cluster, provides cost estimates
@@ -215,6 +326,7 @@ Agent: Recommends optimal cluster configuration, creates cluster, provides cost 
 ### Core Capabilities
 
 #### **AWS Glue Operations**
+
 - **Data Catalog Management**: Create, update, and manage databases, tables, and partitions
 - **ETL Job Development**: Generate optimized PySpark scripts using Glue Version 5 (Spark 3.5.1)
 - **Crawler Operations**: Automate schema discovery and metadata management
@@ -222,6 +334,7 @@ Agent: Recommends optimal cluster configuration, creates cluster, provides cost 
 - **Cost Optimization**: Right-size DPU allocation and implement job bookmarks
 
 #### **Amazon Athena Operations**
+
 - **Natural Language to SQL**: Convert business questions into optimized SQL queries
 - **Query Optimization**: Analyze and improve query performance
 - **Cost Management**: Monitor and optimize query costs with partitioning strategies
@@ -229,6 +342,7 @@ Agent: Recommends optimal cluster configuration, creates cluster, provides cost 
 - **Result Analysis**: Provide insights and visualizations from query results
 
 #### **Amazon EMR-EC2 Operations**
+
 - **Cluster Management**: Create, configure, and manage EMR clusters
 - **Big Data Processing**: Handle large-scale data processing workloads (>10TB)
 - **Cost Optimization**: Implement spot instances and auto-scaling strategies
@@ -236,6 +350,7 @@ Agent: Recommends optimal cluster configuration, creates cluster, provides cost 
 - **Step Management**: Execute and monitor Spark/Hadoop jobs
 
 #### **S3 Data Operations**
+
 - **Bucket Management**: List, analyze, and manage S3 buckets for data processing
 - **Script Deployment**: Upload generated scripts to S3 for Glue job execution
 - **Usage Analysis**: Identify idle buckets and optimize storage costs
@@ -285,10 +400,13 @@ The Amazon Data Processing Agent creates various AWS resources during operation,
 ### Resource Cleanup Options
 
 #### Option 1: Agent-Assisted Cleanup
+
 Ask the agent to help clean up resources:
+
 ```
 "Please help me clean up all the AWS resources we created today"
 ```
 
 #### Option 2: Manual Cleanup
+
 Manually clean up resources through the AWS Console or CLI
