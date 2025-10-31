@@ -1,6 +1,5 @@
-"""
-Stock MCP Server by utilizing yfinance data
-"""
+#This sample application is intended solely for educational and knowledge-sharing purposes. It is not designed to provide investment guidance or financial advice.
+#Stock MCP Server by utilizing yfinance data
 
 import datetime as dt
 from typing import Dict, Union, Optional

@@ -82,13 +82,12 @@ DEFAULT_MODEL = "Claude 3.7 Sonnet"
 
 # Available AI models
 AVAILABLE_MODELS = [
-    "Claude 4.5 Sonnet",
     "Claude 4 Sonnet",
     "Claude 3.7 Sonnet",
 ]
 
 # Models that support advanced reasoning
-REASONING_SUPPORTED_MODELS = ["Claude 4.5 Sonnet","Claude 3.7 Sonnet", "Claude 4 Sonnet"]
+REASONING_SUPPORTED_MODELS = ["Claude 4 Sonnet","Claude 3.7 Sonnet"]
 
 # Configure logging for the application
 logging.basicConfig(
