@@ -1,3 +1,7 @@
+"""
+This sample application is intended solely for educational and knowledge-sharing purposes. It is not designed to provide investment guidance or financial advice.
+"""
+
 import asyncio
 import logging
 import os
@@ -104,7 +108,7 @@ def get_model():
 
         additional_fields = {"thinking": thinking_config}
 
-        if model_name in ["Claude 4 Sonnet", "Claude 4.5 Sonnet"]:
+        if model_name in ["Claude 4 Sonnet", "Claude 3.7 Sonnet"]:
             additional_fields["anthropic_beta"] = ["interleaved-thinking-2025-05-14"]
 
         model = BedrockModel(

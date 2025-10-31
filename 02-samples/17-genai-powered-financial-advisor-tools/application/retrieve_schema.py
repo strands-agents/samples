@@ -1,4 +1,5 @@
 """
+This sample application is intended solely for educational and knowledge-sharing purposes. It is not designed to provide investment guidance or financial advice.
 Database Schema Retrieval Module
 
 This module provides functions to retrieve database schema from AWS Athena.
