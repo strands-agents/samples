@@ -1,6 +1,4 @@
-"""
-This sample application is intended solely for educational and knowledge-sharing purposes. It is not designed to provide investment guidance or financial advice.
-"""
+#This sample application is intended solely for educational and knowledge-sharing purposes. It is not designed to provide investment guidance or financial advice.
 
 import logging
 import sys
