@@ -120,22 +120,23 @@ The application includes specialized MCP servers for different data sources:
    ```
 
 4. **Set up prerequisites**:
+   
+   This script will create Amazon Bedrock Knowledge Bases. Also, it will create database, tables, and insert sample data using Amazon Athena. 
    ```bash
    bash deploy_prereqs.sh 
-   ##This script will create Amazon Bedrock Knowledge Bases. Also, it will create database, tables, and insert sample data using Amazon Athena. 
-   ```
+     ```
 
 6. **Create Tavily API key and add in the .env file**:
    
-   Visit [Travily](https://www.tavily.com/) and create API key post sign-up. Update your tavily api key in .env file :
+   Visit [Travily](https://www.tavily.com/) and create API key post sign-up. Update your tavily api key in .env file. This is mandatory required to run the GenAI tools :
    ```bash
    TAVILY_API_KEY="" 
    ```
 
 6. **Start the application**:
+   
+   Execute the following commands in the "17-genai-powered-financial-advisor-tools" directory
    ```bash
-   cd 17-genai-powered-financial-advisor-tools
-
    streamlit run application/app.py
    ```
 
@@ -207,7 +208,7 @@ Retrieves comprehensive portfolio information including holdings, performance me
 
 
 7. **Access the application**:
-   - Open your browser to `http://localhost:8501` (port number can be same or different)
+   - Open your browser to `http://localhost:8501` (Check "7. Start the application" in the above instruction)
    - Select your preferred AI model from the sidebar
    - Start interacting with the Financial Advisor AI
 
