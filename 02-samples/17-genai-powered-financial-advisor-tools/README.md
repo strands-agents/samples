@@ -23,7 +23,7 @@ A comprehensive GenAI-powered wealth and financial advisory tools built with **S
 
 ## 🏗️ Demo 
 
-<video src="./assets/demo_video.mp4" controls="controls" style="max-width: 840px;"> </video>
+<video src="./assets/demo_video.mp4" controls="controls" style="max-width: 740px;"> </video>
 
 
 ## 🏗️ Architecture
