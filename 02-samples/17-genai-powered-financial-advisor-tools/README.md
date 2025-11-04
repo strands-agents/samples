@@ -1,6 +1,6 @@
 # GenAI-Powered Financial Advisor
 
-A comprehensive GenAI-powered wealth and financial tools built with **Strands Agents**, **Amazon Bedorck**, and **MCP** designed to automate client meeting analysis, advisor follow-up item analysis, portfolio analysis, market research, and report generation for financial advisors.
+A comprehensive GenAI-powered wealth and financial advisory tools built with **Strands Agents**, **Amazon Bedrock**, and **MCP** designed to automate client meeting analysis, advisor follow-up item analysis, client portfolio analysis, market research, and report generation for financial advisors.
 
 ## ✨ Key Features
 
