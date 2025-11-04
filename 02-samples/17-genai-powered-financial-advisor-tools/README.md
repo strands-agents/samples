@@ -21,10 +21,6 @@ A comprehensive GenAI-powered wealth and financial advisory tools built with **S
 ### 🤖 AI-Powered Chat Interface
 - **Interactive UI**: Streamlit-based interface with example queries and configuration options
 
-## 🏗️ Demo 
-
-<video src="./assets/demo_video.mp4" controls="controls" style="max-width: 740px;"> </video>
-
 
 ## 🏗️ Architecture
 Overall architecture in multi-agent collaboration with MCP and tools.
