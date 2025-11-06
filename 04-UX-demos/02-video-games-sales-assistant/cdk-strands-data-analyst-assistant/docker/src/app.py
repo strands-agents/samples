@@ -12,8 +12,7 @@ from uuid import uuid4
 import os
 
 # Import my tools
-from tools import get_tables_information
-from tools import run_sql_query
+from tools import run_sql_query, get_tables_information
 from utils import load_file_content, save_raw_query_result, read_messages_by_session, save_messages, load_config
 from utils import validate_cognito_token_with_config, extract_bearer_token
 
@@ -27,7 +26,6 @@ try:
     print(f"\n✅ CONFIGURATION LOADED FROM SSM")
     print("-" * 50)
     print(f"🔧 Project ID: {PROJECT_ID}")
-    print(f"🌍 Region: {config.get('AWS_REGION')}")
     print(f"📊 Database: {config.get('DATABASE_NAME')}")
     print("-" * 50)
 except Exception as e:
@@ -133,7 +131,7 @@ async def run_data_analyst_assistant_with_stream_response(bedrock_model, system_
         try:
             # Execute the SQL query using the existing function
             # But we need to parse the response first
-            response_json = json.loads(run_sql_query(sql_query, config))
+            response_json = json.loads(run_sql_query(sql_query))
             
             # Check if there was an error
             if "error" in response_json:
@@ -161,9 +159,7 @@ async def run_data_analyst_assistant_with_stream_response(bedrock_model, system_
                 sql_query,
                 description,
                 result,
-                message,
-                table_name=config.get('RAW_QUERY_RESULTS_TABLE_NAME'),
-                region=config.get('AWS_REGION')
+                message
             )
             
             if not save_result["success"]:
@@ -178,9 +174,7 @@ async def run_data_analyst_assistant_with_stream_response(bedrock_model, system_
     # Get conversation history
     message_history = read_messages_by_session(
         session_id, 
-        config.get('LAST_NUMBER_OF_MESSAGES', 20),
-        table_name=config.get('CONVERSATION_TABLE_NAME'),
-        region=config.get('AWS_REGION')
+        config.get('LAST_NUMBER_OF_MESSAGES', 20)
     )
     if len(message_history) > 0:
         starting_message_id = len(message_history)

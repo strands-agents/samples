@@ -176,7 +176,7 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
 
     let cluster = new rds.DatabaseCluster(this, "AssistantCluster", {
       engine: rds.DatabaseClusterEngine.auroraPostgres({
-        version: rds.AuroraPostgresEngineVersion.VER_15_4,
+        version: rds.AuroraPostgresEngineVersion.VER_17_4,
       }),
       writer: rds.ClusterInstance.serverlessV2("writer"),
       serverlessV2MinCapacity: 2,
@@ -244,7 +244,7 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
     });
 
     new ssm.CfnParameter(this, 'ClusterArnParameter', {
-      name: cdk.Fn.sub('/${ProjectId}/CLUSTER_ARN', { ProjectId: projectId.valueAsString }),
+      name: cdk.Fn.sub('/${ProjectId}/AURORA_RESOURCE_ARN', { ProjectId: projectId.valueAsString }),
       value: cluster.clusterArn,
       description: 'ARN of the Aurora Serverless DB Cluster',
       type: 'String'
@@ -311,7 +311,7 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
     // Task execution role
     const executionRole = new iam.Role(this, "AgentTaskExecutionRole", {
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
-      roleName: `${projectId.valueAsString}-task-execution-role`,
+      roleName: `${projectId.valueAsString}-${this.region}-task-execution-role`,
       managedPolicies: [
         iam.ManagedPolicy.fromAwsManagedPolicyName(
           "service-role/AmazonECSTaskExecutionRolePolicy"
@@ -322,7 +322,7 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
     // Task role
     const taskRole = new iam.Role(this, "AgentTaskRole", {
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
-      roleName: `${projectId.valueAsString}-task-role`,
+      roleName: `${projectId.valueAsString}-${this.region}-task-role`,
     });
 
     // Bedrock permissions
@@ -416,7 +416,6 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
         logGroup,
       }),
       environment: {
-        AWS_REGION: this.region,
         PROJECT_ID: projectId.valueAsString,
         COGNITO_USER_POOL_ID: cognitoUserPoolId.valueAsString,
         WEB_APPLICATION_URL: webApplicationUrl.valueAsString,

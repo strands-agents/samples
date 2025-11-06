@@ -19,140 +19,148 @@ import boto3
 import json
 from botocore.exceptions import ClientError
 from decimal import Decimal
-from utils import load_config
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from utils.ssm_utils import load_config
 
-# Configuration will be passed as parameter to functions
+# Load configuration from SSM parameters
+try:
+    CONFIG = load_config()
+except Exception as e:
+    print("\n" + "=" * 70)
+    print("❌ CONFIGURATION LOADING ERROR")
+    print("=" * 70)
+    print(f"💥 Error loading configuration from SSM: {e}")
+    print("=" * 70 + "\n")
+    CONFIG = {}
 
-def validate_configuration(config):
+
+def validate_configuration():
     """
     Validates that all required configuration parameters are present.
-    
-    Args:
-        config: Configuration dictionary
-        
+
     Raises:
         ValueError: If any required configuration parameters are missing
     """
-    required_params = ["SECRET_ARN", "CLUSTER_ARN", "DATABASE_NAME", "AWS_REGION"]
-    missing_params = [param for param in required_params if param not in config or not config[param]]
-    
+    required_params = ["SECRET_ARN", "AURORA_RESOURCE_ARN", "DATABASE_NAME"]
+    missing_params = [
+        param for param in required_params if param not in CONFIG or not CONFIG[param]
+    ]
+
     if missing_params:
-        raise ValueError(f"Missing required configuration parameters: {', '.join(missing_params)}")
+        raise ValueError(
+            f"Missing required configuration parameters: {', '.join(missing_params)}"
+        )
 
 
-def get_rds_data_client(region_name: str):
+def get_rds_data_client():
     """
-    Creates and returns an RDS Data API client.
-    
-    Args:
-        region_name: AWS region where the Aurora Serverless cluster is located
-        
+    Creates and returns an RDS Data API client using default AWS configuration.
+
     Returns:
         boto3.client: RDS Data API client
     """
-    session = boto3.session.Session()
-    return session.client(service_name="rds-data", region_name=region_name)
+    return boto3.client("rds-data")
 
 
-def execute_statement(sql_query: str, aws_region: str, aurora_resource_arn: str, secret_arn: str, database_name: str):
+def execute_statement(
+    sql_query: str, aurora_resource_arn: str, secret_arn: str, database_name: str
+):
     """
     Executes a SQL statement using the RDS Data API.
-    
+
     Args:
         sql_query: SQL query string to execute
-        aws_region: AWS region where the Aurora Serverless cluster is located
         aurora_resource_arn: ARN of the Aurora Serverless cluster
         secret_arn: ARN of the secret containing database credentials
         database_name: Name of the database to connect to
-        
+
     Returns:
         dict: Response from the RDS Data API
     """
-    client = get_rds_data_client(aws_region)
-    
+    client = get_rds_data_client()
+
     try:
         response = client.execute_statement(
             resourceArn=aurora_resource_arn,
             secretArn=secret_arn,
             database=database_name,
             sql=sql_query,
-            includeResultMetadata=True
+            includeResultMetadata=True,
         )
-        print("\n" + "="*70)
+        print("\n" + "=" * 70)
         print("✅ SQL STATEMENT EXECUTED SUCCESSFULLY")
-        print("="*70)
+        print("=" * 70)
         print(f"🗄️  Database: {database_name}")
         print(f"📊 Query length: {len(sql_query)} characters")
-        print("="*70 + "\n")
+        print("=" * 70 + "\n")
         return response
     except ClientError as e:
-        print("\n" + "="*70)
+        print("\n" + "=" * 70)
         print("❌ SQL EXECUTION ERROR")
-        print("="*70)
+        print("=" * 70)
         print(f"🗄️  Database: {database_name}")
         print(f"💥 Error: {e}")
-        print("="*70 + "\n")
+        print("=" * 70 + "\n")
         return {"error": str(e)}
 
 
 def get_size(string: str) -> int:
     """
     Calculates the size of a string in bytes when encoded as UTF-8.
-    
+
     Args:
         string: The string to measure
-        
+
     Returns:
         int: Size of the string in bytes
     """
     return len(string.encode("utf-8"))
 
 
-def run_sql_query(sql_query: str, config: dict = None) -> str:
+def run_sql_query(sql_query: str) -> str:
     """
     Executes a SQL query using the RDS Data API and returns the results as JSON.
-    
+
     The function handles connection to the database, query execution, and formatting
     of results. Special data types (Decimal, date) are properly converted for JSON.
     If the result size exceeds MAX_RESPONSE_SIZE_BYTES, it's truncated.
-    
+
     Args:
         sql_query: SQL query string to execute
-        
+
     Returns:
         str: JSON string containing query results or error information
     """
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("🔍 SQL QUERY EXECUTION")
-    print("="*70)
+    print("=" * 70)
     print(f"📝 Query: {sql_query[:100]}{'...' if len(sql_query) > 100 else ''}")
-    print("="*70)
+    print("=" * 70)
     try:
-        # Load configuration if not provided
-        if config is None:
-            config = load_config()
-            
         # Validate configuration parameters before proceeding
-        validate_configuration(config)
-        
+        validate_configuration()
+
         response = execute_statement(
             sql_query,
-            config["AWS_REGION"],
-            config["CLUSTER_ARN"],
-            config["SECRET_ARN"],
-            config["DATABASE_NAME"]
+            CONFIG["AURORA_RESOURCE_ARN"],
+            CONFIG["SECRET_ARN"],
+            CONFIG["DATABASE_NAME"],
         )
 
         if "error" in response:
-            return json.dumps({
-                "error": f"Something went wrong executing the query: {response['error']}"
-            })
+            return json.dumps(
+                {
+                    "error": f"Something went wrong executing the query: {response['error']}"
+                }
+            )
 
-        print("\n" + "="*50)
+        print("\n" + "=" * 50)
         print("✅ QUERY PROCESSING COMPLETE")
-        print("="*50)
+        print("=" * 50)
         print(f"📊 Records found: {len(response.get('records', []))}")
-        print("="*50 + "\n")
+        print("=" * 50 + "\n")
 
         records = []
         records_to_return = []
@@ -162,22 +170,27 @@ def run_sql_query(sql_query: str, config: dict = None) -> str:
         if "records" in response:
             column_metadata = response.get("columnMetadata", [])
             column_names = [col.get("name") for col in column_metadata]
-            
+
             for row in response["records"]:
                 record = {}
                 for i, value in enumerate(row):
                     # RDS Data API returns values as dictionaries with type indicators
                     # e.g., {"stringValue": "value"}, {"longValue": 123}, etc.
                     for value_type, actual_value in value.items():
-                        if value_type == "numberValue" and isinstance(actual_value, Decimal):
+                        if value_type == "numberValue" and isinstance(
+                            actual_value, Decimal
+                        ):
                             record[column_names[i]] = float(actual_value)
-                        elif value_type == "stringValue" and column_metadata[i].get("typeName") == "date":
+                        elif (
+                            value_type == "stringValue"
+                            and column_metadata[i].get("typeName") == "date"
+                        ):
                             record[column_names[i]] = actual_value  # Already a string
                         else:
                             record[column_names[i]] = actual_value
                 records.append(record)
-                
-            max_response_size = config.get("MAX_RESPONSE_SIZE_BYTES", 25600)
+
+            max_response_size = CONFIG.get("MAX_RESPONSE_SIZE_BYTES", 25600)
             if get_size(json.dumps(records)) > max_response_size:
                 for item in records:
                     if get_size(json.dumps(records_to_return)) <= max_response_size:
@@ -193,8 +206,37 @@ def run_sql_query(sql_query: str, config: dict = None) -> str:
             return json.dumps({"result": records_to_return, "message": message})
         else:
             return json.dumps({"result": records_to_return})
-            
+
     except ValueError as e:
+        import traceback
+        
+        # Print detailed ValueError information
+        print("\n" + "=" * 70)
+        print("💥 RUN_SQL_QUERY VALUE ERROR")
+        print("=" * 70)
+        print(f"🚨 Exception Type: ValueError")
+        print(f"💬 Exception Message: {str(e)}")
+        print(f"📝 SQL Query: {sql_query[:200]}{'...' if len(sql_query) > 200 else ''}")
+        print("-" * 70)
+        print("📊 FULL TRACEBACK:")
+        print(traceback.format_exc())
+        print("=" * 70 + "\n")
+        
         return json.dumps({"error": str(e)})
     except Exception as e:
+        import traceback
+        
+        # Print detailed exception information
+        print("\n" + "=" * 70)
+        print("💥 RUN_SQL_QUERY UNEXPECTED ERROR")
+        print("=" * 70)
+        print(f"🚨 Exception Type: {type(e).__name__}")
+        print(f"💬 Exception Message: {str(e)}")
+        print(f"📝 SQL Query: {sql_query[:200]}{'...' if len(sql_query) > 200 else ''}")
+        print(f"🔧 Configuration Keys: {list(CONFIG.keys()) if CONFIG else 'Empty config'}")
+        print("-" * 70)
+        print("📊 FULL TRACEBACK:")
+        print(traceback.format_exc())
+        print("=" * 70 + "\n")
+        
         return json.dumps({"error": f"Unexpected error: {str(e)}"})

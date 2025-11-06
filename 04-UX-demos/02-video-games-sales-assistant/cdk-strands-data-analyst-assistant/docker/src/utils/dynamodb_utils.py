@@ -13,11 +13,7 @@ except Exception as e:
     print(f"❌ Error loading config in dynamodb_utils: {e}")
     config = {}
 
-# Default AWS region fallback
-DEFAULT_AWS_REGION = "us-east-1"
-
-
-def save_raw_query_result(user_message_uuid, user_message, sql_query, sql_query_description, result, message, table_name=None, region=None):
+def save_raw_query_result(user_message_uuid, user_message, sql_query, sql_query_description, result, message):
     """
     Store SQL query execution results and metadata in DynamoDB.
     
@@ -31,21 +27,18 @@ def save_raw_query_result(user_message_uuid, user_message, sql_query, sql_query_
         sql_query_description: Human-readable description of the query purpose
         result: Query execution results (JSON serialized)
         message: Additional context or result summary
-        table_name: DynamoDB table name (optional, falls back to environment variable)
-        region: AWS region (optional, falls back to environment variable)
         
     Returns:
         dict: Success status with DynamoDB response or error details
     """
     try:
         # Use provided parameters or fall back to SSM config
-        aws_region = region or config.get("AWS_REGION", DEFAULT_AWS_REGION)
-        raw_query_results_table = table_name or config.get("RAW_QUERY_RESULTS_TABLE_NAME")
+        raw_query_results_table = config.get("RAW_QUERY_RESULTS_TABLE_NAME")
         
         if not raw_query_results_table:
             return {"success": False, "error": "RAW_QUERY_RESULTS_TABLE_NAME not configured"}
         
-        dynamodb_client = boto3.client('dynamodb', region_name=aws_region)
+        dynamodb_client = boto3.client('dynamodb')
         
         response = dynamodb_client.put_item(
             TableName=raw_query_results_table,
@@ -77,7 +70,7 @@ def save_raw_query_result(user_message_uuid, user_message, sql_query, sql_query_
         return {"success": False, "error": str(e)}
 
 
-def read_messages_by_session(session_id: str, last_number_of_messages: int = 20, table_name: str = None, region: str = None) -> List[Dict[str, Any]]:
+def read_messages_by_session(session_id: str, last_number_of_messages: int = 20) -> List[Dict[str, Any]]:
     """
     Retrieve conversation history from DynamoDB with pagination and JSON parsing.
     
@@ -87,26 +80,23 @@ def read_messages_by_session(session_id: str, last_number_of_messages: int = 20,
     Args:
         session_id: Session identifier to query
         last_number_of_messages: Maximum messages to retrieve (default: 20)
-        table_name: DynamoDB table name (optional, falls back to environment variable)
-        region: AWS region (optional, falls back to environment variable)
         
     Returns:
         List[Dict]: Parsed message objects in chronological order, empty if table not configured
     """
     # Use provided parameters or fall back to SSM config
-    aws_region = region or config.get("AWS_REGION", DEFAULT_AWS_REGION)
-    conversation_table = table_name or config.get("CONVERSATION_TABLE_NAME")
+    conversation_table = config.get("CONVERSATION_TABLE_NAME")
     
     if not conversation_table:
         print(f"\n⚠️ CONFIGURATION WARNING")
         print("-"*40)
         print(f"📋 Message: CONVERSATION_TABLE_NAME not set")
-        print(f"📤 Action: Returning empty message history")
+        print(f"� Actiaon: Returning empty message history")
         print("-"*40)
         return []
     
     try:
-        dynamodb_resource = boto3.resource('dynamodb', region_name=aws_region)
+        dynamodb_resource = boto3.resource('dynamodb')
         table = dynamodb_resource.Table(conversation_table)
         
         response = table.query(
@@ -220,18 +210,18 @@ def save_messages(session_id: str, message_uuid: str, starting_message_id: int, 
     print(f"🔗 Session ID: {session_id}")
     print("-"*40)
 
-    # Use SSM config for table name and region
+    # Use SSM config for table name
     conversation_table = config.get("CONVERSATION_TABLE_NAME")
-    aws_region = config.get("AWS_REGION", DEFAULT_AWS_REGION)
     
     if not conversation_table:
         print(f"\n⚠️ CONFIGURATION WARNING")
         print("-"*40)
         print(f"📋 Message: CONVERSATION_TABLE_NAME not set")
-        print(f"📤 Action: Skipping message save")
+        print(f"�  Action: Skipping message save")
         print("-"*40)
         return False
-    dynamodb = boto3.resource('dynamodb', region_name=aws_region)
+    
+    dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(conversation_table)
     
     try:

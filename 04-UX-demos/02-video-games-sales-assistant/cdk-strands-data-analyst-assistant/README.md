@@ -2,6 +2,9 @@
 
 This tutorial guides you through setting up the back-end infrastructure and agent for a Data Analyst Assistant for Video Game Sales using **[AWS Cloud Development Kit (CDK)](https://aws.amazon.com/cdk/)**.
 
+> [!NOTE]
+> **Working Directory**: Make sure you are in the `cdk-strands-data-analyst-assistant/` folder before starting this tutorial. All commands in this guide should be executed from this directory.
+
 ## Overview
 
 You will deploy the following AWS services:
@@ -45,7 +48,7 @@ aws ecr-public get-login-password --region us-east-1 | docker login --username A
 
 ## Deploy the Back-End Services with AWS CDK
 
-Navigate to the CDK project folder (cdk-strands-data-analyst-assistant) and install the required npm dependencies::
+Install the required npm dependencies::
 
 ``` bash
 npm install
@@ -86,7 +89,13 @@ After deployment completes, the following resources will be created:
 
 ## Load Sample Data into PostgreSQL Database
 
-Set up the required environment variables:
+1. Install required Python dependencies:
+
+``` bash
+pip install boto3
+```
+
+2. Set up the required environment variables:
 
 ``` bash
 # Set the stack name environment variable
@@ -113,7 +122,7 @@ EOF
 
 ```
 
-Execute the following command to create the database and load the sample data:
+3. Load sample data into PostgreSQL:
 
 ``` bash
 python3 resources/create-sales-database.py

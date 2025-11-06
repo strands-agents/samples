@@ -2,10 +2,14 @@ import jwt
 from jwt import PyJWKClient
 import requests
 import os
+import boto3
 from typing import Dict, Optional
 from functools import lru_cache
 import json
 from .ssm_utils import load_config
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
+import base64
 
 # Load configuration from SSM
 try:
@@ -16,17 +20,20 @@ except Exception as e:
 
 
 @lru_cache(maxsize=10)
-def get_jwks(region: str, user_pool_id: str) -> Dict:
+def get_jwks(user_pool_id: str) -> Dict:
     """
     Fetch and cache the JSON Web Key Set (JWKS) from Cognito.
     
     Args:
-        region (str): AWS region where the Cognito User Pool is located
         user_pool_id (str): Cognito User Pool ID
     
     Returns:
         Dict: The JWKS containing public keys for token verification
     """
+
+    session = boto3.session.Session()
+    region = session.region_name
+    
     jwks_url = f"https://cognito-idp.{region}.amazonaws.com/{user_pool_id}/.well-known/jwks.json"
     
     try:
@@ -38,18 +45,21 @@ def get_jwks(region: str, user_pool_id: str) -> Dict:
         raise Exception(f"Failed to fetch JWKS: {str(e)}")
 
 
-def get_public_key(token_header: Dict, region: str, user_pool_id: str):
+def get_public_key(token_header: Dict, user_pool_id: str):
     """
     Get the public key for token verification based on the token header.
     
     Args:
         token_header (Dict): The JWT token header containing key ID
-        region (str): AWS region where the Cognito User Pool is located
         user_pool_id (str): Cognito User Pool ID
         
     Returns:
         The public key for verification
     """
+
+    session = boto3.session.Session()
+    region = session.region_name
+    
     jwks_url = f"https://cognito-idp.{region}.amazonaws.com/{user_pool_id}/.well-known/jwks.json"
     
     try:
@@ -59,7 +69,7 @@ def get_public_key(token_header: Dict, region: str, user_pool_id: str):
         return signing_key.key
     except Exception as e:
         # Fallback to manual JWKS parsing
-        jwks = get_jwks(region, user_pool_id)
+        jwks = get_jwks(user_pool_id)
         
         # Find the key that matches the token's key ID
         for key in jwks.get('keys', []):
@@ -69,10 +79,6 @@ def get_public_key(token_header: Dict, region: str, user_pool_id: str):
                     if hasattr(jwt.algorithms, 'RSAAlgorithm'):
                         return jwt.algorithms.RSAAlgorithm.from_jwk(json.dumps(key))
                     else:
-                        # For older PyJWT versions, use jwt.algorithms.get_default_algorithms()
-                        from cryptography.hazmat.primitives import serialization
-                        from cryptography.hazmat.primitives.asymmetric import rsa
-                        import base64
                         
                         # Extract RSA components
                         n = base64.urlsafe_b64decode(key['n'] + '==')
@@ -94,19 +100,21 @@ def get_public_key(token_header: Dict, region: str, user_pool_id: str):
         raise Exception("Public key not found in JWKS")
 
 
-def validate_cognito_token(token: str, region: str, user_pool_id: str) -> Optional[Dict]:
+def validate_cognito_token(token: str, user_pool_id: str) -> Optional[Dict]:
     """
     Validate a Cognito JWT token.
     
     Args:
         token (str): The JWT token to validate
-        region (str): AWS region where the Cognito User Pool is located
         user_pool_id (str): Cognito User Pool ID
         
     Returns:
         Optional[Dict]: The decoded token payload if valid, None if invalid
     """
     try:
+        session = boto3.session.Session()
+        region = session.region_name
+        
         # Use PyJWKClient for simpler token validation
         jwks_url = f"https://cognito-idp.{region}.amazonaws.com/{user_pool_id}/.well-known/jwks.json"
         jwks_client = PyJWKClient(jwks_url)
@@ -158,8 +166,8 @@ def validate_cognito_token_with_config(token: str) -> Optional[Dict]:
         Optional[Dict]: The decoded token payload if valid, None if invalid
     """
     try:
-        region, user_pool_id = get_cognito_config_from_ssm()
-        return validate_cognito_token(token, region, user_pool_id)
+        user_pool_id = get_cognito_config_from_ssm()
+        return validate_cognito_token(token, user_pool_id)
     except Exception as e:
         print(f"❌ Token validation error: {str(e)}")
         return None
@@ -185,25 +193,20 @@ def extract_bearer_token(authorization_header: str) -> Optional[str]:
     return None
 
 
-def get_cognito_config_from_ssm() -> tuple[str, str]:
+def get_cognito_config_from_ssm() -> str:
     """
-    Get Cognito configuration from SSM and environment variables.
+    Get Cognito configuration from environment variables.
     
     Returns:
-        tuple[str, str]: A tuple containing (region, user_pool_id)
+        str: The Cognito User Pool ID
         
     Raises:
         Exception: If required configuration values are not set or are "N/A"
     """
-    import os
-    
-    region = config.get('AWS_REGION')
+
     user_pool_id = os.environ.get('COGNITO_USER_POOL_ID', 'N/A')
-    
-    if not region or region == "N/A":
-        raise Exception("AWS_REGION SSM parameter not set or is N/A")
     
     if not user_pool_id or user_pool_id == "N/A":
         raise Exception("COGNITO_USER_POOL_ID environment variable not set or is N/A")
     
-    return region, user_pool_id
+    return user_pool_id
