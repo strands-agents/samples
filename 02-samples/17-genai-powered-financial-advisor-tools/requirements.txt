@@ -1,0 +1,45 @@
+# Core application dependencies
+streamlit==1.45.1
+pandas==2.2.3
+python-dotenv==1.1.0
+
+# AWS and cloud services
+boto3==1.40.55
+botocore==1.40.55
+
+# AI/ML and agent frameworks
+strands-agents==1.13.0
+strands-agents-tools==0.2.12
+mcp==1.14.0
+
+# Data validation and processing
+pydantic==2.11.4
+python-dateutil==2.9.0.post0
+typing-extensions==4.13.2
+
+# Web search and research
+tavily-python==0.7.2
+
+# Financial data and stock analysis
+yfinance==0.2.66
+
+# Data visualization and charting
+matplotlib==3.9.2
+
+# PDF report generation
+reportlab==4.4.1
+
+# Progress bars and utilities
+tqdm==4.67.1
+
+# Prerequisites setup dependencies
+PyYAML==6.0.1
+opensearch-py==2.4.2
+retrying==1.3.4
+IPython==8.18.1
+nest-asyncio==1.6.0
+
+# HTTP and networking
+httpx==0.28.1
+httpx-sse==0.4.0
+anyio==4.9.0
