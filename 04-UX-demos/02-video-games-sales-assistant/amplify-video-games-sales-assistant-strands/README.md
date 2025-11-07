@@ -26,10 +26,6 @@ The application consists of two main components:
 Before you begin, ensure you have:
 
 - [Node.js version 18+](https://nodejs.org/en/download/package-manager)
-- React Scripts installed:
-``` bash
-npm install react-scripts
-```
 
 ## Set Up the Front-End Application
 
