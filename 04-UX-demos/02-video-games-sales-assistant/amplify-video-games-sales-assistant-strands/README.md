@@ -172,14 +172,13 @@ export QUESTION_ANSWERS_TABLE_NAME=$(aws cloudformation describe-stacks --stack-
 export AGENT_ENDPOINT_URL=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs[?OutputKey=='AgentEndpointURL'].OutputValue" --output text)
 
 echo "Table Name: $QUESTION_ANSWERS_TABLE_NAME"
-echo "Agent Endpoint: http://$AGENT_ENDPOINT_URL/assistant-streaming"
+echo "Agent Endpoint URL: $AGENT_ENDPOINT_URL"
 ```
 
 ### Update Environment Variables
 
 In your **src/env.js** update the following environment variables:
 
- - **AWS_REGION**: Your AWS region (e.g., "us-east-1")
  - **QUESTION_ANSWERS_TABLE_NAME**: Use the value from the command above
  - **AGENT_ENDPOINT_URL**: Use the format "http://&lt;AgentEndpointURL&gt;/assistant-streaming" with the URL from the command above
 

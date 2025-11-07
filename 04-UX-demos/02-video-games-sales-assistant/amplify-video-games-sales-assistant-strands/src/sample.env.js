@@ -3,7 +3,6 @@
 // ================================
 
 // AWS Configuration - UPDATE THESE VALUES
-const AWS_REGION = "us-east-1"; // Your AWS region
 const QUESTION_ANSWERS_TABLE_NAME = ""; // Your DynamoDB table name
 const AGENT_ENDPOINT_URL = "http://<AgentEndpointURL>/assistant-streaming";
 
@@ -297,7 +296,6 @@ Example Chart Configurations:\n\
 
 export {
   // AWS Configuration
-  AWS_REGION,
   QUESTION_ANSWERS_TABLE_NAME,
   AGENT_ENDPOINT_URL,
   
