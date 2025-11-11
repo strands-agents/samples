@@ -12,3 +12,4 @@
 | [Arize](./Openinference-Arize)           | Demonstrates Arize Observability integration with Strands Agent which is a restuarant assistant with AWS Services |
 | [Zep AI](./zep-ai/)             | Minimal proof-of-concept for a personal dining assistant agent using Zep AI's graph-based memory and the Strands framework. |
 | [Supabase](./supabase/) | Demonstrate using Strands Agent with Supabase MCP to build a application backend with natural language. |
+| [Third-party Guardrails](./third-party-guardrails/) | Integrations with external guardrail services including NVIDIA NeMo, GuardRails AI, and Llama Firewall for content filtering, safety checks, and compliance monitoring. |
