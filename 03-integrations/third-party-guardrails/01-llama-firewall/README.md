@@ -16,7 +16,7 @@ Llama Firewall uses local models (via HuggingFace) to check user input for poten
 pip install -r requirements.txt
 ```
 
-Note: This wiill install a few LARGE dependencies:
+Note: This will install a few LARGE dependencies:
 ```
 nvidia-cublas-cu12   ------------------------------ 92.59 MiB/566.81 MiB
 nvidia-cudnn-cu12    ------------------------------ 92.50 MiB/674.02 MiB

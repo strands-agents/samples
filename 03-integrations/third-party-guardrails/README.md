@@ -6,9 +6,9 @@ Many of these examples require additional setup, but have free tiers.
 The following examples all use the `MessageAddedEvent`, which is called every time a message is added to the agent.
 This means the same callback is used for inputs to an LLM, and responses from the LLM.
 
-It's recommended use the most relevant [hook](https://strandsagents.com/latest/documentation/docs/user-guide/concepts/agents/hooks/) for your use case.
+It's recommended to use the most relevant [hook](https://strandsagents.com/latest/documentation/docs/user-guide/concepts/agents/hooks/) for your use case.
 
-Event messages are follow the [Amazon Bedrock runtime message format](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html). At present, [there isn't an elegant way to extracting the latest string from the message object](https://github.com/strands-agents/sdk-python/discussions/620).
+Event messages are follow the [Amazon Bedrock runtime message format](https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html). At present, [there isn't an elegant way to extract the latest string from the message object](https://github.com/strands-agents/sdk-python/discussions/620).
 
 ## Available Examples
 

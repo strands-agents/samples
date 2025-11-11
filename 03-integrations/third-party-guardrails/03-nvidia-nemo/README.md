@@ -16,7 +16,7 @@ NeMo Guardrails provides a toolkit for creating customizable guardrails that can
 pip install -r requirements.txt
 ```
 
-Install [`uv`](https://docs.astral.sh/uv/getting-started/installation/), so that you can run the NVIDIA NeMo server seperately.
+Install [`uv`](https://docs.astral.sh/uv/getting-started/installation/), so that you can run the NVIDIA NeMo server separately.
 
 You may also need build-essentials installed to run the NVIDIA NeMo server
 ```
@@ -38,7 +38,7 @@ python main.py
 ```
 
 The agent will communicate with the NeMo Guardrails server to validate and filter content based on the configured rules.
-On first pass, the nvivida server will download a local model.
+On first pass, the nvidia server will download a local model.
 
 **main.py**
 ```
@@ -99,7 +99,7 @@ Payload format:
     }]
 }
 ```
-Where `config_id` matches guardrai name.
+Where `config_id` matches guardrail name.
 
 ## Configuration
 
