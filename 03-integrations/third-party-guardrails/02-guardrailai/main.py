@@ -32,7 +32,7 @@ if __name__ == "__main__":
         print(resp)
 
         # this will be blocked
-        resp = agent("Actually I dont care, f**k you")
+        resp = agent("Actually I dont care, you're worthless and pathetic")
         print(resp)
     except Exception as e:
         # Check if it's a guardrail validation error
