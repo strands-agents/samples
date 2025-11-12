@@ -1,8 +1,0 @@
-strands-agents
-strands-agents-tools
-strands-agents-builder
-coinbase-agentkit
-coinbase-agentkit-strands-agents
-x402
-fastapi
-boto3
