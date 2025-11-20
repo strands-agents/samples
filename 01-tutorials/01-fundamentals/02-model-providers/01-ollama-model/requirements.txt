@@ -1,3 +1,4 @@
 strands-agents
 strands-agents-tools
 strands-agents[ollama]
+PyPDF2>=3.0.0
