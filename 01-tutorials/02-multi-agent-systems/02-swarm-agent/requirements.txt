@@ -1,2 +1,2 @@
-strands-agents
+strands-agents[a2a]
 strands-agents-tools
