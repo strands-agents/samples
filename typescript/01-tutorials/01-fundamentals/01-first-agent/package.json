@@ -10,13 +10,6 @@
     "dev": "tsx src/firstAgent.ts",
     "clean": "rm -rf dist"
   },
-  "keywords": [
-    "strands-agents",
-    "ai",
-    "bedrock",
-    "typescript",
-    "tutorial"
-  ],
   "dependencies": {
     "@strands-agents/sdk": "git+ssh://git.amazon.com/pkg/StrandsAgentsSDKTypescript"
   },
