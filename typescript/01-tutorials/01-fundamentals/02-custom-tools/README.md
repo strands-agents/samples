@@ -4,7 +4,7 @@
 
 In this example we will guide you through creating custom tools using the Strands Agents `tool()` function. We will build a personal assistant that connects with a local SQLite database to manage appointments.
 
-![Custom Tools Architecture](images/architecture.png)
+![Custom Tools Architecture](images/agent_with_custom_tools.png)
 
 | Feature | Description |
 |---------|-------------|
