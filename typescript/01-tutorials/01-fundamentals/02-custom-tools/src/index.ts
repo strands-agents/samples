@@ -13,9 +13,7 @@ import Database from "better-sqlite3";
 import { z } from "zod";
 import { randomUUID } from "crypto";
 
-// ============================================================================
-// DATABASE SETUP
-// ============================================================================
+// Database Setup
 
 // Initialize SQLite database
 const db = new Database("appointments.db");
@@ -31,9 +29,7 @@ db.exec(`
   )
 `);
 
-// ============================================================================
-// CUSTOM TOOLS DEFINITION
-// ============================================================================
+// Custom Tools
 
 /**
  * Tool 1: Create Appointment
@@ -41,7 +37,7 @@ db.exec(`
  */
 const createAppointment = tool({
   name: "create_appointment",
-  description: "Create a new personal appointment in the database. Args: date (str): Date and time of the appointment (format: YYYY-MM-DD HH:MM). location (str): Location of the appointment. title (str): Title of the appointment. description (str): Description of the appointment. Returns: str: The ID of the newly created appointment.",
+  description: "Create a new personal appointment in the database with date (format: YYYY-MM-DD HH:MM), location, title, and description. Returns the appointment ID.",
   inputSchema: z.object({
     date: z.string(),
     location: z.string(),
@@ -68,7 +64,7 @@ const createAppointment = tool({
  */
 const listAppointments = tool({
   name: "list_appointments",
-  description: "List all available appointments from the database. Returns: str: the appointments available",
+  description: "List all appointments from the database, ordered by date.",
   inputSchema: z.object({}), // No input parameters needed
   callback: () => {
     const stmt = db.prepare("SELECT * FROM appointments ORDER BY date");
@@ -88,7 +84,7 @@ const listAppointments = tool({
  */
 const updateAppointment = tool({
   name: "update_appointment",
-  description: "Update an appointment based on the appointment ID.",
+  description: "Update an existing appointment by ID.",
   inputSchema: z.object({
     appointment_id: z.string(),
     date: z.string().optional(),
@@ -126,9 +122,7 @@ const updateAppointment = tool({
 });
 
 
-// ============================================================================
-// AGENT SETUP
-// ============================================================================
+// Agent Setup
 
 const systemPrompt = `You are a helpful personal assistant that specializes in managing my appointments and calendar. You have access to appointment management tools to help me organize my schedule effectively. Always provide the appointment id so that I can update it if required`;
 
@@ -143,9 +137,11 @@ async function main() {
     tools: [createAppointment, listAppointments, updateAppointment]
   });
 
-  // ========================================================================
+  // ===============================
+  // Example Usage
+  // ===============================
+
   // Example 1: Create an appointment
-  // ========================================================================
   console.log("Example 1: Creating an appointment\n");
 
   const userQuery1 = "Book 'Agent fun' for tomorrow 3pm in NYC. This meeting will discuss all the fun things that an agent can do";
@@ -159,9 +155,7 @@ async function main() {
   }
   console.log("\n" + "=".repeat(70) + "\n");
 
-  // ========================================================================
   // Example 2: Update an appointment
-  // ========================================================================
   console.log("Example 2: Updating an appointment\n");
 
   const userQuery2 = "Oh no! My bad, 'Agent fun' is actually happening in DC";
@@ -175,9 +169,7 @@ async function main() {
   }
   console.log("\n" + "=".repeat(70) + "\n");
 
-  // ========================================================================
   // Example 3: Create another appointment
-  // ========================================================================
   console.log("Example 3: Creating another appointment\n");
 
   const userQuery3 = "I want to add a new appointment for tomorrow at 2pm";

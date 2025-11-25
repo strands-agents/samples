@@ -11,7 +11,11 @@ Strands Agents is an open source SDK that takes a model-driven approach to build
 
 ## Creating Your First Agent
 
-![Agent Architecture](simple_agent.png)
+![Agent Architecture](images/simple_agent.png)
+
+| Feature | Description |
+|---------|-------------|
+| Agent Structure | Single agent architecture |
 
 The example in `src/firstAgent.ts` demonstrates how to:
 

@@ -2,14 +2,14 @@
 
 ## Overview
 
-In this example we will guide you through the different ways to create custom tools using Strands Agents. We will build a personal assistant use case that connects with a local SQLite database to perform data tasks. 
+In this example we will guide you through creating custom tools using the Strands Agents `tool()` function. We will build a personal assistant that connects with a local SQLite database to manage appointments.
 
-## What You'll Build
+![Custom Tools Architecture](images/architecture.png)
 
-A personal assistant agent that manages appointments using:
-- **Custom tools** - Three tools for creating, listing, and updating appointments
-- **SQLite database** - Persistent storage for appointment data
-- **Natural language interface** - Conversational interaction with the agent
+| Feature | Description |
+|---------|-------------|
+| Custom tools created | create_appointment, list_appointments, update_appointment |
+| Agent Structure | Single agent architecture |
 
 ## Prerequisites
 
@@ -25,22 +25,11 @@ npm install
 npx tsx src/index.ts
 ```
 
-## Custom Tools Overview
+## Key Concepts
 
-This example demonstrates three custom tools:
+### Custom Tools
 
-### 1. Create Appointment
-Creates a new appointment with date, location, title, and description.
-
-### 2. List Appointments
-Retrieves all appointments from the database.
-
-### 3. Update Appointment
-Modifies an existing appointment by ID.
-
-## Tool Definition Pattern
-
-Custom tools are defined using the `tool()` function:
+Custom tools are defined using the `tool()` function with a name, description, input schema, and callback:
 
 ```typescript
 const createAppointment = tool({
@@ -53,20 +42,21 @@ const createAppointment = tool({
     description: z.string()
   }),
   callback: (input) => {
-    // Tool implementation
+    const id = randomUUID();
+    // Insert into database...
     return `Appointment created successfully with ID: ${id}`;
   }
 });
 ```
 
-## Database Integration
+### Database Integration
 
 The example uses `better-sqlite3` for:
 - Synchronous SQLite operations
 - Simple table creation and queries
 - Persistent appointment storage
 
-## Agent Configuration
+### Agent Configuration
 
 ```typescript
 const agent = new Agent({
@@ -77,3 +67,7 @@ const agent = new Agent({
   tools: [createAppointment, listAppointments, updateAppointment]
 });
 ```
+
+## Additional Resources
+
+- [Strands Agents Documentation](https://strandsagents.com/latest/)
