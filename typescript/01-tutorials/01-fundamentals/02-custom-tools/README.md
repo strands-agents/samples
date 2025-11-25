@@ -49,13 +49,6 @@ const createAppointment = tool({
 });
 ```
 
-### Database Integration
-
-The example uses `better-sqlite3` for:
-- Synchronous SQLite operations
-- Simple table creation and queries
-- Persistent appointment storage
-
 ### Agent Configuration
 
 ```typescript
