@@ -4,14 +4,12 @@
  * This example demonstrates how to create and invoke a simple agent.
  */
 
-import { Agent, BedrockModel } from "@strands-agents/sdk";
+import { Agent } from "@strands-agents/sdk";
 
 async function main() {
-    // Create an agent with Amazon Bedrock model
+    // Create an agent using the default model provider and model
+    // Strands Agents Typescript SDK uses Amazon Bedrock as the default model provider and Claude Sonnet 4.5 as the default model
     const agent = new Agent({
-        model: new BedrockModel({
-            modelId: "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
-        }),
         systemPrompt: "You are a helpful assistant that provides concise responses."
     });
 

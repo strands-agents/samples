@@ -25,28 +25,64 @@ npm install
 npx tsx src/index.ts
 ```
 
+## Project Structure
+
+```
+src/
+├── database/
+│   └── AppointmentDatabase.ts    # SQLite data access layer
+├── tools/
+│   └── AppointmentTools.ts       # Tool definitions factory
+└── index.ts                      # Main entry point
+```
+
 ## Key Concepts
 
-### Custom Tools
+### Class-Based Tool Organization
 
-Custom tools are defined using the `tool()` function with a name, description, input schema, and callback:
+Tools are organized using a factory class pattern that encapsulates tool creation and database dependencies:
 
 ```typescript
-const createAppointment = tool({
-  name: "create_appointment",
-  description: "Create a new personal appointment in the database...",
-  inputSchema: z.object({
-    date: z.string(),
-    location: z.string(),
-    title: z.string(),
-    description: z.string()
-  }),
-  callback: (input) => {
-    const id = randomUUID();
-    // Insert into database...
-    return `Appointment created successfully with ID: ${id}`;
+export class AppointmentTools {
+  constructor(private database: AppointmentDatabase) { }
+
+  getCreateAppointmentTool() {
+    return tool({
+      name: "create_appointment",
+      description: "Create a new personal appointment...",
+      inputSchema: z.object({ date, location, title, description }),
+      callback: (input) => {
+        const id = this.database.createAppointment(...);
+        return `Appointment created with ID: ${id}`;
+      }
+    });
   }
-});
+
+  getAllTools() {
+    return [
+      this.getCreateAppointmentTool(),
+      this.getListAppointmentsTool(),
+      this.getUpdateAppointmentTool()
+    ];
+  }
+}
+```
+
+### Database Integration
+
+The `AppointmentDatabase` class uses `better-sqlite3` to store appointment information:
+
+```typescript
+export class AppointmentDatabase {
+  constructor(databasePath: string = "appointments.db") {
+    this.db = new Database(databasePath);
+    this.initializeTables();
+  }
+
+  createAppointment(date, location, title, description): string
+  listAppointments(): Appointment[]
+  updateAppointment(id, updates): number
+}
 ```
 
 ### Agent Configuration
@@ -57,7 +93,7 @@ const agent = new Agent({
     modelId: "us.anthropic.claude-3-5-haiku-20241022-v1:0",
   }),
   systemPrompt: "You are a helpful personal assistant...",
-  tools: [createAppointment, listAppointments, updateAppointment]
+  tools
 });
 ```
 

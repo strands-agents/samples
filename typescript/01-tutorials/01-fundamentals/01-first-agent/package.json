@@ -11,7 +11,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@strands-agents/sdk": "git+ssh://git.amazon.com/pkg/StrandsAgentsSDKTypescript"
+    "@strands-agents/sdk": "github:strands-agents/sdk-typescript"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
