@@ -1,0 +1,21 @@
+{
+  "name": "first-agent",
+  "version": "1.0.0",
+  "description": "Getting started with Strands Agents in TypeScript - First Agent Tutorial",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/firstAgent.js",
+    "dev": "tsx src/firstAgent.ts",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@strands-agents/sdk": "github:strands-agents/sdk-typescript"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.0.0"
+  }
+}
