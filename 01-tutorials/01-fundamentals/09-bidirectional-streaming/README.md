@@ -13,10 +13,11 @@ These samples demonstrates how to build voice-enabled AI agents using Strands wi
 
 ```python
 from strands import BidiAgent
+from strands.experimental.bidi.models.novasonic import BidiNovaSonicModel
 
 # Create a voice-enabled agent with tools
 agent = BidiAgent(
-    model="nova-sonic",
+    model=BidiNovaSonicModel(region="us-east-1", model_id="amazon.nova-2-sonic-v1:0"),
     tools=[calculator, weather],
     system_prompt="You are a helpful voice assistant."
 )
