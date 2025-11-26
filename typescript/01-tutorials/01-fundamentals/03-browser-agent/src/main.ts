@@ -36,7 +36,7 @@ credentialsForm.addEventListener("submit", async (e) => {
   try {
     // Create the agent with explicit AWS credentials
     // In browser environments, credentials must be passed via clientConfig
-    // since the AWS SDK cannot auto-detect credentials like it does in Node.js
+    // since the underlying AWS SDK cannot auto-detect credentials like it does in Node.js
     agent = new Agent({
       model: new BedrockModel({
         region: region,
@@ -104,19 +104,34 @@ chatForm.addEventListener("submit", async (e) => {
   messagesContainer.appendChild(loadingDiv);
 
   try {
-    // Invoke the agent
-    const response = await agent.invoke(userMessage);
-
-    // Remove loading indicator
+    // Stream the agent response for real-time updates
+    // Replace loading indicator with an empty message we'll populate
     loadingDiv.remove();
+    const responseDiv = document.createElement("div");
+    responseDiv.className = "message assistant";
+    messagesContainer.appendChild(responseDiv);
 
-    // Extract and display the response
-    const messageContent = response.lastMessage.content[0];
-    if (messageContent.type === "textBlock") {
-      addMessage(messageContent.text, "assistant");
+    let responseText = "";
+
+    // Use streaming to show response as it's generated
+    for await (const event of agent.stream(userMessage)) {
+      // Handle text deltas for real-time display
+      if (
+        event.type === "modelContentBlockDeltaEvent" &&
+        event.delta.type === "textDelta"
+      ) {
+        responseText += event.delta.text;
+        responseDiv.textContent = responseText;
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+    }
+
+    // If no text was streamed, show a fallback message
+    if (!responseText) {
+      responseDiv.textContent = "No response received.";
     }
   } catch (error) {
-    // Remove loading indicator
+    // Remove loading indicator if still present
     loadingDiv.remove();
 
     // Show error message

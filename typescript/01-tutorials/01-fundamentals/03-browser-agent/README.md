@@ -4,8 +4,11 @@
 
 This tutorial demonstrates how to run a Strands Agent entirely in the browser using the TypeScript SDK with Vite as the build tool. The example creates a simple chat interface where users can interact with an AI agent directly from their web browser.
 
+![Browser Agent Architecture](images/browser_agent.png)
+
 | Feature | Description |
 |---------|-------------|
+| Agent Structure | Single agent architecture |
 | Architecture | Client-side only (browser) |
 | Build Tool | Vite |
 | Model Provider | Amazon Bedrock (default) |
@@ -13,22 +16,24 @@ This tutorial demonstrates how to run a Strands Agent entirely in the browser us
 ## Prerequisites
 
 - Node.js 18.x or later
-- AWS credentials configured for Amazon Bedrock access
+- AWS credentials with Amazon Bedrock access (Access Key ID and Secret Access Key)
 - Basic TypeScript and web development knowledge
 
 ## Project Structure
 
 ```
 03-browser-agent/
-├── index.html          # Entry HTML with chat UI
+├── images/
+│   └── browser_agent.png  # Architecture diagram
+├── index.html             # Entry HTML with chat UI
 ├── src/
-│   ├── main.ts        # Agent setup and DOM interaction
-│   ├── style.css      # Chat interface styling
-│   └── vite-env.d.ts  # Vite type declarations
-├── package.json       # Dependencies
-├── tsconfig.json      # TypeScript configuration
-├── vite.config.ts     # Vite configuration
-└── README.md          # This file
+│   ├── main.ts           # Agent setup and DOM interaction
+│   ├── style.css         # Chat interface styling
+│   └── vite-env.d.ts     # Vite type declarations
+├── package.json          # Dependencies
+├── tsconfig.json         # TypeScript configuration
+├── vite.config.ts        # Vite configuration
+└── README.md             # This file
 ```
 
 ## Running the Example
@@ -47,21 +52,44 @@ This will start the Vite dev server and open `http://localhost:5173` in your bro
 
 The agent runs entirely in the browser, which means:
 
-1. **No backend required** - The SDK handles API calls directly from the browser
-2. **Simple deployment** - Can be hosted on any static file server
-3. **Real-time interaction** - Direct communication with the model provider
+1. **No backend required** - API calls go directly from the browser to Amazon Bedrock, simplifying deployment
+2. **Simple deployment** - Can be hosted on any static file server 
 
 ### Agent Configuration
 
+In browser environments, AWS credentials must be passed explicitly via `clientConfig` since the SDK cannot auto-detect them like in Node.js:
+
 ```typescript
-import { Agent } from "@strands-agents/sdk";
+import { Agent, BedrockModel } from "@strands-agents/sdk";
 
 const agent = new Agent({
+  model: new BedrockModel({
+    region: "us-east-1",
+    clientConfig: {
+      credentials: {
+        accessKeyId: "...",
+        secretAccessKey: "...",
+      },
+    },
+  }),
   systemPrompt: "You are a helpful assistant running in the browser."
 });
+```
 
-// Invoke the agent with user input
-const response = await agent.invoke(userMessage);
+### Streaming Responses
+
+Streaming displays the response progressively as it's generated, providing immediate feedback:
+
+```typescript
+for await (const event of agent.stream(userMessage)) {
+  if (
+    event.type === "modelContentBlockDeltaEvent" &&
+    event.delta.type === "textDelta"
+  ) {
+    responseText += event.delta.text;
+    // Update UI with each chunk
+  }
+}
 ```
 
 ### Vite for Browser Development
@@ -76,7 +104,7 @@ Vite provides:
 
 When running agents in the browser, be aware of:
 
-1. **API Keys Exposure** - Any credentials used in browser code are visible in the network tab
+1. **Credentials Exposure** - AWS credentials used in browser code are visible in the network tab
 2. **For Production** - Consider using a backend proxy with proper authentication
 3. **Development Only** - This tutorial is intended for development and demonstration purposes
 
