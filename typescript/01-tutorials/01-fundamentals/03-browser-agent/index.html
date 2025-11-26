@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Browser Agent - Strands Agents</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Strands Agent in Browser</h1>
+        <p>A simple chat interface powered by Strands Agents SDK running entirely in your browser.</p>
+      </header>
+
+      <main>
+        <!-- Credentials Form (shown initially) -->
+        <div id="credentials-section">
+          <h2>AWS Credentials</h2>
+          <p class="warning">Credentials are stored in memory only and never sent to any server except AWS Bedrock.</p>
+          <form id="credentials-form">
+            <div class="form-group">
+              <label for="access-key">Access Key ID</label>
+              <input type="text" id="access-key" placeholder="AKIA..." required />
+            </div>
+            <div class="form-group">
+              <label for="secret-key">Secret Access Key</label>
+              <input type="password" id="secret-key" placeholder="Your secret key" required />
+            </div>
+            <div class="form-group">
+              <label for="region">AWS Region</label>
+              <select id="region">
+                <option value="us-east-1">us-east-1 (N. Virginia)</option>
+                <option value="us-west-2">us-west-2 (Oregon)</option>
+                <option value="eu-west-1">eu-west-1 (Ireland)</option>
+                <option value="ap-northeast-1">ap-northeast-1 (Tokyo)</option>
+              </select>
+            </div>
+            <button type="submit" id="connect">Connect to Agent</button>
+          </form>
+        </div>
+
+        <!-- Chat Section (hidden initially) -->
+        <div id="chat-section" class="hidden">
+          <div id="chat-container">
+            <div id="messages"></div>
+          </div>
+
+          <form id="chat-form">
+            <input
+              type="text"
+              id="input"
+              placeholder="Type your message..."
+              autocomplete="off"
+            />
+            <button type="submit" id="send">Send</button>
+          </form>
+        </div>
+      </main>
+
+      <footer>
+        <p>Powered by <a href="https://strandsagents.com" target="_blank">Strands Agents SDK</a></p>
+      </footer>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
