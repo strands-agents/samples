@@ -2,7 +2,7 @@
 
 ## Overview
 
-This tutorial demonstrates how to run a Strands Agent entirely in the browser using the TypeScript SDK with Vite as the build tool. The example creates a simple chat interface where users can interact with an AI agent directly from their web browser.
+This tutorial demonstrates how to run a Strands Agent entirely in the browser using the TypeScript SDK with Vite as the build tool. The example creates a simple chat interface where users can interact with an agent directly from their web browser.
 
 ![Browser Agent Architecture](images/browser_agent.png)
 
@@ -52,8 +52,8 @@ This will start the Vite dev server and open `http://localhost:5173` in your bro
 
 The agent runs entirely in the browser, which means:
 
-1. **No backend required** - API calls go directly from the browser to Amazon Bedrock, simplifying deployment
-2. **Simple deployment** - Can be hosted on any static file server 
+1. **No backend required** - API calls go directly from the browser to Amazon Bedrock (development only - see Security Considerations)
+2. **Simple deployment** - Can be hosted on any static file server (do not bundle credentials)
 
 ### Agent Configuration
 
@@ -92,20 +92,21 @@ for await (const event of agent.stream(userMessage)) {
 }
 ```
 
-### Vite for Browser Development
+### Vite
 
-Vite provides:
-- Hot Module Replacement (HMR) for fast development
-- TypeScript support out of the box
-- Optimized production builds
-- ES module support
+Vite is a build tool that enables browser-based development:
+
+- **TypeScript compilation** - Compiles `.ts` files to JavaScript since browsers can't run TypeScript directly
+- **Module bundling** - Resolves and bundles dependencies (like `@strands-agents/sdk`) so browsers can load them
+- **Dev server** - Serves files locally with automatic reload on save
+- **Production builds** - Creates optimized, minified files for deployment
 
 ## Security Considerations
 
 When running agents in the browser, be aware of:
 
 1. **Credentials Exposure** - AWS credentials used in browser code are visible in the network tab
-2. **For Production** - Consider using a backend proxy with proper authentication
+2. **For Production** - Use a backend proxy or secure token-based authentication
 3. **Development Only** - This tutorial is intended for development and demonstration purposes
 
 ## Building for Production

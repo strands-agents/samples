@@ -4,7 +4,7 @@
  * This example demonstrates how to run a Strands Agent entirely in the browser
  * using the TypeScript SDK with Vite as the build tool.
  *
- * AWS credentials are collected via a form and passed directly to the BedrockModel.
+ * AWS credentials are collected via a form and passed directly to Amazon Bedrock.
  */
 
 import { Agent, BedrockModel } from "@strands-agents/sdk";
@@ -50,9 +50,6 @@ credentialsForm.addEventListener("submit", async (e) => {
       systemPrompt:
         "You are a helpful assistant running in the browser. Keep your responses concise and friendly.",
     });
-
-    // Test the connection with a simple invoke
-    // await agent.invoke("Hello");
 
     // Switch to chat view
     credentialsSection.classList.add("hidden");
