@@ -282,7 +282,7 @@ async def main():
     print(f"🤖 Using model: {MODEL}")
 
     try:
-        # Initialize agent with configured model
+        # Initialize agent with configured model, tools and system prompt
         agent = Agent(
             model_id=MODEL,
             tools=tool_list,
