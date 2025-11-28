@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@strands-agents/sdk": "file:/Users/manojs/Documents/Code/strands-typescript/strands-agents-workspace/docs/sdk-package/@strands-agents/sdk"
+    "@strands-agents/sdk": "github:strands-agents/sdk-typescript"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
