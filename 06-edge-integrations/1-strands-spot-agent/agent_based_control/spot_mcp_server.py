@@ -1,15 +1,3 @@
-"""
-Boston Dynamics Spot Robot MCP Server - Improved Version
-
-This improved MCP server provides better lease handling and force-take capability
-for Boston Dynamics Spot robot control. It includes enhanced error handling for
-lease conflicts.
-
-This project uses the Boston Dynamics SDK. Boston Dynamics and Spot are
-trademarks of Boston Dynamics, Inc.
-"""
-
-import json
 import logging
 import time
 from typing import Optional, Dict, Any
@@ -23,7 +11,7 @@ from pathlib import Path
 # Load environment variables
 load_dotenv()
 
-# Third Party
+# Strands import
 from strands import tool
 
 # Boston Dynamics imports
@@ -61,7 +49,7 @@ _estop_keepalive = None
 _image_client = None
 _executor = ThreadPoolExecutor(max_workers=4)
 
-# Constants from wasd.py
+# Constants from wasd.py from Boston Dynamics Spot SDK at https://github.com/boston-dynamics/spot-sdk/blob/master/python/examples/wasd/wasd.py
 VELOCITY_BASE_SPEED = 0.5  # m/s
 VELOCITY_BASE_ANGULAR = 0.8  # rad/sec
 VELOCITY_CMD_DURATION = 0.6  # seconds
@@ -816,8 +804,6 @@ def robot_get_status() -> str:
 @tool
 def robot_toggle_power() -> str:
     """
-    tool_start_time = time.time()
-    LOGGER.info("Tool 'robot_get_status' called")
     Toggle the robot's motor power state between on and off.
 
     This function checks the current power state and toggles it. If motors are off,
@@ -2004,14 +1990,8 @@ if __name__ == "__main__":
     This server provides remote control capabilities for Boston Dynamics Spot robot
     through the Model Context Protocol (MCP) with enhanced lease handling.
     
-    Key improvements:
-    - Better lease conflict handling
-    - Force-take lease capability
-    - More informative status messages
-    - Enhanced error handling
-    
     Usage:
-        python spot_mcp_server_improved.py
+        python spot_mcp_server.py
     """
     # Initialize and run the MCP server
     mcp.run(transport="stdio")

@@ -147,7 +147,7 @@ This repository is organized to help you progress from basics to advanced implem
 - **[03-integrations](./03-integrations/)** - Integration examples with AWS services and third-party tools
 - **[04-UX-demos](./04-UX-demos/)** - Full-stack applications with user interfaces
 - **[05-agentic-rag](./05-agentic-rag/)** - Advanced Agentic RAG patterns
-
+- **[06-edge](./06-edge-integrations/)** - Edge device integration examples with Strands SDK
 ## Contributing ❤️
 
 We welcome contributions! See our [Contributing Guide](CONTRIBUTING.md) for details on:

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Boston Dynamics Spot Robot Control Agent with Strands Streaming
+Boston Dynamics Spot Robot Control Agent with Strands 
 
 Supports multiple LLM providers via Strands Agents framework.
 Configure your preferred model via the MODEL environment variable.
@@ -41,7 +41,7 @@ from spot_mcp_server import (
 load_dotenv()
 
 # Get model from environment (supports any Strands-compatible model)
-MODEL = os.getenv("MODEL", "anthropic.claude-3-5-sonnet-20241022-v2:0")
+MODEL = os.getenv("MODEL", "global.anthropic.claude-sonnet-4-5-20250929-v1:0")
 
 
 AGENT_PROMPT = """
@@ -142,9 +142,9 @@ Remember: You are responsible for safe, effective robot operation. When in doubt
 
 def print_welcome():
     """Print welcome message and basic instructions."""
-    print("🤖 Boston Dynamics Spot Robot Control Agent (Streaming Edition)")
+    print("🤖 Boston Dynamics Spot Robot Control Agent")
     print("=" * 60)
-    print("Welcome! I'm your Spot robot control assistant with streaming support.")
+    print("Welcome! I'm your Spot robot control assistant.")
     print("\nI can help you:")
     print("• Connect to and control your Spot robot")
     print("• Execute movement commands safely")
@@ -189,7 +189,7 @@ def print_help():
 
 async def process_streaming_command(agent, user_input):
     """
-    Process command using exact Strands documentation pattern.
+    Process command
     """
     # Track timing
     total_start = time.time()
@@ -205,12 +205,10 @@ async def process_streaming_command(agent, user_input):
         print("⏳ Executing robot command...")
 
     try:
-        # Start streaming using exact documentation pattern
         model_start = time.time()
 
-        # This follows the exact pattern from Strands documentation
         async for event in agent.stream_async(user_input):
-            # Track event loop lifecycle (from documentation)
+            # Track event loop lifecycle
             if event.get("init_event_loop", False):
                 print("\n🔄 Event loop initialized")
             elif event.get("start_event_loop", False):
@@ -224,12 +222,12 @@ async def process_streaming_command(agent, user_input):
                     f"🛑 Event loop force-stopped: {event.get('force_stop_reason', 'unknown reason')}"
                 )
 
-            # Track tool usage (from documentation)
+            # Track tool usage 
             if "current_tool_use" in event and event["current_tool_use"].get("name"):
                 tool_name = event["current_tool_use"]["name"]
                 print(f"🔧 Using tool: {tool_name}")
 
-            # Stream text chunks (from documentation pattern)
+            # Stream text chunks
             if "data" in event:
                 if first_token_time is None:
                     first_token_time = time.time() - model_start
@@ -253,7 +251,7 @@ async def process_streaming_command(agent, user_input):
 
 
 async def main():
-    """Main async function for the streaming agent."""
+    """Main async function for the agent."""
     print_welcome()
 
     # Collect all robot control tools
@@ -289,7 +287,7 @@ async def main():
             model_id=MODEL,
             tools=tool_list,
             system_prompt=AGENT_PROMPT,
-            callback_handler=None,  # Required for async streaming per docs
+            callback_handler=None,  
         )
 
         # Interactive loop

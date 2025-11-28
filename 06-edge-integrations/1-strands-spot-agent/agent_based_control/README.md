@@ -1,6 +1,6 @@
 # Spot Robot Agent Control
 
-An AI-powered control system for Boston Dynamics Spot robots using the [Strands Agents](https://github.com/strands-agents/strands-agents) framework. Works with any LLM supported by Strands (Claude, GPT-4, Llama, etc.).
+An AI-powered control system for Boston Dynamics Spot robots using the Strands framework. Works with any LLM supported by Strands (Claude, GPT-4, Llama, etc.).
 
 ## Overview
 
@@ -72,7 +72,7 @@ AWS_REGION=us-east-1
 Run the interactive agent:
 
 ```bash
-python agent_streaming.py
+python agent.py
 ```
 
 The agent provides an interactive prompt where you can issue natural language commands.
@@ -91,7 +91,7 @@ The agent provides an interactive prompt where you can issue natural language co
 
 ## Architecture
 
-- `agent_streaming.py` - Main agent interface using Strands framework
+- `agent.py` - Main agent interface using Strands framework
 - `spot_mcp_server.py` - Robot control tools exposed as Strands tools
 
 ## Safety
@@ -104,13 +104,8 @@ The system includes built-in safety limits:
 
 Always maintain visual contact with the robot and ensure adequate clearance during operation.
 
-## License
-
-MIT License - See LICENSE file for details.
-
 ## Acknowledgments
 
-- [Strands Agents](https://github.com/strands-agents/strands-agents) - Agent framework
-- [Boston Dynamics SDK](https://dev.bostondynamics.com/) - Robot control
+- [Strands Agents](https://github.com/strands-agents) - Agent framework
+- [Boston Dynamics SDK](https://github.com/boston-dynamics/spot-sdk) - Robot control
 
-Boston Dynamics and Spot are trademarks of Boston Dynamics, Inc.
