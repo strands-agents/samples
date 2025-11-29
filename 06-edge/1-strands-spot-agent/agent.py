@@ -327,7 +327,7 @@ async def main():
     try:
         # Initialize agent with configured model, tools and system prompt
         agent = Agent(
-            model_id=MODEL,
+            model=MODEL,
             tools=tool_list,
             system_prompt=AGENT_PROMPT,
             callback_handler=None,  
