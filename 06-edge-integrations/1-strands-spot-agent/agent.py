@@ -189,17 +189,12 @@ def print_help():
 
 async def process_streaming_command(agent, user_input):
     """
-    Process command with token tracking
+    Process command
     """
     # Track timing
     total_start = time.time()
     model_start = None
     first_token_time = None
-    
-    # Track tokens
-    total_input_tokens = 0
-    total_output_tokens = 0
-    tool_tokens = {}
 
     # Show immediate feedback
     print("\n🔄 Processing command...")
@@ -227,32 +222,10 @@ async def process_streaming_command(agent, user_input):
                     f"🛑 Event loop force-stopped: {event.get('force_stop_reason', 'unknown reason')}"
                 )
 
-            # Track tool usage and tokens
+            # Track tool usage 
             if "current_tool_use" in event and event["current_tool_use"].get("name"):
                 tool_name = event["current_tool_use"]["name"]
                 print(f"🔧 Using tool: {tool_name}")
-                
-                # Initialize tool token tracking if needed
-                if tool_name not in tool_tokens:
-                    tool_tokens[tool_name] = {"input": 0, "output": 0, "calls": 0}
-                tool_tokens[tool_name]["calls"] += 1
-
-            # Track token usage
-            if "usage" in event:
-                usage = event["usage"]
-                if "input_tokens" in usage:
-                    total_input_tokens += usage["input_tokens"]
-                    # Associate tokens with current tool if applicable
-                    if "current_tool_use" in event and event["current_tool_use"].get("name"):
-                        tool_name = event["current_tool_use"]["name"]
-                        tool_tokens[tool_name]["input"] += usage["input_tokens"]
-                        
-                if "output_tokens" in usage:
-                    total_output_tokens += usage["output_tokens"]
-                    # Associate tokens with current tool if applicable
-                    if "current_tool_use" in event and event["current_tool_use"].get("name"):
-                        tool_name = event["current_tool_use"]["name"]
-                        tool_tokens[tool_name]["output"] += usage["output_tokens"]
 
             # Stream text chunks
             if "data" in event:
@@ -271,22 +244,6 @@ async def process_streaming_command(agent, user_input):
             print(f"   • Time to First Token: {first_token_time:.2f}s")
         print(f"   • Model Total Time: {model_time:.2f}s")
         print(f"   • Total Execution Time: {total_time:.2f}s")
-        
-        # Print token usage
-        print(f"\n🪙 Token Usage:")
-        print(f"   • Total Input Tokens: {total_input_tokens:,}")
-        print(f"   • Total Output Tokens: {total_output_tokens:,}")
-        print(f"   • Total Tokens: {total_input_tokens + total_output_tokens:,}")
-        
-        # Print per-tool token usage if any tools were used
-        if tool_tokens:
-            print(f"\n🔧 Tool Token Usage:")
-            for tool_name, tokens in tool_tokens.items():
-                print(f"   • {tool_name}:")
-                print(f"     - Calls: {tokens['calls']}")
-                print(f"     - Input Tokens: {tokens['input']:,}")
-                print(f"     - Output Tokens: {tokens['output']:,}")
-                print(f"     - Total: {tokens['input'] + tokens['output']:,}")
 
     except Exception as e:
         print(f"\n\n❌ Streaming error: {str(e)}")
