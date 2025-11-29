@@ -30,7 +30,6 @@ This project enables natural language control of Spot robots through an AI agent
 ## Installation
 
 ```bash
-cd agent_based_control
 pip install -r requirements.txt
 ```
 
@@ -46,9 +45,9 @@ cp example.env .env
 
 ```bash
 # LLM Model (see Strands docs for supported models)
-MODEL=anthropic.claude-3-5-sonnet-20241022-v2:0  # AWS Bedrock
+MODEL=global.anthropic.claude-sonnet-4-5-20250929-v1:0  # AWS Bedrock
 # MODEL=gpt-4                                     # OpenAI
-# MODEL=claude-3-sonnet-20240229                  # Anthropic API
+# MODEL=claude-4-5-sonnet-20250929                  # Anthropic API
 
 # Robot connection
 ROBOT_HOSTNAME="192.168.80.3"
