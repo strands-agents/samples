@@ -16,24 +16,48 @@
       <main>
         <!-- Credentials Form (shown initially) -->
         <div id="credentials-section">
-          <h2>AWS Credentials</h2>
-          <p class="warning">Credentials are stored in memory only and never sent to any server except AWS Bedrock.</p>
+          <h2>Connect to Agent</h2>
           <form id="credentials-form">
             <div class="form-group">
-              <label for="access-key">Access Key ID</label>
-              <input type="text" id="access-key" placeholder="AKIA..." required />
-            </div>
-            <div class="form-group">
-              <label for="secret-key">Secret Access Key</label>
-              <input type="password" id="secret-key" placeholder="Your secret key" required />
-            </div>
-            <div class="form-group">
-              <label for="region">AWS Region</label>
-              <select id="region">
-                <option value="us-east-1">us-east-1 (N. Virginia)</option>
-                <option value="us-west-2">us-west-2 (Oregon)</option>
+              <label for="provider">Model Provider</label>
+              <select id="provider">
+                <option value="bedrock">Amazon Bedrock</option>
+                <option value="openai">OpenAI</option>
               </select>
+              <small id="model-info" class="model-info">Using Claude Sonnet 4</small>
             </div>
+
+            <!-- Bedrock credentials (shown by default) -->
+            <div id="bedrock-fields">
+              <div class="form-group">
+                <label for="access-key">Access Key ID</label>
+                <input type="text" id="access-key" placeholder="AKIA..." />
+              </div>
+              <div class="form-group">
+                <label for="secret-key">Secret Access Key</label>
+                <input type="password" id="secret-key" placeholder="Your secret key" />
+              </div>
+              <div class="form-group">
+                <label for="session-token">Session Token (optional)</label>
+                <input type="password" id="session-token" placeholder="For temporary credentials" />
+              </div>
+              <div class="form-group">
+                <label for="region">AWS Region</label>
+                <select id="region">
+                  <option value="us-east-1">us-east-1 (N. Virginia)</option>
+                  <option value="us-west-2">us-west-2 (Oregon)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- OpenAI credentials (hidden by default) -->
+            <div id="openai-fields" class="hidden">
+              <div class="form-group">
+                <label for="openai-key">OpenAI API Key</label>
+                <input type="password" id="openai-key" placeholder="sk-..." />
+              </div>
+            </div>
+
             <button type="submit" id="connect">Connect to Agent</button>
           </form>
         </div>

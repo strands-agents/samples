@@ -9,7 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@strands-agents/sdk": "github:strands-agents/sdk-typescript"
+    "@strands-agents/sdk": "file:/Users/manojs/Documents/Code/strands-typescript/strands-agents-workspace/docs/sdk-package/@strands-agents/sdk",
+    "openai": "^4.0.0"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

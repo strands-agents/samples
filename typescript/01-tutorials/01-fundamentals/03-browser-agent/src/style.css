@@ -229,3 +229,10 @@ footer a:hover {
 .hidden {
   display: none !important;
 }
+
+.model-info {
+  display: block;
+  color: #666;
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+}

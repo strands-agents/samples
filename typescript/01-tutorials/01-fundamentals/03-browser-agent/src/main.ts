@@ -4,10 +4,11 @@
  * This example demonstrates how to run a Strands Agent entirely in the browser
  * using the TypeScript SDK with Vite as the build tool.
  *
- * AWS credentials are collected via a form and passed directly to Amazon Bedrock.
+ * Supports both Amazon Bedrock and OpenAI as model providers.
  */
 
 import { Agent, BedrockModel } from "@strands-agents/sdk";
+import { OpenAIModel } from "@strands-agents/sdk/openai";
 
 // Agent instance (initialized after credentials are provided)
 let agent: Agent | null = null;
@@ -21,32 +22,66 @@ const chatForm = document.getElementById("chat-form") as HTMLFormElement;
 const inputField = document.getElementById("input") as HTMLInputElement;
 const sendButton = document.getElementById("send") as HTMLButtonElement;
 
+// Provider selection elements
+const providerSelect = document.getElementById("provider") as HTMLSelectElement;
+const bedrockFields = document.getElementById("bedrock-fields")!;
+const openaiFields = document.getElementById("openai-fields")!;
+const modelInfo = document.getElementById("model-info")!;
+
+// Toggle credential fields based on provider selection
+providerSelect.addEventListener("change", () => {
+  const isOpenAI = providerSelect.value === "openai";
+  bedrockFields.classList.toggle("hidden", isOpenAI);
+  openaiFields.classList.toggle("hidden", !isOpenAI);
+  modelInfo.textContent = isOpenAI ? "Using GPT-4o" : "Using Claude Sonnet 4";
+});
+
 // Handle credentials form submission
 credentialsForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const accessKey = (document.getElementById("access-key") as HTMLInputElement).value;
-  const secretKey = (document.getElementById("secret-key") as HTMLInputElement).value;
-  const region = (document.getElementById("region") as HTMLSelectElement).value;
-
+  const provider = providerSelect.value;
   const connectButton = document.getElementById("connect") as HTMLButtonElement;
   connectButton.disabled = true;
   connectButton.textContent = "Connecting...";
 
   try {
-    // Create the agent with explicit AWS credentials
-    // In browser environments, credentials must be passed via clientConfig
-    // since the underlying AWS SDK cannot auto-detect credentials like it does in Node.js
-    agent = new Agent({
-      model: new BedrockModel({
+    let model;
+
+    if (provider === "openai") {
+      const apiKey = (document.getElementById("openai-key") as HTMLInputElement).value;
+      if (!apiKey) {
+        throw new Error("OpenAI API key is required");
+      }
+      model = new OpenAIModel({
+        apiKey,
+        modelId: "gpt-4o",
+      });
+    } else {
+      // Bedrock provider
+      const accessKey = (document.getElementById("access-key") as HTMLInputElement).value;
+      const secretKey = (document.getElementById("secret-key") as HTMLInputElement).value;
+      const sessionToken = (document.getElementById("session-token") as HTMLInputElement).value;
+      const region = (document.getElementById("region") as HTMLSelectElement).value;
+
+      if (!accessKey || !secretKey) {
+        throw new Error("AWS Access Key and Secret Key are required");
+      }
+
+      model = new BedrockModel({
         region: region,
         clientConfig: {
           credentials: {
             accessKeyId: accessKey,
             secretAccessKey: secretKey,
+            ...(sessionToken && { sessionToken }),
           },
         },
-      }),
+      });
+    }
+
+    agent = new Agent({
+      model,
       systemPrompt:
         "You are a helpful assistant running in the browser. Keep your responses concise and friendly.",
     });
@@ -79,7 +114,7 @@ chatForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   if (!agent) {
-    alert("Please connect with your AWS credentials first.");
+    alert("Please connect with your credentials first.");
     return;
   }
 

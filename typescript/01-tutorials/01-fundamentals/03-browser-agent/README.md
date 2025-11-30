@@ -11,12 +11,14 @@ This tutorial demonstrates how to run a Strands Agent entirely in the browser us
 | Agent Structure | Single agent architecture |
 | Architecture | Client-side only (browser) |
 | Build Tool | Vite |
-| Model Provider | Amazon Bedrock (default) |
+| Model Providers | Amazon Bedrock (Claude Sonnet 4), OpenAI (GPT-4o) |
 
 ## Prerequisites
 
 - Node.js 18.x or later
-- AWS credentials with Amazon Bedrock access (Access Key ID and Secret Access Key)
+- One of the following:
+  - AWS credentials with Amazon Bedrock access (Access Key ID, Secret Access Key, and optionally Session Token for temporary credentials)
+  - OpenAI API key
 - Basic TypeScript and web development knowledge
 
 ## Project Structure
@@ -46,18 +48,22 @@ npm run dev
 
 This will start the Vite dev server and open `http://localhost:5173` in your browser.
 
+![Credentials Form](images/credential_form.png)
+
 ## Key Concepts
 
 ### Browser-Based Agent
 
 The agent runs entirely in the browser, which means:
 
-1. **No backend required** - API calls go directly from the browser to Amazon Bedrock (development only - see Security Considerations)
+1. **No backend required** - API calls go directly from the browser to the model provider (development only - see Security Considerations)
 2. **Simple deployment** - Can be hosted on any static file server (do not bundle credentials)
 
 ### Agent Configuration
 
-In browser environments, AWS credentials must be passed explicitly via `clientConfig` since the SDK cannot auto-detect them like in Node.js:
+In browser environments, credentials must be passed explicitly. The application supports two model providers:
+
+#### Amazon Bedrock
 
 ```typescript
 import { Agent, BedrockModel } from "@strands-agents/sdk";
@@ -69,8 +75,25 @@ const agent = new Agent({
       credentials: {
         accessKeyId: "...",
         secretAccessKey: "...",
+        sessionToken: "...",  // Optional, for temporary credentials
       },
     },
+  }),
+  systemPrompt: "You are a helpful assistant running in the browser."
+});
+```
+
+
+#### OpenAI
+
+```typescript
+import { Agent } from "@strands-agents/sdk";
+import { OpenAIModel } from "@strands-agents/sdk/openai";
+
+const agent = new Agent({
+  model: new OpenAIModel({
+    apiKey: "sk-...",
+    modelId: "gpt-4o",
   }),
   systemPrompt: "You are a helpful assistant running in the browser."
 });
@@ -92,6 +115,8 @@ for await (const event of agent.stream(userMessage)) {
 }
 ```
 
+![Chat Interface](images/chat_interface.png)
+
 ### Vite
 
 Vite is a build tool that enables browser-based development:
@@ -105,7 +130,7 @@ Vite is a build tool that enables browser-based development:
 
 When running agents in the browser, be aware of:
 
-1. **Credentials Exposure** - AWS credentials used in browser code are visible in the network tab
+1. **Credentials Exposure** - AWS credentials and OpenAI API keys used in browser code are visible in the network tab and browser developer tools
 2. **For Production** - Use a backend proxy or secure token-based authentication
 3. **Development Only** - This tutorial is intended for development and demonstration purposes
 
