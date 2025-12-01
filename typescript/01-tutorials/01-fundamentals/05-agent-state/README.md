@@ -13,7 +13,8 @@ This sample demonstrates how to use agent state to build stateful agents that re
 ![Architecture](./images/architecture.png)
 
 Creates a shopping assistant that:
-- Tracks items in a user's cart
+- Tracks the user ID as part of the agent state
+- Tracks items in a user's cart in an external store
 - Remembers user preferences
 - Provides tools to add/remove items and view cart
 - Uses hooks to log activity and store conversation history
