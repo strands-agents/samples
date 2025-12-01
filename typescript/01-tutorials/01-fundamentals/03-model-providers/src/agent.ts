@@ -1,6 +1,7 @@
 import { Agent, tool } from '@strands-agents/sdk';
 import { BedrockModel } from '@strands-agents/sdk';
 import { OpenAIModel } from '@strands-agents/sdk/openai';
+import { httpRequest } from '@strands-agents/sdk/vended_tools/http_request'
 import { z } from 'zod';
 
 const openaiModel = () => new OpenAIModel({
@@ -17,18 +18,6 @@ const bedrockModel = () => new BedrockModel({
   temperature: 0.7
 });
 
-// Tools
-const currentWeather = tool({
-  name: 'current_weather',
-  description: 'Shows current weather in specific city',
-  inputSchema: z.object({ city: z.string() }),
-  callback: (input) => {
-    const weather = ['rainy', 'cloudy', 'sunny', 'foggy'];
-    const random = weather[Math.floor(Math.random() * weather.length)];
-    return random
-  }
-});
-
 const currentTime = tool({
   name: 'current_time',
   description: 'Shows current time in timezone',
@@ -42,8 +31,11 @@ const currentTime = tool({
 export const createAgent = (provider: string) => {
   return new Agent({
     model: provider === 'openai' ? openaiModel() : bedrockModel(),
-    tools: [currentTime, currentWeather],
+    tools: [currentTime, httpRequest],
     printer: false,
-    systemPrompt: `You are a simple agent that can tell the time and the weather. Always introduce you as a ${provider === 'openai' ? 'OpenAI' : 'Bedrock'} based assistant.`,
+    systemPrompt: `
+      You are a simple agent that can tell the time and the weather.
+      In order to retrieve the current weather in a specific location, leverage the open-meteo api with the httpRequest tool using the following url: https://api.open-meteo.com/v1/forecast?latitude=LOCATION_LATITUDE&longitude=LOCATION_LONGITUDE&current_weather=true , replacing latitutude and longitude for given location.
+      Always introduce you as a ${provider === 'openai' ? 'OpenAI' : 'Bedrock'} based assistant.`,
   })
 }

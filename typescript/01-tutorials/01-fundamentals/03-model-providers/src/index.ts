@@ -19,9 +19,7 @@ async function chat() {
       break;
     }
     const result = await agent.invoke(input);
-    const textBlock = result.lastMessage.content.find(block => 'text' in block);
-    const text = textBlock && 'text' in textBlock ? textBlock.text : 'No response';
-    console.log(`\nAssistant: ${text}\n`);
+    console.log(`\nAssistant: ${result.toString()}\n`);
   }
 }
 
