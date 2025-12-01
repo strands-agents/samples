@@ -56,6 +56,10 @@ credentialsForm.addEventListener("submit", async (e) => {
       model = new OpenAIModel({
         apiKey,
         modelId: "gpt-4o",
+        // Required to allow OpenAI SDK to run in browser environments
+        clientConfig: {
+          dangerouslyAllowBrowser: true,
+        },
       });
     } else {
       // Bedrock provider

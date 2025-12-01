@@ -94,6 +94,10 @@ const agent = new Agent({
   model: new OpenAIModel({
     apiKey: "sk-...",
     modelId: "gpt-4o",
+    // Required to allow OpenAI SDK to run in browser environments
+    clientConfig: {
+      dangerouslyAllowBrowser: true,
+    },
   }),
   systemPrompt: "You are a helpful assistant running in the browser."
 });
