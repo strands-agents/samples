@@ -12,18 +12,29 @@ A bidirectional streaming agent enables real-time, two-way voice conversations w
 These samples demonstrates how to build voice-enabled AI agents using Strands with models like AWS Nova Sonic, Google Gemini Live, and OpenAI Realtime API.
 
 ```python
-from strands import BidiAgent
-from strands.experimental.bidi.models.novasonic import BidiNovaSonicModel
+from strands.experimental.bidi.agent import BidiAgent
+from strands.experimental.bidi.models.nova_sonic import BidiNovaSonicModel
+from strands_tools import calculator
 
 # Create a voice-enabled agent with tools
 agent = BidiAgent(
-    model=BidiNovaSonicModel(region="us-east-1", model_id="amazon.nova-2-sonic-v1:0"),
-    tools=[calculator, weather],
+    model=BidiNovaSonicModel(
+        region="us-east-1",
+        model_id="amazon.nova-sonic-v1:0",
+        provider_config={
+            "audio": {
+                "input_sample_rate": 16000,
+                "output_sample_rate": 16000,
+                "voice": "matthew"
+            }
+        }
+    ),
+    tools=[calculator],
     system_prompt="You are a helpful voice assistant."
 )
 
 # Start streaming conversation
-await agent.start_session()
+await agent.run(inputs=[...], outputs=[...])
 ```
 
 ## Architecture
@@ -60,6 +71,11 @@ source .venv/bin/activate
 2. **Install dependencies**
 ```bash
 pip install -r requirements.txt
+```
+
+Or install directly:
+```bash
+pip install fastapi uvicorn strands-agents[bidi-all] strands-agents-tools
 ```
 
 3. **Set up credentials** (for the models you want to use)
@@ -233,17 +249,19 @@ The result returned from tool execution.
 
 ### Adding New Tools
 
-Tools can be added to the `tools` parameter in `websocket_example.py`:
+Tools can be added to the `tools` parameter in `websocket_example.py`. The agent is already configured with the calculator tool:
 
 ```python
-from strands_tools import calculator, weather, search
+from strands_tools import calculator
 
 agent = BidiAgent(
     model=model,
-    tools=[calculator, weather, search],
-    system_prompt="You are a helpful assistant with access to tools.",
+    tools=[calculator],
+    system_prompt="You are a helpful assistant with access to a calculator tool.",
 )
 ```
+
+You can add additional tools from `strands_tools` or create custom tools following the Strands tools specification.
 
 ## Event Format Reference
 

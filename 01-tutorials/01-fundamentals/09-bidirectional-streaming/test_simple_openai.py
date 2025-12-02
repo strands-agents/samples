@@ -12,7 +12,8 @@ from strands_tools import calculator
 
 
 async def main():
-    audio_io = BidiAudioIO(audio_config={"input_sample_rate": 24000, "output_sample_rate": 24000})
+    audio_config={"input_sample_rate": 24000, "output_sample_rate": 24000}
+    audio_io = BidiAudioIO(audio_config=audio_config)
     text_io = BidiTextIO()
 
     model = BidiOpenAIRealtimeModel()

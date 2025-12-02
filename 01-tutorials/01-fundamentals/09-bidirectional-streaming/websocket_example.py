@@ -1,15 +1,6 @@
 """FastAPI WebSocket Example for BidiAgent - Real-time Voice Conversations
-
-Setup:
-    1. Install: pip install fastapi uvicorn websockets strands-agents[bidi-all] strands-agents-tools
-    2. Set API keys:
-       - AWS Nova Sonic: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
-       - Google Gemini: GOOGLE_API_KEY
-       - OpenAI: OPENAI_API_KEY
-    3. Run: python websocket_example.py [port]
-    4. Open browser at http://localhost:8000
 """
-    
+
 import json
 import logging
 import os

@@ -10,7 +10,8 @@ from strands_tools import calculator
 
 
 async def main():
-    audio_io = BidiAudioIO(audio_config={})
+    audio_config = {}
+    audio_io = BidiAudioIO(audio_config=audio_config)
     text_io = BidiTextIO()
 
     model = BidiNovaSonicModel(
