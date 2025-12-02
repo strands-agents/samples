@@ -1,0 +1,22 @@
+{
+  "name": "strands-js-sdk-agent-state",
+  "version": "1.0.0",
+  "description": "Simple TypeScript app using StrandsAgentsSDKTypescript showcasing agent state",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "prepare": "npm run build"
+  },
+  "dependencies": {
+    "@strands-agents/sdk": "git+ssh://git@github.com:strands-agents/sdk-typescript.git",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.0.0"
+  }
+}
