@@ -70,6 +70,25 @@ main {
   line-height: 1.5;
 }
 
+/* Markdown content styling */
+.message p {
+  margin: 0 0 0.5em 0;
+}
+
+.message p:last-child {
+  margin-bottom: 0;
+}
+
+.message ul,
+.message ol {
+  margin: 0.5em 0;
+  padding-left: 1.5em;
+}
+
+.message li {
+  margin: 0.25em 0;
+}
+
 .message.user {
   background: #667eea;
   color: white;

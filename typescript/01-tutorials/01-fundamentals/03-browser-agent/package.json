@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@strands-agents/sdk": "github:strands-agents/sdk-typescript",
+    "marked": "^17.0.1",
     "openai": "^4.0.0"
   },
   "devDependencies": {

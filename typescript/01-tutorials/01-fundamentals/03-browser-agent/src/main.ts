@@ -9,6 +9,7 @@
 
 import { Agent, BedrockModel } from "@strands-agents/sdk";
 import { OpenAIModel } from "@strands-agents/sdk/openai";
+import { marked } from "marked";
 
 // Agent instance (initialized after credentials are provided)
 let agent: Agent | null = null;
@@ -157,7 +158,7 @@ chatForm.addEventListener("submit", async (e) => {
         event.delta.type === "textDelta"
       ) {
         responseText += event.delta.text;
-        responseDiv.textContent = responseText;
+        responseDiv.innerHTML = marked.parse(responseText) as string;
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       }
     }
