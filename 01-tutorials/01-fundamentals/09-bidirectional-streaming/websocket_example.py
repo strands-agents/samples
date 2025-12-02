@@ -32,7 +32,10 @@ logger = logging.getLogger(__name__)
 def check_available_models():
     """Check which models have valid credentials."""
     available = {
-        "novasonic": bool(os.environ.get("AWS_ACCESS_KEY_ID") and os.environ.get("AWS_SECRET_ACCESS_KEY")),
+        "novasonic": bool(
+            (os.environ.get("AWS_ACCESS_KEY_ID") and os.environ.get("AWS_SECRET_ACCESS_KEY"))
+            or os.environ.get("AWS_PROFILE")
+        ),
         "gemini": bool(os.environ.get("GOOGLE_API_KEY")),
         "openai": bool(os.environ.get("OPENAI_API_KEY")),
     }
