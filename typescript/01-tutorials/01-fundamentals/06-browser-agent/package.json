@@ -1,0 +1,20 @@
+{
+  "name": "03-browser-agent",
+  "version": "1.0.0",
+  "description": "Run Strands Agents in the browser with Vite",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@strands-agents/sdk": "github:strands-agents/sdk-typescript",
+    "marked": "^17.0.1",
+    "openai": "^4.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vite": "^6.0.0"
+  }
+}

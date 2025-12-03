@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Browser Agent - Strands Agents</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Strands Agent in Browser</h1>
+        <p>A simple chat interface powered by Strands Agents SDK running entirely in your browser.</p>
+      </header>
+
+      <main>
+        <!-- Credentials Form (shown initially) -->
+        <div id="credentials-section">
+          <h2>Connect to Agent</h2>
+          <form id="credentials-form">
+            <div class="form-group">
+              <label for="provider">Model Provider</label>
+              <select id="provider">
+                <option value="bedrock">Amazon Bedrock</option>
+                <option value="openai">OpenAI</option>
+              </select>
+              <small id="model-info" class="model-info">Using Claude Sonnet 4</small>
+            </div>
+
+            <!-- Bedrock credentials (shown by default) -->
+            <div id="bedrock-fields">
+              <div class="form-group">
+                <label for="access-key">Access Key ID</label>
+                <input type="text" id="access-key" placeholder="AKIA..." />
+              </div>
+              <div class="form-group">
+                <label for="secret-key">Secret Access Key</label>
+                <input type="password" id="secret-key" placeholder="Your secret key" />
+              </div>
+              <div class="form-group">
+                <label for="session-token">Session Token (optional)</label>
+                <input type="password" id="session-token" placeholder="For temporary credentials" />
+              </div>
+              <div class="form-group">
+                <label for="region">AWS Region</label>
+                <select id="region">
+                  <option value="us-east-1">us-east-1 (N. Virginia)</option>
+                  <option value="us-west-2">us-west-2 (Oregon)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- OpenAI credentials (hidden by default) -->
+            <div id="openai-fields" class="hidden">
+              <div class="form-group">
+                <label for="openai-key">OpenAI API Key</label>
+                <input type="password" id="openai-key" placeholder="sk-..." />
+              </div>
+            </div>
+
+            <button type="submit" id="connect">Connect to Agent</button>
+          </form>
+        </div>
+
+        <!-- Chat Section (hidden initially) -->
+        <div id="chat-section" class="hidden">
+          <div id="chat-container">
+            <div id="messages"></div>
+          </div>
+
+          <form id="chat-form">
+            <input
+              type="text"
+              id="input"
+              placeholder="Type your message..."
+              autocomplete="off"
+            />
+            <button type="submit" id="send">Send</button>
+          </form>
+        </div>
+      </main>
+
+      <footer>
+        <p>Powered by <a href="https://strandsagents.com" target="_blank">Strands Agents SDK</a></p>
+      </footer>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
