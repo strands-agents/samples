@@ -130,15 +130,18 @@ Follow the instructions [here](https://strandsagents.com/latest/user-guide/quick
 
 ## Explore the Repository
 
-This repository is organized to help you progress from basics to advanced implementations:
+### <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" width="20" height="20"/> Python Samples
 
-- **[01-tutorials](./01-tutorials/)** - Step-by-step guides covering fundamentals, deployment, and best practices
+- **[01-tutorials](./01-tutorials/)** - Jupyter notebook tutorials covering fundamentals, multi-agent systems, and deployment
 - **[02-samples](./02-samples/)** - Real-world use cases and industry-specific examples
 - **[03-integrations](./03-integrations/)** - Integration examples with AWS services and third-party tools
 - **[04-UX-demos](./04-UX-demos/)** - Full-stack applications with user interfaces
 - **[05-agentic-rag](./05-agentic-rag/)** - Advanced Agentic RAG patterns
-- **[06-edge](./06-edge/)** - Edge device integrations with Strands, including physical AI and robotics
-- **[typescript](./typescript/)** - TypeScript SDK samples and tutorials
+- **[06-edge](./06-edge/)** - Edge device integrations including physical AI and robotics
+
+### <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" width="20" height="20"/> TypeScript Samples
+
+- **[typescript/01-tutorials](./typescript/01-tutorials/)** - Step-by-step tutorials for the TypeScript SDK
 
 ## Contributing ❤️
 
