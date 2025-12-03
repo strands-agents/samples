@@ -1,0 +1,5 @@
+strands-agents
+strands-evals
+boto3
+jupyter
+ipython

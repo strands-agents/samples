@@ -1,0 +1,90 @@
+{
+  "cases": [
+    {
+      "name": "Simple Technology Investment Recommendation",
+      "session_id": "8d4977e9-75e5-4275-a30d-8b365dd967a3",
+      "input": "Our small software company has $100,000 to invest in new technology. We are considering either upgrading our existing server infrastructure or investing in cloud services. We currently spend $2,000 monthly on server maintenance. Cloud services would cost $2,500 monthly but eliminate maintenance costs. Which option should we choose and why?",
+      "expected_output": "Recommendation to invest in cloud services with clear financial justification showing the ROI over 3-5 years. Analysis should include: initial capital expenditure vs. operational expenditure comparison, total cost of ownership calculation, and acknowledgment of scalability benefits. The recommendation should conclude that while cloud services have a higher monthly cost, the elimination of maintenance costs and improved scalability justify the investment in the long term.",
+      "expected_trajectory": null,
+      "expected_interactions": null,
+      "metadata": null
+    },
+    {
+      "name": "Technology Investment - Semiconductor Industry",
+      "session_id": "134b3d5d-6ac6-4f97-8eaf-8605e726094b",
+      "input": "Our tech investment firm is considering allocating $150M to the semiconductor industry. We're debating between: (1) Investing in established players like TSMC or Intel that have stable revenue but slower growth, (2) Emerging AI chip startups with promising technology but limited market validation, or (3) Specialized semiconductor companies focused on quantum computing. Current market conditions include chip shortages, geopolitical tensions affecting supply chains, and increasing demand from AI applications. Consider 5-year ROI projections, technological risk factors, and alignment with broader market trends.",
+      "expected_output": "A comprehensive investment recommendation that:\n1. Analyzes each investment option with quantitative projections and qualitative risk assessments\n2. Evaluates the semiconductor market trends with data-supported insights on supply constraints and demand drivers\n3. Considers geopolitical factors affecting manufacturing and supply chains\n4. Provides a recommended allocation strategy across the three options with percentage breakdowns\n5. Includes contingency recommendations based on potential market shifts\n6. Highlights key milestones and metrics to track for re-evaluation of the investment\n7. Analyzes the opportunity cost compared to other tech sectors\n8. Addresses potential regulatory concerns in different markets",
+      "expected_trajectory": null,
+      "expected_interactions": null,
+      "metadata": null
+    },
+    {
+      "name": "Technology Investment Evaluation",
+      "session_id": "11535483-9581-43da-a6fb-b8ef56a30b61",
+      "input": "Our mid-size software company ($50M annual revenue) is considering investing $5M in either quantum computing research or AI model development. We have an established client base in financial services but are looking to expand our technology offerings. The quantum computing investment would take 3-4 years to potentially yield products, while the AI investment could produce market-ready solutions within 12-18 months. Our technical team has moderate expertise in AI but would need to hire quantum specialists. Market analysis suggests quantum computing may have higher long-term returns but with significantly more uncertainty. What investment strategy would you recommend and why?",
+      "expected_output": "A comprehensive recommendation that: \n1. Analyzes both investment options (quantum computing vs. AI) with specific pros and cons for each\n2. Considers the company's current capabilities, resource requirements, and timeline differences\n3. Evaluates market potential and risk factors quantitatively where possible\n4. Provides a clear recommendation with primary and secondary options\n5. Suggests a phased approach if appropriate (e.g., initial investment followed by milestone-based additional funding)\n6. Recommends specific metrics to track for measuring investment success\n7. Addresses potential contingencies if market conditions change",
+      "expected_trajectory": null,
+      "expected_interactions": null,
+      "metadata": null
+    },
+    {
+      "name": "Basic Technology Investment Evaluation",
+      "session_id": "21469574-8a86-49e6-8a1c-6179e36844cf",
+      "input": "A small software company has $500,000 to invest in either: (1) upgrading their existing server infrastructure, or (2) migrating to a cloud-based solution. The server upgrade costs $450,000 upfront with $30,000 annual maintenance. The cloud solution costs $200,000 for implementation and $90,000 annually. Both options are expected to last 5 years. Which option should they choose and why?",
+      "expected_output": "Recommendation: Migrate to cloud-based solution\n\nFinancial analysis:\n- Server upgrade: $450,000 + ($30,000 \u00d7 5) = $600,000 total over 5 years\n- Cloud solution: $200,000 + ($90,000 \u00d7 5) = $650,000 total over 5 years\n\nWhile the cloud solution costs slightly more over 5 years, it offers several advantages:\n1. Lower initial capital expenditure ($200,000 vs $450,000)\n2. More predictable operational expenses\n3. Better scalability for future growth\n4. Lower risk of technology obsolescence\n5. Reduced need for in-house IT infrastructure management\n\nThe cloud solution provides greater flexibility and aligns with current industry trends, making it the recommended investment despite the slightly higher 5-year total cost.",
+      "expected_trajectory": null,
+      "expected_interactions": null,
+      "metadata": null
+    },
+    {
+      "name": "Technology Investment Comparison",
+      "session_id": "764c3a93-4edc-4d25-99e5-20f89be6bc49",
+      "input": "A mid-size manufacturing company with $50M annual revenue is considering investing in one of two technologies: (1) An AI-powered predictive maintenance system costing $2M upfront with estimated annual savings of $500K and 15% reduction in downtime, or (2) A new automated production line costing $3.5M with projected 20% increase in output capacity and $750K annual labor savings. The company has $4M available for technology investments this year and aims to maximize ROI within a 5-year period. Which technology should they invest in and why?",
+      "expected_output": "A comprehensive recommendation that includes:\n1. Quantitative analysis of both investment options including 5-year ROI calculations\n2. Qualitative assessment of strategic fit with the company's manufacturing operations\n3. Risk evaluation for both options (implementation risks, technology obsolescence, etc.)\n4. A clear recommendation with supporting rationale\n5. Potential phasing or alternative approach if appropriate\n6. Key performance indicators to track for the recommended investment\n\nThe recommendation should consider both financial returns and strategic implications, with appropriate weighting of factors like payback period, maintenance requirements, workforce implications, and competitive advantage.",
+      "expected_trajectory": null,
+      "expected_interactions": null,
+      "metadata": null
+    },
+    {
+      "name": "Technology Investment Analysis",
+      "session_id": "41f8f94b-a942-4716-939a-133fe3764945",
+      "input": "Our mid-sized manufacturing company has $500,000 available for technology investments this fiscal year. We need to choose between upgrading our factory equipment with IoT sensors ($300,000) or implementing a new enterprise resource planning (ERP) system ($450,000). Which investment would provide better returns in the next 3-5 years?",
+      "expected_output": "A clear recommendation on whether to invest in IoT sensors or the ERP system, with justification based on ROI analysis, industry trends, implementation considerations, and alignment with business objectives. The recommendation should include:\n1. A direct answer to the question (which option to choose)\n2. Key financial considerations (initial costs, maintenance costs, expected returns)\n3. Implementation timeline and resource requirements\n4. Potential risks and mitigation strategies\n5. Long-term strategic advantages of the recommended option",
+      "expected_trajectory": null,
+      "expected_interactions": null,
+      "metadata": null
+    },
+    {
+      "name": "Technology Investment Analysis",
+      "session_id": "7ad03570-00f9-4698-8e47-58be1dbcf9fd",
+      "input": "A medium-sized healthcare technology company with $50 million in annual revenue is considering investing in one of three technologies: an AI-powered diagnostic tool ($8 million investment), a telemedicine platform ($5 million investment), or blockchain-based medical records system ($7 million investment). The company currently has $12 million available for investment. Their primary goal is to achieve the best ROI within 3 years while also improving patient outcomes. Their competitors have already started implementing telemedicine solutions, but the AI diagnostic market is less saturated. Provide an investment recommendation with supporting analysis.",
+      "expected_output": "A comprehensive recommendation that includes:\n1. A clear investment choice from the three options with justification\n2. ROI analysis for the recommended technology and comparison with alternatives\n3. Market trend analysis and competitive positioning assessment\n4. Implementation timeline considerations\n5. Risk assessment and mitigation strategies\n6. Specific metrics to track for measuring success\n7. Potential secondary benefits or opportunities from the investment\n\nThe recommendation should balance financial returns with strategic positioning and patient outcome improvements, providing quantitative projections where appropriate and acknowledging market uncertainties.",
+      "expected_trajectory": null,
+      "expected_interactions": null,
+      "metadata": null
+    },
+    {
+      "name": "Technology Investment - Medium Semiconductor Manufacturing",
+      "session_id": "1893aa0f-d8f5-40b3-9910-bc3913a59c23",
+      "input": "Our medium-sized tech company is considering investing $15M in specialized semiconductor manufacturing equipment to expand our capabilities in chip design and production. Current market analysis shows increasing demand for custom chips in IoT devices, but there are concerns about supply chain vulnerabilities and competition from established manufacturers in Taiwan and South Korea. Our technical team believes we have a 2-year innovation advantage in energy-efficient designs. We have $28M available for strategic investments this year, with other competing priorities including talent acquisition and R&D facilities. Should we pursue this semiconductor manufacturing investment? If so, what implementation strategy would maximize our competitive advantage while managing risks?",
+      "expected_output": "A comprehensive recommendation addressing:\n\n1. Investment decision (yes/no) with clear justification based on ROI analysis\n2. Quantitative assessment of market opportunity in IoT semiconductor space\n3. Risk analysis of supply chain vulnerabilities with specific mitigation strategies\n4. Competitive positioning strategy against established manufacturers\n5. Capital allocation recommendation (whether full $15M or adjusted amount)\n6. Implementation timeline with critical milestones and decision points\n7. Performance metrics to evaluate investment success\n8. Contingency strategies if market conditions shift\n9. Analysis of how this investment fits within overall company strategy\n\nThe recommendation should reflect multi-agent perspectives (financial, technical, market, operational) and include both strategic rationale and tactical implementation steps.",
+      "expected_trajectory": null,
+      "expected_interactions": null,
+      "metadata": null
+    },
+    {
+      "name": "Technology Investment Analysis for Clean Energy Startup",
+      "session_id": "7e148d17-13ed-466a-a3c2-14dbda1b48b4",
+      "input": "Your client is a mid-sized manufacturing company ($50M annual revenue) considering a $5M investment in a clean energy startup that has developed a new solar panel technology claiming 35% efficiency (compared to industry standard 20-22%). The startup has completed successful lab tests but has not yet scaled production. Their patent portfolio includes 3 granted patents and 2 pending applications. They're seeking this round of funding to build their first commercial production facility with an estimated 18-month timeline to market. The startup projects reaching profitability within 3 years with an IRR of 28%. However, there are three established competitors working on similar technology improvements. Provide a comprehensive investment recommendation with risk assessment and strategic considerations.",
+      "expected_output": "A comprehensive investment recommendation that includes:\n\n1. Technology assessment: Detailed analysis of the solar panel technology's competitive advantage, verifying the 35% efficiency claim against industry standards and evaluating the strength of the patent portfolio.\n\n2. Market opportunity analysis: Evaluation of the clean energy market trajectory, specifically for solar technology, including regulatory environment and potential incentives.\n\n3. Competition analysis: Assessment of the three established competitors, their technological progress, market share, and financial strength.\n\n4. Financial projection evaluation: Critical analysis of the startup's profitability projections and IRR claims, including sensitivity analysis for different scenarios.\n\n5. Risk assessment: Identification of key technological, market, execution, and financial risks with quantitative ratings.\n\n6. Strategic fit analysis: How this investment aligns with the manufacturing company's overall business strategy and potential synergies.\n\n7. Investment structure recommendation: Suggested terms, milestones, and potential phased investment approach to mitigate risks.\n\n8. Alternative investment options: At least two alternative investment approaches for the clean energy sector with comparative analysis.\n\n9. Clear final recommendation: Whether to proceed with the investment, with what modifications, or alternative actions, with supporting rationale.\n\nThe recommendation should demonstrate multi-agent collaboration between financial, technological, market, and strategic perspectives, with balanced consideration of both opportunities and risks.",
+      "expected_trajectory": null,
+      "expected_interactions": null,
+      "metadata": null
+    }
+  ],
+  "evaluator": {
+    "evaluator_type": "OutputEvaluator",
+    "rubric": "Scoring should assess the quality of investment and strategy recommendations based on: (1) soundness of business process automation suggestions with clear implementation paths, (2) viability of market expansion recommendations supported by relevant market analysis, (3) strategic alignment of technology investment proposals with business goals, (4) comprehensive risk assessment of recommended actions, (5) clear prioritization of recommendations with justifiable timelines, and (6) actionability of advice with specific next steps. Higher scores should be given to outputs that balance short and long-term considerations while providing evidence-based, contextually appropriate business recommendations.\n",
+    "model_id": "us.anthropic.claude-sonnet-4-20250514-v1:0"
+  }
+}
