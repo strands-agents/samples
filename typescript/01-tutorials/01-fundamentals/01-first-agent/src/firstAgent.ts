@@ -16,11 +16,8 @@ async function main() {
     // Send a message to the agent
     const response = await agent.invoke("Hello! Tell me a joke.");
 
-    // Extract and print the response text
-    const messageContent = response.lastMessage.content[0];
-    if (messageContent.type === 'textBlock') {
-        console.log(messageContent.text);
-    }
+    // Print the response
+    console.log(response.toString());
 }
 
 main().catch(console.error);

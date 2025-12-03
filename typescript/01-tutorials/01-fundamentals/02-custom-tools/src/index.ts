@@ -54,11 +54,7 @@ async function main() {
   console.log("User:", userQuery1, "\n");
 
   let response = await agent.invoke(userQuery1);
-
-  let messageContent = response.lastMessage.content[0];
-  if (messageContent.type === "textBlock") {
-    console.log("Agent:", messageContent.text);
-  }
+  console.log("Agent:", response.toString());
   console.log("\n" + "=".repeat(70) + "\n");
 
   // Example 2: Update an appointment
@@ -68,11 +64,7 @@ async function main() {
   console.log("User:", userQuery2, "\n");
 
   response = await agent.invoke(userQuery2);
-
-  messageContent = response.lastMessage.content[0];
-  if (messageContent.type === "textBlock") {
-    console.log("Agent:", messageContent.text);
-  }
+  console.log("Agent:", response.toString());
   console.log("\n" + "=".repeat(70) + "\n");
 
   // Example 3: Create another appointment
@@ -82,11 +74,7 @@ async function main() {
   console.log("User:", userQuery3, "\n");
 
   response = await agent.invoke(userQuery3);
-
-  messageContent = response.lastMessage.content[0];
-  if (messageContent.type === "textBlock") {
-    console.log("Agent:", messageContent.text);
-  }
+  console.log("Agent:", response.toString());
   console.log("\n" + "=".repeat(70) + "\n");
 
   // Cleanup
