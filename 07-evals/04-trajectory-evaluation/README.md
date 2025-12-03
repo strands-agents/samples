@@ -15,7 +15,7 @@ This tutorial demonstrates how to evaluate agent trajectories - the sequences of
 
 ## Prerequisites
 
-- Python 3.10 or higher
+- Python 3.11 or higher
 - AWS account with Amazon Bedrock access
 - Anthropic Claude 3.7 Sonnet enabled on Amazon Bedrock
 - IAM permissions for Amazon Bedrock API access

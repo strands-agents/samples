@@ -28,7 +28,7 @@ This tutorial demonstrates comprehensive evaluation of multi-agent systems where
 - AWS credentials configured locally
 
 ### Python Requirements
-- Python 3.10 or higher
+- Python 3.11 or higher
 - pip package manager
 - Virtual environment (recommended)
 

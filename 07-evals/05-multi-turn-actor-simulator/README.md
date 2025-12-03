@@ -23,7 +23,7 @@ This tutorial demonstrates how to use ActorSimulator to evaluate conversational 
 - Basic knowledge of evaluation concepts
 
 ### System Requirements
-- Python 3.8 or higher
+- Python 3.11 or higher
 - AWS account with Bedrock access
 - AWS credentials configured
 - 500MB free disk space (for SQLite database)

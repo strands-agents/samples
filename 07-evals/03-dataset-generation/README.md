@@ -14,7 +14,7 @@ This tutorial demonstrates automated test case generation for agent evaluation u
 
 ## Prerequisites
 
-- Python 3.10 or higher
+- Python 3.11 or higher
 - AWS account with Amazon Bedrock access
 - Claude Sonnet 4.0 model enabled in Amazon Bedrock
 - IAM permissions to invoke Bedrock models
