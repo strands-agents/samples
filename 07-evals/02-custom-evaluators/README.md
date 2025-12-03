@@ -6,7 +6,7 @@ This tutorial teaches you how to create custom evaluators for domain-specific ev
 
 ## Prerequisites
 
-- Python 3.9 or higher
+- Python 3.11 or higher
 - AWS account with Bedrock access
 - AWS credentials configured (via AWS CLI, environment variables, or IAM role)
 - Access to Claude models in AWS Bedrock
