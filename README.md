@@ -24,6 +24,7 @@
     <a href="https://strandsagents.com/">Documentation</a>
     ◆ <a href="https://github.com/strands-agents/samples">Samples</a>
     ◆ <a href="https://github.com/strands-agents/sdk-python">Python SDK</a>
+    ◆ <a href="https://github.com/strands-agents/sdk-typescript">TypeScript SDK</a>
     ◆ <a href="https://github.com/strands-agents/tools">Tools</a>
     ◆ <a href="https://github.com/strands-agents/agent-builder">Agent Builder</a>
     ◆ <a href="https://github.com/strands-agents/mcp-server">MCP Server</a>
@@ -36,25 +37,17 @@ Explore easy-to-use examples to get started with <a href="https://strandsagents.
 
 The examples in this repository are for **demonstration and educational purposes** only. They demonstrate concepts and techniques but are **not intended for direct use in production**. Always apply proper **security** and **testing** procedures before using in production environments.
 
-## 📚 Table of Contents
+## Quick Start
 
-- [📚 Table of Contents](#-table-of-contents)
-- [🏁 Getting Started](#-getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Step 1: Create Virtual Environment](#step-1-create-virtual-environment)
-  - [Step 2: Install Required Packages](#step-2-install-required-packages)
-  - [Step 3: Setup Model Provider](#step-3-setup-model-provider)
-  - [Step 4: Build Your First Strands Agent](#step-4-build-your-first-strands-agent)
-  - [Step 5: Getting Started with the SDK](#step-5-getting-started-with-the-sdk)
-  - [Step 6: Explore More Samples](#step-6-explore-more-samples)
+<table>
+<tr>
+<td width="40%" valign="top">
 
-## 🏁 Getting Started
+### <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" width="24" height="24" alt="Python"/> Python
 
-### Prerequisites
-
-- **Python 3.10 or higher**
-
-- **pip package manager**
+**Prerequisites:**
+- Python 3.10 or higher
+- pip package manager
   - Verify with: `pip --version` or `pip3 --version`
   - Usually comes bundled with Python 3.4+ installers from python.org
   - If pip is missing, install using one of these methods:
@@ -67,8 +60,7 @@ The examples in this repository are for **demonstration and educational purposes
     python get-pip.py
     ```
 
-### Step 1: Create Virtual Environment
-
+**Step 1: Create Virtual Environment**
 ```bash
 # Create virtual environment
 python -m venv venv
@@ -80,65 +72,63 @@ source venv/bin/activate
 venv\Scripts\activate
 ```
 
-### Step 2: Install Required Packages
-
+**Step 2: Install**
 ```bash
-# Install Strands core packages (required for all examples)
-pip install strands-agents
-pip install strands-agents-tools
+pip install strands-agents strands-agents-tools
 ```
 
-> **Additional Dependencies:** Individual examples throughout this repository may require extra packages. When working with a specific example, check for its `requirements.txt` file:
-> ```bash
-> # Navigate to the example folder you want to run
-> cd [example-directory]
->
-> # Install dependencies if requirements.txt exists
-> pip install -r requirements.txt
-> ```
+**Your First Agent:**
+```python
+from strands import Agent
 
-### Step 3: Setup Model Provider
+agent = Agent()
+response = agent("Hello! Tell me a joke.")
+print(response)
+```
+
+[Explore Python tutorials →](./01-tutorials/)
+
+</td>
+<td width="60%" valign="top">
+
+### <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" width="24" height="24" alt="TypeScript"/> TypeScript
+
+**Prerequisites:**
+- Node.js 18 or higher
+- npm or yarn package manager
+
+**Install:**
+```bash
+npm install @strands-agents/sdk
+```
+
+**Your First Agent:**
+```typescript
+import { Agent } from "@strands-agents/sdk";
+
+async function main() {
+    const agent = new Agent({
+        systemPrompt: "You are a helpful assistant."
+    });
+
+    const response = await agent.invoke("Hello! Tell me a joke.");
+    console.log(response.lastMessage.content[0].text);
+}
+
+main();
+```
+
+[Explore TypeScript tutorials →](./typescript/01-tutorials/)
+
+</td>
+</tr>
+</table>
+
+### Model Provider Setup
 
 Follow the instructions [here](https://strandsagents.com/latest/user-guide/quickstart/#model-providers) to configure your model provider and model access.
 
-### Step 4: Build Your First Strands Agent
-
-```python
-from strands import Agent, tool
-from strands_tools import calculator, current_time, python_repl
-
-@tool
-def letter_counter(word: str, letter: str) -> int:
-    """
-    Count the occurrences of a specific letter in a word.
-    """
-    if not isinstance(word, str) or not isinstance(letter, str):
-        return 0
-    if len(letter) != 1:
-        raise ValueError("The 'letter' parameter must be a single character")
-    return word.lower().count(letter.lower())
-
-agent = Agent(tools=[calculator, current_time, python_repl, letter_counter])
-
-message = """
-I have 4 requests:
-
-1. What is the time right now?
-2. Calculate 3111696 / 74088
-3. Tell me how many letter R's are in the word "strawberry" 🍓
-4. Output a script that does what we just spoke about!
-   Use your python tools to confirm that the script works before outputting it
-"""
-
-agent(message)
-```
-
-### Step 5: Getting Started with the SDK
-
-Start with the [01-tutorials](./01-tutorials/) directory.
-Create your [first agent](./01-tutorials/01-fundamentals/01-first-agent/) and explore notebook-based examples covering core functionalities.
-
-### Step 6: Explore the Repository
+## Explore the Repository
 
 This repository is organized to help you progress from basics to advanced implementations:
 
@@ -148,6 +138,8 @@ This repository is organized to help you progress from basics to advanced implem
 - **[04-UX-demos](./04-UX-demos/)** - Full-stack applications with user interfaces
 - **[05-agentic-rag](./05-agentic-rag/)** - Advanced Agentic RAG patterns
 - **[06-edge](./06-edge/)** - Edge device integrations with Strands, including physical AI and robotics
+- **[typescript](./typescript/)** - TypeScript SDK samples and tutorials
+
 ## Contributing ❤️
 
 We welcome contributions! See our [Contributing Guide](CONTRIBUTING.md) for details on:
