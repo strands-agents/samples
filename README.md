@@ -112,7 +112,7 @@ async function main() {
     });
 
     const response = await agent.invoke("Hello! Tell me a joke.");
-    console.log(response.lastMessage.content[0].text);
+    console.log(response.toString());
 }
 
 main();
