@@ -1,0 +1,23 @@
+{
+  "name": "02-custom-tools",
+  "version": "1.0.0",
+  "description": "Custom tools with Strands Agents in TypeScript",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "clean": "rm -rf dist *.db"
+  },
+  "dependencies": {
+    "@strands-agents/sdk": "github:strands-agents/sdk-typescript",
+    "better-sqlite3": "^11.0.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.0",
+    "@types/node": "^20.0.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.0.0"
+  }
+}
