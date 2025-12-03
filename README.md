@@ -24,7 +24,7 @@
     <a href="https://strandsagents.com/">Documentation</a>
     ◆ <a href="https://github.com/strands-agents/samples">Samples</a>
     ◆ <a href="https://github.com/strands-agents/sdk-python">Python SDK</a>
-    ◆ <a href="https://github.com/strands-agents/sdk-typescript">TypeScript SDK</a>
+    ◆ <a href="https://github.com/strands-agents/sdk-typescript">TypeScript SDK</a> <img src="https://img.shields.io/badge/NEW-brightgreen" alt="New"/>
     ◆ <a href="https://github.com/strands-agents/tools">Tools</a>
     ◆ <a href="https://github.com/strands-agents/agent-builder">Agent Builder</a>
     ◆ <a href="https://github.com/strands-agents/mcp-server">MCP Server</a>
