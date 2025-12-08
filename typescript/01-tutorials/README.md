@@ -11,3 +11,8 @@ In this folder we provide TypeScript examples on how to get started with differe
 | F4      | [Streaming](01-fundamentals/04-streaming)                      | Coming Soon                                                       |
 | F5      | [Agent State](01-fundamentals/05-agent-state)                  | State management, hooks, and persistent storage across interactions |
 | F6      | [Browser Agent](01-fundamentals/06-browser-agent)              | Running Strands Agents in the browser with Vite                   |
+
+## Deployment
+| Example | Description                                                    | Features showcased                                                |
+|---------|----------------------------------------------------------------|-------------------------------------------------------------------|
+| D1      | [AgentCore Deployment](03-deployment/01-agentcore-deployment)  | Deploying Strands Agent to Amazon Bedrock AgentCore Runtime       |
