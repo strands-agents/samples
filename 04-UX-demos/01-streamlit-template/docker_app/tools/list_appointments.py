@@ -41,7 +41,7 @@ def list_appointments() -> str:
             appointments.append(appointment)
         
         conn.close()
-        print(appointments)
+        print(f"Retrieved {len(appointments)} appointments")
         return str(appointments)
     
     except sqlite3.Error:
