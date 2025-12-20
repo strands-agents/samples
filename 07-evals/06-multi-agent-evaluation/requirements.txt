@@ -1,5 +1,6 @@
 strands-agents
 strands-agents-evals
 boto3
+urllib3>=2.6.0
 jupyter
 ipython

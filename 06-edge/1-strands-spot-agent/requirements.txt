@@ -13,6 +13,7 @@ strands-agents-tools>=0.0.1
 
 # AWS and Nova Sonic
 boto3>=1.26.0
+urllib3>=2.6.0
 # aws-sdk-bedrock-runtime>=0.0.2  # Nova Sonic SDK (commented - optional)
 
 # Audio Processing

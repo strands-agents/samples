@@ -5,6 +5,7 @@ strands-agents-evals>=0.1.0
 # AWS dependencies
 boto3>=1.34.0
 botocore>=1.34.0
+urllib3>=2.6.0
 
 # Web search tool dependency
 duckduckgo-search>=6.0.0
