@@ -1,6 +1,7 @@
 import json
 import os
-import logging 
+import logging
+import re
 import boto3
 from botocore.exceptions import ClientError
 from typing import Optional
@@ -32,7 +33,13 @@ logging.basicConfig(
     handlers=[logging.StreamHandler()]
 )
 
-# table name for session managament 
+def validate_user_id(user_id: str) -> bool:
+    """Validate user_id to prevent path traversal attacks."""
+    if not user_id:
+        return False
+    return bool(re.match(r'^[a-zA-Z0-9_-]+$', user_id))
+
+# table name for session managament
 table_name = os.environ.get('TABLE_NAME') or None
 table_region = os.environ.get('TABLE_REGION') or None
 primary_key = os.environ.get('PRIMARY_KEY') or None
@@ -134,6 +141,9 @@ class StrandsPlaygroundAgent(Agent):
         logger.debug(f"tools available: {self.tool_names}")
     # Restore agent state
     def restore_agent_state(self, user_id):
+        if not validate_user_id(user_id):
+            logger.error(f"Invalid user_id format")
+            raise ValueError("Invalid user_id: must contain only alphanumeric characters, underscores, or hyphens")
         if not table_name and not table_region:
             logger.debug("TABLE_NAME environment variable not set, fallback to local file session.. loading conversation history from file")
             # Retrieve state
@@ -168,6 +178,9 @@ class StrandsPlaygroundAgent(Agent):
 
     # Save agent state
     def save_agent_state(self, user_id):
+        if not validate_user_id(user_id):
+            logger.error(f"Invalid user_id format")
+            raise ValueError("Invalid user_id: must contain only alphanumeric characters, underscores, or hyphens")
         if not table_name and not table_region:
             try:
                 logger.debug("TABLE_NAME and TABLE_REGION environment variable not set, fallback to local file session management, saving conversation to file")
