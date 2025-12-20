@@ -3,3 +3,4 @@
 
 diagrams>=0.23.0
 graphviz>=0.20.0
+filelock>=3.20.1

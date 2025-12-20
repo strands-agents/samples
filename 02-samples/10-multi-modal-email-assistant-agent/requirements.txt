@@ -2,6 +2,7 @@
 strands-agents>=0.1.0
 strands-agents-tools>=0.1.0
 boto3>=1.37.18
+urllib3>=2.6.0
 ipython
 
 # Optional packages for notebooks and data processing

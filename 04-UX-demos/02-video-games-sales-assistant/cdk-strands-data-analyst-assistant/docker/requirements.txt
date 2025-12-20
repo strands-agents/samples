@@ -4,3 +4,4 @@ fastapi==0.120.1
 uvicorn==0.38.0
 pydantic==2.12.3
 pyjwt[crypto]
+urllib3>=2.6.0

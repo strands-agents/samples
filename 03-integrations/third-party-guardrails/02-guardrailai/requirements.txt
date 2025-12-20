@@ -1,2 +1,5 @@
 strands-agents==1.4.0
 guardrails-ai==0.5.15
+urllib3>=2.6.0
+filelock>=3.20.1
+nltk>=3.9

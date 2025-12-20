@@ -6,3 +6,5 @@ coinbase-agentkit-strands-agents
 x402
 fastapi
 boto3
+urllib3>=2.6.0
+aiohttp>=3.12.14

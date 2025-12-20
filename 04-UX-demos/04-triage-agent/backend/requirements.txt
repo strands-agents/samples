@@ -10,3 +10,4 @@ python-dotenv>=1.1.1
 httpx>=0.28.1
 pandas>=2.3.2
 numpy>=2.3.3
+urllib3>=2.6.0

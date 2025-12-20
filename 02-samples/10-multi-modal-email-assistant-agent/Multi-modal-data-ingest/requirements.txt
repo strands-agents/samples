@@ -1,6 +1,8 @@
 textblob
 aws-requests-auth
 boto3==1.37.18
+urllib3>=2.6.0
+filelock>=3.20.1
 requests
 pillow  
 yfinance 

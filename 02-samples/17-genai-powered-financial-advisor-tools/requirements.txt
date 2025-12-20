@@ -10,7 +10,7 @@ botocore==1.40.55
 # AI/ML and agent frameworks
 strands-agents==1.13.0
 strands-agents-tools==0.2.12
-mcp==1.14.0
+mcp>=1.23.0
 
 # Data validation and processing
 pydantic==2.11.4
@@ -43,3 +43,4 @@ nest-asyncio==1.6.0
 httpx==0.28.1
 httpx-sse==0.4.0
 anyio==4.9.0
+urllib3>=2.6.0

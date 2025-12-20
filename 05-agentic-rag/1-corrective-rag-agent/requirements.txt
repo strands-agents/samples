@@ -7,3 +7,5 @@ tavily-python
 boto3
 langchain
 ragas
+urllib3>=2.6.0
+filelock>=3.20.1

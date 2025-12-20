@@ -1,5 +1,7 @@
 boto3>=1.34.131
 botocore>=1.33.9
+urllib3>=2.6.0
+filelock>=3.20.1
 strands-agents
 strands-agents-tools
 openpyxl

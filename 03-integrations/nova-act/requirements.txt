@@ -1,3 +1,4 @@
 strands-agents
 strands-agents-tools
 nova-act
+urllib3>=2.6.0
