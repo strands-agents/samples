@@ -258,9 +258,10 @@ async def generate_images(request: ContentRequest) -> Dict[str, Any]:
             "content": result.message,
         }
     except Exception as e:
+        print(f"Image generation error: {e}")
         return {
             "success": False,
-            "error": str(e),
+            "error": "An error occurred while generating the image. Please try again.",
         }
 
 
@@ -300,8 +301,9 @@ async def get_weather(request: WeatherRequest) -> Dict[str, Any]:
         return weather_response
 
     except Exception as e:
+        print(f"Weather data error: {e}")
         return {
-            "error": str(e),
+            "error": "An error occurred while fetching weather data. Please try again.",
         }
 
 
