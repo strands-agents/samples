@@ -468,8 +468,14 @@
         }
         
         function handleBufferedTranscript(role, text) {
+            // Validate role to prevent prototype pollution
+            const allowedRoles = ['user', 'assistant'];
+            if (!allowedRoles.includes(role)) {
+                console.warn(`Invalid role: ${role}`);
+                return;
+            }
             const buffer = transcriptBuffer[role];
-            
+
             // Clear existing timer
             if (buffer.timer) {
                 clearTimeout(buffer.timer);
@@ -514,7 +520,17 @@
             const time = new Date().toLocaleTimeString();
             const arrow = direction === 'sent' ? '⬆' : '⬇';
             const dataStr = typeof data === 'object' ? JSON.stringify(data, null, 2) : data;
-            event.innerHTML = `<div class="event-type">${arrow} ${type}</div><div class="event-data">${dataStr}</div>`;
+
+            const typeDiv = document.createElement('div');
+            typeDiv.className = 'event-type';
+            typeDiv.textContent = `${arrow} ${type}`;
+
+            const dataDiv = document.createElement('div');
+            dataDiv.className = 'event-data';
+            dataDiv.textContent = dataStr;
+
+            event.appendChild(typeDiv);
+            event.appendChild(dataDiv);
             events.appendChild(event);
             events.scrollTop = events.scrollHeight;
         }
