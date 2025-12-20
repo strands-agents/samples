@@ -1,31 +1,16 @@
 /**
  * Creates or updates an Amazon Bedrock AgentCore Runtime from a containerized agent image.
- * Uses CloudFormation stack outputs to get the IAM role and ECR repository URI.
- *
+ * Uses environment variables for IAM role and ECR repository URI.
  */
 import { BedrockAgentCoreControlClient, CreateAgentRuntimeCommand, UpdateAgentRuntimeCommand, ListAgentRuntimesCommand, GetAgentRuntimeCommand } from '@aws-sdk/client-bedrock-agentcore-control';
-import { CloudFormationClient, DescribeStacksCommand } from '@aws-sdk/client-cloudformation';
 
-// Get the region, stack name, and agent name from the environment variables
+// Get configuration from environment variables
 const REGION = process.env.AWS_REGION || 'us-east-1';
-const STACK_NAME = process.env.STACK_NAME || 'agentcore-prerequisites';
+const ROLE_ARN = process.env.ROLE_ARN;
+const REPO_URI = process.env.REPO_URI;
 const AGENT_NAME = 'agentcore_deployment';
 
-// Create the CloudFormation and AgentCore clients
-const cfnClient = new CloudFormationClient({ region: REGION });
 const agentCoreClient = new BedrockAgentCoreControlClient({ region: REGION });
-
-// Get the IAM role and ECR repository URI from the prerequisites CloudFormation stack
-async function getStackOutputs() {
-  const command = new DescribeStacksCommand({ StackName: STACK_NAME });
-  const response = await cfnClient.send(command);
-  const outputs = response.Stacks?.[0]?.Outputs || [];
-
-  return {
-    roleArn: outputs.find(o => o.OutputKey === 'RoleArn')?.OutputValue,
-    repositoryUri: outputs.find(o => o.OutputKey === 'RepositoryUri')?.OutputValue
-  };
-}
 
 // Check if the agent already exists for idempotent deployments (update if exists, create if not)
 async function findExistingAgent() {
@@ -50,20 +35,17 @@ async function waitForReady(agentRuntimeId: string) {
 }
 
 // Main deployment flow:
-// 1. Fetch infrastructure details (IAM role, ECR URI) from CloudFormation
+// 1. Validate required environment variables
 // 2. Check if an agent with this name already exists
 // 3. Update the existing agent or create a new one
 try {
-  // Step 1: Get required infrastructure from CloudFormation stack outputs
-  console.log('Fetching CloudFormation stack outputs...');
-  const { roleArn, repositoryUri } = await getStackOutputs();
-
-  if (!roleArn || !repositoryUri) {
-    throw new Error('Missing required CloudFormation outputs. Deploy prerequisites.yaml first.');
+  // Step 1: Validate required environment variables
+  if (!ROLE_ARN || !REPO_URI) {
+    throw new Error('Missing required environment variables. Run setup-prerequisites.sh and export ROLE_ARN and REPO_URI.');
   }
 
-  console.log(`Role ARN: ${roleArn}`);
-  console.log(`Repository URI: ${repositoryUri}`);
+  console.log(`Role ARN: ${ROLE_ARN}`);
+  console.log(`Repository URI: ${REPO_URI}`);
 
   // Step 2: Check for existing agent to determine create vs update
   const existingAgent = await findExistingAgent();
@@ -76,10 +58,10 @@ try {
       agentRuntimeId: existingAgent.agentRuntimeId,
       agentRuntimeArtifact: {
         containerConfiguration: {
-          containerUri: `${repositoryUri}:latest`
+          containerUri: `${REPO_URI}:latest`
         }
       },
-      roleArn,
+      roleArn: ROLE_ARN,
       networkConfiguration: { networkMode: 'PUBLIC' }
     });
 
@@ -97,11 +79,11 @@ try {
       agentRuntimeName: AGENT_NAME,
       agentRuntimeArtifact: {
         containerConfiguration: {
-          containerUri: `${repositoryUri}:latest`
+          containerUri: `${REPO_URI}:latest`
         }
       },
       networkConfiguration: { networkMode: 'PUBLIC' },
-      roleArn
+      roleArn: ROLE_ARN
     });
 
     const response = await agentCoreClient.send(command);

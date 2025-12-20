@@ -1,8 +1,6 @@
 # Deploying Strands Agents to Amazon Bedrock AgentCore Runtime
 
-## Overview
-
-In this tutorial, we will guide you through deploying a Strands Agent to Amazon Bedrock AgentCore Runtime for production workloads.
+This tutorial demonstrates how to deploy a Strands Agent to Amazon Bedrock AgentCore Runtime for production workloads.
 
 ![Agent Architecture](images/architecture_runtime.png)
 
@@ -15,9 +13,9 @@ In this tutorial, we will guide you through deploying a Strands Agent to Amazon 
 ## Prerequisites
 
 - Node.js 20.x or later
-- Docker with buildx support
 - AWS CLI configured with appropriate permissions
 - AWS account with AgentCore access
+- Docker with buildx support, or AWS CodeBuild permissions
 
 ## Running Locally
 
@@ -37,29 +35,31 @@ curl -X POST http://localhost:8080/invocations \
 
 ## Deploying to AgentCore
 
-### Deploy Infrastructure
+### Setup Prerequisites
+
+Run the setup script to create the IAM role and ECR repository:
 
 ```bash
-aws cloudformation deploy \
-  --template-file prerequisites.yaml \
-  --stack-name agentcore-prerequisites \
-  --capabilities CAPABILITY_NAMED_IAM \
-  --region us-east-1
+chmod +x setup-prerequisites.sh
+./setup-prerequisites.sh
+```
+
+Export the variables printed by the script:
+
+```bash
+export ROLE_ARN=<role-arn-from-script>
+export REPO_URI=<repo-uri-from-script>
+export AWS_REGION=us-east-1
 ```
 
 ### Build and Push Docker Image
 
 ```bash
-REPO_URI=$(aws cloudformation describe-stacks \
-  --stack-name agentcore-prerequisites \
-  --query 'Stacks[0].Outputs[?OutputKey==`RepositoryUri`].OutputValue' \
-  --output text)
-
-aws ecr get-login-password --region us-east-1 | \
-  docker login --username AWS --password-stdin ${REPO_URI%%/*}
-
-docker buildx build --platform linux/arm64 -t $REPO_URI --push .
+chmod +x build-image.sh
+./build-image.sh
 ```
+
+> **Note:** The script auto-detects your environment and uses local Docker or AWS CodeBuild accordingly.
 
 ### Create AgentCore Runtime
 
@@ -122,28 +122,41 @@ const command = new InvokeAgentRuntimeCommand({
 ## Project Structure
 
 ```
-├── Dockerfile            # Container image for AgentCore
-├── prerequisites.yaml    # CloudFormation template (IAM role, ECR repo)
+├── Dockerfile               # Container image for AgentCore
+├── setup-prerequisites.sh   # Setup script (IAM role, ECR repo)
+├── build-image.sh           # Build script (Docker or CodeBuild)
 ├── package.json
 ├── tsconfig.json
 └── src/
-    ├── agent.ts          # Express server with Strands Agent
-    ├── deploy-agent.ts   # AgentCore deployment script
-    └── invoke-agent.ts   # Remote invocation script
+    ├── agent.ts             # Express server with Strands Agent
+    ├── deploy-agent.ts      # AgentCore deployment script
+    └── invoke-agent.ts      # Remote invocation script
 ```
 
 ## Cleanup
 
 ```bash
+# Delete AgentCore Runtime
 aws bedrock-agentcore-control delete-agent-runtime \
   --agent-runtime-id <runtime-id> --region us-east-1
 
-aws cloudformation delete-stack \
-  --stack-name agentcore-prerequisites --region us-east-1
+# Delete ECR repository
+aws ecr delete-repository \
+  --repository-name agentcore-deployment \
+  --region us-east-1 --force
+
+# Delete IAM role
+aws iam delete-role-policy --role-name AgentCoreRuntimeRole --policy-name AgentCoreRuntimePolicy
+aws iam delete-role --role-name AgentCoreRuntimeRole
+
+# (Optional) Delete CodeBuild resources if created
+aws codebuild delete-project --name agentcore-image-builder
+aws iam delete-role-policy --role-name CodeBuildAgentCoreRole --policy-name CodeBuildPolicy
+aws iam delete-role --role-name CodeBuildAgentCoreRole
 ```
 
 ## Additional Resources
 
-- [Strands Agents Documentation](https://strandsagents.com/latest/)
+- [Deploy to Amazon Bedrock AgentCore (TypeScript)](https://strandsagents.com/latest/documentation/docs/user-guide/deploy/deploy_to_bedrock_agentcore/typescript/)
+- [Operating Agents in Production](https://strandsagents.com/latest/documentation/docs/user-guide/deploy/operating-agents-in-production/)
 - [Amazon Bedrock AgentCore Documentation](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/)
-- [AgentCore Runtime HTTP Protocol Contract](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/runtime-http-protocol-contract.html)

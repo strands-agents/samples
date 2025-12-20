@@ -15,7 +15,6 @@
   "dependencies": {
     "@aws-sdk/client-bedrock-agentcore": "^3.0.0",
     "@aws-sdk/client-bedrock-agentcore-control": "^3.0.0",
-    "@aws-sdk/client-cloudformation": "^3.0.0",
     "@strands-agents/sdk": "^0.1.2",
     "express": "^4.18.2"
   },

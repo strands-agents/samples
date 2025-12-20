@@ -5,7 +5,7 @@
 #   - Host: 0.0.0.0
 #   - Port: 8080 
 
-FROM --platform=linux/arm64 node:20-slim
+FROM --platform=linux/arm64 public.ecr.aws/docker/library/node:20-slim
 
 WORKDIR /app
 
