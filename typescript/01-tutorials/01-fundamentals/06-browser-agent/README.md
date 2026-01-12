@@ -41,7 +41,7 @@ This tutorial demonstrates how to run a Strands Agent entirely in the browser us
 ## Running the Example
 
 ```bash
-cd typescript/01-tutorials/01-fundamentals/03-browser-agent
+cd typescript/01-tutorials/01-fundamentals/06-browser-agent
 npm install
 npm run dev
 ```
