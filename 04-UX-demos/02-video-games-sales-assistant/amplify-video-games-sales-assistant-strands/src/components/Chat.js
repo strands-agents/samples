@@ -16,6 +16,7 @@ import { v4 as uuidv4 } from "uuid";
 import InsightsOutlinedIcon from "@mui/icons-material/InsightsOutlined";
 import QuestionAnswerOutlinedIcon from "@mui/icons-material/QuestionAnswerOutlined";
 import TableRowsRoundedIcon from "@mui/icons-material/TableRowsRounded";
+import { alpha } from "@mui/material/styles";
 import {
   WELCOME_MESSAGE,
   MAX_LENGTH_INPUT_SEARCH,
@@ -132,12 +133,28 @@ const Chat = ({ userName = "Guest User" }) => {
         };
         console.log(params);
 
+        // Get JWT token for authentication
+        let authHeaders = {
+          "Content-Type": "application/json",
+        };
+
+        try {
+          const { fetchAuthSession } = await import("aws-amplify/auth");
+          const session = await fetchAuthSession();
+          const authToken = session.tokens?.idToken?.toString();
+
+          if (authToken) {
+            authHeaders["Authorization"] = `Bearer ${authToken}`;
+          }
+        } catch (authError) {
+          console.warn("Could not get auth token:", authError);
+          // Continue without auth token - backend will handle unauthenticated requests
+        }
+
         // Initiate streaming response
         const response = await fetch(AGENT_ENDPOINT_URL, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: authHeaders,
           body: JSON.stringify(params),
         });
 
@@ -536,10 +553,14 @@ const Chat = ({ userName = "Guest User" }) => {
                         mb: 1.5,
                         mr: 1,
                         boxShadow: "rgba(0, 0, 0, 0.05) 0px 4px 12px",
-                        background: "#DCD6FB",
+                        background: `linear-gradient(to right, 
+                  ${alpha(theme.palette.primary.light, 0.2)}, 
+                  ${alpha(theme.palette.primary.main, 0.2)})`,
                       })}
                     >
-                      <Typography color="primary.dark" variant="body1">{answer.query}</Typography>
+                      <Typography color="primary.dark" variant="body1">
+                        {answer.query}
+                      </Typography>
                     </Box>
                   </Grid>
                 )}
@@ -558,37 +579,61 @@ const Chat = ({ userName = "Guest User" }) => {
           </ul>
         ) : (
           <Box
-            textAlign={"center"}
             sx={{
-              pl: 1,
-              pt: 1,
-              pr: 1,
-              pb: 6,
               height: height,
               display: "flex",
-              alignItems: "flex-end",
+              alignItems: "center",
+              justifyContent: "center",
+              px: 3,
             }}
           >
-            <div style={{ width: "100%" }}>
-              <img
-                src="/images/logo-dark.svg"
-                alt="Strands Agents SDK"
-                height={128}
-              />
-              <Typography variant="h5" sx={{ pb: 1, fontWeight: 500 }}>
-                Strands Agents SDK
-              </Typography>
-              <Typography sx={{ pb: 4, fontWeight: 400 }}>
-                An open-source framework that leverages the full power of modern
-                Language Models.
-              </Typography>
+            <Box sx={{ textAlign: "center", maxWidth: 600 }}>
+              <Box sx={{ mb: 4 }}>
+                <img
+                  src="images/strands-logo.svg"
+                  alt="Strands Agents SDK"
+                  height={128}
+                  style={{ opacity: 0.9 }}
+                />
+              </Box>
+
               <Typography
-                color="primary"
-                sx={{ fontSize: "1.1rem", pb: 1, fontWeight: 500 }}
+                variant="body1"
+                sx={{
+                  color: "text.secondary",
+                  fontSize: "1.1rem",
+                  lineHeight: 1.5,
+                  mb: 3,
+                  fontWeight: 400,
+                }}
               >
-                {WELCOME_MESSAGE}
+                Open-source framework leveraging modern language models to build powerful AI agents through minimal, model-driven code.
               </Typography>
-            </div>
+
+              <Box
+                sx={(theme) => ({
+                  borderRadius: 2,
+                  px: 3,
+                  py: 2,
+                  border: `1px solid ${alpha(
+                    theme.palette.secondary.main,
+                    0.15
+                  )}`,
+                  backgroundColor: alpha(theme.palette.secondary.main, 0.1),
+                })}
+              >
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "secondary.main",
+                    fontWeight: 500,
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {WELCOME_MESSAGE}
+                </Typography>
+              </Box>
+            </Box>
           </Box>
         )}
       </Box>
@@ -602,10 +647,32 @@ const Chat = ({ userName = "Guest User" }) => {
           display: "flex",
           alignItems: "center",
           boxShadow:
-            "rgba(60, 26, 128, 0.05) 0px 4px 16px, rgba(60, 26, 128, 0.05) 0px 8px 24px, rgba(60, 26, 128, 0.05) 0px 16px 56px",
-          border: 1,
-          borderColor: "divider",
+            "rgba(76, 175, 80, 0.05) 0px 4px 16px, rgba(76, 175, 80, 0.05) 0px 8px 24px, rgba(76, 175, 80, 0.05) 0px 16px 56px",
           borderRadius: 6,
+          position: "relative",
+          // Remove the default border
+          border: "none",
+          // Add gradient border using pseudo-element
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            borderRadius: 6,
+            padding: "1px", // This creates the border thickness
+            background: `linear-gradient(to right, 
+                    ${theme.palette.divider}, 
+                    ${alpha(theme.palette.primary.main, 0.3)}, 
+                    ${theme.palette.divider})`,
+            mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            maskComposite: "xor",
+            WebkitMask:
+              "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+            WebkitMaskComposite: "xor",
+            zIndex: -1,
+          },
         })}
       >
         <Box sx={{ pt: 1.5, pl: 0.5 }}>

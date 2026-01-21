@@ -1,0 +1,22 @@
+{
+  "models": {
+    "haiku": {
+      "model_id": "us.anthropic.claude-3-5-haiku-20241022-v1:0",
+      "name": "Claude Haiku",
+      "description": "Fast, cost-effective, optimized for simple queries"
+    },
+    "sonnet": {
+      "model_id": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+      "name": "Claude Sonnet",
+      "description": "Balanced performance, strong reasoning capabilities"
+    },
+    "nova_lite": {
+      "model_id": "us.amazon.nova-lite-v1:0",
+      "name": "Nova Lite",
+      "description": "AWS-native, cost-effective, multimodal"
+    }
+  },
+  "dataset_path": "./data/tau-bench/tau_bench/envs/airline/tasks_singleturn.json",
+  "num_tools": 14,
+  "prompt_length": 6561
+}

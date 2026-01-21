@@ -1,26 +1,23 @@
-// AWS Credentials
+// ================================
+// CUSTOMIZABLE CONFIGURATION VALUES
+// ================================
 
-const ACCESS_KEY_ID = "";
-const SECRET_ACCESS_KEY = "";
-const AWS_REGION = "us-east-1";
+// AWS Configuration - UPDATE THESE VALUES
+const QUESTION_ANSWERS_TABLE_NAME = ""; // Your DynamoDB table name
+const AGENT_ENDPOINT_URL = "http://<AgentEndpointURL>/assistant-streaming";
 
-// DynamoDB Table
-
-const QUESTION_ANSWERS_TABLE_NAME = "";
-
-// Application Information
-
+// Application Information - CUSTOMIZE AS NEEDED
 const APP_NAME = "Data Analyst Assistant";
 const APP_SUBJECT = "Video Games Sales";
 const WELCOME_MESSAGE =
   "I'm your Video Games Sales Data Analyst, crunching data for insights.";
 
-const STRANDS_ENDPOINT = "http://<AGENT_ENDPOINT_URL>/assistant-streaming";
-
-// --------------------------------
+// ================================
+// SYSTEM CONFIGURATION
+// ================================
 
 const MAX_LENGTH_INPUT_SEARCH = 140;
-const MODEL_ID_FOR_CHART = "us.anthropic.claude-3-5-sonnet-20241022-v2:0";
+const MODEL_ID_FOR_CHART = "us.anthropic.claude-3-7-sonnet-20250219-v1:0";
 
 const CHART_PROMPT =
   '\n\
@@ -298,15 +295,17 @@ Example Chart Configurations:\n\
 </ChartExamples>';
 
 export {
-  CHART_PROMPT,
+  // AWS Configuration
   QUESTION_ANSWERS_TABLE_NAME,
+  AGENT_ENDPOINT_URL,
+  
+  // Application Information
   APP_NAME,
   APP_SUBJECT,
   WELCOME_MESSAGE,
-  STRANDS_ENDPOINT,
-  MODEL_ID_FOR_CHART,
+  
+  // System Configuration
   MAX_LENGTH_INPUT_SEARCH,
-  ACCESS_KEY_ID,
-  SECRET_ACCESS_KEY,
-  AWS_REGION,
+  MODEL_ID_FOR_CHART,
+  CHART_PROMPT
 };

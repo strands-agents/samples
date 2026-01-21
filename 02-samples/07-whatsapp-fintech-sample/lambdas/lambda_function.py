@@ -87,7 +87,7 @@ def process_record(record):
         data["message"] = remove_thinking_tags(
             llm_response.message["content"][0]["text"]
         )
-        logger.info(f"Data after processing: {data}")
+        logger.info("Message processed successfully")
 
         whatsapp_info.text_reply(
             data["phone_number"], data["id"], data["phone_number_id"], data["message"]

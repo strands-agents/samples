@@ -6,8 +6,8 @@ requests-aws4auth
 pyyaml
 retrying
 strands-agents
-strands-agents-tools
 langfuse
 ragas
 langchain-aws
 pandas
+datasets>=4.0.0

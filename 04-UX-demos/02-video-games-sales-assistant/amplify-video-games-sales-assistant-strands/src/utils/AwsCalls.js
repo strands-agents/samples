@@ -127,7 +127,7 @@ export const generateChart = async (
 
       console.log("------- Final chart generation -------");
       console.log(chart);
-      
+
       return chart;
     } else {
       return {

@@ -1,6 +1,8 @@
 textblob
 aws-requests-auth
 boto3==1.37.18
+urllib3>=2.6.0
+filelock>=3.20.1
 requests
 pillow  
 yfinance 
@@ -10,7 +12,8 @@ opensearch-py
 botocore
 awscli
 retrying
-ragas>=0.1.9,<0.2.0
+ragas>=0.1.22
+langchain-community>=0.3.27
 ipywidgets
 iprogress
 s3fs

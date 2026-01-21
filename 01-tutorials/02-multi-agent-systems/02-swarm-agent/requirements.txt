@@ -1,2 +1,2 @@
-strands-agents
+strands-agents[a2a]>=1.17.0
 strands-agents-tools

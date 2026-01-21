@@ -1,5 +1,6 @@
 boto3
 botocore
+urllib3>=2.6.0
 awscli
 opensearch-py
 requests-aws4auth

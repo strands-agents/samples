@@ -6,7 +6,7 @@
     <title>Smart Building HVAC Data Analytics Agent</title>
 
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1048.0.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
 
     <style>
         :root {
@@ -431,7 +431,7 @@
             
             // Create message content
             const messageContent = document.createElement('div');
-            messageContent.innerHTML = content;
+            messageContent.innerHTML = DOMPurify.sanitize(content);
             
             // Create timestamp
             const timeSpan = document.createElement('span');
