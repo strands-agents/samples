@@ -20,12 +20,15 @@ from strands_tools import calculator
 agent = BidiAgent(
     model=BidiNovaSonicModel(
         region="us-east-1",
-        model_id="amazon.nova-sonic-v1:0",
+        model_id="amazon.nova-2-sonic-v1:0", # default to v2
         provider_config={
             "audio": {
                 "input_sample_rate": 16000,
                 "output_sample_rate": 16000,
                 "voice": "matthew"
+            },
+            "turn_detection": {
+                "endpointingSensitivity": "HIGH" # HIGH, MEDIUM, LOW
             }
         }
     ),

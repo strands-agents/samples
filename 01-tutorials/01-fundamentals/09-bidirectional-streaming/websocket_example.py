@@ -76,7 +76,7 @@ async def websocket_endpoint(websocket: WebSocket, model_name: str):
     if model_name == "novasonic":
         model = BidiNovaSonicModel(
             region="us-east-1",
-            model_id="amazon.nova-sonic-v1:0",
+            model_id="amazon.nova-2-sonic-v1:0",
             provider_config={
                 "audio": {
                     "input_sample_rate": 16000,
