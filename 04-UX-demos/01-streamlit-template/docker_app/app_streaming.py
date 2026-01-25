@@ -1,3 +1,4 @@
+import asyncio
 import streamlit as st
 from utils.auth import Auth
 from config_file import Config
@@ -67,6 +68,7 @@ if "agent" not in st.session_state:
             tools.list_appointments,
             tools.update_appointment,
         ],
+        callback_handler=None
     )
 
 # Display old chat messages
@@ -91,55 +93,97 @@ if prompt := st.chat_input("Ask your agent..."):
     with st.chat_message("user"):
         st.write(prompt)
 
-    # Prepare containers for response
-    with st.chat_message("assistant"):
-        st.session_state.details_placeholder = st.empty()  # Create a new placeholder
-    
-    # Initialize strings to store streaming of model output
-    st.session_state.output = []
+    # Async function to process streaming response
+    async def process_streaming_response(prompt):
+        output_buffer = []
+        
+        # Create container for real-time display
+        with st.chat_message("assistant"):
+            container = st.container()
+            spinner_placeholder = st.empty()
+            
+            current_text = ""
+            text_placeholder = None
+            current_tool_id = None
+            first_content_received = False
+            
+            # Show spinner initially
+            with spinner_placeholder:
+                with st.spinner("Thinking..."):
+                    # Stream events from agent
+                    async for event in st.session_state.agent.stream_async(prompt):
+                
+                        # Handle tool usage - create new placeholder for each tool
+                        if "current_tool_use" in event and event["current_tool_use"].get("name"):
+                            current_text = ""
+                            # Remove spinner on first content
+                            if not first_content_received:
+                                spinner_placeholder.empty()
+                                first_content_received = True
+                            
+                            tool_use_id = event["current_tool_use"].get("toolUseId")
+                            tool_name = event["current_tool_use"]["name"]
+                            tool_input = event["current_tool_use"].get("input", {})
+                            tool_text = f"Using tool: {tool_name} with args: {str(tool_input)}"
+                            
+                            # Check if this is a new tool (different toolUseId)
+                            if tool_use_id != current_tool_id:
+                                current_tool_id = tool_use_id
+                                # Reset text placeholder when new tool starts
+                                text_placeholder = None
+                                
+                                # Create new placeholder for this tool
+                                with container:
+                                    tool_placeholder = st.empty()
+                                    tool_placeholder.code(tool_text)
+                                
+                                # Add to buffer as new entry
+                                output_buffer.append({"type": "tool_use", "content": tool_text})
+                            else:
+                                # Update existing tool placeholder
+                                tool_placeholder.code(tool_text)
+                                
+                                # Update buffer
+                                if output_buffer and output_buffer[-1]["type"] == "tool_use":
+                                    output_buffer[-1]["content"] = tool_text
+                        
+                        # Handle text data streaming
+                        if "data" in event:
+                            # Remove spinner on first content
+                            if not first_content_received:
+                                spinner_placeholder.empty()
+                                first_content_received = True
+                            
+                            current_text += event["data"]
+                            
+                            # Create text placeholder if it doesn't exist or was reset
+                            if text_placeholder is None:
+                                with container:
+                                    text_placeholder = st.empty()
+                            
+                            text_placeholder.markdown(current_text)
+                            
+                            # Add to buffer
+                            if len(output_buffer) == 0 or output_buffer[-1]["type"] != "data":
+                                output_buffer.append({"type": "data", "content": event["data"]})
+                            else:
+                                output_buffer[-1]["content"] += event["data"]
+                        
+                        # Handle reasoning text
+                        if "reasoningText" in event:
+                            reasoning_text = event["reasoningText"]
+                            
+                            # Add to buffer
+                            if len(output_buffer) == 0 or output_buffer[-1]["type"] != "reasoning":
+                                output_buffer.append({"type": "reasoning", "content": reasoning_text})
+                            else:
+                                output_buffer[-1]["content"] += reasoning_text
+        
+        return output_buffer
 
-    # Create the callback handler to display streaming responses
-    def custom_callback_handler(**kwargs):
-        def add_to_output(output_type, content, append = True):
-            if len(st.session_state.output) == 0:
-                st.session_state.output.append({"type": output_type, "content": content})
-            else:
-                last_item = st.session_state.output[-1]
-                if last_item["type"] == output_type:
-                    if append:
-                        st.session_state.output[-1]["content"] += content
-                    else:
-                        st.session_state.output[-1]["content"] = content
-                else:
-                    st.session_state.output.append({"type": output_type, "content": content})
-
-        with st.session_state.details_placeholder.container():
-            current_streaming_tool_use = ""
-            # Process stream data
-            if "data" in kwargs:
-                add_to_output("data", kwargs["data"])
-            elif "current_tool_use" in kwargs and kwargs["current_tool_use"].get("name"):
-                tool_use_id = kwargs["current_tool_use"].get("toolUseId")
-                current_streaming_tool_use = "Using tool: " + kwargs["current_tool_use"]["name"] + " with args: " + str(kwargs["current_tool_use"]["input"])
-                add_to_output("tool_use", current_streaming_tool_use, append = False)
-            elif "reasoningText" in kwargs:
-                add_to_output("reasoning", kwargs["reasoningText"])
-
-            # Display output
-            for output_item in st.session_state.output:
-                if output_item["type"] == "data":
-                    st.markdown(output_item["content"])
-                elif output_item["type"] == "tool_use":
-                    st.code(output_item["content"])
-                elif output_item["type"] == "reasoning":
-                    st.markdown(output_item["content"])
-    
-    # Set callback handler into the agent
-    st.session_state.agent.callback_handler = custom_callback_handler
-    
-    # Get response from agent
-    response = st.session_state.agent(prompt)
+    # Run the async streaming function
+    output_buffer = asyncio.run(process_streaming_response(prompt))
 
     # When done, add assistant messages to chat history
-    for output_item in st.session_state.output:
+    for output_item in output_buffer:
             st.session_state.messages.append({"role": "assistant", "type": output_item["type"] , "content": output_item["content"]})
