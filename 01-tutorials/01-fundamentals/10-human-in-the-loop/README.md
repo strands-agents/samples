@@ -37,7 +37,7 @@ The strands_hitl.ipynb notebook in this directory provides comprehensive example
 
 Architecture:
 
-![Architecture Patterns](/images/interrupt-patterns.png)
+![Architecture Patterns](images/interrupt-patterns.png)
 
 ## Running the Examples
 Open the notebook: strands_hitl.ipynb
