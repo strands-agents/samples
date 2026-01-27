@@ -46,7 +46,6 @@ Interact with the approval prompts when requested
 
 ## Key Points to Remember
 - Unique Names: Interrupt names must be unique within their scope (hook or tool)
-- JSON-Serializable: Both reason and response must be JSON-serializable
 - One at a Time: A single hook/tool can raise multiple interrupts sequentially, not simultaneously
 - Concurrent Tools: All concurrently running tools can raise interrupts independently
 
