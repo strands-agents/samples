@@ -16,4 +16,5 @@ This folder contains a series of tutorials covering the fundamental concepts of 
 | F6      | [Integrating Bedrock Guardrail](./06-guardrail-integration)                  | Integrate an Amazon Bedrock Guardrail to your agent                                                  |
 | F7      | [Adding memory to your agent](./07-memory-persistent-agents)                 | Personal assistant using memory and websearch tools                                                  |
 | F8      | [Observability and Evaluation](./08-observability-and-evaluation)            | Adding observability and evaluation to your agent                                                    |
-| F9      | [Bidirectional Streaming Agent](./09-bidirectional-streaming)                | Bidirectional streaming agent enable realtime voice chat  
+| F9      | [Bidirectional Streaming Agent](./09-bidirectional-streaming)                | Bidirectional streaming agent enable realtime voice chat
+| F10     | [Human in the loop](./10-human-in-the-loop)    | Interrupt your agent's loop for human approval  
