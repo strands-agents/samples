@@ -5,10 +5,11 @@ description = "Deep Research Assistant using Strands Agents and Exa Search API"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "strands-agents>=0.1.0",
+    "strands-agents[otel]>=0.1.0",
     "strands-agents-tools>=0.1.0",
     "boto3>=1.34.0",
     "python-dotenv>=1.0.0",
+    "aws-opentelemetry-distro>=0.14.2",
 ]
 
 [project.scripts]

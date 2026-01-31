@@ -100,6 +100,58 @@ The agent produces a comprehensive research brief including:
    python deep_research_assistant.py
    ```
 
+## Setup with AgentCore Observability
+
+Amazon Bedrock Amazon Bedrock AgentCore Observability helps you trace, debug, and monitor agent performance. This data is available in Amazon CloudWatch. To view the full range of observability data or output custom runtime metrics, you need to instrument your code using the AWS Distro for OpenTelemetry (ADOT) SDK. We will visualise the Exa deep researcher agent on Cloudwatch GenAI Observability Dahsboard.
+
+### Prerequisites for Observability
+
+1. **Enable Transaction Search on Amazon CloudWatch** - Required for viewing observability data
+   - [Enable Transaction Search Documentation](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Enable-TransactionSearch.html)
+
+2. **CloudWatch Permissions** - Ensure your AWS IAM user/role has the appropriate CloudWatch permissions for AgentCore Observability
+
+3. **AWS Distro for OpenTelemetry (ADOT)** - Required for full observability features
+   - [AgentCore Observability Configuration Guide](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/observability-configure.html)
+
+### Running with Observability
+
+1. Copy the observability environment template:
+   ```bash
+   cp .env-obs.example .env
+   ```
+
+2. Edit the `.env` file and configure your API keys and observability settings
+
+3. Run the setup script with observability:
+   ```bash
+   ./setup-with-observability.sh
+   ```
+
+4. Execute with observability instrumentation:
+   ```bash
+   # Using standard Python
+   source .venv/bin/activate
+   opentelemetry-instrument python deep_research_assistant.py "your search query"
+
+   # Using uv
+   uv run opentelemetry-instrument python deep_research_assistant.py "your search query"
+   ```
+
+### Viewing Observability Data
+
+To view the observability dashboard in CloudWatch:
+1. Open the Amazon CloudWatch console
+2. Navigate to the GenAI Observability page
+3. Select your application: `exa-deep-research`
+
+The dashboard provides:
+- End-to-end trace analysis of the research workflow
+- Search performance metrics for each Exa operation
+- Token usage and cost tracking
+- Tool execution timing and success rates
+- Agent decision tracking and reasoning flow
+
 ## Usage Options
 
 ### Interactive Mode
@@ -157,13 +209,17 @@ entanglement to perform computations...
 
 ```
 exa/
-├── deep_research_assistant.py   # Main agent with Exa tool integration
-├── .prompt                      # System prompt defining research workflow
-├── .env.example                 # Environment variables template
-├── .gitignore                   # Git ignore rules
-├── requirements.txt            # Python dependencies (pip)
-├── pyproject.toml              # Project dependencies (uv)
-└── README.md                   # This file
+├── deep_research_assistant.py      # Main agent with Exa tool integration
+├── .prompt                         # System prompt defining research workflow
+├── .env.example                    # Basic environment variables template
+├── .env-obs.example                # Observability environment template
+├── setup-new.sh                    # Basic setup script
+├── setup-with-observability.sh     # Setup script with AWS CloudWatch integration
+├── setup-observability.py          # Observability configuration script
+├── .gitignore                      # Git ignore rules
+├── requirements.txt                # Python dependencies (pip)
+├── pyproject.toml                  # Project dependencies (uv)
+└── README.md                       # This file
 ```
 
 ## Dependencies
