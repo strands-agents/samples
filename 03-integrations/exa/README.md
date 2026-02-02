@@ -109,34 +109,39 @@ Amazon Bedrock Amazon Bedrock AgentCore Observability helps you trace, debug, an
 1. **Enable Transaction Search on Amazon CloudWatch** - Required for viewing observability data
    - [Enable Transaction Search Documentation](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Enable-TransactionSearch.html)
 
-2. **CloudWatch Permissions** - Ensure your AWS IAM user/role has the appropriate CloudWatch permissions for AgentCore Observability
+2. **AWS Permissions** - Ensure your AWS IAM user/role has the appropriate CloudWatch permissions for AgentCore Observability
 
 3. **AWS Distro for OpenTelemetry (ADOT)** - Required for full observability features
    - [AgentCore Observability Configuration Guide](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/observability-configure.html)
 
 ### Running with Observability
 
-1. Copy the observability environment template:
-   ```bash
-   cp .env-obs.example .env
-   ```
-
-2. Edit the `.env` file and configure your API keys and observability settings
-
-3. Run the setup script with observability:
+1. Run the setup script with observability:
    ```bash
    ./setup-with-observability.sh
    ```
+   This will:
+   - Create a virtual environment
+   - Install dependencies including OpenTelemetry
+   - Create `.env` file from the observability template
+   - Configure CloudWatch resources
 
-4. Execute with observability instrumentation:
+2. Edit the `.env` file and add your Exa API key:
    ```bash
-   # Using standard Python
-   source .venv/bin/activate
-   opentelemetry-instrument python deep_research_assistant.py "your search query"
-
-   # Using uv
-   uv run opentelemetry-instrument python deep_research_assistant.py "your search query"
+   EXA_API_KEY=your-exa-api-key-here
    ```
+
+3. Execute with observability instrumentation:
+   ```bash
+   # Activate environment and load observability settings
+   source .venv/bin/activate
+   source .env  # Load observability environment variables
+
+   # Run with OpenTelemetry instrumentation
+   opentelemetry-instrument python deep_research_assistant.py "your search query"
+   
+   # Using uv
+   uv run opentelemetry-instrument python deep_research_assistant.py "your search query"   ```
 
 ### Viewing Observability Data
 
@@ -227,6 +232,7 @@ exa/
 - **strands-agents** - AWS Strands Agents framework
 - **strands-agents-tools** - Exa tools integration (exa_search, exa_get_contents)
 - **boto3** - AWS SDK for Bedrock integration
+- **aws-opentelemetry-distro** - AWS Opentelemetry python package ( For AgentCore observability on Amazon Cloudwatch) 
 
 ## Resources
 
@@ -234,6 +240,7 @@ exa/
 - [Exa API Documentation](https://docs.exa.ai)
 - [AWS Bedrock](https://aws.amazon.com/bedrock/)
 - [Exa Dashboard](https://dashboard.exa.ai)
+- [ AgentCore Observability](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/observability.html)
 
 ## License
 

@@ -23,21 +23,15 @@ LOG_STREAM = "default"
 ENV_FILE = Path(__file__).parent / ".env"
 ENV_EXAMPLE = Path(__file__).parent / ".env-obs.example"
 
-def setup_env_file():
-    """Set up .env file from example if it doesn't exist."""
-    if not ENV_FILE.exists():
-        if ENV_EXAMPLE.exists():
-            print("📝 Creating .env from .env-obs.example...")
-            ENV_FILE.write_text(ENV_EXAMPLE.read_text())
-            print("✅ Created .env file")
-            print("\n⚠️  IMPORTANT: Please edit .env and add your Exa API key")
-            return False
-        else:
-            print("❌ .env-obs.example not found")
-            return False
-    else:
-        print("✅ .env file already exists")
+def check_env_file():
+    """Check if .env file exists."""
+    if ENV_FILE.exists():
+        print("✅ .env file exists")
         return True
+    else:
+        print("❌ .env file not found")
+        print("   Run ./setup-with-observability.sh first")
+        return False
 
 def verify_exa_api_key():
     """Check if Exa API key is configured."""
@@ -45,8 +39,9 @@ def verify_exa_api_key():
     api_key = os.getenv("EXA_API_KEY", "")
 
     if not api_key or api_key == "ADD_YOUR_EXA_API_KEY_HERE":
-        print("\n❌ Exa API key not configured!")
-        print("📝 Please edit .env and add your Exa API key")
+        print("⚠️  Exa API key not configured!")
+        print("   Please edit .env and add your Exa API key:")
+        print("   EXA_API_KEY=your-key-here")
         print("   Get your key at: https://dashboard.exa.ai/api-keys")
         return False
 
@@ -123,7 +118,7 @@ def print_instructions(observability_enabled):
         print("\n🔍 WITH OBSERVABILITY (traces in CloudWatch):")
         print("   opentelemetry-instrument python deep_research_assistant.py \"your research query\"")
         print("\n   View traces in AWS CloudWatch Console: GenAI Observability Dashboard")
-        print(f"   • Look for: {SERVICE_NAME}")
+        print(f"   • Service name: {SERVICE_NAME}")
 
     print("\n🚀 WITHOUT OBSERVABILITY (simple mode):")
     print("   python deep_research_assistant.py \"your research query\"")
@@ -141,21 +136,17 @@ def print_instructions(observability_enabled):
 
 def main():
     """Main setup function."""
-    print("🔧 Exa Deep Research Assistant Setup")
+    print("🔧 Exa Deep Research Assistant - Observability Setup")
     print("="*60)
 
-    # Step 1: Setup .env file
-    print("\n📁 Step 1: Environment File Setup")
-    env_exists = setup_env_file()
-
-    if not env_exists:
-        print("\n⚠️  Please add your Exa API key to .env and run this script again")
+    # Step 1: Check .env file exists
+    print("\n📁 Step 1: Environment File Check")
+    if not check_env_file():
         sys.exit(1)
 
-    # Step 2: Verify Exa API key
+    # Step 2: Verify Exa API key (warn but don't exit)
     print("\n🔑 Step 2: API Key Verification")
-    if not verify_exa_api_key():
-        sys.exit(1)
+    api_key_configured = verify_exa_api_key()
 
     # Step 3: Check if observability is enabled
     print("\n📊 Step 3: Observability Configuration")
@@ -170,6 +161,10 @@ def main():
 
     # Step 5: Print instructions
     print_instructions(observability_enabled)
+
+    # Final warning if API key not configured
+    if not api_key_configured:
+        print("\n⚠️  REMEMBER: Add your Exa API key to .env before running the application!")
 
 if __name__ == "__main__":
     main()

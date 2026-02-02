@@ -4,7 +4,6 @@
 set -e
 
 echo "🔭 Setting up Deep Research Assistant with AWS CloudWatch Observability..."
-echo "="*70
 echo ""
 
 # Create virtual environment
@@ -19,37 +18,32 @@ pip install --upgrade pip -q
 pip install -r requirements.txt -q
 echo "✅ Dependencies installed (including OpenTelemetry)"
 
-# Create .env from example if doesn't exist
-if [ ! -f ".env" ]; then
-    cp .env-obs.example .env
-    echo "✅ Created .env file from template"
-fi
-
+# Create .env from observability template 
+cp .env-obs.example .env
+echo "✅ Created .env file from observability template"
 
 # Setup CloudWatch resources and OTEL configuration
 echo ""
 echo "📊 Setting up CloudWatch observability..."
 python setup-observability.py
 
-# Check if EXA_API_KEY is set
-source .env 2>/dev/null || true
+# Check prerequisites (same approach as setup-new.sh)
+if ! aws sts get-caller-identity > /dev/null 2>&1; then
+    echo "⚠️  AWS credentials not configured. Run 'aws configure'."
+fi
+
 if [ -z "$EXA_API_KEY" ]; then
-    echo ""
-    echo "="*70
-    echo "⚠️  ACTION REQUIRED: Add your Exa API key to the .env file"
-    echo "="*70
+    echo "⚠️  EXA_API_KEY not set. Get one at https://dashboard.exa.ai/api-keys"
+    echo "   After setup, run: export EXA_API_KEY=your-key-here"
 fi
 
 echo ""
-echo "🎉 Setup complete with observability!"
+echo "🎉 Setup complete. To run with observability:"
 echo ""
-echo "Next steps:"
-echo "  1. Ensure your Exa API key is in .env file and your env variables are loaded correctly in your environment"
-echo "  2. Enable Transaction Search in CloudWatch (see instructions in Readme)"
-echo "  3. Run with observability:"
+echo "  source .venv/bin/activate"
+echo "  export EXA_API_KEY=your-key-here  # If not already set"
+echo "  source .env  # Ensure your env varibales are loaded correctly"
+echo "  Enable Transaction Search in CloudWatch (see Pre requisites in Readme)"
+echo "  opentelemetry-instrument python deep_research_assistant.py \"your query\""
 echo ""
-echo "     source .venv/bin/activate"
-echo "     opentelemetry-instrument python deep_research_assistant.py  "[Add your single query]""
-echo ""
-echo "  View traces after a few minutes in CloudWatch > GenAI Observability Dashboard "
-echo "  Look for : exa-deep-research"
+echo "View traces in CloudWatch > GenAI Observability  (exa-deep-research)"
