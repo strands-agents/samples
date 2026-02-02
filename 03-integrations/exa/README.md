@@ -100,11 +100,42 @@ The agent produces a comprehensive research brief including:
    python deep_research_assistant.py
    ```
 
-## Setup with AgentCore Observability
+## Setup with Local Observability (Jaeger)
 
-Amazon Bedrock Amazon Bedrock AgentCore Observability helps you trace, debug, and monitor agent performance. This data is available in Amazon CloudWatch. To view the full range of observability data or output custom runtime metrics, you need to instrument your code using the AWS Distro for OpenTelemetry (ADOT) SDK. We will visualise the Exa deep researcher agent on Cloudwatch GenAI Observability Dahsboard.
+The quickest way to visualize agent traces is using a local OTEL collector with Jaeger.
 
-### Prerequisites for Observability
+### Start Jaeger
+
+```bash
+docker run -d --name jaeger \
+  -p 4317:4317 \
+  -p 4318:4318 \
+  -p 16686:16686 \
+  jaegertracing/all-in-one:latest
+```
+
+### Run with Instrumentation
+
+```bash
+# Load environment variables and run with uv
+set -a && source .env && set +a
+uv run opentelemetry-instrument python deep_research_assistant.py
+
+# Or with a specific query
+uv run opentelemetry-instrument python deep_research_assistant.py "your research query"
+```
+
+### View Traces
+
+Open the Jaeger UI at [http://localhost:16686/](http://localhost:16686/) to view traces, spans, and agent execution flow.
+
+---
+
+## Advanced: Setup with AWS CloudWatch Observability
+
+Amazon Bedrock AgentCore Observability helps you trace, debug, and monitor agent performance. This data is available in Amazon CloudWatch. To view the full range of observability data or output custom runtime metrics, you need to instrument your code using the AWS Distro for OpenTelemetry (ADOT) SDK. We will visualise the Exa deep researcher agent on CloudWatch GenAI Observability Dashboard.
+
+### Prerequisites for CloudWatch Observability
 
 1. **Enable Transaction Search on Amazon CloudWatch** - Required for viewing observability data
    - [Enable Transaction Search Documentation](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Enable-TransactionSearch.html)
@@ -114,7 +145,7 @@ Amazon Bedrock Amazon Bedrock AgentCore Observability helps you trace, debug, an
 3. **AWS Distro for OpenTelemetry (ADOT)** - Required for full observability features
    - [AgentCore Observability Configuration Guide](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/observability-configure.html)
 
-### Running with Observability
+### Running with CloudWatch Observability
 
 1. Run the setup script with observability:
    ```bash
@@ -141,9 +172,10 @@ Amazon Bedrock Amazon Bedrock AgentCore Observability helps you trace, debug, an
    opentelemetry-instrument python deep_research_assistant.py "your search query"
    
    # Using uv
-   uv run opentelemetry-instrument python deep_research_assistant.py "your search query"   ```
+   uv run opentelemetry-instrument python deep_research_assistant.py "your search query"
+   ```
 
-### Viewing Observability Data
+### Viewing CloudWatch Observability Data
 
 To view the observability dashboard in CloudWatch:
 1. Open the Amazon CloudWatch console
