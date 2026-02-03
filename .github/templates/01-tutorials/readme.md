@@ -9,7 +9,6 @@ Use this template when creating a new tutorial in `01-tutorials/`.
 - Be concise but thorough—tutorials should teach, not just demonstrate
 - Test all commands before documenting
 - Use code blocks for all terminal commands
-- Adapt complexity based on your tutorial's learning objectives
 - Add optional sections as needed (see below)
 
 ---
@@ -18,40 +17,36 @@ Use this template when creating a new tutorial in `01-tutorials/`.
 
 [1-2 sentence description of what this tutorial demonstrates and why it's useful.]
 
-## Overview
+![Architecture Diagram](./images/architecture.png)
 
-### Tutorial Details
+## Tutorial Details
 
 | Information            | Details                                                  |
 |------------------------|----------------------------------------------------------|
-| **Strands Feature**    | [Agent / Tools / Memory / Streaming / Multi-agent / MCP] |
-| **Agent Pattern**      | [Single-agent / Multi-agent / Swarm / Graph]             |
-| **Tools Used**         | [Native tools, custom tools, or "None"]                  |
-| **Complexity**         | [Beginner / Intermediate / Advanced]                     |
-| **Model Provider**     | [Amazon Bedrock / Anthropic / OpenAI / Ollama]           |
+| **Strands Features**   | [Multi-agent orchestration, A2A protocol, MCP tool integration, ...] |
+| **Agent Pattern**      | [Single agent / Orchestrator + specialist agents / Swarm / Graph] |
+| **Tools**              | [Custom tools, MCP tools, A2A client tools, or "None"]   |
+| **Model**              | [Claude Sonnet 4 on Amazon Bedrock / ...]                |
 
-### Key Concepts
+## Key Concepts
 
 - **[Concept 1]**: Brief explanation of the concept
 - **[Concept 2]**: Brief explanation of the concept
 - **[Concept 3]**: Brief explanation of the concept
 
-### Architecture
-
-![Architecture Diagram](./images/architecture.png)
-
-[Brief description of the architecture diagram and how components interact.]
-
 ## Prerequisites
 
-- Python **3.10+**
+- Python 3.10 or higher
 - AWS account with Amazon Bedrock model access
+- [Model name] model access in Amazon Bedrock (`[model-id]`)
 - [Additional requirements specific to this tutorial]
 
-### Model Access
+## Tutorial Structure
 
-This tutorial uses the following models:
-- `[model-id]` - [Purpose]
+| Notebook | Description |
+|----------|-------------|
+| [01-notebook-name.ipynb](./01-notebook-name.ipynb) | [What this notebook covers] |
+| [02-notebook-name.ipynb](./02-notebook-name.ipynb) | [What this notebook covers] |
 
 ## Getting Started
 
@@ -60,69 +55,59 @@ This tutorial uses the following models:
    pip install -r requirements.txt
    ```
 
-2. **Run the notebook:**
-   ```
-   [tutorial-name].ipynb
-   ```
+2. **Run the notebooks in order:**
+   - **Notebook 1**: [What it does]
+   - **Notebook 2**: [What it does]
 
-## Execution Instructions
+3. **Test the system** [how to verify everything works]:
+   - [Example query or test]
+   - [Example query or test]
 
-### Step 1: [First Step]
+## Project Structure
 
-```bash
-[command]
+```
+[tutorial-folder]/
+├── 01-notebook-name.ipynb
+├── 02-notebook-name.ipynb
+├── requirements.txt
+├── [agent_folder]/
+│   ├── [main_file].py
+│   └── requirements.txt
+└── utils/
+    └── [helper].py
 ```
 
-This command:
-- [What it does]
-- [Expected outcome]
+## Cleanup
 
-### Step 2: [Second Step]
+[Explain how to clean up any AWS resources created by the tutorial.]
 
-```bash
-[command]
-```
-
-[Explanation of what happens.]
-
-## [Feature-Specific Section] (Optional)
-
-[For complex tutorials, include tables or code blocks explaining key mechanisms.]
-
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `param1` | Description | `value` |
-| `param2` | Description | `value` |
-
-## Best Practices
-
-- [Practice 1]
-- [Practice 2]
-- [Practice 3]
-
-## Cleanup (If Applicable)
-
-If you created any AWS resources, clean them up:
-
-```bash
-cd infrastructure
-./cleanup.sh
-```
-
-## Experiment Ideas
-
-- [Idea 1: Suggestion for extending the tutorial]
-- [Idea 2: Alternative approach to try]
-
-## Resources
+## Additional Resources
 
 - [Strands Agents Documentation](https://strandsagents.com/)
 - [Related Tutorial](../path-to-related-tutorial/)
 - [AWS Documentation](https://docs.aws.amazon.com/)
 
+---
+
 ## Common Optional Sections
 
 Based on analysis of existing tutorials, consider adding these sections as appropriate:
+
+### Best Practices
+```markdown
+## Best Practices
+
+- [Practice 1]
+- [Practice 2]
+```
+
+### Experiment Ideas
+```markdown
+## Experiment Ideas
+
+- [Idea 1: Suggestion for extending the tutorial]
+- [Idea 2: Alternative approach to try]
+```
 
 ### Flow Overview
 For multi-agent tutorials, show step-by-step collaboration:
@@ -151,14 +136,3 @@ For complex tutorials, explain key code sections:
 [Explanation of important code blocks]
 ```
 
----
-
-## Disclaimer
-
-This tutorial is provided for educational and demonstration purposes only. It is not intended for production use without further development, testing, and hardening.
-
-For production deployments, consider:
-- Implementing appropriate content filtering and safety measures
-- Following security best practices for your deployment environment
-- Conducting thorough testing and validation
-- Reviewing and adjusting configurations for your specific requirements
