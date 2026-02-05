@@ -6,6 +6,7 @@ arize-toolkit
 opentelemetry-api
 opentelemetry-sdk
 opentelemetry-exporter-otlp-proto-grpc
+openinference-instrumentation-strands-agents
 boto3
 botocore
 awscli
