@@ -1,52 +1,100 @@
 # Human-in-the-Loop (HITL) with Strands Agents
 
-This guide will help you understand how to implement human-in-the-loop workflows with Strands Agents, enabling you to pause agent execution, request human input or approval, and resume based on that input.
+This tutorial demonstrates how to implement human-in-the-loop workflows with Strands Agents. By the end, you'll have built agents that can pause execution, request human input or approval, and resume based on that feedback.
+
+## Architecture
+
+![Architecture Pattern 1](images/pattern1.png)
+![Architecture Pattern 2](images/pattern2.png)
+![Architecture Pattern 3](images/pattern3.png)
+
+## Tutorial Details
+
+| Information            | Details                                                  |
+|------------------------|----------------------------------------------------------|
+| **Strands Features**   | Interrupts, Hooks, Tool Context, Session Management, Agent State |
+| **Agent Pattern**      | Single agent with human-in-the-loop controls             |
+| **Tools**              | Custom tools with interrupt capabilities                 |
+| **Model**              | Claude Sonnet 4 on Amazon Bedrock                        |
+
+## How It Works
+
+1. Agent begins executing a task and encounters a tool call that requires approval
+2. A hook intercepts the tool call using BeforeToolCallEvent, triggering an interrupt (second pattern explores triggering interrupt within the tool itself)
+3. Execution pauses and control returns to the caller with an interrupt request
+4. Human reviews the request and provides approval or denial
+5. Agent resumes execution with the human's decision and continues the workflow
+6. Session manager persists user preferences for future interactions
 
 ## Prerequisites
 
 - Python 3.10 or later
-- AWS account configured with appropriate permissions
+- AWS account with [Amazon Bedrock](https://aws.amazon.com/bedrock/) model access configured
 - Basic understanding of Python programming
 - Familiarity with Strands Agents basics [(see Quickstart Guide)](https://strandsagents.com/latest/documentation/docs/user-guide/quickstart/)
 
-## Installation
+## Tutorial Structure
 
-Install Strands Agents and the tools package using pip:
-
-```bash
-pip install strands-agents strands-agents-tools
+```
+10-human-in-the-loop/
+├── README.md
+├── requirements.txt
+├── strands_hitl.ipynb
+└── images/
+    ├── pattern1.png
+    ├── pattern2.png
+    └── pattern3.png
 ```
 
-## Basic Concepts
-
-The interrupt system in Strands Agents allows you to build workflows that require human oversight. The key components are:
-
-- **Interrupts**	- Mechanisms to pause agent execution and request human input
-- **Hooks** - Intercept tool calls before execution using BeforeToolCallEvent
-- **Tool Context** - Access interrupt functionality from within tools using tool_context.interrupt()
-- **Session Management**	- Persist interrupt state and user preferences across sessions
-- **Agent State**	- Store and retrieve user preferences with agent.state.set() and agent.state.get()
+| File | Description |
+|------|-------------|
+| [strands_hitl.ipynb](./strands_hitl.ipynb) | Interactive notebook demonstrating three HITL patterns |
 
 ## What You'll Learn
-The strands_hitl.ipynb notebook in this directory provides comprehensive examples for:
+
+The [strands_hitl.ipynb](./strands_hitl.ipynb) notebook in this directory covers:
 
 - **Understanding Interrupts**: Learn how the interrupt system pauses and resumes agent execution
 - **Hook-Based Approvals**: Create approval workflows that intercept tool calls before execution
 - **Tool-Based Interrupts**: Raise interrupts directly from within your tool definitions
 - **Session Persistence**: Remember user preferences across sessions with FileSessionManager
 
-Architecture:
+## Installation
 
-![Architecture Patterns](images/interrupt-patterns.png)
+Install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
 
 ## Running the Examples
-Open the notebook: strands_hitl.ipynb
-Run cells sequentially to see each pattern in action
-Interact with the approval prompts when requested
 
-## Key Points to Remember
-- Unique Names: Interrupt names must be unique within their scope (hook or tool)
-- One at a Time: A single hook/tool can raise multiple interrupts sequentially, not simultaneously
-- Concurrent Tools: All concurrently running tools can raise interrupts independently
+1. Open the notebook: [strands_hitl.ipynb](./strands_hitl.ipynb)
+2. Run cells sequentially to see each pattern in action
+3. Interact with the approval prompts when requested
 
-Happy building with Strands Agents! 🚀
+## Key Concepts
+
+- **Interrupts**: Mechanisms to pause agent execution and request human input
+- **Hooks**: Intercept tool calls before execution using BeforeToolCallEvent
+- **Tool Context**: Access interrupt functionality from within tools using tool_context.interrupt()
+- **Session Management**: Persist interrupt state and user preferences across sessions
+- **Agent State**: Store and retrieve user preferences with agent.state.set() and agent.state.get()
+
+## Important Notes
+
+- Interrupt names must be unique within their scope (hook or tool)
+- A single hook/tool can raise multiple interrupts sequentially, not simultaneously
+- All concurrently running tools can raise interrupts independently
+
+## Additional Resources
+
+- [Strands Agents Documentation](https://strandsagents.com/)
+- [Quickstart Guide](https://strandsagents.com/latest/documentation/docs/user-guide/quickstart/)
+- [Strands Interrupts Documentation](https://strandsagents.com/latest/documentation/docs/user-guide/concepts/interrupts/)
+
+## Next Steps
+
+- Explore [Multi-Agent Systems](../../02-multi-agent-systems/) to combine HITL with orchestration patterns
+- Learn about [Memory and Persistent Agents](../07-memory-persistent-agents/) for long-running workflows
+- Review [Observability and Evaluation](../08-observability-and-evaluation/) to monitor HITL interactions
