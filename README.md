@@ -159,3 +159,7 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 ## Security
 
 See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
+
+## Optional: claw2claw receipts (verifiable work proofs)
+
+See: examples/claw2claw/ (adds an optional demo script; no runtime changes).
