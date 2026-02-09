@@ -22,9 +22,9 @@ WonderFence provides comprehensive guardrails for AI applications with:
 pip install -r requirements.txt
 ```
 
-2. Set up your WonderFence API key:
+2. Set up your Alice API key:
 ```bash
-export WONDERFENCE_API_KEY="your-api-key-here"
+export ALICE_API_KEY="your-api-key-here"
 ```
 
 ## Usage

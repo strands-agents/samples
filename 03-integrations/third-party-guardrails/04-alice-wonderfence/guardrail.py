@@ -1,6 +1,7 @@
 """Minimal WonderFence integration example for Strands agents."""
 
 import json
+import os
 import uuid
 from typing import Any
 
@@ -15,7 +16,7 @@ from strands.hooks import (
 from wonderfence_sdk.client import WonderFenceClient
 from wonderfence_sdk.models import Actions, AnalysisContext
 
-client = WonderFenceClient(provider="aws-bedrock", platform="aws")
+client = WonderFenceClient(provider="aws-bedrock", platform="aws", api_key=os.environ.get("ALICE_API_KEY"))
 
 
 class WonderFenceViolationException(Exception):
