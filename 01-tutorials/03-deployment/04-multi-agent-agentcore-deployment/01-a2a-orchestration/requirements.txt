@@ -1,0 +1,4 @@
+# Notebook dependencies for E-commerce Shopping Assistant deployment
+boto3>=1.35.0
+python-dotenv>=1.0.0
+bedrock-agentcore-starter-toolkit>=0.1.0

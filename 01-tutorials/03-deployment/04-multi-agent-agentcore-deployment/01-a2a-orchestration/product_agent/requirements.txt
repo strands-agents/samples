@@ -1,0 +1,5 @@
+strands-agents[a2a,otel]
+fastapi
+uvicorn
+boto3
+requests

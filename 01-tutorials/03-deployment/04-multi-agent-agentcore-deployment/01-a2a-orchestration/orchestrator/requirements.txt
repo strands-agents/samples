@@ -1,0 +1,6 @@
+strands-agents[a2a,otel]
+strands-agents-tools
+bedrock-agentcore
+fastapi
+uvicorn
+boto3
