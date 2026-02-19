@@ -4,9 +4,8 @@ This tutorial demonstrates how to implement human-in-the-loop workflows with Str
 
 ## Architecture
 
-![Architecture Pattern 1](images/pattern1.png)
-![Architecture Pattern 2](images/pattern2.png)
-![Architecture Pattern 3](images/pattern3.png)
+![Architecture Pattern 2](images/pattern-1.png)
+![Architecture Pattern 3](images/pattern-2.png)
 
 ## Tutorial Details
 
@@ -15,7 +14,7 @@ This tutorial demonstrates how to implement human-in-the-loop workflows with Str
 | **Strands Features**   | Interrupts, Hooks, Tool Context, Session Management, Agent State |
 | **Agent Pattern**      | Single agent with human-in-the-loop controls             |
 | **Tools**              | Custom tools with interrupt capabilities                 |
-| **Model**              | Claude Sonnet 4 on Amazon Bedrock                        |
+| **Model**              | Claude Haiku 4.5 on Amazon Bedrock                        |
 
 ## How It Works
 
@@ -41,9 +40,8 @@ This tutorial demonstrates how to implement human-in-the-loop workflows with Str
 ├── requirements.txt
 ├── strands_hitl.ipynb
 └── images/
-    ├── pattern1.png
-    ├── pattern2.png
-    └── pattern3.png
+    ├── pattern-1.png
+    ├── pattern-2.png
 ```
 
 | File | Description |
