@@ -1,3 +1,34 @@
+
+<div align="right">
+  <details>
+    <summary >🌐 Language</summary>
+    <div>
+      <div align="center">
+        <a href="https://openaitx.github.io/view.html?user=strands-agents&project=samples&lang=en">English</a>
+        | <a href="https://openaitx.github.io/view.html?user=strands-agents&project=samples&lang=zh-CN">简体中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=strands-agents&project=samples&lang=zh-TW">繁體中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=strands-agents&project=samples&lang=ja">日本語</a>
+        | <a href="https://openaitx.github.io/view.html?user=strands-agents&project=samples&lang=ko">한국어</a>
+        | <a href="https://openaitx.github.io/view.html?user=strands-agents&project=samples&lang=hi">हिन्दी</a>
+        | <a href="https://openaitx.github.io/view.html?user=strands-agents&project=samples&lang=th">ไทย</a>
+        | <a href="https://openaitx.github.io/view.html?user=strands-agents&project=samples&lang=fr">Français</a>
+        | <a href="https://openaitx.github.io/view.html?user=strands-agents&project=samples&lang=de">Deutsch</a>
+        | <a href="https://openaitx.github.io/view.html?user=strands-agents&project=samples&lang=es">Español</a>
+        | <a href="https://openaitx.github.io/view.html?user=strands-agents&project=samples&lang=it">Italiano</a>
+        | <a href="https://openaitx.github.io/view.html?user=strands-agents&project=samples&lang=ru">Русский</a>
+        | <a href="https://openaitx.github.io/view.html?user=strands-agents&project=samples&lang=pt">Português</a>
+        | <a href="https://openaitx.github.io/view.html?user=strands-agents&project=samples&lang=nl">Nederlands</a>
+        | <a href="https://openaitx.github.io/view.html?user=strands-agents&project=samples&lang=pl">Polski</a>
+        | <a href="https://openaitx.github.io/view.html?user=strands-agents&project=samples&lang=ar">العربية</a>
+        | <a href="https://openaitx.github.io/view.html?user=strands-agents&project=samples&lang=fa">فارسی</a>
+        | <a href="https://openaitx.github.io/view.html?user=strands-agents&project=samples&lang=tr">Türkçe</a>
+        | <a href="https://openaitx.github.io/view.html?user=strands-agents&project=samples&lang=vi">Tiếng Việt</a>
+        | <a href="https://openaitx.github.io/view.html?user=strands-agents&project=samples&lang=id">Bahasa Indonesia</a>
+      </div>
+    </div>
+  </details>
+</div>
+
 <div align="center">
   <div>
     <a href="https://strandsagents.com">
