@@ -30,7 +30,7 @@ You have access to appointment management tools, and can check the current time 
 Always provide the appointment id so that I can update it if required"""
 
 model = BedrockModel(
-    model_id="us.anthropic.claude-sonnet-4-20250514-v1:0",
+    model_id="us.anthropic.claude-sonnet-4-5-20250929-v1:0",
 )
 
 agent = Agent(

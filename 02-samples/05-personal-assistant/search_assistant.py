@@ -84,7 +84,7 @@ perplexity_mcp_server.__enter__()
 
 try:
     model = BedrockModel(
-        model_id="us.anthropic.claude-sonnet-4-20250514-v1:0",
+        model_id="us.anthropic.claude-sonnet-4-5-20250929-v1:0",
     )
     # Get available tools from MCP server
     tools = perplexity_mcp_server.list_tools_sync()
