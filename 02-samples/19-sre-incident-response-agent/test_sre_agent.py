@@ -212,13 +212,14 @@ class TestPostIncidentReport:
         assert "P3" in captured.out
 
     @patch("sre_agent.SLACK_WEBHOOK_URL", "https://hooks.slack.com/fake")
-    @patch("sre_agent.urllib.request.urlopen")
-    @patch("sre_agent.urllib.request.Request")
-    def test_posts_to_slack_when_webhook_set(self, mock_req, mock_urlopen):
+    def test_posts_to_slack_when_webhook_set(self):
         mock_resp = MagicMock()
         mock_resp.status = 200
-        mock_urlopen.return_value.__enter__ = lambda s: mock_resp
-        mock_urlopen.return_value.__exit__ = MagicMock(return_value=False)
 
-        result = post_incident_report("Critical incident", severity="P1")
-        assert "Slack" in result or "200" in result
+        with patch("urllib.request.Request"), \
+                patch("urllib.request.urlopen") as mock_urlopen:
+            mock_urlopen.return_value.__enter__ = lambda s: mock_resp
+            mock_urlopen.return_value.__exit__ = MagicMock(return_value=False)
+
+            result = post_incident_report("Critical incident", severity="P1")
+            assert "Slack" in result or "200" in result

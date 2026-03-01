@@ -82,10 +82,10 @@ def list_active_alarms(namespace: str = "") -> str:
 
 @tool
 def get_metric_statistics(
-    namespace: str,
-    metric_name: str,
-    dimensions: str,
-    period_minutes: int = 30,
+        namespace: str,
+        metric_name: str,
+        dimensions: str,
+        period_minutes: int = 30,
 ) -> str:
     """
     Retrieve CloudWatch metric statistics for the last N minutes.
@@ -101,7 +101,7 @@ def get_metric_statistics(
         JSON string with datapoints (timestamp, average, sum, unit).
     """
     cw = boto3.client("cloudwatch", region_name=AWS_REGION)
-    end_time = datetime.datetime.utcnow()
+    end_time = datetime.datetime.now(datetime.timezone.utc)
     start_time = end_time - datetime.timedelta(minutes=period_minutes)
 
     try:
@@ -136,10 +136,10 @@ def get_metric_statistics(
 
 @tool
 def fetch_log_events(
-    log_group: str,
-    filter_pattern: str = "ERROR",
-    minutes_back: int = 15,
-    max_events: int = 50,
+        log_group: str,
+        filter_pattern: str = "ERROR",
+        minutes_back: int = 15,
+        max_events: int = 50,
 ) -> str:
     """
     Fetch recent CloudWatch Logs events matching a filter pattern.
@@ -154,7 +154,7 @@ def fetch_log_events(
         JSON string with matching log events including timestamp and message.
     """
     logs = boto3.client("logs", region_name=AWS_REGION)
-    end_time = int(datetime.datetime.utcnow().timestamp() * 1000)
+    end_time = int(datetime.datetime.now(datetime.timezone.utc).timestamp() * 1000)
     start_time = end_time - (minutes_back * 60 * 1000)
 
     try:
@@ -168,7 +168,7 @@ def fetch_log_events(
         events = [
             {
                 "timestamp": str(
-                    datetime.datetime.utcfromtimestamp(e["timestamp"] / 1000)
+                    datetime.datetime.fromtimestamp(e["timestamp"] / 1000, datetime.timezone.utc)
                 ),
                 "message": e["message"].strip(),
                 "stream": e.get("logStreamName", ""),
@@ -279,7 +279,7 @@ def helm_rollback(release: str, revision: int = 0, namespace: str = "default") -
 
 @tool
 def helm_scale(
-    release: str, replicas: int, namespace: str = "default"
+        release: str, replicas: int, namespace: str = "default"
 ) -> str:
     """
     Scale a Helm-managed deployment by patching replica count.
@@ -335,7 +335,7 @@ def post_incident_report(summary: str, severity: str = "P2") -> str:
     Returns:
         Confirmation of where the report was sent.
     """
-    timestamp = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+    timestamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M UTC").replace("+00:00", "")
     report = (
         f"*[{severity}] SRE Incident Report — {timestamp}*\n\n{summary}"
     )
@@ -360,10 +360,10 @@ def post_incident_report(summary: str, severity: str = "P2") -> str:
 
 
 # ---------------------------------------------------------------------------
-# Sub-Agents
+# Sub-Agents wrapped as Tools (Agents-as-Tools pattern)
 # ---------------------------------------------------------------------------
 
-cloudwatch_agent = Agent(
+_cloudwatch_agent = Agent(
     model=model,
     system_prompt="""You are a CloudWatch Monitoring specialist.
 Your job is to:
@@ -377,7 +377,7 @@ Always include timestamps and specific metric values in your summary.
     tools=[list_active_alarms, get_metric_statistics, fetch_log_events],
 )
 
-rca_agent = Agent(
+_rca_agent = Agent(
     model=model,
     system_prompt="""You are a senior Site Reliability Engineer performing root cause analysis.
 Given alarm data, metrics, and log snippets, your job is to:
@@ -391,7 +391,7 @@ Be precise. Use technical language. Cite specific metric values and log lines.
     tools=[],
 )
 
-remediation_agent = Agent(
+_remediation_agent = Agent(
     model=model,
     system_prompt="""You are a Kubernetes and Helm operations expert.
 Given a root cause analysis, your job is to:
@@ -405,6 +405,55 @@ In DRY_RUN mode, commands are simulated and safe to run.
     tools=[kubectl_get, kubectl_rollout_restart, helm_rollback, helm_scale],
 )
 
+
+@tool
+def cloudwatch_agent(task: str) -> str:
+    """
+    Delegate a CloudWatch monitoring task to the specialist agent.
+    Use this to list active alarms, fetch metric statistics, and pull error logs.
+
+    Args:
+        task: Natural language description of the monitoring task to perform.
+
+    Returns:
+        Structured summary of alarms, metrics, and log events found.
+    """
+    response = _cloudwatch_agent(task)
+    return str(response)
+
+
+@tool
+def rca_agent(context: str) -> str:
+    """
+    Delegate root cause analysis to the SRE specialist agent.
+    Provide alarm data, metrics, and log snippets as context.
+
+    Args:
+        context: Full context including alarm details, metric values, and log events.
+
+    Returns:
+        Root cause analysis with severity rating and ranked remediation options.
+    """
+    response = _rca_agent(context)
+    return str(response)
+
+
+@tool
+def remediation_agent(instructions: str) -> str:
+    """
+    Delegate Kubernetes/Helm remediation to the operations specialist agent.
+    Use this to inspect workloads and apply rollback, restart, or scaling actions.
+
+    Args:
+        instructions: Root cause analysis and remediation instructions.
+
+    Returns:
+        Confirmation of actions taken or dry-run command output.
+    """
+    response = _remediation_agent(instructions)
+    return str(response)
+
+
 # ---------------------------------------------------------------------------
 # Supervisor Agent
 # ---------------------------------------------------------------------------
@@ -414,9 +463,9 @@ supervisor_agent = Agent(
     system_prompt="""You are the SRE Incident Commander orchestrating an incident response.
 
 Follow this workflow:
-1. Delegate to the cloudwatch_agent to gather all alarm and metric data.
-2. Delegate to the rca_agent to perform root cause analysis on that data.
-3. Delegate to the remediation_agent to inspect workloads and apply a fix.
+1. Call cloudwatch_agent to gather all alarm and metric data.
+2. Call rca_agent with the gathered data to perform root cause analysis.
+3. Call remediation_agent with the RCA findings to inspect workloads and apply a fix.
 4. Synthesise findings into a final incident report and post it using the
    post_incident_report tool.
 
@@ -426,8 +475,7 @@ Be decisive. Keep the report concise but complete: include
 - What was done (remediation action)
 - What to watch next (follow-up items)
 """,
-    tools=[post_incident_report],
-    agents=[cloudwatch_agent, rca_agent, remediation_agent],
+    tools=[cloudwatch_agent, rca_agent, remediation_agent, post_incident_report],
 )
 
 
