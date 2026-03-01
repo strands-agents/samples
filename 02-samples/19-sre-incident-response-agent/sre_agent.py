@@ -451,7 +451,7 @@ def run_incident_response(trigger: str = "") -> None:
             "incident report."
         )
 
-    print(f"\n🚨 Starting SRE Incident Response\n   Trigger: {trigger}\n")
+    print(f"\n Starting SRE Incident Response\n   Trigger: {trigger}\n")
     supervisor_agent(trigger)
 
 
