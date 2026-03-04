@@ -59,7 +59,7 @@ class WonderFenceHook(HookProvider):
         content = self._extract_text(event.agent.messages[-1].get("content", ""))
         context = AnalysisContext(session_id=self._get_session_id(event))
 
-        result = self.client.evaluate_prompt_sync(context, content)
+        result = self.client.evaluate_prompt_sync(content, context)
         if result.action == Actions.BLOCK:
             raise WonderFenceViolationException(f"Model input blocked: {result.detections}")
 
@@ -72,7 +72,7 @@ class WonderFenceHook(HookProvider):
         content = self._extract_text(response_message.get("content", ""))
         context = AnalysisContext(session_id=self._get_session_id(event))
 
-        result = self.client.evaluate_response_sync(context, content)
+        result = self.client.evaluate_response_sync(content, context)
         if result.action == Actions.BLOCK:
             raise WonderFenceViolationException(f"Model output blocked: {result.detections}")
         elif result.action == Actions.MASK and result.action_text:
@@ -88,7 +88,7 @@ class WonderFenceHook(HookProvider):
         content = f"Tool: {tool_name}, Input: {json.dumps(event.tool_use.get('input', {}))}"
         context = AnalysisContext(session_id=self._get_session_id(event))
 
-        result = self.client.evaluate_prompt_sync(context, content)
+        result = self.client.evaluate_prompt_sync(content, context)
 
         if result.action == Actions.BLOCK:
             # print all the types (string) of detections
@@ -104,7 +104,7 @@ class WonderFenceHook(HookProvider):
         content = self._extract_text(result_obj.get("content", result_obj) if isinstance(result_obj, dict) else result_obj)
         context = AnalysisContext(session_id=self._get_session_id(event))
 
-        result = self.client.evaluate_response_sync(context, content)
+        result = self.client.evaluate_response_sync(content, context)
         if result.action == Actions.BLOCK:
             raise WonderFenceViolationException(f"Tool output blocked for {tool_name}: {result.detections}")
         elif result.action == Actions.MASK and result.action_text:
