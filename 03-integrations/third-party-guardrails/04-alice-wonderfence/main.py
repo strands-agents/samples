@@ -10,6 +10,7 @@ from __future__ import annotations
 from strands import Agent
 
 from guardrail import WonderFenceHook, WonderFenceViolationException, client
+import traceback
 
 
 def safe_print(text: str) -> None:
@@ -22,13 +23,6 @@ def safe_print(text: str) -> None:
 def demo_wonderfence() -> None:
     """Demonstrate WonderFence safety evaluation with safe and unsafe prompts."""
     print("Starting WonderFence integration demo")
-
-    agent = Agent(
-        name="AssistantAgent",
-        hooks=[WonderFenceHook(wonderfence_client=client)],
-        system_prompt="You are a helpful assistant. Provide clear and accurate responses.",
-        callback_handler=None,
-    )
 
     test_cases = [
         # ("What is the capital of France?", "Safe prompt"),
@@ -43,6 +37,13 @@ def demo_wonderfence() -> None:
         print("\n" + "=" * 60)
         print(f"Test {i}: {description}, Prompt: {prompt}")
 
+        agent = Agent(
+            name="AssistantAgent",
+            hooks=[WonderFenceHook(wonderfence_client=client)],
+            system_prompt="You are a helpful assistant. Provide clear and accurate responses.",
+            callback_handler=None,
+        )
+
         try:
             result = agent(prompt, invocation_state={"session_id": f"demo_session_{i}"})
             response = result.message.get("content", [{}])[0].get("text", str(result))
@@ -51,7 +52,9 @@ def demo_wonderfence() -> None:
             safe_print(f"🚫 Content Blocked: {e}")
         except Exception as e:
             safe_print(f"Test {i} failed: {e}")
-            e.print_exc()
+            # print stack trace
+            traceback.print_exc()
+
 
 
 if __name__ == "__main__":
