@@ -1,5 +1,5 @@
-strands-agents[a2a,otel]
-fastapi
-uvicorn
-boto3
-mcp
+strands-agents[a2a,otel]==1.29.0
+fastapi==0.115.0
+uvicorn==0.34.0
+boto3==1.42.60
+mcp==1.9.2
