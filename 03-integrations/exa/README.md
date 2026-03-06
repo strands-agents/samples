@@ -10,7 +10,7 @@ A conversational AI agent that demonstrates the full power of Exa's search and c
 
 | Feature | Description |
 |---------|-------------|
-| Auto Mode | Intelligent hybrid of neural + keyword search for optimal results |
+| Auto Mode | Intelligent search mode selection for optimal results |
 | Category Filtering | Specialized searches for news, PDF documents, and GitHub repositories |
 | Date Filtering | Time-bound searches for recent content (e.g., last 30 days) |
 | AI Summaries | Automatic key insights extraction from search results |

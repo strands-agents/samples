@@ -6,7 +6,7 @@ A conversational AI agent that demonstrates the full power of Exa's search and
 content extraction capabilities through a practical research workflow.
 
 Exa Capabilities Demonstrated:
-- Auto mode: Intelligent hybrid of neural + keyword search
+- Auto mode: Intelligent search mode selection for optimal results
 - Category filtering: news, pdf, github for specialized searches
 - Date filtering: Time-bound searches for recent content
 - AI summaries: Automatic key insights extraction
