@@ -77,6 +77,16 @@ venv\Scripts\activate
 pip install strands-agents strands-agents-tools
 ```
 
+**Alternative: Using [uv](https://docs.astral.sh/uv/) (faster)**
+```bash
+# Install uv if you don't have it
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Create venv and install in one step
+uv venv && source .venv/bin/activate
+uv pip install strands-agents strands-agents-tools
+```
+
 **Your First Agent:**
 ```python
 from strands import Agent
