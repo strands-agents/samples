@@ -85,10 +85,6 @@ if prompt := st.chat_input("Ask your agent..."):
     # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-    # Clear previous tool usage details
-    if "details_placeholder" in st.session_state:
-        st.session_state.details_placeholder.empty()
-    
     # Display user message
     with st.chat_message("user"):
         st.write(prompt)
