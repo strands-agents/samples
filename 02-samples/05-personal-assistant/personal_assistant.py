@@ -10,7 +10,7 @@ from constants import SESSION_ID
 os.environ["STRANDS_TOOL_CONSOLE_MODE"] = "enabled"
 
 model = BedrockModel(
-    model_id="us.anthropic.claude-sonnet-4-20250514-v1:0",
+    model_id="us.anthropic.claude-sonnet-4-5-20250929-v1:0",
 )
 
 personal_assistant_agent = Agent(

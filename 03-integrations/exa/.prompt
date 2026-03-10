@@ -12,7 +12,7 @@ STEP 1: OVERVIEW SEARCH - Demonstrating Auto Mode & Subpage Crawling
 
 Use exa_search with:
 - query: A comprehensive search query for the topic
-- type: "auto"  ← SHOWCASES: Intelligent neural + keyword hybrid search
+- type: "auto"  ← SHOWCASES: Intelligent search mode selection
 - num_results: 5
 - text: {"maxCharacters": 2000}  ← SHOWCASES: Content extraction with limits
 - summary: {"query": "What are the key concepts, main points, and important details?"}  ← SHOWCASES: AI summaries
