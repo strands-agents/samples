@@ -127,7 +127,7 @@ The agent includes 14 airline domain tools for comprehensive customer service op
 
 For issues or questions:
 - Review tutorial prerequisites
-- Check AWS Bedrock model availability in your region
+- Check Amazon Bedrock model availability in your region
 - Verify strands-samples repository is accessible
 - Ensure all required tools are imported correctly
 

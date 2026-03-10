@@ -35,7 +35,7 @@ This tutorial introduces the complete toolkit of built-in evaluators provided by
    ```
 
 2. **Enable Bedrock model access**:
-   - Navigate to AWS Bedrock console
+   - Navigate to Amazon Bedrock console
    - Enable access to Claude Sonnet 4.0 model
    - Ensure your IAM role has `bedrock:InvokeModel` permissions
 
@@ -127,7 +127,7 @@ Error: Unable to locate credentials
 ```
 Error: You don't have access to the requested model
 ```
-**Solution**: Enable Claude Sonnet 4.0 access in AWS Bedrock console
+**Solution**: Enable Claude Sonnet 4.0 access in Amazon Bedrock console
 
 #### DuckDuckGo Rate Limit
 ```
@@ -152,7 +152,7 @@ Warning: AWS region not detected
 If you encounter issues not covered here:
 
 1. Check the [Strands documentation](https://docs.strands.ai)
-2. Review AWS Bedrock permissions and quotas
+2. Review Amazon Bedrock permissions and quotas
 3. Verify all dependencies are correctly installed
 4. Ensure you're using Python 3.11 or higher
 
@@ -183,7 +183,7 @@ After completing this tutorial, consider:
 
 - [Strands Agents Documentation](https://docs.strands.ai/agents)
 - [Strands Evals Documentation](https://docs.strands.ai/evals)
-- [AWS Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
+- [Amazon Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
 - [Recipe Bot Source Code](../../strands-samples/01-tutorials/01-fundamentals/01-first-agent/02-simple-interactive-usecase/)
 
 ## License

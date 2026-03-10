@@ -9,7 +9,7 @@ This tutorial teaches you how to create custom evaluators for domain-specific ev
 - Python 3.11 or higher
 - AWS account with Bedrock access
 - AWS credentials configured (via AWS CLI, environment variables, or IAM role)
-- Access to Claude models in AWS Bedrock
+- Access to Claude models in Amazon Bedrock
 - Basic understanding of Python and object-oriented programming
 - Completion of Tutorial 01 recommended (but not required)
 
@@ -60,7 +60,7 @@ This tutorial teaches you how to create custom evaluators for domain-specific ev
 
 5. **Verify Bedrock access**
 
-   Ensure you have access to Claude models in AWS Bedrock:
+   Ensure you have access to Claude models in Amazon Bedrock:
    ```bash
    aws bedrock list-foundation-models --region us-east-1
    ```
@@ -161,7 +161,7 @@ The notebook follows this structure:
 - Review the code comments in the notebook for detailed explanations
 - Check Tutorial 01 for foundational concepts
 - Consult Strands documentation for API details
-- Verify AWS Bedrock service status if experiencing connectivity issues
+- Verify Amazon Bedrock service status if experiencing connectivity issues
 
 ## File Structure
 
@@ -186,7 +186,7 @@ After completing this tutorial, you can:
 
 - Strands Agents Documentation: [Link to docs]
 - Strands Evals Documentation: [Link to docs]
-- AWS Bedrock Documentation: https://docs.aws.amazon.com/bedrock/
+- Amazon Bedrock Documentation: https://docs.aws.amazon.com/bedrock/
 - Tutorial 01: Getting Started with Built-In Evaluators
 - Tutorial 03: Dataset Generation
 

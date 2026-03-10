@@ -29,7 +29,7 @@ This tutorial demonstrates how to use ActorSimulator to evaluate conversational 
 - 500MB free disk space (for SQLite database)
 
 ### AWS Configuration
-- AWS Bedrock access enabled
+- Amazon Bedrock access enabled
 - Claude Sonnet 4.0 model access
 - IAM permissions for Bedrock model invocation
 
@@ -159,7 +159,7 @@ The notebook is organized into the following sections:
 - **Automated pipeline**: 5-10 minutes
 
 Runtime varies based on:
-- AWS Bedrock API response times
+- Amazon Bedrock API response times
 - Number of conversation turns
 - Dataset size
 
@@ -214,7 +214,7 @@ Error: Could not resolve model: claude-sonnet-4-0
 ```
 
 **Solution:**
-1. Verify model access in AWS Bedrock console
+1. Verify model access in Amazon Bedrock console
 2. Check model ID in notebook configuration
 3. Update `DEFAULT_MODEL` variable if using different model
 
@@ -343,7 +343,7 @@ def log_to_monitoring(result):
 - [Strands Agents SDK](https://docs.strands.ai/agents)
 - [Strands Evals Documentation](https://docs.strands.ai/evals)
 - [ActorSimulator API Reference](https://docs.strands.ai/evals/actor-simulator)
-- [AWS Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
+- [Amazon Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
 
 ### Related Tutorials
 - Tutorial 01: Built-in Evaluators (single-turn evaluation basics)
@@ -359,7 +359,7 @@ def log_to_monitoring(result):
 
 ### Getting Help
 - Check troubleshooting section above
-- Review AWS Bedrock service status
+- Review Amazon Bedrock service status
 - Verify AWS credentials and permissions
 - Check Strands SDK documentation
 
