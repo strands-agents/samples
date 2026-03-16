@@ -9,6 +9,7 @@
 | [Nova Act](./nova-act) | Nova Act integration with Strands. Amazon Nova Act is an AI model trained to perform actions within a web browser. |
 | [Nova Sonic](./nova-sonic) | Nova Sonic integration with Strands. [Amazon Nova Sonic](https://aws.amazon.com/ai/generative-ai/nova/speech/) provides real-time, conversational interactions through bidirectional audio streaming, enabling natural, 
 | [Tavily](./tavily/)             | This agent uses Tavily's web search, extract and crawl APIs to gather information from reliable sources, extract key insights, and save comprehensive research reports in Markdown format. |
+| [Datadog](./datadog) | Sample application using Strands Agents instrumented with Datadog 'ddtrace' and example Datadog dashboard. |
 | [Arize](./Openinference-Arize)           | Demonstrates Arize Observability integration with Strands Agent which is a restuarant assistant with AWS Services |
 | [Zep AI](./zep-ai/)             | Minimal proof-of-concept for a personal dining assistant agent using Zep AI's graph-based memory and the Strands framework. |
 | [Supabase](./supabase/) | Demonstrate using Strands Agent with Supabase MCP to build a application backend with natural language. |
