@@ -1,0 +1,17 @@
+graph TD
+    A[Strands Agent] --> B[ElastiCache MCP Server]
+    A --> C[Valkey MCP Server]
+    A --> D[Memcached MCP Server]
+    A --> H[AWS Documentation MCP Server]
+    B --> E[ElastiCache Control Plane]
+    C --> F[Valkey Data Plane]
+    D --> G[Memcached Data Plane]
+    H --> I[AWS Documentation]
+    
+    classDef agent fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef server fill:#bbf,stroke:#333,stroke-width:1px;
+    classDef plane fill:#bfb,stroke:#333,stroke-width:1px;
+    
+    class A agent;
+    class B,C,D,H server;
+    class E,F,G,I plane;
