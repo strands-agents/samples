@@ -35,7 +35,7 @@ This tutorial demonstrates how to implement human-in-the-loop workflows with Str
 ## Tutorial Structure
 
 ```
-10-human-in-the-loop/
+13-human-in-the-loop/
 ├── README.md
 ├── requirements.txt
 ├── strands_hitl.ipynb
@@ -93,6 +93,5 @@ pip install -r requirements.txt
 
 ## Next Steps
 
-- Explore [Multi-Agent Systems](../../02-multi-agent-systems/) to combine HITL with orchestration patterns
-- Learn about [Memory and Persistent Agents](../07-memory-persistent-agents/) for long-running workflows
-- Review [Observability and Evaluation](../08-observability-and-evaluation/) to monitor HITL interactions
+- Learn about [Memory](../06-memory/) for long-running workflows
+- Review [Observability](../08-observability/) to monitor HITL interactions

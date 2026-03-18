@@ -18,6 +18,7 @@ Step-by-step guides from basic agent creation to multi-agent orchestration.
 | [`10-agents-as-tools`](./10-agents-as-tools/) | Hierarchical agents | Compose agents as callable tools |
 | [`11-swarm`](./11-swarm/) | `Swarm` class | Build self-organizing agent teams |
 | [`12-graph`](./12-graph/) | `GraphBuilder` | Create deterministic agent workflows |
+| [`13-human-in-the-loop`](./13-human-in-the-loop/) | Interrupts, hooks | Implement approval workflows with human oversight |
 
 ## Getting Started
 
