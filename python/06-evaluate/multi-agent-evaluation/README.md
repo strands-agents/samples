@@ -23,7 +23,7 @@ This tutorial demonstrates comprehensive evaluation of multi-agent systems where
 
 ### AWS Requirements
 - AWS account with Bedrock access
-- Claude Sonnet 4.0 model enabled in AWS Bedrock
+- Claude Sonnet 4.0 model enabled in Amazon Bedrock
 - Appropriate IAM permissions for Bedrock API calls
 - AWS credentials configured locally
 
@@ -164,7 +164,7 @@ The notebook is organized into the following sections:
 
 ## Cost Considerations
 
-This tutorial makes multiple calls to AWS Bedrock:
+This tutorial makes multiple calls to Amazon Bedrock:
 - Orchestrator calls: ~4 per evaluation
 - Specialist agent calls: ~8 per evaluation
 - Evaluator calls: ~12 per evaluation
@@ -303,7 +303,7 @@ After completing this tutorial:
 
 - [Strands Agents Documentation](https://github.com/awslabs/strands-agents)
 - [Strands Evals Documentation](https://github.com/awslabs/strands-evals)
-- [AWS Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
+- [Amazon Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
 - [Claude API Documentation](https://docs.anthropic.com/)
 - [Multi-Agent Systems Research](https://arxiv.org/list/cs.MA/recent)
 

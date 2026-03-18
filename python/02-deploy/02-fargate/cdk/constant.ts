@@ -10,7 +10,7 @@ const s3BucketProps = {
   removalPolicy: RemovalPolicy.DESTROY,
 };
 
-const agentModelId = "anthropic.claude-3-7-sonnet-20250219-v1:0";
+const agentModelId = "us.anthropic.claude-sonnet-4-5-20250929-v1:0";
 type envNameType = "sagemaker" | "local";
 
 export { projectName, s3BucketProps, ssmParamKnowledgeBaseId, ssmParamDynamoDb,agentModelId, envNameType };

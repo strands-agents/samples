@@ -156,7 +156,7 @@ Generated test cases include:
 **Error**: `AccessDeniedException` or model not available
 
 **Solution**:
-- Verify Claude Sonnet 4.0 is enabled in your AWS Bedrock console
+- Verify Claude Sonnet 4.0 is enabled in your Amazon Bedrock console
 - Check model ID is correct: `us.anthropic.claude-sonnet-4-0-20250514-v1:0`
 - Confirm your AWS region supports the model
 

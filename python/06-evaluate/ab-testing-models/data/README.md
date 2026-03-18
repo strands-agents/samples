@@ -74,7 +74,7 @@ with open('./data/tau-bench/tau_bench/envs/airline/tasks_singleturn.json', 'r') 
 
 1. **Package Initialization**: The `mabench/__init__.py` file is required for Python to recognize mabench as an importable package. Without it, you'll get `ModuleNotFoundError`.
 
-2. **Dependencies**: These tools require the Strands framework and AWS Bedrock access. See the main `requirements.txt` for full dependencies.
+2. **Dependencies**: These tools require the Strands framework and Amazon Bedrock access. See the main `requirements.txt` for full dependencies.
 
 3. **Independence**: This data directory makes tutorial 07 completely self-contained, with no dependencies on other tutorial folders.
 
