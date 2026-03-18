@@ -1,6 +1,6 @@
 # Sample Project Structure Guide
 
-Recommended directory structures for samples in `python/04-use-cases/`. These structures help users quickly understand and navigate samples. Use these as guidelines and adapt as needed for your specific use case.
+Recommended directory structures for samples in `python/04-industry-use-cases/`. These structures help users quickly understand and navigate samples. Use these as guidelines and adapt as needed for your specific use case.
 
 ## Python Scripts-Based Samples
 

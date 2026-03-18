@@ -9,7 +9,7 @@ This tutorial demonstrates how to systematically compare different language mode
 This tutorial consists of two parts:
 
 ### Part 1: Building Agents (07a-ab-testing-build-agents.ipynb)
-- Use ReAct airline assistant agent from python/04-use-cases/logistics/
+- Use ReAct airline assistant agent from python/04-industry-use-cases/logistics/
 - Create three agent variants with different models
 - Configure identical prompts, tools, and orchestration
 - Test each agent independently with sample queries
@@ -75,7 +75,7 @@ This tutorial uses the TauBench airline customer service dataset from the reposi
 
 ### Step 1: Build Agents
 Open and run `07a-ab-testing-build-agents.ipynb`:
-- Imports airline tools from python/04-use-cases/logistics/custom-orchestration-airline-assistant/
+- Imports airline tools from python/04-industry-use-cases/logistics/custom-orchestration-airline-assistant/
 - Creates three agent variants
 - Tests basic functionality
 - Exports configuration for evaluation
@@ -119,7 +119,7 @@ After completing this tutorial, you will:
 ## Agent Source
 
 This tutorial uses the ReAct airline assistant agent from:
-`python/04-use-cases/logistics/custom-orchestration-airline-assistant/`
+`python/04-industry-use-cases/logistics/custom-orchestration-airline-assistant/`
 
 The agent includes 14 airline domain tools for comprehensive customer service operations.
 
@@ -128,7 +128,7 @@ The agent includes 14 airline domain tools for comprehensive customer service op
 For issues or questions:
 - Review tutorial prerequisites
 - Check Amazon Bedrock model availability in your region
-- Verify required tools are in python/04-use-cases/logistics/custom-orchestration-airline-assistant/
+- Verify required tools are in python/04-industry-use-cases/logistics/custom-orchestration-airline-assistant/
 - Ensure all required tools are imported correctly
 
 ## Next Steps

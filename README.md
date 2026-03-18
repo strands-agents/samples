@@ -135,8 +135,8 @@ Follow the instructions [here](https://strandsagents.com/latest/user-guide/quick
 - **[01-learn](./python/01-learn/)** - SDK tutorials covering fundamentals, multi-agent systems, and streaming
 - **[02-deploy](./python/02-deploy/)** - Deployment patterns for Lambda, Fargate, and AgentCore
 - **[03-integrate](./python/03-integrate/)** - Integrations with AWS services, databases, and third-party tools
-- **[04-use-cases](./python/04-use-cases/)** - Industry applications (finance, healthcare, retail, productivity, etc.)
-- **[05-techniques](./python/05-techniques/)** - Architectural patterns including Agentic RAG
+- **[04-industry-use-cases](./python/04-industry-use-cases/)** - Industry applications (finance, healthcare, retail, productivity, etc.)
+- **[05-technical-use-cases](./python/05-technical-use-cases/)** - Architectural patterns including Agentic RAG
 - **[06-evaluate](./python/06-evaluate/)** - Evaluation tutorials and testing patterns
 - **[07-ux-demos](./python/07-ux-demos/)** - Full-stack applications with user interfaces
 - **[08-edge](./python/08-edge/)** - Edge device integrations including physical AI and robotics

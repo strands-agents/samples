@@ -1,6 +1,6 @@
 # README Template Instructions
 
-When creating a new sample in the `python/04-use-cases/{industry}/` folder, follow this structure to ensure consistency and clarity.
+When creating a new sample in the `python/04-industry-use-cases/{industry}/` folder, follow this structure to ensure consistency and clarity.
 
 A sample README must include:
 - A descriptive title

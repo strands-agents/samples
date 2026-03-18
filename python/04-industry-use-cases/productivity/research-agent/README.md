@@ -61,7 +61,7 @@ research-agent
 ### Option 3: Development Setup
 ```bash
 git clone https://github.com/strands-agents/samples.git
-cd samples/python/04-use-cases/productivity/research-agent  
+cd samples/python/04-industry-use-cases/productivity/research-agent  
 pip install -e .[dev]
 strands-research-agent
 ```

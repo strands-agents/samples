@@ -352,7 +352,7 @@ def log_to_monitoring(result):
 - Tutorial 04: Trajectory Evaluation (analyzing agent execution paths)
 
 ### Example Code
-- Personal Assistant sample: `python/04-use-cases/productivity/personal-assistant/`
+- Personal Assistant sample: `python/04-industry-use-cases/productivity/personal-assistant/`
 - Multi-agent samples: `python/01-learn/` (folders 09-11 for swarm, graph, and bidirectional streaming)
 
 ## Support

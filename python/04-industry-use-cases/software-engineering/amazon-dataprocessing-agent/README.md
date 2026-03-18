@@ -219,7 +219,7 @@ Many of the newer MCP offerings are primarily supported on macOS and specific Li
    git clone https://github.com/strands-agents/samples.git
 
    # Navigate to the project directory
-   cd samples/python/04-use-cases/software-engineering/amazon-dataprocessing-agent
+   cd samples/python/04-industry-use-cases/software-engineering/amazon-dataprocessing-agent
    ```
 
 10. **Install dependencies using uv**:
