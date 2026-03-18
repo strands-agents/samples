@@ -48,7 +48,7 @@ specialist sub-agents and then synthesises their findings into a final report.
 ```bash
 # 1. Clone the strands-agents/samples repository
 git clone https://github.com/strands-agents/samples.git
-cd samples/02-samples/sre-incident-response-agent
+cd samples/02-samples/20-sre-incident-response-agent
 
 # 2. Create and activate a virtual environment
 python -m venv .venv
