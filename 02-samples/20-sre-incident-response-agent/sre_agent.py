@@ -20,12 +20,15 @@ import datetime
 from typing import Any
 
 import boto3
+from dotenv import load_dotenv
 from strands import Agent, tool
 from strands.models import BedrockModel
 
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
+
+load_dotenv()  # load variables from .env into os.environ (does not overwrite existing env vars)
 
 AWS_REGION = os.environ.get("AWS_REGION", "us-east-1")
 SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL", "")  # optional
@@ -59,13 +62,16 @@ def list_active_alarms(namespace: str = "") -> str:
     """
     cw = boto3.client("cloudwatch", region_name=AWS_REGION)
     kwargs: dict[str, Any] = {"StateValue": "ALARM"}
-    if namespace:
-        kwargs["AlarmNamePrefix"] = namespace
 
     paginator = cw.get_paginator("describe_alarms")
     alarms = []
     for page in paginator.paginate(**kwargs):
         for alarm in page.get("MetricAlarms", []):
+            # Filter by namespace in Python rather than using AlarmNamePrefix,
+            # which matches on alarm *name* not namespace and would silently
+            # return an empty list when a namespace string is passed.
+            if namespace and alarm.get("Namespace", "") != namespace:
+                continue
             alarms.append(
                 {
                     "name": alarm["AlarmName"],

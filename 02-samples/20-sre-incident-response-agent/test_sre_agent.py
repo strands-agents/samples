@@ -74,6 +74,93 @@ class TestListActiveAlarms:
         result = list_active_alarms()
         assert json.loads(result) == []
 
+    @patch("sre_agent.boto3.client")
+    def test_namespace_filter_matches_on_namespace_field_not_alarm_name(self, mock_boto):
+        """
+        Regression test: namespace filtering must match the Namespace field of
+        each alarm, not be passed as AlarmNamePrefix to the AWS API.
+        AlarmNamePrefix is a string prefix on the alarm *name*, so passing a
+        namespace string like 'AWS/ECS' would silently return an empty list
+        even when matching alarms exist.
+        """
+        mock_cw = MagicMock()
+        mock_boto.return_value = mock_cw
+        mock_cw.get_paginator.return_value.paginate.return_value = [
+            {
+                "MetricAlarms": [
+                    {
+                        "AlarmName": "ecs-service-HighCPU",
+                        "Namespace": "AWS/ECS",
+                        "MetricName": "CPUUtilization",
+                        "Threshold": 85.0,
+                        "ComparisonOperator": "GreaterThanThreshold",
+                        "StateReason": "Threshold crossed",
+                        "StateUpdatedTimestamp": datetime(2025, 1, 1, 12, 0, 0),
+                    },
+                    {
+                        "AlarmName": "lambda-errors-high",
+                        "Namespace": "AWS/Lambda",
+                        "MetricName": "Errors",
+                        "Threshold": 10.0,
+                        "ComparisonOperator": "GreaterThanThreshold",
+                        "StateReason": "Threshold crossed",
+                        "StateUpdatedTimestamp": datetime(2025, 1, 1, 12, 5, 0),
+                    },
+                ]
+            }
+        ]
+
+        result = list_active_alarms(namespace="AWS/ECS")
+        alarms = json.loads(result)
+
+        # Only the ECS alarm should be returned; the Lambda alarm filtered out
+        assert len(alarms) == 1
+        assert alarms[0]["namespace"] == "AWS/ECS"
+        assert alarms[0]["name"] == "ecs-service-HighCPU"
+
+        # AlarmNamePrefix must NOT have been passed to the AWS paginator —
+        # it operates on alarm names, not namespaces, and would silently
+        # return nothing when a namespace string like 'AWS/ECS' is used.
+        call_kwargs = mock_cw.get_paginator.return_value.paginate.call_args.kwargs
+        assert "AlarmNamePrefix" not in call_kwargs, (
+            "AlarmNamePrefix must not be used for namespace filtering; "
+            "it matches alarm names, not CloudWatch namespaces."
+        )
+
+    @patch("sre_agent.boto3.client")
+    def test_no_namespace_filter_returns_all_alarms(self, mock_boto):
+        mock_cw = MagicMock()
+        mock_boto.return_value = mock_cw
+        mock_cw.get_paginator.return_value.paginate.return_value = [
+            {
+                "MetricAlarms": [
+                    {
+                        "AlarmName": "ecs-alarm",
+                        "Namespace": "AWS/ECS",
+                        "MetricName": "CPUUtilization",
+                        "Threshold": 85.0,
+                        "ComparisonOperator": "GreaterThanThreshold",
+                        "StateReason": "Threshold crossed",
+                        "StateUpdatedTimestamp": datetime(2025, 1, 1, 12, 0, 0),
+                    },
+                    {
+                        "AlarmName": "lambda-alarm",
+                        "Namespace": "AWS/Lambda",
+                        "MetricName": "Errors",
+                        "Threshold": 10.0,
+                        "ComparisonOperator": "GreaterThanThreshold",
+                        "StateReason": "Threshold crossed",
+                        "StateUpdatedTimestamp": datetime(2025, 1, 1, 12, 5, 0),
+                    },
+                ]
+            }
+        ]
+
+        result = list_active_alarms()
+        alarms = json.loads(result)
+
+        assert len(alarms) == 2
+
 
 class TestGetMetricStatistics:
     @patch("sre_agent.boto3.client")
