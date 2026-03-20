@@ -131,8 +131,8 @@ python sre_agent.py "High CPU alarm fired on ECS service my-api in prod namespac
 ### Example output
 
 ```
-🚨 Starting SRE Incident Response
-   Trigger: High CPU alarm fired on ECS service my-api in prod namespace
+Starting SRE Incident Response
+Trigger: High CPU alarm fired on ECS service my-api in prod namespace
 
 [cloudwatch_agent] Fetching active alarms...
   ✓ Found alarm: my-api-HighCPU (CPUUtilization > 85% for 5m)
