@@ -1,6 +1,6 @@
 # SRE Incident Response Agent
 
-An automated SRE incident response system that detects AWS CloudWatch alarms, performs AI-powered root cause analysis, applies Kubernetes/Helm remediations, and posts structured incident reports to Slack.
+An automated SRE incident response system that detects Amazon CloudWatch alarms, performs AI-powered root cause analysis, applies Kubernetes/Helm remediations, and posts structured incident reports to Slack.
 
 ## Overview
 
@@ -25,7 +25,7 @@ Each specialist sub-agent is wrapped as a `@tool` function and passed to the sup
 
 ### Key Features
 
-- **Automatic alarm discovery** — polls all active CloudWatch alarms; optionally filters by namespace
+- **Automatic alarm discovery** — polls all active Amazon CloudWatch alarms; optionally filters by namespace
 - **AI-powered RCA** — reasoning-based root cause analysis with P1/P2/P3 severity scoring and ranked remediation options
 - **Safe by default** — all `kubectl` and `helm` commands run in dry-run mode (`DRY_RUN=true`) until explicitly enabled
 - **Flexible notification** — posts structured incident reports to a Slack webhook or prints to stdout
@@ -34,9 +34,8 @@ Each specialist sub-agent is wrapped as a `@tool` function and passed to the sup
 ## Prerequisites
 
 - Python 3.11+
-- `uv` for dependency management
 - AWS CLI configured with appropriate credentials (`aws configure` or IAM role)
-- [Model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) enabled for Claude Sonnet 4 in your AWS region
+- [Model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) enabled for Claude Sonnet 4 in Amazon Bedrock in your AWS region
 - `kubectl` configured against your cluster (only required when `DRY_RUN=false`)
 - `helm` v3 installed (only required when `DRY_RUN=false`)
 
@@ -112,7 +111,7 @@ cp .env.example .env
 2. Install dependencies:
 
 ```bash
-uv sync
+pip install -r requirements.txt
 ```
 
 ## Usage
@@ -120,20 +119,20 @@ uv sync
 Run with automatic alarm discovery:
 
 ```bash
-uv run sre_agent.py
+python sre_agent.py
 ```
 
 Run with a specific trigger for faster focus:
 
 ```bash
-uv run sre_agent.py "High CPU alarm fired on ECS service my-api in prod namespace"
+python sre_agent.py "High CPU alarm fired on ECS service my-api in prod namespace"
 ```
 
 ### Example output
 
 ```
-Starting SRE Incident Response
-Trigger: High CPU alarm fired on ECS service my-api in prod namespace
+🚨 Starting SRE Incident Response
+   Trigger: High CPU alarm fired on ECS service my-api in prod namespace
 
 [cloudwatch_agent] Fetching active alarms...
   ✓ Found alarm: my-api-HighCPU (CPUUtilization > 85% for 5m)
@@ -174,17 +173,17 @@ No infrastructure is provisioned by this sample. To clean up, deactivate the vir
 
 | Symptom | Likely Cause | Fix |
 |---|---|---|
-| `No active alarms found` when alarms exist | Namespace filter mismatch | Pass the exact CloudWatch namespace string, e.g. `AWS/ECS` |
-| `ResourceNotFoundException` on log fetch | Wrong log group name | Verify the log group name in the CloudWatch console |
+| `No active alarms found` when alarms exist | Namespace filter mismatch | Pass the exact Amazon CloudWatch namespace string, e.g. `AWS/ECS` |
+| `ResourceNotFoundException` on log fetch | Wrong log group name | Verify the log group name in the Amazon CloudWatch console |
 | `kubectl` commands fail | Cluster not configured | Run `kubectl config current-context` and confirm the correct cluster is active |
-| Bedrock `AccessDeniedException` | Model access not enabled | Enable Claude Sonnet 4 access in the Bedrock console |
-| `.env` values not picked up | Missing `python-dotenv` | Ensure `uv sync` completed successfully |
+| Amazon Bedrock `AccessDeniedException` | Model access not enabled | Enable Claude Sonnet 4 access in the Amazon Bedrock console |
+| `.env` values not picked up | Missing `python-dotenv` | Ensure `pip install -r requirements.txt` completed successfully |
 
 ## Additional Resources
 
 - [Strands Agents SDK documentation](https://strandsagents.com)
-- [Agents-as-tools pattern](https://strandsagents.com/latest/user-guide/concepts/multi-agent/agents-as-tools/)
-- [CloudWatch DescribeAlarms API reference](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_DescribeAlarms.html)
+- [Agents-as-tools pattern](https://strandsagents.com/latest/docs/user-guide/concepts/multi-agent/agents-as-tools/)
+- [Amazon CloudWatch DescribeAlarms API reference](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_DescribeAlarms.html)
 
 ---
 
