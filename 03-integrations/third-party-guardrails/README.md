@@ -17,6 +17,7 @@ Event messages are follow the [Amazon Bedrock runtime message format](https://do
 | [01-llama-firewall](./01-llama-firewall/) | [Meta's Llama Firewall](https://meta-llama.github.io/PurpleLlama/LlamaFirewall/) | Local model-based input filtering using Llama-Prompt-Guard-2-86M | HuggingFace account, API key, model access request |
 | [02-guardrailai](./02-guardrailai/) | [Guardrails AI](https://www.guardrailsai.com/) | Cloud-based guardrails with toxic language detection | Guardrails AI account, API key, hub guardrail installation |
 | [03-nvidia-nemo](./03-nvidia-nemo/) | [NVIDIA NeMo Guardrails](https://developer.nvidia.com/nemo-guardrails) | Server-based guardrails with configurable rules | Local NeMo server setup, configuration files |
+| [04-alice-wonderfence](./04-alice-wonderfence/) | [Alice WonderFence](https://alice.io/products/wonderfence) | Adaptive real-time low-latency protection. Configured to *your* application, *your* policies, and the specific risks that come with *your* industry | Alice WonderFence account and API key |
 
 ## Getting Started
 
