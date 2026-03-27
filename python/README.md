@@ -18,15 +18,12 @@ Build AI agents with the Strands Agents Python SDK.
 ## Getting Started
 
 1. **New to Strands?** Start with [`01-learn/01-first-agent`](./01-learn/01-first-agent/)
-2. **Ready to deploy?** See [`02-deploy`](./02-deploy/) for production patterns
-3. **Building for a specific industry?** Browse [`04-industry-use-cases`](./04-industry-use-cases/)
+2. **Ready to deploy?** See [`02-deploy`](./02-deploy/) for Lambda, Fargate, and AgentCore patterns
+3. **Connecting external services?** Check [`03-integrate`](./03-integrate/) for databases, protocols, and guardrails
+4. **Building for a specific industry?** Browse [`04-industry-use-cases`](./04-industry-use-cases/) by domain
+5. **Looking for design patterns?** See [`05-technical-use-cases`](./05-technical-use-cases/) for reusable architectural patterns
+6. **Testing your agent?** Use [`06-evaluate`](./06-evaluate/) for built-in and custom evaluators
+7. **Adding a UI?** Try [`07-ux-demos`](./07-ux-demos/) for Streamlit templates and playgrounds
+8. **Running on devices?** Explore [`08-edge`](./08-edge/) for robotics and edge platforms
 
-## Prerequisites
-
-- Python 3.11+
-- See individual sample READMEs for specific requirements
-
-## Resources
-
-- [Strands Agents Documentation](https://strandsagents.com/)
-- [Python API Reference](https://strandsagents.com/latest/documentation/docs/api-reference/python/agent/agent/)
+For setup instructions and prerequisites, see the [main README](../README.md#quick-start).
