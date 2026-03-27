@@ -1,0 +1,26 @@
+{
+  "name": "strands-streaming-ts",
+  "version": "1.0.0",
+  "description": "Simple TypeScript apps using StrandsAgentsSDKTypescript",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "runHooks": "tsx src/hooks-sample.ts",
+    "runAsync1": "tsx src/async-sample-1.ts",
+    "runAsync2": "tsx src/async-sample-2.ts",
+    "runStreaming": "tsx src/streaming-sample.ts",
+    "prepare": "npm run build"
+  },
+  "dependencies": {
+    "@strands-agents/sdk": "^0.1.2",
+    "express": "^5.1.0",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.5",
+    "@types/node": "^20.0.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.0.0"
+  }
+}
