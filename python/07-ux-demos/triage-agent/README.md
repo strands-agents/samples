@@ -246,11 +246,11 @@ The application implements a modern, scalable architecture:
 
 ## Contributing
 
-Please refer to [CONTRIBUTING.md](../../CONTRIBUTING.md) for detailed contribution guidelines, development practices, and code standards.
+Please refer to [CONTRIBUTING.md](../../../CONTRIBUTING.md) for detailed contribution guidelines, development practices, and code standards.
 
 ## License
 
-This project is licensed under the **MIT License** - see [LICENSE](../../LICENSE) for details.
+This project is licensed under the **MIT License** - see [LICENSE](../../../LICENSE) for details.
 
 <div align="center">
   <p><strong>Built with ❤️ using Strands Agents</strong></p>

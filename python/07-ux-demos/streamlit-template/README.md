@@ -176,4 +176,4 @@ The developer is responsible for properly implementing and configuring these ser
 
 ## Security
 
-See [CONTRIBUTING](../../CONTRIBUTING.md#security-issue-notifications) for more information.
+See [CONTRIBUTING](../../../CONTRIBUTING.md#security-issue-notifications) for more information.

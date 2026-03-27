@@ -57,6 +57,7 @@ Real-world agent applications organized by domain.
 | [`code-assistant`](./software-engineering/code-assistant/) | Coding companion with Python REPL, shell access, and file editing capabilities for development workflows |
 | [`data-warehouse-optimizer`](./software-engineering/data-warehouse-optimizer/) | Multi-agent system for SQLite query optimization with OpenTelemetry observability logging and collaborative agent coordination |
 | [`lambda-error-analysis-agent`](./software-engineering/lambda-error-analysis-agent/) | Event-driven Lambda error diagnostics using CDK, EventBridge, and Bedrock Knowledge Base RAG for root cause analysis with confidence scoring |
+| [`sre-incident-response-agent`](./software-engineering/sre-incident-response-agent/) | Multi-agent SRE incident response system that detects CloudWatch alarms, performs AI-powered root cause analysis, applies Kubernetes/Helm remediations, and posts Slack incident reports |
 
 ## Getting Started
 

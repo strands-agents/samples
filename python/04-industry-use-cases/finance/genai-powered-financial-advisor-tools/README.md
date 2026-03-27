@@ -226,7 +226,7 @@ python athena_database_setup.py --mode delete
 
 ## 📄 License
 
-This project is licensed under the MIT No Attribution License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT No Attribution License.
 
 ## 🤝 Contributing
 
