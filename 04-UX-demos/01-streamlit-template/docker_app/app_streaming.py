@@ -15,6 +15,10 @@ from strands_tools import calculator, current_time
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+# Initialize details placeholder
+if "details_placeholder" not in st.session_state:
+    st.session_state.details_placeholder = st.empty()
+
 # ID of Secrets Manager containing cognito parameters
 secrets_manager_id = Config.SECRETS_MANAGER_ID
 
