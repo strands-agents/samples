@@ -86,7 +86,7 @@ response = agent("Hello! Tell me a joke.")
 print(response)
 ```
 
-[Explore Python tutorials →](./01-tutorials/)
+[Explore Python tutorials →](./python/01-learn/)
 
 </td>
 <td width="60%" valign="top">
@@ -118,7 +118,7 @@ async function main() {
 main();
 ```
 
-[Explore TypeScript tutorials →](./typescript/01-tutorials/)
+[Explore TypeScript tutorials →](./typescript/01-learn/)
 
 </td>
 </tr>
@@ -132,16 +132,19 @@ Follow the instructions [here](https://strandsagents.com/latest/user-guide/quick
 
 ### <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" width="20" height="20"/> Python Samples
 
-- **[01-tutorials](./01-tutorials/)** - Jupyter notebook tutorials covering fundamentals, multi-agent systems, and deployment
-- **[02-samples](./02-samples/)** - Real-world use cases and industry-specific examples
-- **[03-integrations](./03-integrations/)** - Integration examples with AWS services and third-party tools
-- **[04-UX-demos](./04-UX-demos/)** - Full-stack applications with user interfaces
-- **[05-agentic-rag](./05-agentic-rag/)** - Advanced Agentic RAG patterns
-- **[06-edge](./06-edge/)** - Edge device integrations including physical AI and robotics
+- **[01-learn](./python/01-learn/)** - SDK tutorials covering fundamentals, multi-agent systems, and streaming
+- **[02-deploy](./python/02-deploy/)** - Deployment patterns for Lambda, Fargate, and AgentCore
+- **[03-integrate](./python/03-integrate/)** - Integrations with AWS services, databases, and third-party tools
+- **[04-industry-use-cases](./python/04-industry-use-cases/)** - Industry applications (finance, healthcare, retail, productivity, etc.)
+- **[05-technical-use-cases](./python/05-technical-use-cases/)** - Architectural patterns including Agentic RAG
+- **[06-evaluate](./python/06-evaluate/)** - Evaluation tutorials and testing patterns
+- **[07-ux-demos](./python/07-ux-demos/)** - Full-stack applications with user interfaces
+- **[08-edge](./python/08-edge/)** - Edge device integrations including physical AI and robotics
 
 ### <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" width="20" height="20"/> TypeScript Samples
 
-- **[typescript/01-tutorials](./typescript/01-tutorials/)** - Step-by-step tutorials for the TypeScript SDK
+- **[01-learn](./typescript/01-learn/)** - SDK tutorials for the TypeScript SDK
+- **[02-deploy](./typescript/02-deploy/)** - Deployment patterns for AgentCore
 
 ## Contributing ❤️
 

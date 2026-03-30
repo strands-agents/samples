@@ -1,0 +1,68 @@
+[project]
+name = "library-book-renewal-agent"
+version = "0.1.0"
+description = "Demonstrates different approaches to controlling AI agent behavior with a librarian agent"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "AWS", email = "opensource@amazon.com"}
+]
+keywords = ["ai", "agent", "strands", "strands-agents", "evaluation", "steering", "workflow", "sop"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "strands-agents[openai]>=1.30.0",
+    "strands-agents-evals>=0.1.9",
+    "boto3>=1.34.0",
+    "aws-cdk-lib>=2.100.0",
+    "constructs>=10.0.0",
+    "aws-bedrock-token-generator>=1.0.0",
+    "requests>=2.31.0",
+    "httpx>=0.24.0",
+    "pydantic>=2.0.0",
+    "typing-extensions>=4.0.0",
+    "click>=8.0.0",
+    "rich>=13.0.0",
+    "bedrock-agentcore-starter-toolkit>=0.2.4",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pyright>=1.1.350",
+    "ruff>=0.1.0",
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+]
+
+[project.scripts]
+library-agent-demo = "library_agent_demo.main:cli"
+
+[project.urls]
+Homepage = "https://github.com/strands-agents/samples"
+Repository = "https://github.com/strands-agents/samples"
+Documentation = "https://strandsagents.com"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/library_agent_demo"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]

@@ -1,0 +1,68 @@
+[
+  {
+    "order_id": "ORD-1001",
+    "customer_id": "CUST-101",
+    "customer_name": "Alex",
+    "status": "delivered",
+    "order_date": "2025-01-03",
+    "product_ids": [9, 10],
+    "total": 173.00,
+    "shipping_address": "123 Tech Lane, Seattle, WA 98101",
+    "tracking_number": "1Z999AA10123456784",
+    "delivered_date": "2025-01-06"
+  },
+  {
+    "order_id": "ORD-1002",
+    "customer_id": "CUST-102",
+    "customer_name": "Sarah",
+    "status": "shipped",
+    "order_date": "2025-01-05",
+    "product_ids": [15, 7, 8],
+    "total": 76.97,
+    "shipping_address": "456 Fashion Ave, Portland, OR 97201",
+    "tracking_number": "1Z999BB20234567895",
+    "estimated_delivery": "2025-01-09"
+  },
+  {
+    "order_id": "ORD-1003",
+    "customer_id": "CUST-101",
+    "customer_name": "Alex",
+    "status": "processing",
+    "order_date": "2025-01-07",
+    "product_ids": [13],
+    "total": 599.00,
+    "shipping_address": "123 Tech Lane, Seattle, WA 98101"
+  },
+  {
+    "order_id": "ORD-1004",
+    "customer_id": "CUST-103",
+    "customer_name": "Mike",
+    "status": "delivered",
+    "order_date": "2025-01-02",
+    "product_ids": [1, 2, 3],
+    "total": 188.24,
+    "shipping_address": "789 Style St, San Francisco, CA 94102",
+    "tracking_number": "1Z999CC30345678906",
+    "delivered_date": "2025-01-05"
+  },
+  {
+    "order_id": "ORD-1005",
+    "customer_id": "CUST-102",
+    "customer_name": "Sarah",
+    "status": "pending",
+    "order_date": "2025-01-08",
+    "product_ids": [18, 19, 20],
+    "total": 30.79,
+    "shipping_address": "456 Fashion Ave, Portland, OR 97201"
+  },
+  {
+    "order_id": "ORD-1006",
+    "customer_id": "CUST-103",
+    "customer_name": "Mike",
+    "status": "cancelled",
+    "order_date": "2025-01-04",
+    "product_ids": [5],
+    "total": 695.00,
+    "cancelled_reason": "Customer requested cancellation - price too high"
+  }
+]
