@@ -25,29 +25,30 @@ A conversational AI agent that demonstrates the full power of Exa's search and c
 The Deep Research Assistant implements a comprehensive 6-step research workflow:
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    Deep Research Assistant                          │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
+┌───────────────────────────────────────────────────────────────────┐
+│                    Deep Research Assistant                        │
+├───────────────────────────────────────────────────────────────────┤
+│                                                                   │
 │  ┌───────────┐     ┌──────────────────┐     ┌─────────────────┐   │
 │  │  User     │────▶│  Strands Agent   │────▶│   Exa Tools     │   │
-│  │  Query    │     │  (Claude/Bedrock)│     │                 │   │
+│  │  Query    │     │ (Claude/Amazon   │     │                 │   │
+│  │           │     │  Bedrock)        │     │                 │   │
 │  └───────────┘     └──────────────────┘     │  • exa_search   │   │
 │                             │               │  • exa_get_     │   │
 │                             │               │    contents     │   │
 │                             ▼               └─────────────────┘   │
 │  ┌─────────────────────────────────────────────────────────────┐  │
-│  │              6-Step Research Workflow                        │  │
-│  ├──────────────────────────────────────────────────────────────┤  │
+│  │              6-Step Research Workflow                       │
+│  ├─────────────────────────────────────────────────────────────┤  │
 │  │ 1. Overview Search  │ Auto mode + subpages + AI summaries   │  │
 │  │ 2. News Search      │ Category: news + date filtering       │  │
 │  │ 3. Academic Papers  │ Category: pdf + structured output     │  │
 │  │ 4. GitHub Projects  │ Category: github                      │  │
 │  │ 5. Deep Dive        │ exa_get_contents + live crawling      │  │
 │  │ 6. Synthesis        │ Comprehensive research brief          │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
+│  └─────────────────────────────────────────────────────────────┘  │
+│                                                                   │
+└───────────────────────────────────────────────────────────────────┘
 ```
 
 ## Research Output Structure
@@ -263,8 +264,8 @@ exa/
 
 - **strands-agents** - Strands Agents Open source framework
 - **strands-agents-tools** - Exa tools integration (exa_search, exa_get_contents)
-- **boto3** - AWS SDK for Bedrock integration
-- **aws-opentelemetry-distro** - AWS Opentelemetry python package ( For AgentCore observability on Amazon Cloudwatch) 
+- **boto3** - AWS SDK for Amazon Bedrock integration
+- **aws-opentelemetry-distro** - AWS Opentelemetry python package ( For Amazon Bedrock AgentCore observability on Amazon Cloudwatch) 
 
 ## Resources
 
