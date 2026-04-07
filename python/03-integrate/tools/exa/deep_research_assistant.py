@@ -25,7 +25,7 @@ Research Workflow:
   6. Synthesis - Structured research brief with citations
 
 Prerequisites:
-    - AWS credentials configured for Bedrock access
+    - AWS credentials configured for Amazon Bedrock access
     - EXA_API_KEY environment variable (https://dashboard.exa.ai/api-keys)
 
 Usage:

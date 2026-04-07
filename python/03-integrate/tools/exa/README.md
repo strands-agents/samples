@@ -66,7 +66,7 @@ The agent produces a comprehensive research brief including:
 
 1. **Python 3.11+** - Required Python version
 2. **[uv](https://docs.astral.sh/uv/getting-started/installation/)** - Fast Python package manager
-3. **AWS Credentials** - Configure AWS CLI for Bedrock access:
+3. **AWS Credentials** - Configure AWS CLI for Amazon Bedrock access:
    ```bash
    aws configure
    ```
@@ -140,10 +140,10 @@ Amazon Bedrock AgentCore Observability helps you trace, debug, and monitor agent
 1. **Enable Transaction Search on Amazon CloudWatch** - Required for viewing observability data
    - [Enable Transaction Search Documentation](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Enable-TransactionSearch.html)
 
-2. **AWS Permissions** - Ensure your AWS IAM user/role has the appropriate CloudWatch permissions for AgentCore Observability
+2. **AWS Permissions** - Ensure your AWS IAM user/role has the appropriate CloudWatch permissions for Amazon Bedrock AgentCore Observability
 
 3. **AWS Distro for OpenTelemetry (ADOT)** - Required for full observability features
-   - [AgentCore Observability Configuration Guide](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/observability-configure.html)
+   - [Amazon Bedrock AgentCore Observability Configuration Guide](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/observability-configure.html)
 
 ### Running with CloudWatch Observability
 
@@ -261,7 +261,7 @@ exa/
 
 ## Dependencies
 
-- **strands-agents** - AWS Strands Agents framework
+- **strands-agents** - Strands Agents Open source framework
 - **strands-agents-tools** - Exa tools integration (exa_search, exa_get_contents)
 - **boto3** - AWS SDK for Bedrock integration
 - **aws-opentelemetry-distro** - AWS Opentelemetry python package ( For AgentCore observability on Amazon Cloudwatch) 
@@ -270,10 +270,38 @@ exa/
 
 - [Strands Agents SDK](https://strandsagents.com)
 - [Exa API Documentation](https://docs.exa.ai)
-- [AWS Bedrock](https://aws.amazon.com/bedrock/)
+- [Amazon Bedrock](https://aws.amazon.com/bedrock/)
 - [Exa Dashboard](https://dashboard.exa.ai)
-- [ AgentCore Observability](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/observability.html)
+- [Amazon Bedrock AgentCore Observability](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/observability.html)
 
-## License
+## Security
 
-Apache License 2.0
+This sample uses [Amazon Bedrock](https://aws.amazon.com/bedrock/) for model inference and [Amazon CloudWatch](https://aws.amazon.com/cloudwatch/) for observability. Both services process data in your AWS account; review their documentation for data handling and encryption details. This is an non-production example.
+
+### IAM Permissions
+
+Apply [least-privilege permissions](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#grant-least-privilege) when configuring AWS credentials. Grant only the Amazon Bedrock and Amazon CloudWatch actions required by this sample.
+
+### Shared Responsibility
+
+Security and compliance are shared responsibilities between AWS and the customer. See the [AWS Shared Responsibility Model](https://aws.amazon.com/compliance/shared-responsibility-model/) for details.
+
+### Credential Management
+
+Store API keys (such as `EXA_API_KEY`) securely using environment variables and never commit them to source control. For production deployments, consider using [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/) to manage sensitive credentials.
+
+### Third-Party Services
+
+[Exa](https://exa.ai/) is a third-party search service. Review Exa's terms of service and content licensing before using search results. This is an non-production example.
+
+### Recommended Security Measures
+
+1. **Credential management** — Rotate API keys regularly; use AWS Secrets Manager in production.
+2. **Least-privilege IAM** — Scope IAM policies to only the actions and resources this sample requires.
+3. **Input validation** — Validate and sanitize all user-supplied queries before passing them to the agent.
+4. **Logging and monitoring** — Enable Amazon CloudWatch logging to audit agent activity and detect anomalies.
+
+
+### Clean up 
+
+Clean up the resources created on AWS to avoid undesired costs.
