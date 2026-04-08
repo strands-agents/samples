@@ -1,0 +1,12 @@
+[project]
+name = "infra"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aws-cdk-lib>=2.244.0",
+    "aws-cdk.aws-bedrock-agentcore-alpha>=2.244.0a0",
+    "cdk-nag>=2.37.55",
+    "constructs>=10.0.79",
+]
