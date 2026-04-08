@@ -6,6 +6,7 @@ A collaborative swarm of specialized agents for comprehensive stock analysis.
 """
 # Standard library imports
 import logging
+import re
 import time
 from typing import Dict, Any, List
 
@@ -62,40 +63,66 @@ def get_real_stock_data(ticker: str) -> Dict[str, Any]:
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
+def _extract_ticker(query: str) -> str:
+    """Extract a stock ticker symbol from a query string.
+
+    Handles cases like 'ALK', 'Analyze ALK', 'ALK (Alaska Air Group)', etc.
+    """
+    # If the query itself is already a short ticker, use it directly
+    stripped = query.strip().upper()
+    if re.fullmatch(r"[A-Z]{1,5}", stripped):
+        return stripped
+
+    # Try to find a 1-5 letter uppercase word that looks like a ticker
+    match = re.search(r"\b([A-Z]{1,5})\b", query.upper())
+    if match:
+        return match.group(1)
+
+    return stripped[:5] if stripped else "UNKNOWN"
+
+
+# Model used for the swarm agents — use a fast model to avoid timeouts.
+# Switch to "us.anthropic.claude-opus-4-6-v1" for higher quality (requires longer timeouts).
+SWARM_MODEL_ID = "us.anthropic.claude-opus-4-6-v1"
+
+# Model used for the orchestration agent (deep synthesis).
+ORCHESTRATOR_MODEL_ID = "us.anthropic.claude-opus-4-6-v1"
+
+
 @tool
-def analyze_company_with_collaborative_swarm(query: str, stock_data: str = "") -> Dict[str, Any]:
-    """Collaborative swarm using Nova LITE to avoid streaming timeouts"""
+def analyze_company_with_collaborative_swarm(ticker: str) -> Dict[str, Any]:
+    """Run a collaborative swarm analysis for a stock ticker symbol (e.g. 'ALK', 'AAPL', 'MSFT').
+    The ticker parameter must be a valid stock ticker symbol, not a full sentence."""
     try:
-        ticker = query.upper() if len(query) <= 5 else "AMZN"
-        
-        # Use NOVA LITE for all swarm agents - much faster, no timeouts
+        ticker = _extract_ticker(ticker)
+
         company_strategist = Agent(
             name="company_strategist",
-            system_prompt=f"Analyze {ticker} business model. Use get_company_info then hand off to financial_analyst.",
-            model=BedrockModel(model_id="us.amazon.nova-lite-v1:0", region="us-east-1"),
+            system_prompt=f"Analyze {ticker} business model. Use get_company_info with ticker '{ticker}', then hand off to financial_analyst.",
+            model=BedrockModel(model_id=SWARM_MODEL_ID),
             tools=[get_company_info]
         )
-        
+
         financial_analyst = Agent(
-            name="financial_analyst", 
-            system_prompt=f"Build on company insights. Use get_financial_metrics then hand off to market_analyst.",
-            model=BedrockModel(model_id="us.amazon.nova-lite-v1:0", region="us-east-1"),
+            name="financial_analyst",
+            system_prompt=f"Build on the company insights for {ticker}. Use get_financial_metrics with ticker '{ticker}', then hand off to market_analyst.",
+            model=BedrockModel(model_id=SWARM_MODEL_ID),
             tools=[get_financial_metrics]
         )
-        
+
         market_analyst = Agent(
             name="market_analyst",
-            system_prompt=f"Synthesize all insights. Use get_stock_news for final recommendation.",
-            model=BedrockModel(model_id="us.amazon.nova-lite-v1:0", region="us-east-1"),
+            system_prompt=f"Synthesize all insights for {ticker}. Use get_stock_news with ticker '{ticker}' for final recommendation.",
+            model=BedrockModel(model_id=SWARM_MODEL_ID),
             tools=[get_stock_news]
         )
-        
+
         swarm = Swarm(
             [company_strategist, financial_analyst, market_analyst],
             max_handoffs=3,
             max_iterations=3,
-            execution_timeout=120.0,
-            node_timeout=30.0
+            execution_timeout=300.0,
+            node_timeout=90.0
         )
         
         result = swarm(f"Analyze {ticker}")
@@ -109,28 +136,29 @@ def analyze_company_with_collaborative_swarm(query: str, stock_data: str = "") -
         return {"status": "error", "collaborative_analysis": f"Analysis failed: {str(e)}"}
 
 def create_orchestration_agent() -> Agent:
-    """Orchestrator with Nova Pro for deep synthesis"""
+    """Orchestrator for deep synthesis"""
     return Agent(
-        system_prompt="""You are a senior research director using Nova Pro.
+        system_prompt="""You are a senior research director.
 
         WORKFLOW:
-        1. Get real stock data using get_real_stock_data  
-        2. Get ONE collaborative analysis using analyze_company_with_collaborative_swarm
+        1. Get real stock data using get_real_stock_data with the ticker symbol
+        2. Get ONE collaborative analysis using analyze_company_with_collaborative_swarm — pass ONLY the ticker symbol (e.g. "ALK"), NOT a full sentence
         3. Synthesize using think tool for deep strategic insights
-        
+
         CRITICAL RULES:
+        - When calling analyze_company_with_collaborative_swarm, pass ONLY the stock ticker symbol (e.g. "ALK", "AAPL"), never a full sentence
         - DO NOT call analyze_company_with_collaborative_swarm multiple times
         - Focus on synthesis and strategic conclusions
         - Always prominently display the current stock price
         - Provide deep insights that demonstrate collaborative agent value
-        
+
         REPORT STRUCTURE:
         1. Executive Summary (current price + key thesis)
         2. Strategic Business Analysis (from collaborative insights)
         3. Financial Health Assessment (integrated metrics)
         4. Market Sentiment Analysis (news + trends)
         5. Investment Recommendation (buy/hold/sell with rationale)""",
-        model=BedrockModel(model_id="us.amazon.nova-pro-v1:0", region="us-east-1"),
+        model=BedrockModel(model_id=ORCHESTRATOR_MODEL_ID),
         tools=[get_real_stock_data, analyze_company_with_collaborative_swarm, think],
     )
 
@@ -159,7 +187,7 @@ def main():
     # Initialize messages for the orchestration agent
     orchestration_agent.messages = create_initial_messages()
 
-    print("\n🤖 Hybrid Multi-Agent Stock Analysis (Nova Lite Swarm + Nova Pro Synthesis) 📊")
+    print("\n🤖 Hybrid Multi-Agent Stock Analysis 📊")
     print("Features: Real-time data + Fast collaborative swarm + Deep orchestrator synthesis\n")
 
     while True:
