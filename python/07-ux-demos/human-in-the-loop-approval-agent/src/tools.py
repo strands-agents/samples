@@ -6,12 +6,9 @@
 import uuid
 from datetime import datetime, timedelta
 
-from strands import tool
+from strands import tool, ToolContext
 
 from data import CUSTOMERS, PRODUCT_CATALOG
-
-# Shared state: written by assess_order_risk, read by the approval hook
-last_risk_score: int | None = None
 
 
 @tool
@@ -48,8 +45,8 @@ def lookup_product(query: str) -> dict:
     }
 
 
-@tool
-def assess_order_risk(customer_name: str, order_total: float, items: list[dict]) -> dict:
+@tool(context=True)
+def assess_order_risk(customer_name: str, order_total: float, items: list[dict], tool_context: ToolContext) -> dict:
     """Assess the risk level of an order based on customer history, order value, and inventory.
 
     Args:
@@ -57,7 +54,6 @@ def assess_order_risk(customer_name: str, order_total: float, items: list[dict])
         order_total: Total dollar value of the order.
         items: List of order items, each with 'sku' and 'quantity' keys.
     """
-    global last_risk_score
     factors = []
     total_score = 0
 
@@ -159,7 +155,7 @@ def assess_order_risk(customer_name: str, order_total: float, items: list[dict])
         risk_level = "high"
         recommendation = "flag_for_review"
 
-    last_risk_score = total_score
+    tool_context.invocation_state["risk_score"] = total_score
 
     return {
         "risk_score": total_score,

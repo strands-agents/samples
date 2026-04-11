@@ -18,7 +18,6 @@ from strands.hooks import BeforeNodeCallEvent, HookProvider, HookRegistry
 from strands.multiagent import GraphBuilder, Status
 from strands.session import S3SessionManager
 from bedrock_agentcore.runtime import BedrockAgentCoreApp
-import tools as tools_module
 from tools import assess_order_risk, lookup_product, place_order
 
 load_dotenv()
@@ -52,7 +51,7 @@ class OrderApprovalHook(HookProvider):
         if event.node_id != "approval_gate":
             return
 
-        risk_score = tools_module.last_risk_score
+        risk_score = event.invocation_state.get("risk_score")
         logger.info("Risk score for approval gate: %s (threshold: %s)", risk_score, RISK_THRESHOLD)
 
         if risk_score is not None and risk_score <= RISK_THRESHOLD:
