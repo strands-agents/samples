@@ -41,14 +41,13 @@ def get_agentcore_client():
 
 def invoke_agent(payload: dict) -> dict:
     """Invoke the agent running in AgentCore Runtime."""
+
     if LOCAL_MODE:
         resp = requests.post(LOCAL_AGENT_URL, json=payload, timeout=120)
         resp.raise_for_status()
         return resp.json()
 
     runtime_session_id = payload.get("session_id", str(uuid.uuid4()))
-    if len(runtime_session_id) < 33:
-        runtime_session_id = runtime_session_id + "0" * (33 - len(runtime_session_id))
 
     response = get_agentcore_client().invoke_agent_runtime(
         agentRuntimeArn=AGENT_RUNTIME_ARN,
