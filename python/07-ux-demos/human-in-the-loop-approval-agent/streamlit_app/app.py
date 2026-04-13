@@ -408,30 +408,48 @@ with st.sidebar:
 
 st.title("📦 Order Dashboard")
 
-pending = {sid: s for sid, s in all_orders.items() if isinstance(s, dict) and get_order_status(s) == "pending"}
-processed = {sid: s for sid, s in all_orders.items() if isinstance(s, dict) and get_order_status(s) in ("approved", "rejected")}
-
 if not all_orders:
     st.info("No orders yet. Use the sidebar to create one.")
     st.stop()
 
-# --- Pending approvals ---
-if pending:
-    st.subheader(f"Awaiting Approval  ({len(pending)})", divider="orange")
+STATUS_ORDER = {"pending": 0, "approved": 1, "rejected": 2, "unknown": 3}
+sorted_orders = sorted(
+    ((sid, order, get_order_status(order)) for sid, order in all_orders.items() if isinstance(order, dict)),
+    key=lambda x: STATUS_ORDER.get(x[2], 99),
+)
 
-    for sid, order in pending.items():
-        display = order.get("display_name", sid[:8])
-        customer = order.get("customer", "")
-        total = order.get("total")
-        total_str = f"${total:,.2f}" if total else ""
+pending_count = sum(1 for _, _, s in sorted_orders if s == "pending")
+processed_count = len(sorted_orders) - pending_count
 
-        with st.container(border=True):
-            info_col, action_col = st.columns([3, 1])
+current_section = None
+for sid, order, status in sorted_orders:
+    is_pending = status == "pending"
+    section = "pending" if is_pending else "processed"
 
-            with info_col:
+    if section != current_section:
+        current_section = section
+        if is_pending:
+            st.subheader(f"Awaiting Approval  ({pending_count})", divider="orange")
+        else:
+            st.subheader(f"Completed  ({processed_count})", divider="green")
+
+    display = order.get("display_name", sid[:8])
+    customer = order.get("customer", "")
+
+    with st.container(border=True):
+        info_col, action_col = st.columns([3, 1])
+
+        with info_col:
+            if is_pending:
+                total = order.get("total")
+                total_str = f"${total:,.2f}" if total else ""
                 st.markdown(f"**{display}**  &mdash;  {customer}  &nbsp; `{total_str}`")
+            else:
+                icon = "✅" if status == "approved" else "❌"
+                st.markdown(f"{icon} **{display}**  &mdash;  {customer}")
 
-            with action_col:
+        with action_col:
+            if is_pending:
                 btn_cols = st.columns(2)
                 with btn_cols[0]:
                     if st.button("Approve", key=f"a_{sid}", type="primary", use_container_width=True):
@@ -439,34 +457,13 @@ if pending:
                 with btn_cols[1]:
                     if st.button("Reject", key=f"r_{sid}", use_container_width=True):
                         handle_decision(sid, "rejected")
-
-            is_active = st.session_state.get("active_order") == sid
-            with st.expander(f"Details & Agent State — `{sid}`", expanded=is_active):
-                summary = get_status_summary(order)
-                if summary:
-                    st.markdown(summary)
-                render_graph_interactive(order, key_prefix=sid)
-
-# --- Processed orders ---
-if processed:
-    st.subheader(f"Completed  ({len(processed)})", divider="green")
-
-    for sid, order in processed.items():
-        display = order.get("display_name", sid[:8])
-        customer = order.get("customer", "")
-        status = get_order_status(order)
-        icon = "✅" if status == "approved" else "❌"
-
-        with st.container(border=True):
-            cols = st.columns([3, 1])
-            with cols[0]:
-                st.markdown(f"{icon} **{display}**  &mdash;  {customer}")
-            with cols[1]:
+            else:
                 st.caption(status.upper())
 
-            is_active = st.session_state.get("active_order") == sid
-            with st.expander(f"Agent State — `{sid}`", expanded=is_active):
-                summary = get_status_summary(order)
-                if summary:
-                    st.markdown(summary)
-                render_graph_interactive(order, key_prefix=sid)
+        is_active = st.session_state.get("active_order") == sid
+        expander_label = f"Details & Agent State — `{sid}`" if is_pending else f"Agent State — `{sid}`"
+        with st.expander(expander_label, expanded=is_active):
+            summary = get_status_summary(order)
+            if summary:
+                st.markdown(summary)
+            render_graph_interactive(order, key_prefix=f"{status}-{sid}")
