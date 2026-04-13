@@ -128,7 +128,7 @@ When user provides a company ticker:
    - Return on Equity
    - Risk Assessment
 </output_format>""",
-        model=BedrockModel(model_id="us.amazon.nova-pro-v1:0", region="us-east-1"),
+        model=BedrockModel(model_id="us.anthropic.claude-opus-4-6-v1"),
         tools=[get_financial_metrics, http_request, think],
     )
 

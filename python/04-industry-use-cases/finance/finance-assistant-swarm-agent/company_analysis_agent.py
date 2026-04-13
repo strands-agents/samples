@@ -432,7 +432,7 @@ When user provides a company ticker:
    - Potential Risks
    - Overall Assessment
 </output_format>""",
-        model=BedrockModel(model_id="us.amazon.nova-pro-v1:0", region="us-east-1"),
+        model=BedrockModel(model_id="us.anthropic.claude-opus-4-6-v1"),
         tools=[get_company_info, get_stock_news, http_request, think],
     )
 

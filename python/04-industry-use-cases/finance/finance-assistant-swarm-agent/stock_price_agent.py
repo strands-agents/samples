@@ -97,7 +97,7 @@ When user provides a company name or ticker:
 
 3. Key Metrics Summary
 </output_format>""",
-        model=BedrockModel(model_id="us.amazon.nova-pro-v1:0", region="us-east-1"),
+        model=BedrockModel(model_id="us.anthropic.claude-opus-4-6-v1"),
         tools=[get_stock_prices, http_request, think],
     )
 

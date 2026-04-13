@@ -81,8 +81,8 @@ def _extract_ticker(query: str) -> str:
     return stripped[:5] if stripped else "UNKNOWN"
 
 
-# Model used for the swarm agents — use a fast model to avoid timeouts.
-# Switch to "us.anthropic.claude-opus-4-6-v1" for higher quality (requires longer timeouts).
+# Model used for the swarm agents — using Opus for highest quality.
+# Switch to a faster model like Haiku or Sonnet if you hit timeouts.
 SWARM_MODEL_ID = "us.anthropic.claude-opus-4-6-v1"
 
 # Model used for the orchestration agent (deep synthesis).
