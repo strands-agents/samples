@@ -279,7 +279,7 @@ def handle_decision(session_id: str, decision: str):
             # Refresh the full state from S3
             session_state = fetch_session_state(session_id)
             if session_state and session_state.get("multi_agent") is not None:
-                for key in ("display_name", "customer", "total", "interrupts"):
+                for key in ("display_name", "customer", "interrupts"):
                     session_state[key] = order.get(key)
                 session_state["interrupts"] = []
                 st.session_state["orders"][session_id] = session_state
@@ -441,9 +441,7 @@ for sid, order, status in sorted_orders:
 
         with info_col:
             if is_pending:
-                total = order.get("total")
-                total_str = f"${total:,.2f}" if total else ""
-                st.markdown(f"**{display}**  &mdash;  {customer}  &nbsp; `{total_str}`")
+                st.markdown(f"**{display}**  &mdash;  {customer}")
             else:
                 icon = "✅" if status == "approved" else "❌"
                 st.markdown(f"{icon} **{display}**  &mdash;  {customer}")
