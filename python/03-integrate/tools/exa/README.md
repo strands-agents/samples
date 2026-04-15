@@ -11,13 +11,14 @@ A conversational AI agent that demonstrates the full power of Exa's search and c
 | Feature | Description |
 |---------|-------------|
 | Auto Mode | Intelligent search mode selection for optimal results |
-| Category Filtering | Specialized searches for news, PDF documents, and GitHub repositories |
+| Category Filtering | Specialized searches for news, research papers, and GitHub repositories |
 | Date Filtering | Time-bound searches for recent content (e.g., last 30 days) |
 | AI Summaries | Automatic key insights extraction from search results |
 | Structured Output | JSON schema for structured summary extraction |
 | Subpage Crawling | Discover related pages (citations, methodology, references) |
 | Subpage Targeting | Keywords to find specific subpages (references, bibliography) |
-| Live Crawling | Fresh content retrieval, bypassing cache |
+| Highlights | Token-efficient page excerpts for key information |
+| Content Freshness | max_age_hours for livecrawl control (replaces old livecrawl enum) |
 | Content Extraction | Full text retrieval with character limit control |
 
 ## Architecture
@@ -42,9 +43,9 @@ The Deep Research Assistant implements a comprehensive 6-step research workflow:
 │  ├─────────────────────────────────────────────────────────────┤  │
 │  │ 1. Overview Search  │ Auto mode + subpages + AI summaries   │  │
 │  │ 2. News Search      │ Category: news + date filtering       │  │
-│  │ 3. Academic Papers  │ Category: pdf + structured output     │  │
+│  │ 3. Academic Papers  │ Category: research paper + structured │  │
 │  │ 4. GitHub Projects  │ Category: github                      │  │
-│  │ 5. Deep Dive        │ exa_get_contents + live crawling      │  │
+│  │ 5. Deep Dive        │ exa_get_contents + highlights         │  │
 │  │ 6. Synthesis        │ Comprehensive research brief          │  │
 │  └─────────────────────────────────────────────────────────────┘  │
 │                                                                   │

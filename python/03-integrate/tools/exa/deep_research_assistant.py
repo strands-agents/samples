@@ -7,19 +7,20 @@ content extraction capabilities through a practical research workflow.
 
 Exa Capabilities Demonstrated:
 - Auto mode: Intelligent search mode selection for optimal results
-- Category filtering: news, pdf, github for specialized searches
+- Category filtering: news, research paper, github for specialized searches
 - Date filtering: Time-bound searches for recent content
 - AI summaries: Automatic key insights extraction
+- Highlights: Token-efficient page excerpts
 - Structured output: JSON schema for structured summary extraction
 - Subpage crawling: Discover related pages (citations, methodology)
 - Subpage targeting: Keywords to find specific subpages (references, bibliography)
-- Live crawling: Fresh content retrieval, bypassing cache
+- Content freshness: max_age_hours for livecrawl control
 - Content extraction: Full text with character limit control
 
 Research Workflow:
   1. Overview Search (Auto Mode) - General topic understanding
   2. News Search (Category: news) - Recent developments with date filtering
-  3. Academic Papers (Category: pdf) - Technical depth from research
+  3. Academic Papers (Category: research paper) - Technical depth from research
   4. Code & Projects (Category: github) - Practical implementations
   5. Deep Dive (exa_get_contents) - Detailed extraction from key sources
   6. Synthesis - Structured research brief with citations
@@ -126,7 +127,7 @@ def main():
     print("Deep Research Assistant")
     print("=======================")
     print("Demonstrating Exa capabilities: auto mode, category filters, date filtering,")
-    print("AI summaries, structured output (JSON schema), subpage crawling/targeting, and live crawling.\n")
+    print("AI summaries, highlights, structured output, subpage crawling/targeting, and content freshness.\n")
 
     agent = create_research_agent()
 

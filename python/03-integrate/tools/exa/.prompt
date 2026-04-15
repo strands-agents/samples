@@ -15,10 +15,11 @@ Use exa_search with:
 - type: "auto"  ← SHOWCASES: Intelligent search mode selection
 - num_results: 5
 - text: {"maxCharacters": 2000}  ← SHOWCASES: Content extraction with limits
+- highlights: {"maxCharacters": 4000}  ← SHOWCASES: Token-efficient page excerpts
 - summary: {"query": "What are the key concepts, main points, and important details?"}  ← SHOWCASES: AI summaries
 - subpages: 2  ← SHOWCASES: Subpage crawling to find related content
 - subpage_target: ["overview", "about", "introduction"]  ← SHOWCASES: Targeted subpage discovery
-- livecrawl: "fallback"  ← SHOWCASES: Live crawling when cache misses
+- max_age_hours: 168  ← SHOWCASES: Content freshness (livecrawl pages older than 7 days)
 
 PURPOSE: Get foundational understanding with AI-summarized key points.
 
@@ -33,7 +34,7 @@ Use exa_search with:
 - start_published_date: [Use the date provided in the prompt]  ← SHOWCASES: Date filtering
 - text: {"maxCharacters": 1500}
 - summary: {"query": "What are the key announcements, developments, and news?"}
-- livecrawl: "fallback"  ← SHOWCASES: Fresh news retrieval
+- max_age_hours: 24  ← SHOWCASES: Fresh news (livecrawl pages older than 24h)
 
 PURPOSE: Capture recent developments and breaking news.
 
@@ -43,7 +44,7 @@ STEP 3: ACADEMIC PAPERS - Demonstrating PDF Category & Structured Output
 
 Use exa_search with:
 - query: Academic/research-focused query (include terms like "research", "study", "analysis")
-- category: "pdf"  ← SHOWCASES: Academic/PDF document search
+- category: "research paper"  ← SHOWCASES: Academic/research paper search
 - num_results: 5
 - text: {"maxCharacters": 2000}
 - summary: {
@@ -82,10 +83,11 @@ STEP 5: DEEP DIVE - Demonstrating exa_get_contents for Detailed Extraction
 Select 2-3 of the most valuable URLs from previous searches, then use exa_get_contents with:
 - urls: [list of important URLs]
 - text: {"maxCharacters": 4000}  ← SHOWCASES: Extended content extraction
+- highlights: {"maxCharacters": 4000}  ← SHOWCASES: Key excerpts from important sources
 - summary: {"query": "Extract all important details, insights, and actionable information"}
 - subpages: 3  ← SHOWCASES: Deep subpage discovery (citations, references, docs)
 - subpage_target: ["references", "citations", "bibliography", "methodology"]  ← SHOWCASES: Targeted crawling for academic context
-- livecrawl: "always"  ← SHOWCASES: Force fresh content retrieval
+- max_age_hours: 0  ← SHOWCASES: Force fresh content (always livecrawl)
 
 PURPOSE: Get comprehensive detail from the most important sources, including citations and methodology.
 
