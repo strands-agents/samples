@@ -1,0 +1,25 @@
+[project]
+name = "exa-deep-research-assistant"
+version = "0.1.0"
+description = "Deep Research Assistant using Strands Agents and Exa Search API"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "strands-agents[otel]>=0.1.0",
+    "strands-agents-tools>=0.1.0",
+    "boto3>=1.34.0",
+    "python-dotenv>=1.0.0",
+    # OpenTelemetry instrumentation
+    "opentelemetry-distro>=0.50b0",
+    "opentelemetry-exporter-otlp>=1.29.0",
+    "opentelemetry-instrumentation>=0.50b0",
+]
+
+[project.scripts]
+deep-research = "deep_research_assistant:main"
+
+[project.optional-dependencies]
+# AWS CloudWatch observability (requires ADOT Collector running locally)
+aws = [
+    "aws-opentelemetry-distro>=0.14.2",
+]

@@ -1,0 +1,2 @@
+# No additional dependencies required for this simple MCP server
+# The Lambda runtime provides the necessary Python standard library modules

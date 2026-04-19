@@ -1,0 +1,12 @@
+[project]
+name = "streamlit-app"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "boto3>=1.42.74",
+    "python-dotenv>=1.2.2",
+    "streamlit>=1.55.0",
+    "streamlit-flow-component>=1.5.0",
+]

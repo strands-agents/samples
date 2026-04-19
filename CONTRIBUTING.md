@@ -26,7 +26,7 @@ Contributions via pull requests are much appreciated. Before sending us a pull r
 1. You are working against the latest source on the *main* branch.
 2. You check existing open, and recently merged, pull requests to make sure someone else hasn't addressed the problem already.
 3. You open an issue to discuss any significant work - we would hate for your time to be wasted.
-4. For new samples, follow the project structure guidelines in [`.github/templates/02-samples/structure.md`](.github/templates/02-samples/structure.md) and use the README template in [`.github/templates/02-samples/readme.md`](.github/templates/02-samples/readme.md).
+4. For new samples, follow the project structure guidelines in [`.github/templates/use-cases/structure.md`](.github/templates/use-cases/structure.md) and use the README template in [`.github/templates/use-cases/readme.md`](.github/templates/use-cases/readme.md).
 
 To send us a pull request, please:
 
