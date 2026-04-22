@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO="${REPO:-slack-asssistant}"
+REPO="${REPO:-slack-assistant}"
 REGION="${AWS_REGION:-us-west-2}"
 STACK_NAME="${STACK_NAME:-slack-assistant}"
 
