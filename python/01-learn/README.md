@@ -19,6 +19,7 @@ Step-by-step guides from basic agent creation to multi-agent orchestration.
 | [`11-swarm`](./11-swarm/) | `Swarm` class | Build self-organizing agent teams |
 | [`12-graph`](./12-graph/) | `GraphBuilder` | Create deterministic agent workflows |
 | [`13-human-in-the-loop`](./13-human-in-the-loop/) | Interrupts, hooks | Implement approval workflows with human oversight |
+| [`14-skills`](./14-skills/) | AgentSkills plugin, Skill dataclass | Load specialized instructions on demand with skills |
 
 ## Getting Started
 
