@@ -5,9 +5,6 @@ Parameters:
   Image:
     Type: String
     Description: Container image URI
-  SlackAppToken:
-    Type: String
-    NoEcho: true
   SlackBotToken:
     Type: String
     NoEcho: true
@@ -16,11 +13,6 @@ Parameters:
     NoEcho: true
 
 Resources:
-  AppTokenSecret:
-    Type: AWS::SecretsManager::Secret
-    Properties:
-      SecretString: !Ref SlackAppToken
-
   BotTokenSecret:
     Type: AWS::SecretsManager::Secret
     Properties:
@@ -48,7 +40,6 @@ Resources:
               - Effect: Allow
                 Action: secretsmanager:GetSecretValue
                 Resource:
-                  - !Ref AppTokenSecret
                   - !Ref BotTokenSecret
                   - !Ref SigningSecretSecret
 
@@ -92,8 +83,6 @@ Resources:
         Image: !Ref Image
         ContainerPort: 3000
         Secrets:
-          - Name: SLACK_APP_TOKEN
-            ValueFrom: !Ref AppTokenSecret
           - Name: SLACK_BOT_TOKEN
             ValueFrom: !Ref BotTokenSecret
           - Name: SLACK_SIGNING_SECRET

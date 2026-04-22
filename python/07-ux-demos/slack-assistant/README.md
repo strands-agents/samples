@@ -16,7 +16,7 @@ or deployed to AWS and invoked via HTTP requests (see [Slack documentation](http
 on the two modes).
 
 This sample app supports chatting via direct message or in the assistant panel on the right. Other interactions are possible by configuring additional
-events and permissions in the Slack app settings. Here is a sample of the installed application in action:
+events and permissions in the Slack app settings. Here is a demo of the installed application in action:
 
 ![app demo video](./demo.gif)
 
@@ -54,10 +54,10 @@ cp .slack_secrets.example .slack_secrets
 in the contents of the file `manifest.json` in this sample project.
 
 4. Once the app is created, navigate to "OAuth & Permissions" and click the "Install to <workspace>" button under "OAuth Tokens". Copy
-the token into .slack_secrets assigned to the `SLACK_BOT_TOKEN` env var.
+the token into .slack_secrets assigned to the `SLACK_BOT_TOKEN` environment variable.
 
 5. Navigate to "Basic Information" and click "Generate Token and Scopes" in the "App-Level Tokens" section. Give the token any name and add the
-`connections:write` scope. Click "Generate", copy the token and assign to the `SLACK_APP_TOKEN` env var.
+`connections:write` scope. Click "Generate", copy the token and assign to the `SLACK_APP_TOKEN` environment variable.
 
 ### Step 2: Run the app locally
 
@@ -70,16 +70,18 @@ INFO:slack_bolt.App:Starting to receive messages from a new connection (session 
 ```
 
 2. Now you can test out the app in Slack. Once installed, you can find the app in slack by clicking "Add apps" in the left navigation bar or "Add agents"
-in the top bar. Once you initiate a chat with the agent, you should the message "How can I help you?" along with some sample prompts (see demo video above).
+in the top bar. Once you initiate a chat with the agent, you should see the message "How can I help you?" along with some sample prompts (see demo video above).
 
 ## Deploy to AWS
 
 Now that the app is working in socket mode and running locally, try deploying it to AWS. This sample deploys the app as an
 [ECS Express Mode](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/express-service-overview.html) service.
+Note that the deploy script uses the `us-west-2` region by default, but this can be customized with the `AWS_REGION` environment variable.
+The CloudFormation stack name and ECR repo name can also be customized with the `STACK_NAME` and `REPO` variables (both are `slack-assistant` by default).
 
 ### Step 1: Deploy the backend
 
-1. Retrieve the Slack signing secret in the "Basic Information" section of the API settings and assign it to the `SLACK_SIGNING_SECRET` env var in
+1. Retrieve the Slack signing secret in the "Basic Information" section of the API settings and assign it to the `SLACK_SIGNING_SECRET` environment variable in
 `.slack_secrets`.
 
 2. Run the deployment script. This script builds a Docker image, creates an ECR repository, pushes the image to the repository, then launches a
@@ -110,7 +112,7 @@ that says "Verified ✓" if successful.
 
 ### Step 3: Clean up
 
-1. Run the `cleanup.sh` script to tear down all provisioned AWS resources. You should see output similar to:
+Run the `cleanup.sh` script to tear down all provisioned AWS resources. You should see output similar to:
 ```
 $ ./cleanup.sh
 Deleting CloudFormation stack slack-assistant in us-west-2...

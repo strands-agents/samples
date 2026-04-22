@@ -30,7 +30,6 @@ aws cloudformation deploy \
   --capabilities CAPABILITY_IAM \
   --parameter-overrides \
     Image="$URI" \
-    SlackAppToken="$SLACK_APP_TOKEN" \
     SlackBotToken="$SLACK_BOT_TOKEN" \
     SlackSigningSecret="$SLACK_SIGNING_SECRET"
 

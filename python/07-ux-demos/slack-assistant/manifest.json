@@ -13,7 +13,7 @@
             "always_online": false
         },
 	"assistant_view": {
-	    "assistant_description": "Hi, I'm an AI assitant built with Strands!"
+	    "assistant_description": "Hi, I'm an AI assistant built with Strands!"
 	}
     },
     "oauth_config": {
