@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.12"
 dependencies = [
+    "gunicorn>=25.3.0",
     "slack-bolt>=1.28.0",
     "strands-agents>=1.35.0",
     "strands-agents-tools>=0.4.1",

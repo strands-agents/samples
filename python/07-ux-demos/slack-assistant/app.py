@@ -6,6 +6,7 @@ from typing import Any, Dict, List
 
 from slack_bolt import App, Assistant, BoltContext, Say, SayStream, SetStatus, SetSuggestedPrompts
 from slack_bolt.adapter.socket_mode import SocketModeHandler
+from slack_bolt.adapter.wsgi import SlackRequestHandler
 from slack_sdk import WebClient
 from slack_sdk.models.messages.chunk import TaskUpdateChunk
 from strands import Agent, tool
@@ -141,6 +142,16 @@ def respond_in_assistant_thread(
     except Exception as e:
         logger.exception(f"Failed to respond to an inquiry: {e}")
         say(f":warning: Sorry, something went wrong during processing your request (error: {e})")
+
+
+api = SlackRequestHandler(app)
+
+
+def api_with_health(environ, start_response):  # type: ignore[no-untyped-def]
+    if environ.get("PATH_INFO") == "/health":
+        start_response("200 OK", [("Content-Type", "text/plain")])
+        return [b"ok"]
+    return api(environ, start_response)
 
 
 if __name__ == "__main__":
