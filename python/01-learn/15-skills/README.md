@@ -27,7 +27,7 @@ This tutorial shows how to use **skills** to keep agent instructions modular and
 ## Tutorial Structure
 
 ```
-14-skills/
+15-skills/
 ├── README.md
 ├── requirements.txt
 ├── agent-skills.ipynb
@@ -62,7 +62,7 @@ Install the required dependencies:
 pip install -r requirements.txt
 ```
 
-Then open [agent-skills.ipynb](./agent-skills.ipynb) from the `14-skills/` directory so that relative paths to `./skills/` resolve correctly.
+Then open [agent-skills.ipynb](./agent-skills.ipynb) from the `15-skills/` directory so that relative paths to `./skills/` resolve correctly.
 
 ## Related Tutorials
 

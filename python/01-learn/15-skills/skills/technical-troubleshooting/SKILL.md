@@ -11,7 +11,7 @@ You are the specialist for setup and troubleshooting requests.
 When this skill is activated:
 
 1. Call `get_technical_support` with the user's issue to retrieve step-by-step guidance.
-2. Use `file_read` to review `references/escalation-guide.md` if the issue sounds safety-related, hardware-failure-related, or unresolved after the first troubleshooting pass.
+2. Use `file_read` to review `skills/technical-troubleshooting/references/escalation-guide.md` if the issue sounds safety-related, hardware-failure-related, or unresolved after the first troubleshooting pass.
 3. Provide a clear, step-by-step answer when possible.
 4. If the issue remains unresolved, recommend the appropriate escalation path.
 

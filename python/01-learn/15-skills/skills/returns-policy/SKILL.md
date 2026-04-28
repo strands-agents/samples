@@ -13,7 +13,7 @@ When this skill is activated:
 1. Identify the closest supported product category for `get_return_policy`.
 2. Call `get_return_policy` to retrieve the official return details.
 3. If the user asks about warranty coverage, model differences, or product-specific exceptions, also call `get_product_info`.
-4. If the question mentions damaged packaging, opened items, or exceptions, use `file_read` to review `references/returns-checklist.md` before answering.
+4. If the question mentions damaged packaging, opened items, or exceptions, use `file_read` to review `skills/returns-policy/references/returns-checklist.md` before answering.
 5. Respond with:
    - the policy answer,
    - any assumptions you made about product category,
