@@ -13,7 +13,7 @@ This tutorial demonstrates how to persist agent conversation state across restar
 
 ## Key Concepts
 
-![Session Management Lifecycle](./images/session_lifecycle.svg)
+![Session Management Architecture](./images/architecture.png)
 
 - **SessionManager**: Abstract interface that hooks into agent lifecycle events to persist conversation state automatically
 - **FileSessionManager**: Built-in backend that stores sessions as JSON files on the local filesystem
@@ -97,7 +97,7 @@ This tutorial demonstrates how to persist agent conversation state across restar
 ├── README.md
 ├── requirements.txt
 ├── images/
-│   └── session_lifecycle.svg
+│   └── architecture.png
 ├── 01-baseline.ipynb
 ├── 02-file-session-manager.ipynb
 ├── 03-s3-session-manager.ipynb
