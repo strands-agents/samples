@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#555"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="520" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+
+  <!-- Title -->
+  <text x="450" y="35" text-anchor="middle" font-size="18" font-weight="bold" fill="#1e293b">Session Management Lifecycle</text>
+
+  <!-- Agent Box -->
+  <rect x="50" y="70" width="160" height="70" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="130" y="100" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e40af">Agent</text>
+  <text x="130" y="118" text-anchor="middle" font-size="11" fill="#3b82f6">conversation state</text>
+
+  <!-- SessionManager Box -->
+  <rect x="310" y="70" width="200" height="70" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="410" y="100" text-anchor="middle" font-size="13" font-weight="bold" fill="#92400e">SessionManager</text>
+  <text x="410" y="118" text-anchor="middle" font-size="11" fill="#b45309">hooks into agent lifecycle</text>
+
+  <!-- Arrow: Agent -> SessionManager -->
+  <line x1="210" y1="105" x2="305" y2="105" stroke="#555" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="258" y="97" text-anchor="middle" font-size="10" fill="#64748b">uses</text>
+
+  <!-- Storage Backends -->
+  <!-- File -->
+  <rect x="620" y="55" width="220" height="50" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="730" y="77" text-anchor="middle" font-size="12" font-weight="bold" fill="#166534">FileSessionManager</text>
+  <text x="730" y="93" text-anchor="middle" font-size="10" fill="#15803d">local JSON files</text>
+
+  <!-- S3 -->
+  <rect x="620" y="115" width="220" height="50" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="730" y="137" text-anchor="middle" font-size="12" font-weight="bold" fill="#166534">S3SessionManager</text>
+  <text x="730" y="153" text-anchor="middle" font-size="10" fill="#15803d">S3 bucket objects</text>
+
+  <!-- Custom -->
+  <rect x="620" y="175" width="220" height="50" rx="8" fill="#fce7f3" stroke="#db2777" stroke-width="1.5"/>
+  <text x="730" y="197" text-anchor="middle" font-size="12" font-weight="bold" fill="#9d174d">Custom Repository</text>
+  <text x="730" y="213" text-anchor="middle" font-size="10" fill="#be185d">DynamoDB, Redis, etc.</text>
+
+  <!-- Arrows: SessionManager -> Backends -->
+  <line x1="510" y1="90" x2="615" y2="80" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="510" y1="105" x2="615" y2="140" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="510" y1="115" x2="615" y2="200" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Divider -->
+  <line x1="30" y1="260" x2="870" y2="260" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="6,4"/>
+  <text x="450" y="280" text-anchor="middle" font-size="12" font-weight="bold" fill="#64748b">Persist &amp; Restore Flow</text>
+
+  <!-- First Run -->
+  <rect x="50" y="300" width="130" height="55" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="115" y="323" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e40af">1. First Run</text>
+  <text x="115" y="340" text-anchor="middle" font-size="10" fill="#3b82f6">agent("Hello")</text>
+
+  <!-- Auto-save -->
+  <rect x="240" y="300" width="150" height="55" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="315" y="323" text-anchor="middle" font-size="12" font-weight="bold" fill="#92400e">2. Auto-Save</text>
+  <text x="315" y="340" text-anchor="middle" font-size="10" fill="#b45309">messages persisted</text>
+
+  <!-- Restart -->
+  <rect x="450" y="300" width="130" height="55" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="515" y="323" text-anchor="middle" font-size="12" font-weight="bold" fill="#991b1b">3. Restart</text>
+  <text x="515" y="340" text-anchor="middle" font-size="10" fill="#dc2626">process ends</text>
+
+  <!-- Restore -->
+  <rect x="640" y="300" width="150" height="55" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="715" y="323" text-anchor="middle" font-size="12" font-weight="bold" fill="#166534">4. Restore</text>
+  <text x="715" y="340" text-anchor="middle" font-size="10" fill="#15803d">same session_id</text>
+
+  <!-- Arrows between flow steps -->
+  <line x1="180" y1="327" x2="235" y2="327" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <line x1="390" y1="327" x2="445" y2="327" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <line x1="580" y1="327" x2="635" y2="327" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+
+  <!-- Multi-agent section -->
+  <rect x="50" y="400" width="340" height="100" rx="10" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="220" y="425" text-anchor="middle" font-size="13" font-weight="bold" fill="#5b21b6">Multi-Agent Patterns</text>
+
+  <rect x="70" y="440" width="100" height="40" rx="6" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1"/>
+  <text x="120" y="465" text-anchor="middle" font-size="11" font-weight="bold" fill="#6d28d9">Swarm</text>
+
+  <rect x="190" y="440" width="80" height="40" rx="6" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1"/>
+  <text x="230" y="465" text-anchor="middle" font-size="11" font-weight="bold" fill="#6d28d9">Graph</text>
+
+  <text x="310" y="460" font-size="10" fill="#7c3aed">session_manager</text>
+  <text x="310" y="475" font-size="10" fill="#7c3aed">persists all agents</text>
+
+  <!-- Key data stored -->
+  <rect x="450" y="400" width="400" height="100" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="650" y="425" text-anchor="middle" font-size="13" font-weight="bold" fill="#166534">Persisted Data</text>
+  <text x="530" y="450" font-size="11" fill="#15803d">• session.json — session metadata</text>
+  <text x="530" y="468" font-size="11" fill="#15803d">• agent.json — agent state per agent</text>
+  <text x="530" y="486" font-size="11" fill="#15803d">• message_N.json — each conversation turn</text>
+</svg>
