@@ -20,6 +20,7 @@ Step-by-step guides from basic agent creation to multi-agent orchestration.
 | [`12-graph`](./12-graph/) | `GraphBuilder` | Create deterministic agent workflows |
 | [`13-human-in-the-loop`](./13-human-in-the-loop/) | Interrupts, hooks | Implement approval workflows with human oversight |
 | [`15-skills`](./15-skills/) | AgentSkills plugin, Skill dataclass | Load specialized instructions on demand with skills |
+| [`16-a2a-protocol`](./16-a2a-protocol/) | `A2AServer`, `A2AAgent`, `A2AClientToolProvider` | Expose agents as services and compose them over the network |
 
 ## Getting Started
 
