@@ -20,6 +20,7 @@ Step-by-step guides from basic agent creation to multi-agent orchestration.
 | [`12-graph`](./12-graph/) | `GraphBuilder` | Create deterministic agent workflows |
 | [`13-human-in-the-loop`](./13-human-in-the-loop/) | Interrupts, hooks | Implement approval workflows with human oversight |
 | [`15-skills`](./15-skills/) | AgentSkills plugin, Skill dataclass | Load specialized instructions on demand with skills |
+| [`17-conversation-management`](./17-conversation-management/) | `SlidingWindowConversationManager`, `NullConversationManager`, `SummarizingConversationManager` | Control agent message history with sliding window, null, and summarizing strategies |
 
 ## Getting Started
 
