@@ -66,43 +66,25 @@ def search_knowledge(query: str) -> str:
     results = search_markdown_files(query)
     
     if not results:
-        return json.dumps({
-            "sources": [],
-            "summary": "No results found in the knowledge base for your query."
-        })
+        return json.dumps({"sources": []})
     
-    structured_results = {
-        "sources": [],
-        "summary": ""
-    }
-    
-    for i, result in enumerate(results, 1):
-        source = {
+    structured_sources = []
+    for i, result in enumerate(results[:3], 1):  # Top 3 only
+        # Extract section headers from full content
+        headers = re.findall(r'^##?\s+(.+)$', result["full_content"], re.MULTILINE)
+        structured_sources.append({
             "id": f"source_{i}",
             "name": result["filename"],
             "title": result["title"],
             "type": "document",
-            "content": result["content"][:500],
+            "content": result["content"][:200],  # Short snippet
             "metadata": {
                 "score": round(result["score"], 2),
-                "sections": []
-            }
-        }
-        
-        # Extract section headers from content
-        headers = re.findall(r'^##?\s+(.+)$', result["full_content"], re.MULTILINE)
-        source["metadata"]["sections"] = headers[:5]
-        
-        structured_results["sources"].append(source)
+                "sections": headers[:5],
+            },
+        })
     
-    # Build summary
-    summary_parts = []
-    for s in structured_results["sources"]:
-        summary_parts.append(f"[{s['id']}] {s['title']}: {s['content'][:200]}...")
-    
-    structured_results["summary"] = "\n---\n".join(summary_parts)
-    
-    return json.dumps(structured_results)
+    return json.dumps({"sources": structured_sources})
 
 
 @tool
@@ -158,17 +140,14 @@ def update_learning_checklist(topic: str, tasks: list[str]) -> str:
 
 @tool
 def get_checklist_progress() -> str:
-    """Get the current progress on the learning checklist.
+    """Look up the user's current learning checklist progress.
     
-    This tool is called automatically when the user asks about their progress.
-    The actual checklist state comes from the frontend via shared state.
+    The actual checklist items and completion status are injected into
+    the conversation context from the frontend via shared state. This tool
+    simply signals to the agent that it should reference the
+    CURRENT_CHECKLIST_STATE section of the current message when answering.
     
     Returns:
-        A message indicating this info comes from shared state.
+        A short instruction pointing the agent at the shared-state context.
     """
-    # Note: The actual checklist state is passed via the conversation context
-    # from the frontend's useCoAgent state. This tool just signals intent.
-    return json.dumps({
-        "message": "Checking your progress from shared state...",
-        "note": "The checklist state is synced from the frontend UI"
-    })
+    return "Refer to the CURRENT_CHECKLIST_STATE section of the current message for live checklist items and completion status."

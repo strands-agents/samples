@@ -3,7 +3,7 @@
 
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import {
   CopilotKit,
   useCopilotAction,
@@ -188,6 +188,11 @@ function ChatPage() {
   
   // Quiz states
   const [quizStates, setQuizStates] = useState<Map<string, QuizState>>(new Map());
+  // Ref kept in sync so the render() closure always reads current state (avoids stale closure on tool-result renders)
+  const quizStatesRef = useRef(quizStates);
+  useEffect(() => {
+    quizStatesRef.current = quizStates;
+  }, [quizStates]);
 
   // Sidebar collapsed state
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -343,9 +348,10 @@ function ChatPage() {
       } catch {
         return JSON.stringify({ error: "Invalid options format" });
       }
-      
-      const quizId = `quiz_${Date.now()}`;
-      
+
+      // Deterministic quiz ID derived from the question so handler and render agree
+      const quizId = `quiz_${question.substring(0, 40)}`;
+
       return new Promise<string>((resolve) => {
         setQuizStates((prev: Map<string, QuizState>) => {
           const newMap = new Map(prev);
@@ -359,29 +365,31 @@ function ChatPage() {
           });
           return newMap;
         });
-        (window as unknown as { __currentQuizId: string }).__currentQuizId = quizId;
       });
     },
     render: ({ status, args, result }) => {
-      const quizId = (window as unknown as { __currentQuizId?: string }).__currentQuizId || `quiz_${args?.question?.substring(0, 20)}`;
-      const quiz = quizStates.get(quizId);
-      
+      // Same deterministic ID scheme as the handler
+      const quizId = `quiz_${args?.question?.substring(0, 40)}`;
+      // Read via ref so this render always sees the latest quizStates,
+      // even when CopilotKit re-renders after the handler has updated state
+      const quiz = quizStatesRef.current.get(quizId);
+
       let displayOptions: string[] = [];
       try {
         displayOptions = typeof args?.options === "string" ? JSON.parse(args.options) : (args?.options || []);
       } catch {
         displayOptions = [];
       }
-      
+
       if (status === "inProgress" && !quiz) {
         return <QuizCard question="" options={[]} correctIndex={0} selectedIndex={null} isAnswered={false} onAnswer={() => {}} isLoading={true} />;
       }
-      
+
       let resultData: { selectedIndex?: number } = {};
       if (result) {
         try { resultData = JSON.parse(result); } catch {}
       }
-      
+
       return (
         <QuizCard
           question={args?.question || ""}
