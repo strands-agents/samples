@@ -20,13 +20,15 @@ user_prefs = {}  # Don't do this!
 
 ### 2. Use Appropriate Model Sizes
 
-Choose the right model for your use case:
+Choose the right model for your use case. On Amazon Bedrock, the current Anthropic Claude family:
 
-| Model | Best For | Latency |
-|-------|----------|---------|
-| Claude 3 Haiku | Simple tasks, high volume | ~500ms |
-| Claude 3 Sonnet | Balanced performance | ~1-2s |
-| Claude 3 Opus | Complex reasoning | ~3-5s |
+| Model | Best For |
+|-------|----------|
+| **Claude Haiku 4.5** | Simple tasks, high volume, latency-sensitive paths |
+| **Claude Sonnet 4.6** | Balanced default — coding, tool use, long-context reasoning, agent planning |
+| **Claude Opus 4.6** | Most complex reasoning, long-horizon agentic tasks, large codebases |
+
+Prefer a cross-region inference profile ID (e.g. `us.anthropic.claude-sonnet-4-6`) over an in-region model ID for higher throughput.
 
 ### 3. Implement Graceful Degradation
 
@@ -69,7 +71,8 @@ Configure minimal IAM permissions:
   Action:
     - bedrock:InvokeModel
   Resource:
-    - arn:aws:bedrock:*:*:model/anthropic.claude-3-haiku*
+    - arn:aws:bedrock:*:*:model/anthropic.claude-sonnet-4-6
+    - arn:aws:bedrock:*:*:inference-profile/us.anthropic.claude-sonnet-4-6
 
 # Avoid: Wildcard permissions
 - Effect: Allow

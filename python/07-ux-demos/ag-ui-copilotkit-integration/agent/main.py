@@ -49,7 +49,7 @@ Example good response:
 > **Tip:** Start with the getting started guide to set up your first agent.
 
 To deploy, run:
-`agentcore deploy --config agent.yaml`"
+`agentcore deploy`"
 
 CRITICAL GUIDELINES:
 - **ALWAYS use search_knowledge tool FIRST** before answering ANY question about AgentCore, deployment, agents, or technical topics
@@ -137,7 +137,7 @@ agent_config = StrandsAgentConfig(
 
 # Create the Strands agent with tools
 agent = Agent(
-    model=os.getenv("BEDROCK_MODEL_ID", "anthropic.claude-3-haiku-20240307-v1:0"),
+    model=os.getenv("BEDROCK_MODEL_ID", "us.anthropic.claude-sonnet-4-6"),
     tools=[search_knowledge, get_article_content, update_learning_checklist, get_checklist_progress],
     system_prompt=SYSTEM_PROMPT,
 )

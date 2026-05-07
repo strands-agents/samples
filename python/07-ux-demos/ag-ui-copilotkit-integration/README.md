@@ -37,7 +37,7 @@ The sample consists of a Python backend agent and a Next.js frontend that commun
 - Node.js 20+
 - [uv](https://docs.astral.sh/uv/getting-started/installation/) for Python dependency management
 - AWS CLI configured with appropriate credentials
-- [Model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) enabled for Claude 3 Haiku (or your preferred model)
+- [Model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) enabled for Anthropic Claude Sonnet 4.6 (or your preferred model)
 
 ## Setup
 
