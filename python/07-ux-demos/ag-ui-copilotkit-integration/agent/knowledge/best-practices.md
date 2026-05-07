@@ -25,7 +25,7 @@ Choose the right model for your use case. On Amazon Bedrock, the current Anthrop
 | Model | Best For |
 |-------|----------|
 | **Claude Haiku 4.5** | Simple tasks, high volume, latency-sensitive paths |
-| **Claude Sonnet 4.6** | Balanced default — coding, tool use, long-context reasoning, agent planning |
+| **Claude Sonnet 4.6** | Balanced default for coding, tool use, long-context reasoning, agent planning |
 | **Claude Opus 4.6** | Most complex reasoning, long-horizon agentic tasks, large codebases |
 
 Prefer a cross-region inference profile ID (e.g. `us.anthropic.claude-sonnet-4-6`) over an in-region model ID for higher throughput.

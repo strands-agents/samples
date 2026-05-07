@@ -72,7 +72,7 @@ AgentCore supports multiple agent protocols:
 | **HTTP** | Standard request/response over HTTPS | Default for most agents |
 | **MCP** | Model Context Protocol | Tool integration and gateway targets |
 | **A2A** | Agent-to-Agent | Multi-agent systems |
-| **AG-UI** | Agent-to-UI protocol (SSE) | Rich web interfaces — the protocol this sample uses |
+| **AG-UI** | Agent-to-UI protocol (SSE) | Rich web interfaces; this is the protocol this sample uses |
 
 ## Model Selection
 
@@ -84,7 +84,7 @@ AgentCore supports any model available in your chosen provider. On Amazon Bedroc
 | **Claude Sonnet 4.6** | Balanced quality and cost; strong coding, long-context reasoning, and agent planning (default for most agents) |
 | **Claude Opus 4.6** | Most complex reasoning, long-horizon agentic workflows, large codebases |
 
-Use the `us.`, `eu.`, `au.`, `jp.`, or `global.` prefix on the model ID to use cross-region inference profiles (e.g. `us.anthropic.claude-sonnet-4-6`) — these give higher throughput than in-region IDs.
+Use the `us.`, `eu.`, `au.`, `jp.`, or `global.` prefix on the model ID to use cross-region inference profiles (e.g. `us.anthropic.claude-sonnet-4-6`). These give higher throughput than in-region IDs.
 
 ## Best Practices
 

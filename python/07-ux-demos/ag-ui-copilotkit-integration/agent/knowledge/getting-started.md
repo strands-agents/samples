@@ -21,7 +21,7 @@ Install globally from npm:
 npm install -g @aws/agentcore
 ```
 
-> **Upgrading from the old starter toolkit?** If you previously installed `bedrock-agentcore-starter-toolkit` (pip/pipx/uv), uninstall it first — both CLIs use the `agentcore` command name. The new CLI will show a warning if it detects the old one.
+> **Upgrading from the old starter toolkit?** If you previously installed `bedrock-agentcore-starter-toolkit` (pip/pipx/uv), uninstall it first. Both CLIs use the `agentcore` command name. The new CLI will show a warning if it detects the old one.
 
 Verify the install:
 
@@ -95,7 +95,7 @@ agentcore deploy
 This will:
 
 1. Package your agent
-2. Build the container (via AWS CodeBuild by default — no local Docker required)
+2. Build the container (via AWS CodeBuild by default, so no local Docker is required)
 3. Push the image to Amazon ECR
 4. Create / update the AgentCore Runtime and endpoint
 5. Return the runtime ARN and endpoint URL
@@ -135,8 +135,8 @@ agentcore logs --follow
 
 ## Next Steps
 
-- Learn about [AgentCore Concepts](concepts.md) — Runtime, Memory, Gateway, Identity
-- Review [Best Practices](best-practices.md) — architecture, security, performance, observability
+- Learn about [AgentCore Concepts](concepts.md): Runtime, Memory, Gateway, Identity
+- Review [Best Practices](best-practices.md): architecture, security, performance, observability
 - Explore advanced capabilities: MCP Gateway for external tools, AgentCore Memory strategies, evaluations, and Policy for guardrails
 
 ## Troubleshooting
