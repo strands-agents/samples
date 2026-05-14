@@ -1,0 +1,9 @@
+launchdarkly-server-sdk
+launchdarkly-server-sdk-ai>=0.18.0
+strands-agents>=1.8.0
+strands-agents-tools>=0.2.0
+anthropic
+openai
+boto3
+python-dotenv
+requests
