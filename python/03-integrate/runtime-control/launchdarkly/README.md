@@ -91,6 +91,10 @@ Order ORD-789 was delivered on Monday.
 [OK] Path invoked: strands-agent → strands-specialist-agent
 ```
 
+## Changing the graph at runtime
+
+Add a node + edge in LaunchDarkly's Agent Graph UI, save, and re-run the section 9 cell. The dispatcher re-fetches the live topology on every call and self-heals the SDK client if a prior cleanup closed it, so new nodes show up without restarting the kernel. The most reliable refresh after any LD UI change is still **Kernel → Restart and Run All**, which guarantees a fresh streaming connection.
+
 ## Monitoring in LaunchDarkly
 
 After running the agent, view metrics on the AI Config's **Monitoring** tab, or open **Insights** under **AI** in the left navigation for aggregated cost, latency, error rate, and model-distribution metrics across every AI Config in your project. The **Agent Graph** view (same nav) shows the same metrics laid out by node + the edges between them.
