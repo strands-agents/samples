@@ -1,29 +1,31 @@
-# Strands Agents Python Samples and Tutorials
+# Strands Agents SDK Fundamentals (Python)
 
-Build AI agents with the Strands Agents Python SDK.
+Step-by-step guides from basic agent creation to multi-agent orchestration.
 
 ## Index
 
-| Folder | Description |
-|--------|-------------|
-| [`01-learn`](./01-learn/) | **Build foundational skills.** Progressive tutorials from creating your first agent to multi-agent orchestration |
-| [`02-deploy`](./02-deploy/) | **Take agents to production.** Reference patterns for serverless, container, and managed runtime deployments |
-| [`03-integrate`](./03-integrate/) | **Extend agent capabilities.** Connect agents with databases, communication protocols, voice services, and safety guardrails |
-| [`04-industry-use-cases`](./04-industry-use-cases/) | **See agents in action.** Industry-specific applications organized by domain: finance, healthcare, retail, and more |
-| [`05-technical-use-cases`](./05-technical-use-cases/) | **Apply architectural patterns.** Reusable design patterns for retrieval, reasoning, and agent coordination |
-| [`06-evaluate`](./06-evaluate/) | **Ensure agent quality.** Test agents with the Strands Evals SDK using built-in and custom evaluators |
-| [`07-ux-demos`](./07-ux-demos/) | **Build user interfaces.** UX/UI demos with Streamlit, data visualization, and interactive playgrounds |
-| [`08-edge`](./08-edge/) | **Deploy beyond the cloud.** Run agents on edge devices and robotics platforms |
+| Folder | SDK Feature | Description |
+|--------|-------------|-------------|
+| [`01-first-agent`](./01-first-agent/) | `Agent` class | Create your first agent with system prompts |
+| [`02-tools-and-mcp`](./02-tools-and-mcp/) | `@tool` decorator, MCP | Build custom tools and connect MCP servers |
+| [`03-model-providers`](./03-model-providers/) | `BedrockModel`, `OllamaModel`, `LiteLLMModel` | Switch between Bedrock, Ollama, and OpenAI |
+| [`04-streaming`](./04-streaming/) | `stream_async`, callbacks | Stream responses in async/FastAPI apps |
+| [`05-guardrails`](./05-guardrails/) | `guardrails` parameter | Add content filtering with Bedrock Guardrails |
+| [`06-memory`](./06-memory/) | Memory tools | Persist agent memory across sessions |
+| [`07-aws-services`](./07-aws-services/) | `retrieve` tool, `BedrockModel` | Connect to Knowledge Bases and DynamoDB |
+| [`08-observability`](./08-observability/) | Tracing, evaluation | Trace with Langfuse, evaluate with RAGAS |
+| [`09-bidi-streaming`](./09-bidi-streaming/) | `BidiAgent` | Build real-time voice agents |
+| [`10-agents-as-tools`](./10-agents-as-tools/) | Hierarchical agents | Compose agents as callable tools |
+| [`11-swarm`](./11-swarm/) | `Swarm` class | Build self-organizing agent teams |
+| [`12-graph`](./12-graph/) | `GraphBuilder` | Create deterministic agent workflows |
+| [`13-human-in-the-loop`](./13-human-in-the-loop/) | Interrupts, hooks | Implement approval workflows with human oversight |
+| [`15-skills`](./15-skills/) | AgentSkills plugin, Skill dataclass | Load specialized instructions on demand with skills |
+| [`16-hooks-lifecycle`](./16-hooks-lifecycle/) | `HookProvider`, lifecycle events, `cancel_tool`, `retry`, `resume` | Tour the full hook lifecycle and use writable fields to control agent behavior |
+| [`17-conversation-management`](./17-conversation-management/) | `SlidingWindowConversationManager`, `NullConversationManager`, `SummarizingConversationManager` | Control agent message history with sliding window, null, and summarizing strategies |
+| [`20-production-deployment-patterns`](./20-production-deployment-patterns/) | `BedrockModel`, `stream_async`, `SlidingWindowConversationManager`, Docker, boto3 | Deploy agents to Lambda and Fargate with production best practices |
 
 ## Getting Started
 
-1. **New to Strands?** Start with [`01-learn/01-first-agent`](./01-learn/01-first-agent/)
-2. **Ready to deploy?** See [`02-deploy`](./02-deploy/) for Lambda, Fargate, and AgentCore patterns
-3. **Connecting external services?** Check [`03-integrate`](./03-integrate/) for databases, protocols, and guardrails
-4. **Building for a specific industry?** Browse [`04-industry-use-cases`](./04-industry-use-cases/) by domain
-5. **Looking for design patterns?** See [`05-technical-use-cases`](./05-technical-use-cases/) for reusable architectural patterns
-6. **Testing your agent?** Use [`06-evaluate`](./06-evaluate/) for built-in and custom evaluators
-7. **Adding a UI?** Try [`07-ux-demos`](./07-ux-demos/) for Streamlit templates and playgrounds
-8. **Running on devices?** Explore [`08-edge`](./08-edge/) for robotics and edge platforms
+Start with [`01-first-agent`](./01-first-agent/) if you're new to Strands Agents, then progress in order.
 
-For setup instructions and prerequisites, see the [main README](../README.md#quick-start).
+[Strands Agents Documentation](https://strandsagents.com/)
