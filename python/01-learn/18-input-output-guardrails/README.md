@@ -436,7 +436,7 @@ agent = Agent(hooks=[MyHook()])
 
 ### Next steps
 
-- Explore the [hooks tutorial](../06-hooks/) for more lifecycle event patterns
+- Explore the [hooks lifecycle tutorial](../16-hooks-lifecycle/) for more lifecycle event patterns
 - Check out [05-guardrails](../05-guardrails/) for the managed Bedrock Guardrails approach
 - Add custom ML-based classifiers (toxicity, sentiment) as `ContentFilter` subclasses
 - Integrate with external moderation APIs by wrapping them in the `ContentFilter` interface
