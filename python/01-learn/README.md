@@ -23,6 +23,7 @@ Step-by-step guides from basic agent creation to multi-agent orchestration.
 | [`15-skills`](./15-skills/) | AgentSkills plugin, Skill dataclass | Load specialized instructions on demand with skills |
 | [`16-hooks-lifecycle`](./16-hooks-lifecycle/) | `HookProvider`, lifecycle events, `cancel_tool`, `retry`, `resume` | Tour the full hook lifecycle and use writable fields to control agent behavior |
 | [`17-conversation-management`](./17-conversation-management/) | `SlidingWindowConversationManager`, `NullConversationManager`, `SummarizingConversationManager` | Control agent message history with sliding window, null, and summarizing strategies |
+| [`22-structured-output`](./22-structured-output/) | Structured Output, Pydantic validation, `structured_output_model`, `field_validator` | Get validated, typed Pydantic objects back from agents instead of free-form text |
 
 ## Getting Started
 
