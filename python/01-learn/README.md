@@ -23,6 +23,7 @@ Step-by-step guides from basic agent creation to multi-agent orchestration.
 | [`15-skills`](./15-skills/) | AgentSkills plugin, Skill dataclass | Load specialized instructions on demand with skills |
 | [`16-hooks-lifecycle`](./16-hooks-lifecycle/) | `HookProvider`, lifecycle events, `cancel_tool`, `retry`, `resume` | Tour the full hook lifecycle and use writable fields to control agent behavior |
 | [`17-conversation-management`](./17-conversation-management/) | `SlidingWindowConversationManager`, `NullConversationManager`, `SummarizingConversationManager` | Control agent message history with sliding window, null, and summarizing strategies |
+| [`18-self-improving-agents`](./18-self-improving-agents/) | `load_tools_from_directory`, dynamic system prompt, AgentCore Memory + Runtime | Build a self-extending, self-modifying, autonomous agent and deploy it (6 steps, AIM308) |
 
 ## Getting Started
 

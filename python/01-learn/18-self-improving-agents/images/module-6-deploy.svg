@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" width="1000" height="440" preserveAspectRatio="xMidYMid meet" style="max-width:100%;height:auto;" role="img" aria-label="Module 6 — deploy to AgentCore Runtime">
+  <title>Module 6 — Deploy to AgentCore Runtime</title>
+  <defs>
+    <linearGradient id="m6-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f1729"/><stop offset="1" stop-color="#1a2744"/></linearGradient>
+    <linearGradient id="m6-g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff9900"/><stop offset="1" stop-color="#ffbb00"/></linearGradient>
+    <linearGradient id="m6-s" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#00ff88"/><stop offset="1" stop-color="#00d4ff"/></linearGradient>
+    <marker id="m6-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#ffbb00"/></marker>
+  </defs>
+  <rect width="1000" height="440" fill="url(#m6-bg)"/>
+  <text x="500" y="42" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="26" font-weight="700">Deploy · agent.py → production endpoint</text>
+  <text x="500" y="68" text-anchor="middle" fill="#8fa3c7" font-family="system-ui,sans-serif" font-size="15">Same code · same memory · invokable from anywhere</text>
+
+  <g font-family="system-ui,sans-serif">
+    <!-- Local laptop -->
+    <g transform="translate(40,105)">
+      <rect width="250" height="290" rx="14" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="125" y="32" text-anchor="middle" fill="#8fa3c7" font-size="13" font-weight="700" letter-spacing="1.5">YOUR LAPTOP</text>
+      <text x="125" y="78" text-anchor="middle" font-size="52">💻</text>
+      <g transform="translate(16,125)" font-family="ui-monospace,monospace" font-size="13">
+        <rect width="218" height="150" rx="8" fill="#0b1020" stroke="#2a3660"/>
+        <text x="12" y="26" fill="#fff">agent.py</text>
+        <text x="12" y="46" fill="#8fa3c7">@app.entrypoint</text>
+        <text x="12" y="74" fill="#00ff88" font-weight="600">$ ./deploy.sh</text>
+        <text x="12" y="96" fill="#8fa3c7">→ agentcore configure</text>
+        <text x="12" y="116" fill="#8fa3c7">→ agentcore deploy</text>
+        <text x="12" y="140" fill="#ffbb00" font-weight="600">⏳ ~2min build</text>
+      </g>
+    </g>
+
+    <!-- Arrow -->
+    <g stroke="url(#m6-g)" stroke-width="3.5" fill="none" marker-end="url(#m6-a)">
+      <path d="M295 250 L360 250"/>
+    </g>
+    <circle r="7" fill="#ffbb00">
+      <animateMotion dur="5s" repeatCount="indefinite" path="M295 250 L360 250"/>
+      <animate attributeName="opacity" values="0;1;1;0" dur="5s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- AgentCore Runtime -->
+    <g transform="translate(370,105)">
+      <rect width="280" height="290" rx="14" fill="#2a1e4a" stroke="url(#m6-g)" stroke-width="2.5"/>
+      <text x="140" y="32" text-anchor="middle" fill="#ffbb00" font-size="13" font-weight="700" letter-spacing="1.5">AGENTCORE RUNTIME</text>
+      <text x="140" y="62" text-anchor="middle" fill="#fff" font-size="17" font-weight="700">☁ Managed container</text>
+
+      <g transform="translate(22,90)" font-family="ui-monospace,monospace" font-size="12">
+        <rect width="236" height="185" rx="8" fill="#0b1020" stroke="#2a3660"/>
+        <text x="12" y="22" fill="#8fa3c7"># your agent, isolated</text>
+        <text x="12" y="46" fill="#00ff88">✓ IAM: RuntimeRole</text>
+        <text x="12" y="66" fill="#00ff88">✓ Memory attached</text>
+        <text x="12" y="86" fill="#00ff88">✓ InvokeModel</text>
+        <text x="12" y="106" fill="#00ff88">✓ CloudWatch logs</text>
+        <text x="12" y="138" fill="#ffbb00" font-weight="600">ARN:</text>
+        <text x="12" y="156" fill="#fff">arn:aws:bedrock-</text>
+        <text x="12" y="172" fill="#fff">agentcore:us-east-1</text>
+      </g>
+    </g>
+
+    <!-- Arrow to invokers -->
+    <g stroke="url(#m6-s)" stroke-width="3.5" fill="none" marker-end="url(#m6-a)">
+      <path d="M655 250 L720 250"/>
+    </g>
+
+    <!-- Invokers -->
+    <g transform="translate(730,105)">
+      <rect width="230" height="290" rx="14" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="115" y="32" text-anchor="middle" fill="#8fa3c7" font-size="13" font-weight="700" letter-spacing="1.5">INVOKABLE FROM</text>
+      <g transform="translate(22,62)" fill="#fff" font-size="15">
+        <text y="22">📱 Mobile app</text>
+        <text y="52">🖥️ Lambda</text>
+        <text y="82">🌐 Web frontend</text>
+        <text y="112">🤖 Another agent</text>
+        <text y="142">⏰ EventBridge</text>
+        <text y="172">📬 SQS trigger</text>
+        <text y="210" fill="#00ff88" font-size="12" font-weight="700">invoke_agent_runtime()</text>
+        <text y="228" fill="#8fa3c7" font-size="11">boto3 bedrock-agentcore</text>
+      </g>
+    </g>
+  </g>
+</svg>

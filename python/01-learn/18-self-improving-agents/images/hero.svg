@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600" preserveAspectRatio="xMidYMid meet" style="max-width:100%;height:auto;" role="img" aria-label="AIM308 workshop hero — from 20 lines to deployed autonomous agent">
+  <title>AIM308 — from 20 lines of Python to a deployed autonomous agent</title>
+  <defs>
+    <linearGradient id="h-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f1729"/>
+      <stop offset="1" stop-color="#1a2744"/>
+    </linearGradient>
+    <linearGradient id="h-aws" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff9900"/>
+      <stop offset="1" stop-color="#ffbb00"/>
+    </linearGradient>
+    <linearGradient id="h-strands" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#00ff88"/>
+      <stop offset="1" stop-color="#00d4ff"/>
+    </linearGradient>
+    <filter id="h-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="h-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#00d4ff"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="600" fill="url(#h-bg)"/>
+
+  <!-- subtle grid -->
+  <g stroke="#ffffff" stroke-opacity="0.04" stroke-width="1">
+    <path d="M0 100h1200M0 200h1200M0 300h1200M0 400h1200M0 500h1200"/>
+    <path d="M150 0v600M300 0v600M450 0v600M600 0v600M750 0v600M900 0v600M1050 0v600"/>
+  </g>
+
+  <!-- title -->
+  <text x="600" y="70" text-anchor="middle" fill="#ffffff" font-family="system-ui,-apple-system,sans-serif" font-size="38" font-weight="700">AIM308 · New York Summit 2026</text>
+  <text x="600" y="110" text-anchor="middle" fill="url(#h-strands)" font-family="system-ui,-apple-system,sans-serif" font-size="22" font-weight="500">Build autonomous, self-improving AI agents with Strands</text>
+
+  <!-- 6-step journey -->
+  <g font-family="system-ui,-apple-system,sans-serif">
+    <!-- Step 0 -->
+    <g transform="translate(30,175)">
+      <rect width="180" height="130" rx="14" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="90" y="30" text-anchor="middle" fill="#8fa3c7" font-size="13" font-weight="700" letter-spacing="1.5">STEP 0</text>
+      <text x="90" y="64" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="700">Hello Agent</text>
+      <text x="90" y="92" text-anchor="middle" fill="#00ff88" font-size="14" font-weight="600">20 lines · Claude 4.6</text>
+      <text x="90" y="114" text-anchor="middle" fill="#8fa3c7" font-size="13">local</text>
+    </g>
+    <!-- Step 1 -->
+    <g transform="translate(225,175)">
+      <rect width="180" height="130" rx="14" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="90" y="30" text-anchor="middle" fill="#8fa3c7" font-size="13" font-weight="700" letter-spacing="1.5">STEP 1</text>
+      <text x="90" y="64" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="700">Self-Extending</text>
+      <text x="90" y="92" text-anchor="middle" fill="#00ff88" font-size="14" font-weight="600">hot-reload tools</text>
+      <text x="90" y="114" text-anchor="middle" fill="#8fa3c7" font-size="13">+10 lines</text>
+    </g>
+    <!-- Step 2 -->
+    <g transform="translate(420,175)">
+      <rect width="180" height="130" rx="14" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="90" y="30" text-anchor="middle" fill="#8fa3c7" font-size="13" font-weight="700" letter-spacing="1.5">STEP 2</text>
+      <text x="90" y="64" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="700">Self-Modifying</text>
+      <text x="90" y="92" text-anchor="middle" fill="#00ff88" font-size="14" font-weight="600">rewrite own prompt</text>
+      <text x="90" y="114" text-anchor="middle" fill="#8fa3c7" font-size="13">+40 lines</text>
+    </g>
+    <!-- Step 3 -->
+    <g transform="translate(615,175)">
+      <rect width="180" height="130" rx="14" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="90" y="30" text-anchor="middle" fill="#8fa3c7" font-size="13" font-weight="700" letter-spacing="1.5">STEP 3</text>
+      <text x="90" y="64" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="700">Self-Learning</text>
+      <text x="90" y="92" text-anchor="middle" fill="#ff9900" font-size="14" font-weight="600">AgentCore Memory</text>
+      <text x="90" y="114" text-anchor="middle" fill="#8fa3c7" font-size="13">+30 lines</text>
+    </g>
+    <!-- Step 4 -->
+    <g transform="translate(810,175)">
+      <rect width="180" height="130" rx="14" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="90" y="30" text-anchor="middle" fill="#8fa3c7" font-size="13" font-weight="700" letter-spacing="1.5">STEP 4</text>
+      <text x="90" y="64" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="700">Autonomous</text>
+      <text x="90" y="92" text-anchor="middle" fill="#00ff88" font-size="14" font-weight="600">ambient + scheduler</text>
+      <text x="90" y="114" text-anchor="middle" fill="#8fa3c7" font-size="13">+50 lines</text>
+    </g>
+    <!-- Step 5 -->
+    <g transform="translate(1005,175)">
+      <rect width="180" height="130" rx="14" fill="#2a1e4a" stroke="url(#h-aws)" stroke-width="2.5"/>
+      <text x="90" y="30" text-anchor="middle" fill="#ffbb00" font-size="13" font-weight="700" letter-spacing="1.5">STEP 5 · PROD</text>
+      <text x="90" y="64" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="700">Deployed</text>
+      <text x="90" y="92" text-anchor="middle" fill="#ff9900" font-size="14" font-weight="600">AgentCore Runtime</text>
+      <text x="90" y="114" text-anchor="middle" fill="#8fa3c7" font-size="13">+15 lines · cloud ☁</text>
+    </g>
+
+    <!-- flowing arrows between steps -->
+    <g stroke="url(#h-strands)" stroke-width="3" fill="none" marker-end="url(#h-arr)" opacity="0.75">
+      <line x1="210" y1="240" x2="225" y2="240"/>
+      <line x1="405" y1="240" x2="420" y2="240"/>
+      <line x1="600" y1="240" x2="615" y2="240"/>
+      <line x1="795" y1="240" x2="810" y2="240"/>
+      <line x1="990" y1="240" x2="1005" y2="240"/>
+    </g>
+
+    <!-- animated pulse traveling along the path -->
+    <circle r="6" fill="#00ff88" filter="url(#h-glow)">
+      <animateMotion dur="6s" repeatCount="indefinite"
+        path="M120 240 L225 240 L315 240 L420 240 L510 240 L615 240 L705 240 L810 240 L900 240 L1005 240 L1095 240"/>
+      <animate attributeName="opacity" values="0;1;1;1;0" dur="6s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- bottom capability bar -->
+  <g transform="translate(0,380)" font-family="system-ui,-apple-system,sans-serif">
+    <text x="600" y="30" text-anchor="middle" fill="#8fa3c7" font-size="15" letter-spacing="2" font-weight="600">WHAT YOUR AGENT CAN DO BY THE END</text>
+
+    <g transform="translate(80,70)" fill="#ffffff">
+      <circle cx="28" cy="28" r="24" fill="#00ff88" opacity="0.18"/>
+      <text x="28" y="36" text-anchor="middle" font-size="26">🛠</text>
+      <text x="70" y="24" font-size="16" font-weight="700">Creates tools</text>
+      <text x="70" y="46" fill="#8fa3c7" font-size="13">while running</text>
+    </g>
+    <g transform="translate(295,70)" fill="#ffffff">
+      <circle cx="28" cy="28" r="24" fill="#00ff88" opacity="0.18"/>
+      <text x="28" y="36" text-anchor="middle" font-size="26">✏</text>
+      <text x="70" y="24" font-size="16" font-weight="700">Rewrites itself</text>
+      <text x="70" y="46" fill="#8fa3c7" font-size="13">persistent behavior</text>
+    </g>
+    <g transform="translate(510,70)" fill="#ffffff">
+      <circle cx="28" cy="28" r="24" fill="#ff9900" opacity="0.18"/>
+      <text x="28" y="36" text-anchor="middle" font-size="26">🧠</text>
+      <text x="70" y="24" font-size="16" font-weight="700">Remembers you</text>
+      <text x="70" y="46" fill="#8fa3c7" font-size="13">AgentCore Memory</text>
+    </g>
+    <g transform="translate(735,70)" fill="#ffffff">
+      <circle cx="28" cy="28" r="24" fill="#00ff88" opacity="0.18"/>
+      <text x="28" y="36" text-anchor="middle" font-size="26">🌙</text>
+      <text x="70" y="24" font-size="16" font-weight="700">Works at night</text>
+      <text x="70" y="46" fill="#8fa3c7" font-size="13">ambient mode</text>
+    </g>
+    <g transform="translate(955,70)" fill="#ffffff">
+      <circle cx="28" cy="28" r="24" fill="#ff9900" opacity="0.18"/>
+      <text x="28" y="36" text-anchor="middle" font-size="26">🚀</text>
+      <text x="70" y="24" font-size="16" font-weight="700">Deploys to cloud</text>
+      <text x="70" y="46" fill="#8fa3c7" font-size="13">AgentCore Runtime</text>
+    </g>
+  </g>
+
+  <!-- footer -->
+  <g transform="translate(0,540)" font-family="system-ui,-apple-system,sans-serif">
+    <text x="600" y="22" text-anchor="middle" fill="#6b7a9a" font-size="14">60-minute builders session · Claude 4.6 Sonnet · Amazon Bedrock AgentCore</text>
+    <text x="600" y="46" text-anchor="middle" fill="#6b7a9a" font-size="12">github.com/strands-agents/samples/tree/main/python/01-learn/18-self-improving-agents</text>
+  </g>
+</svg>
