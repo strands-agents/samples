@@ -1,0 +1,12 @@
+[project]
+name = "pokemon-team-advisor"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "strands-agents>=1.44.0",
+    "strands-agents-evals>=1.0.0",
+    "strands-shell>=0.1.0",
+]
+
+[tool.uv]
+dev-dependencies = []
