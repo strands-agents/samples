@@ -16,7 +16,7 @@ Go from a 20-line Strands agent to a fully autonomous, self-improving agent depl
 | **Custom Tools**     | `system_prompt` (self-modification), `calculator` (example of a self-written tool)        |
 | **Memory**           | Amazon Bedrock AgentCore Memory (semantic, per-actor)                                     |
 | **Complexity**       | Beginner → Advanced (progressive)                                                         |
-| **Model Provider**   | Amazon Bedrock — Claude Sonnet 4.5 (`global.anthropic.claude-opus-4-8`)                  |
+| **Model Provider**   | Amazon Bedrock — Claude Opus 4 (`global.anthropic.claude-opus-4-8`)                  |
 | **SDK Used**         | Strands Agents SDK, `bedrock-agentcore`                                                   |
 
 ## The core pattern: Agent → Model → Tools
@@ -47,7 +47,7 @@ Every step reuses this one loop. Once you grok **Agent · Model · Tools**, ever
 ## Prerequisites
 
 - Python **3.10+** and `pip`
-- AWS account with [Amazon Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) enabled for Claude Sonnet 4.5 in `us-east-1`
+- AWS account with [Amazon Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) enabled for Claude Opus 4 (`global.anthropic.claude-opus-4-8`) in `us-east-1`
 - AWS credentials configured (`aws configure` or environment variables)
 - For steps 3–5: [Amazon Bedrock AgentCore](https://aws.amazon.com/bedrock/agentcore/) access
 - For step 5 deploy: Node.js 20+ (the new [`@aws/agentcore`](https://github.com/aws/agentcore-cli) CLI)
