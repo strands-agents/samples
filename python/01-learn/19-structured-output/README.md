@@ -49,7 +49,7 @@ Under the hood, the SDK registers your model as a dynamic tool, the LLM calls it
 ## Tutorial Structure
 
 ```
-22-structured-output/
+19-structured-output/
 ├── README.md
 ├── requirements.txt
 ├── structured-output.ipynb
