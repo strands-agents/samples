@@ -2,20 +2,9 @@
 
 This tutorial teaches you how to get reliable, typed, validated data from your Strands agents using structured output. Instead of parsing free-form text, you define a Pydantic model and the agent returns a validated Python object — ready for downstream code, APIs, and workflows.
 
-## Architecture
+## Overview
 
 The core idea is simple: you give the agent a prompt **and** a Pydantic model describing the shape you want, and you get back a validated, typed object instead of free-form text.
-
-```mermaid
-flowchart LR
-    P["Your prompt"] --> AG
-    M["Pydantic model<br>(the shape you want)"] --> AG
-    AG(["Strands Agent"]) --> O["Validated,<br>typed object"]
-
-    style M fill:#e8f0fe,stroke:#4285f4,stroke-width:2px
-    style O fill:#e6f4ea,stroke:#34a853,stroke-width:2px
-    style AG fill:#fef7e0,stroke:#fbbc04,stroke-width:2px
-```
 
 Under the hood, the SDK registers your model as a dynamic tool, the LLM calls it to produce the data, and Pydantic validates the result — retrying automatically if validation fails. See [How It Works](#how-it-works) for the full mechanics.
 
@@ -52,9 +41,7 @@ Under the hood, the SDK registers your model as a dynamic tool, the LLM calls it
 19-structured-output/
 ├── README.md
 ├── requirements.txt
-├── structured-output.ipynb
-└── images/
-    └── architecture.png
+└── structured-output.ipynb
 ```
 
 | File | Description |
@@ -66,7 +53,7 @@ Under the hood, the SDK registers your model as a dynamic tool, the LLM calls it
 - **Your First Structured Output**: Define a flat Pydantic model, pass it to an agent, and access typed results — both sync and async
 - **Complex Schemas**: Build nested models with `List`, `Optional`, field validators, and enum constraints
 - **Validation & Self-Correction**: Watch the automatic retry loop fire when validation fails, inspect the retry trail in `agent.messages`, handle `StructuredOutputException`, and customize the forcing prompt
-- **Tools + Structured Output**: Combine regular tools with structured output so agents can gather data and return structured results — plus a note on how structured output behaves when streaming
+- **Tools + Structured Output**: Combine regular tools with structured output so agents can gather data and return structured results
 
 ## Installation
 
