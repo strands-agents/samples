@@ -12,6 +12,7 @@ PROJECT_NAME="${AIM308_PROJECT_NAME:-Aim308Deploy}"
 AGENT_NAME="${AIM308_AGENT_NAME:-aim308_research_agent}"
 REGION="${AWS_REGION:-us-east-1}"
 PROJECT_DIR="${AIM308_PROJECT_DIR:-./$PROJECT_NAME}"
+MODEL_ID="${BEDROCK_AGENTCORE_MODEL_ID:-global.anthropic.claude-opus-4-8}"
 
 # --- preflight checks -------------------------------------------------------
 
@@ -83,6 +84,8 @@ touch "$ENV_FILE"
 grep -q "^AWS_REGION=" "$ENV_FILE"                 || echo "AWS_REGION=$REGION" >> "$ENV_FILE"
 grep -q "^BEDROCK_AGENTCORE_MEMORY_ID=" "$ENV_FILE" || \
     echo "BEDROCK_AGENTCORE_MEMORY_ID=$BEDROCK_AGENTCORE_MEMORY_ID" >> "$ENV_FILE"
+grep -q "^BEDROCK_AGENTCORE_MODEL_ID=" "$ENV_FILE"  || \
+    echo "BEDROCK_AGENTCORE_MODEL_ID=$MODEL_ID" >> "$ENV_FILE"
 
 # --- step 4: install deps & deploy via CDK --------------------------------
 

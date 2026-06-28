@@ -1,6 +1,6 @@
 """AIM308 - Step 0: Hello Agent.
 
-The minimum viable Strands agent. Claude 4.6 Sonnet + one tool (shell).
+The minimum viable Strands agent. Claude Opus 4 + one tool (shell).
 """
 import sys
 from strands import Agent
