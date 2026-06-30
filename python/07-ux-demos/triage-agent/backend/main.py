@@ -455,8 +455,8 @@ AVAILABLE_MODELS = [
         "description": "Most advanced Claude model with superior reasoning"
     },
     {
-        "id": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
-        "name": "Claude 3.7 Sonnet",
+        "id": "us.anthropic.claude-sonnet-4-6",
+        "name": "Claude Sonnet 4.6",
         "description": "Claude model with enhanced reasoning capabilities"
     },
     {

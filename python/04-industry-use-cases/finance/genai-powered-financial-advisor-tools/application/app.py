@@ -76,16 +76,16 @@ else:
 APP_TITLE = "Financial Advisor AI"
 APP_VERSION = "1.0"
 MAX_INPUT_LENGTH = 5000
-DEFAULT_MODEL = "Claude 3.7 Sonnet"
+DEFAULT_MODEL = "Claude Sonnet 4.6"
 
 # Available AI models
 AVAILABLE_MODELS = [
     "Claude 4 Sonnet",
-    "Claude 3.7 Sonnet",
+    "Claude Sonnet 4.6",
 ]
 
 # Models that support advanced reasoning
-REASONING_SUPPORTED_MODELS = ["Claude 4 Sonnet","Claude 3.7 Sonnet"]
+REASONING_SUPPORTED_MODELS = ["Claude 4 Sonnet","Claude Sonnet 4.6"]
 
 # Configure logging for the application
 logging.basicConfig(

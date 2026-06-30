@@ -8,7 +8,7 @@ A lightweight conversational AI agent built with Strands SDK that assists facili
 |--------------------|---------------------------------------------------|
 |Agent Structure     |Single-agent architecture                           |
 |Tools        | Get current time, Execute Code, Get Site info (from IoT platform), Get Timeseries data (from IoT pltaform)             |
-|Model Provider      |Amazon Bedrock - Anthropic Claude 3.5 Haiku
+|Model Provider      |Amazon Bedrock - Anthropic Claude Haiku 4.5
 
 ## Project Overview
 
@@ -53,7 +53,7 @@ The solution consists of several key components:
 
 ## Prerequisites
 
-- AWS Account with appropriate permissions to create the resources in this architecture and access to Anthropic Claude 3.5 Haiku
+- AWS Account with appropriate permissions to create the resources in this architecture and access to Anthropic Claude Haiku 4.5
 - Python 3.12 or higher
 - AWS CDK v2 installed : [Installation guide](https://docs.aws.amazon.com/cdk/v2/guide/getting-started.html)
 - uv package manager (faster alternative to pip)
@@ -134,7 +134,7 @@ After deployment, you can interact with the agent through the web interface. You
 
 - Navigate to the WebAppStack in Cloudformation in AWS console and look for the 'CloudFrontURL' in the Outputs tab. Open this link in a new tab.
 - Navigate to the CognitoStack in the Cloudformation in AWS console and look for the 'Username' and 'Password' in the Outputs tab. Use these credentials to login to the web ui.
-- In AWS console, navigate to the Amazon Bedrock page and verify that you have access to Anthropic Claude 3.5 Haiku model.
+- In AWS console, navigate to the Amazon Bedrock page and verify that you have access to Anthropic Claude Haiku 4.5 model.
 
 Example queries:
 - "How many zones are on the first floor?"

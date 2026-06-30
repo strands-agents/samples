@@ -9,7 +9,7 @@ This tutorial guides you through setting up the back-end infrastructure and agen
 
 You will deploy the following AWS services:
 
-- **Strands Agents SDK**: Powers the ***Data Analyst Assistant*** that answers questions by generating SQL queries using Claude 3.7 Sonnet
+- **Strands Agents SDK**: Powers the ***Data Analyst Assistant*** that answers questions by generating SQL queries using Claude Sonnet 4.6
     - Strands Agents is a simple yet powerful SDK that takes a model-driven approach to building and running AI agents. From simple conversational assistants to complex autonomous workflows, from local development to production deployment, Strands Agents scales with your needs.
 - **Amazon Aurora PostgreSQL**: Stores the video game sales data
 - **Amazon ECS on Fargate**: Hosts the Strands Agent service
@@ -33,7 +33,7 @@ Before you begin, ensure you have:
 
 * **[AWS CDK Installed](https://docs.aws.amazon.com/cdk/v2/guide/getting-started.html)**
 * **[Docker](https://www.docker.com)**
-* Anthropic Claude 3.7 Sonnet model enabled in Amazon Bedrock
+* Anthropic Claude Sonnet 4.6 model enabled in Amazon Bedrock
 * Run this command to create a service-linked role for RDS:
 
 ```bash

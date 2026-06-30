@@ -53,7 +53,7 @@ AI-powered Lambda error diagnostics that transforms generic error messages into 
 - **Python** 3.12+
 - **Docker** installed and running (for building Lambda layers)
 - **Amazon Bedrock** [model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) enabled for:
-  - Claude Sonnet 3.7 (`us.anthropic.claude-3-7-sonnet-20250219-v1:0`)
+  - Claude Sonnet 3.7 (`us.anthropic.claude-sonnet-4-6`)
   - Claude Sonnet 4 (`us.anthropic.claude-sonnet-4-20250514-v1:0`)
 
 ## Setup

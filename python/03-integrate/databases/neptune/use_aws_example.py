@@ -18,7 +18,7 @@ def main():
     args = parser.parse_args()
 
     agent = Agent(
-        model=BedrockModel(model_id="anthropic.claude-3-5-sonnet-20240620-v1:0"),
+        model=BedrockModel(model_id="us.anthropic.claude-sonnet-4-6"),
         tools=[use_aws],
     )
 

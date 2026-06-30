@@ -187,7 +187,7 @@ The Strands Playground follows a modern web application architecture:
 4. The agent will now use only the selected tools in future interactions
 
 ### Customizing Model Parameters
-1. Enter the desired model ID (e.g., "us.anthropic.claude-3-7-sonnet-20250219-v1:0")
+1. Enter the desired model ID (e.g., "us.anthropic.claude-sonnet-4-6")
 2. Specify the AWS region (e.g., "us-west-2")
 3. Optionally configure max tokens, temperature, and top P values
 4. Click "Update" to apply changes

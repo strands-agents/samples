@@ -16,7 +16,7 @@ This tutorial demonstrates automated test case generation for agent evaluation u
 
 - Python 3.11 or higher
 - AWS account with Amazon Bedrock access
-- Claude Sonnet 4.0 model enabled in Amazon Bedrock
+- Claude Sonnet 4.6 model enabled in Amazon Bedrock
 - IAM permissions to invoke Bedrock models
 - Basic understanding of agent evaluation concepts
 
@@ -156,8 +156,8 @@ Generated test cases include:
 **Error**: `AccessDeniedException` or model not available
 
 **Solution**:
-- Verify Claude Sonnet 4.0 is enabled in your Amazon Bedrock console
-- Check model ID is correct: `us.anthropic.claude-sonnet-4-0-20250514-v1:0`
+- Verify Claude Sonnet 4.6 is enabled in your Amazon Bedrock console
+- Check model ID is correct: `us.anthropic.claude-sonnet-4-6`
 - Confirm your AWS region supports the model
 
 ### Dataset Generation Timeout

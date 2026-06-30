@@ -19,7 +19,7 @@ AWS Audit Assistant is your AI-powered partner for ensuring AWS resource complia
 ### Technical Stack
 | Component | Description |
 |-----------|-------------|
-| Model Provider | Amazon Bedrock (Claude 3.5 Sonnet) |
+| Model Provider | Amazon Bedrock (Claude Sonnet 4.6) |
 | Native Tools | boto3, file_read, shell, python_repl |
 | Custom Agents | Documentation Retriever, Boto3 Code Assistant, Resource Auditor |
 

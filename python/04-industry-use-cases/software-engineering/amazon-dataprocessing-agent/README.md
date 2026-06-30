@@ -15,7 +15,7 @@ The **Amazon Data Processing Agent** is an intelligent conversational AI assista
 | Agent Structure | Multi-agent architecture with specialized components                                              |
 | Custom Tools    | send_email, manage_s3_table_buckets, manage_s3_namespaces, manage_s3_tables                       |
 | MCP Servers     | [AWS Data Processing MCP Server](https://pypi.org/project/awslabs.aws-dataprocessing-mcp-server/) |
-| Model Provider  | Amazon Bedrock (Claude 3.7 Sonnet, Claude 4.0 Sonnet)                                             |
+| Model Provider  | Amazon Bedrock (Claude Sonnet 4.6, Claude 4.0 Sonnet)                                             |
 | UI Framework    | Streamlit with real-time streaming                                                                |
 
 ### What We're Building
@@ -290,7 +290,7 @@ uv run python -m streamlit run app.py
 
 1. **Launch the application** using one of the methods above
 2. **Initialize the agent** using the sidebar controls (connects to aws-dataprocessing-mcp-server)
-3. **Select your preferred Claude model** (Claude-3.7 Sonnet or Claude-4 Sonnet)
+3. **Select your preferred Claude model** (Claude Sonnet 4.6 or Claude-4 Sonnet)
 4. **Start chatting** with the agent about your data processing needs
 
 ### Example Conversations

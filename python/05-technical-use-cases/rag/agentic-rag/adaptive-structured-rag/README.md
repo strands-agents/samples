@@ -14,9 +14,9 @@ An Adaptive Structured RAG agent that converts natural language questions into S
 
 - **AWS Environment Access**: This agent requires access to an AWS environment if you use Amazon Bedrock as model provider
   - AWS credentials configured (via AWS CLI, environment variables, or IAM roles)
-  - **Model Access**: Enable access to Claude 3.7 Sonnet model in Amazon Bedrock console
+  - **Model Access**: Enable access to Claude Sonnet 4.6 model in Amazon Bedrock console
     - Navigate to Amazon Bedrock → Model access
-    - Request access to "Anthropic Claude 3.7 Sonnet" model
+    - Request access to "Anthropic Claude Sonnet 4.6" model
     - Wait for approval (usually immediate for supported regions)
   - **Athena mode Access**: 
     - Additional access to Amazon Athena and S3
@@ -42,7 +42,7 @@ The agent supports two execution modes & architecture, each optimized for differ
 - **Database**: SQLite (`wealthmanagement.db`) - Local file-based database
 - **Schema Source**: Hardcoded wealth management schema in knowledge base tool
 - **Query Engine**: Direct SQLite execution with local file access
-- **LLM Provider**: Amazon Bedrock (Claude 3.7 Sonnet)
+- **LLM Provider**: Amazon Bedrock (Claude Sonnet 4.6)
 
 **Architecture Flow**:
 1. User submits natural language query
@@ -62,7 +62,7 @@ The agent supports two execution modes & architecture, each optimized for differ
 - **Database**: Your choice of Amazon Datastores like AWS Glue that can be queried through Athena
 - **Schema Source**: AWS Bedrock Knowledge Base with dynamic schema retrieval
 - **Query Engine**: Athena with S3 output location for results
-- **LLM Provider**: Amazon Bedrock (Claude 3.7 Sonnet)
+- **LLM Provider**: Amazon Bedrock (Claude Sonnet 4.6)
 
 **Architecture Flow**:
 1. User submits natural language query
@@ -75,7 +75,7 @@ The agent supports two execution modes & architecture, each optimized for differ
 ## Model Configuration
 
 ### Default Model
-The Strands Agent framework uses **Claude 3.7 Sonnet** as the default model for natural language processing and SQL generation. 
+The Strands Agent framework uses **Claude Sonnet 4.6** as the default model for natural language processing and SQL generation. 
 
 ### Custom Model Providers
 You can configure the agent to use different model providers by modifying the agent initialization in `src/agent.py`. The Strands framework supports multiple model providers. 

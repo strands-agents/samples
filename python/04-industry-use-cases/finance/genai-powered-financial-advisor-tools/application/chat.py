@@ -33,7 +33,7 @@ from strands.tools.mcp import MCPClient
 import info
 import prompt
 
-model_name = "Claude 3.7 Sonnet"
+model_name = "Claude Sonnet 4.6"
 reasoning_mode = "Disable"
 os.environ["BYPASS_TOOL_CONSENT"] = "true"  # Bypass consent for file_write
 
@@ -106,7 +106,7 @@ def get_model():
 
         additional_fields = {"thinking": thinking_config}
 
-        if model_name in ["Claude 4 Sonnet", "Claude 3.7 Sonnet"]:
+        if model_name in ["Claude 4 Sonnet", "Claude Sonnet 4.6"]:
             additional_fields["anthropic_beta"] = ["interleaved-thinking-2025-05-14"]
 
         model = BedrockModel(

@@ -444,7 +444,7 @@ def _get_medical_code_from_bedrock(term: str, code_system: str, instruction: str
         )
         
         # Prepare request for Claude model
-        model_id = os.environ.get('BEDROCK_MODEL_ID', 'anthropic.claude-3-sonnet-20240229-v1:0')
+        model_id = os.environ.get('BEDROCK_MODEL_ID', 'us.anthropic.claude-sonnet-4-6')
         
         # Adjust prompt based on code system
         if code_system == "ICD-10":
@@ -542,7 +542,7 @@ def _get_structured_data_from_bedrock(prompt: str, data_type: str) -> str:
         )
         
         # Prepare request for Claude model
-        model_id = os.environ.get('BEDROCK_MODEL_ID', 'anthropic.claude-3-sonnet-20240229-v1:0')
+        model_id = os.environ.get('BEDROCK_MODEL_ID', 'us.anthropic.claude-sonnet-4-6')
         
         # Modify prompt based on data type to ensure consistent output format
         if "diagnoses" in data_type:

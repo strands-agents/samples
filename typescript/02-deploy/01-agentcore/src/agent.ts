@@ -54,7 +54,7 @@ const calculatorTool = tool({
 
 // Step 3: Configure the LLM model and create the agent
 const model = new BedrockModel({
-  modelId: 'us.anthropic.claude-3-5-haiku-20241022-v1:0'
+  modelId: 'us.anthropic.claude-haiku-4-5-20251001-v1:0'
 });
 
 // Configure the agent with the model, tools, and system prompt

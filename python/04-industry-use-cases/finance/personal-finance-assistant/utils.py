@@ -1055,11 +1055,11 @@ def validation_agent(query: str) -> str:
         if 'model' not in locals():
             # Fallback: create a new model instance
             from strands.models import BedrockModel
-            model = BedrockModel(model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0")
+            model = BedrockModel(model_id="us.anthropic.claude-sonnet-4-6")
     except:
         # Final fallback
         from strands.models import BedrockModel
-        model = BedrockModel(model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0")
+        model = BedrockModel(model_id="us.anthropic.claude-sonnet-4-6")
     
     agent = Agent(
         model=model,

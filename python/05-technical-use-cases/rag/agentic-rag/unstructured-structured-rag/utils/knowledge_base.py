@@ -11,10 +11,10 @@ import warnings
 import random
 warnings.filterwarnings('ignore')
 
-valid_generation_models = ["anthropic.claude-3-5-sonnet-20240620-v1:0", 
-                          "anthropic.claude-3-5-haiku-20241022-v1:0", 
-                          "anthropic.claude-3-sonnet-20240229-v1:0",
-                          "anthropic.claude-3-haiku-20240307-v1:0",
+valid_generation_models = ["us.anthropic.claude-sonnet-4-6", 
+                          "us.anthropic.claude-haiku-4-5-20251001-v1:0", 
+                          "us.anthropic.claude-sonnet-4-6",
+                          "us.anthropic.claude-haiku-4-5-20251001-v1:0",
                           "amazon.nova-micro-v1:0"] 
 
 valid_reranking_models = ["cohere.rerank-v3-5:0",
@@ -59,9 +59,9 @@ class BedrockKnowledgeBase:
             intermediate_bucket_name=None,
             lambda_function_name=None,
             embedding_model="amazon.titan-embed-text-v2:0",
-            generation_model="anthropic.claude-3-sonnet-20240229-v1:0",
+            generation_model="us.anthropic.claude-sonnet-4-6",
             reranking_model="cohere.rerank-v3-5:0",
-            graph_model="anthropic.claude-3-haiku-20240307-v1:0",
+            graph_model="us.anthropic.claude-haiku-4-5-20251001-v1:0",
             chunking_strategy="FIXED_SIZE",
             suffix=None,
             vector_store="OPENSEARCH_SERVERLESS" # can be OPENSEARCH_SERVERLESS or NEPTUNE_ANALYTICS
@@ -1076,7 +1076,7 @@ class BedrockKnowledgeBase:
             if self.multi_modal:
                 if self.parser == "BEDROCK_FOUNDATION_MODEL":
                     parsing_configuration = {"bedrockFoundationModelConfiguration": 
-                                             {"parsingModality": "MULTIMODAL", "modelArn": f"arn:aws:bedrock:{self.region_name}::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0"}, 
+                                             {"parsingModality": "MULTIMODAL", "modelArn": f"arn:aws:bedrock:{self.region_name}::foundation-model/us.anthropic.claude-sonnet-4-6"}, 
                                              "parsingStrategy": "BEDROCK_FOUNDATION_MODEL"}
                     
                 if self.parser == 'BEDROCK_DATA_AUTOMATION':

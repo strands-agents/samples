@@ -317,7 +317,7 @@ async def assistant_streaming(
         if not session_id:
             session_id = str(uuid4())
 
-        bedrock_model_id = request.bedrock_model_id or 'us.anthropic.claude-3-7-sonnet-20250219-v1:0'
+        bedrock_model_id = request.bedrock_model_id or 'us.anthropic.claude-sonnet-4-6'
         
         print(f"\n🔧 REQUEST PROCESSING")
         print("-" * 40)

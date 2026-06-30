@@ -90,7 +90,7 @@ export class AppointmentDatabase {
 ```typescript
 const agent = new Agent({
   model: new BedrockModel({
-    modelId: "us.anthropic.claude-3-5-haiku-20241022-v1:0",
+    modelId: "us.anthropic.claude-haiku-4-5-20251001-v1:0",
   }),
   systemPrompt: "You are a helpful personal assistant...",
   tools

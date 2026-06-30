@@ -10,10 +10,10 @@ import warnings
 import random
 warnings.filterwarnings('ignore')
 
-valid_generation_models = ["anthropic.claude-3-5-sonnet-20240620-v1:0", 
-                          "anthropic.claude-3-5-haiku-20241022-v1:0", 
-                          "anthropic.claude-3-sonnet-20240229-v1:0",
-                          "anthropic.claude-3-haiku-20240307-v1:0",
+valid_generation_models = ["us.anthropic.claude-sonnet-4-6", 
+                          "us.anthropic.claude-haiku-4-5-20251001-v1:0", 
+                          "us.anthropic.claude-sonnet-4-6",
+                          "us.anthropic.claude-haiku-4-5-20251001-v1:0",
                           "amazon.nova-micro-v1:0"] 
 
 
@@ -34,7 +34,7 @@ class BedrockStructuredKnowledgeBase:
             workgroup_arn=None,
             secrets_arn = None,
             kbConfigParam = None,
-            generation_model="anthropic.claude-3-sonnet-20240229-v1:0",
+            generation_model="us.anthropic.claude-sonnet-4-6",
             suffix=None,
     ):
         boto3_session = boto3.session.Session()

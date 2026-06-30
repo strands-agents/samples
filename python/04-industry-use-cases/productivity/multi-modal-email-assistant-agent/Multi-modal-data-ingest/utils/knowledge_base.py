@@ -17,10 +17,10 @@ import warnings
 warnings.filterwarnings("ignore")
 
 valid_generation_models = [
-    "anthropic.claude-3-5-sonnet-20240620-v1:0",
-    "anthropic.claude-3-5-haiku-20241022-v1:0",
-    "anthropic.claude-3-sonnet-20240229-v1:0",
-    "anthropic.claude-3-haiku-20240307-v1:0",
+    "us.anthropic.claude-sonnet-4-6",
+    "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+    "us.anthropic.claude-sonnet-4-6",
+    "us.anthropic.claude-haiku-4-5-20251001-v1:0",
     "amazon.nova-micro-v1:0",
 ]
 
@@ -70,7 +70,7 @@ class BedrockKnowledgeBase:
         intermediate_bucket_name=None,
         lambda_function_name=None,
         embedding_model="amazon.titan-embed-text-v2:0",
-        generation_model="anthropic.claude-3-sonnet-20240229-v1:0",
+        generation_model="us.anthropic.claude-sonnet-4-6",
         reranking_model="cohere.rerank-v3-5:0",
         chunking_strategy="FIXED_SIZE",
         suffix=None,
@@ -1165,7 +1165,7 @@ class BedrockKnowledgeBase:
                     parsing_configuration = {
                         "bedrockFoundationModelConfiguration": {
                             "parsingModality": "MULTIMODAL",
-                            "modelArn": f"arn:aws:bedrock:{self.region_name}::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0",
+                            "modelArn": f"arn:aws:bedrock:{self.region_name}::foundation-model/us.anthropic.claude-sonnet-4-6",
                         },
                         "parsingStrategy": "BEDROCK_FOUNDATION_MODEL",
                     }

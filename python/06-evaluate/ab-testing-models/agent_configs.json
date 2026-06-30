@@ -1,12 +1,12 @@
 {
   "models": {
     "haiku": {
-      "model_id": "us.anthropic.claude-3-5-haiku-20241022-v1:0",
+      "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
       "name": "Claude Haiku",
       "description": "Fast, cost-effective, optimized for simple queries"
     },
     "sonnet": {
-      "model_id": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+      "model_id": "us.anthropic.claude-sonnet-4-6",
       "name": "Claude Sonnet",
       "description": "Balanced performance, strong reasoning capabilities"
     },

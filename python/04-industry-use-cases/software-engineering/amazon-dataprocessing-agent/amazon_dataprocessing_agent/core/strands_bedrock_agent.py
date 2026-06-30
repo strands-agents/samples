@@ -36,7 +36,7 @@ class StrandsBedrockAgent:
 
     def __init__(
         self,
-        model_id: str = "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+        model_id: str = "us.anthropic.claude-sonnet-4-6",
         region: str = "us-east-1",
         max_tokens: int = 8000,
         temperature: float = 1.0,

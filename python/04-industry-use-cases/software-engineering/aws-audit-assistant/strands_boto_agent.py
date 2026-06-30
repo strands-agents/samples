@@ -20,7 +20,7 @@ def code_assistant(query: str) -> str:
         you will create a code by utilizing the tools, pick up the environment variables for access key and secret access key and execute the script.
         you will return the result of the output
     """
-    bedrock_model = BedrockModel(model_id="anthropic.claude-3-5-sonnet-20241022-v2:0", temperature=0.4)
+    bedrock_model = BedrockModel(model_id="us.anthropic.claude-sonnet-4-6", temperature=0.4)
 
     agent = Agent(
         system_prompt="You are a coding assistant for boto3 python library. You can use the available tools to execute python code and get the output.",
@@ -34,7 +34,7 @@ def code_assistant(query: str) -> str:
 
 
 
-# bedrock_model = BedrockModel(model_id="anthropic.claude-3-5-sonnet-20241022-v2:0", temperature=0.4)
+# bedrock_model = BedrockModel(model_id="us.anthropic.claude-sonnet-4-6", temperature=0.4)
 # agent = Agent(
 #     system_prompt="You are a helpful assistant.  Use the agents and tools at your disposal to assist the user",
 #     tools=[doc_agent,code_assistant],
