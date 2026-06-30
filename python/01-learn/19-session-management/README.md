@@ -13,8 +13,6 @@ This tutorial demonstrates how to persist agent conversation state across restar
 
 ## Key Concepts
 
-![Session Management Architecture](./images/architecture.png)
-
 - **SessionManager**: Abstract interface that hooks into agent lifecycle events to persist conversation state automatically
 - **FileSessionManager**: Built-in backend that stores sessions as JSON files on the local filesystem
 - **S3SessionManager**: Built-in backend that stores sessions in an S3 bucket for cloud-based persistence
@@ -26,18 +24,48 @@ This tutorial demonstrates how to persist agent conversation state across restar
 - Python 3.10 or higher
 - AWS account with Amazon Bedrock model access
 - Model access enabled in Amazon Bedrock
-- S3 bucket (for the S3SessionManager section)
-- DynamoDB table (for the custom backend section)
+- AWS credentials configured (for the S3 and DynamoDB sections)
+
+## AWS Credentials Setup
+
+Both notebooks include an optional setup cell at the top for configuring credentials.
+By default the notebooks use the standard boto3 credential chain (environment variables,
+`~/.aws/credentials`, IAM role, etc.).
+
+If you use a named AWS profile, uncomment and set the profile name in the setup cell:
+
+```python
+# os.environ["AWS_PROFILE"] = "your-profile-name"
+```
+
+The region and account ID are derived automatically from your active credentials:
+
+```python
+REGION = boto3.session.Session().region_name or "us-east-1"
+ACCOUNT_ID = boto3.client("sts").get_caller_identity()["Account"]
+```
+
+For SageMaker notebook instances or environments with an attached IAM role, no
+credential configuration is needed — the role is picked up automatically.
 
 ## Tutorial Structure
 
 | Notebook | Description |
 |----------|-------------|
-| [01-baseline.ipynb](./01-baseline.ipynb) | Agent without session management — state lost on restart |
-| [02-file-session-manager.ipynb](./02-file-session-manager.ipynb) | Local persistence with FileSessionManager |
-| [03-s3-session-manager.ipynb](./03-s3-session-manager.ipynb) | Cloud persistence with S3SessionManager |
-| [04-custom-dynamodb-backend.ipynb](./04-custom-dynamodb-backend.ipynb) | Implementing a custom DynamoDB session repository |
-| [05-multi-agent-sessions.ipynb](./05-multi-agent-sessions.ipynb) | Session persistence with Swarm and Graph patterns |
+| [01-single-agent-persistence.ipynb](./01-single-agent-persistence.ipynb) | Baseline failure → FileSessionManager → S3 backend → custom DynamoDB backend |
+| [02-multi-agent-persistence.ipynb](./02-multi-agent-persistence.ipynb) | Session persistence with Swarm and Graph patterns |
+
+### Notebook 1 walkthrough
+
+1. **Baseline** — see an agent lose memory on restart (a few cells)
+2. **FileSessionManager** — persist to the local filesystem, inspect the files, restore
+3. **S3SessionManager** — swap the backend constructor, everything else stays the same
+4. **DynamoDB** (advanced) — implement `SessionRepository` for a custom single-table design
+
+### Notebook 2 walkthrough
+
+1. **Swarm** — two collaborating agents with `S3SessionManager` on the orchestrator
+2. **Graph** — deterministic three-node pipeline with `FileSessionManager` on the orchestrator
 
 ## Getting Started
 
@@ -71,45 +99,32 @@ This tutorial demonstrates how to persist agent conversation state across restar
 2. **Clone the repository** (if not already done):
    ```bash
    git clone https://github.com/strands-agents/samples.git
-   cd samples/python/01-learn/14-session-management
+   cd samples/python/01-learn/19-session-management
    ```
 
 3. **Install dependencies** in the first cell of each notebook (already included):
    ```python
    %pip install -q --upgrade strands-agents boto3
    ```
-   SageMaker notebook instances come with Jupyter pre-installed. The `%pip` magic command installs packages into the active kernel. No virtual environment is needed.
 
 4. **Open the notebooks** from the Jupyter file browser and run them in order.
-
-### Notebook Progression
-
-- **Notebook 1**: See how an agent loses state on restart
-- **Notebook 2**: Add FileSessionManager for local persistence
-- **Notebook 3**: Switch to S3SessionManager for cloud storage
-- **Notebook 4**: Build a custom DynamoDB backend
-- **Notebook 5**: Apply sessions to Swarm and Graph agents
 
 ## Project Structure
 
 ```
-14-session-management/
+19-session-management/
 ├── README.md
 ├── requirements.txt
-├── images/
-│   └── architecture.png
-├── 01-baseline.ipynb
-├── 02-file-session-manager.ipynb
-├── 03-s3-session-manager.ipynb
-├── 04-custom-dynamodb-backend.ipynb
-└── 05-multi-agent-sessions.ipynb
+├── 01-single-agent-persistence.ipynb
+└── 02-multi-agent-persistence.ipynb
 ```
 
 ## Cleanup
 
-- **FileSessionManager**: Session files are stored in a temp directory by default. Delete the `sessions/` folder if you specified a custom `storage_dir`.
-- **S3SessionManager**: The cleanup cell in notebook 03 deletes the session objects and the bucket.
-- **DynamoDB**: Delete the DynamoDB table created in notebook 04.
+- **FileSessionManager**: Delete the `sessions/` folder created during the notebook run.
+- **S3SessionManager** (notebook 01): The cleanup cell deletes the session objects and bucket.
+- **S3SessionManager** (notebook 02 Swarm): The cleanup cell deletes the swarm session bucket.
+- **DynamoDB**: The cleanup cell in notebook 01 deletes the DynamoDB table.
 
 ## Additional Resources
 
