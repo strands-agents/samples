@@ -1,6 +1,6 @@
 strands-agents
 strands-agents-tools
-mem0ai
+mem0ai<2.0
 boto3 
 opensearch-py
 ddgs

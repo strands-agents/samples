@@ -1,0 +1,5 @@
+strands-agents
+strands-agents-tools
+aiohttp>=3.12.13
+strands-agents[openai]
+aws-bedrock-token-generator

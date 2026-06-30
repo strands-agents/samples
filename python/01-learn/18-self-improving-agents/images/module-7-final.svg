@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 560" width="1100" height="560" preserveAspectRatio="xMidYMid meet" style="max-width:100%;height:auto;" role="img" aria-label="Final architecture — all capabilities in one deployed agent">
+  <title>Final architecture</title>
+  <defs>
+    <linearGradient id="m7-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f1729"/><stop offset="1" stop-color="#1a2744"/></linearGradient>
+    <linearGradient id="m7-s" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#00ff88"/><stop offset="1" stop-color="#00d4ff"/></linearGradient>
+    <linearGradient id="m7-a" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff9900"/><stop offset="1" stop-color="#ffbb00"/></linearGradient>
+    <marker id="m7-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#00d4ff"/></marker>
+  </defs>
+  <rect width="1100" height="560" fill="url(#m7-bg)"/>
+  <text x="550" y="48" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="30" font-weight="700">You built this</text>
+
+  <!-- Central deployed agent -->
+  <g transform="translate(365,125)">
+    <rect width="370" height="310" rx="16" fill="#2a1e4a" stroke="url(#m7-a)" stroke-width="3"/>
+    <text x="185" y="34" text-anchor="middle" fill="#ffbb00" font-size="13" font-weight="700" letter-spacing="1.5">AGENTCORE RUNTIME · us-east-1</text>
+    <text x="185" y="66" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="19" font-weight="700">🤖 Your autonomous agent</text>
+
+    <!-- 5 capability pills -->
+    <g font-family="system-ui,sans-serif" font-size="13">
+      <g transform="translate(20,92)">
+        <rect width="160" height="38" rx="19" fill="#00ff88" opacity="0.18"/>
+        <text x="80" y="24" text-anchor="middle" fill="#00ff88" font-weight="600">🛠 self-extending</text>
+      </g>
+      <g transform="translate(190,92)">
+        <rect width="160" height="38" rx="19" fill="#c77dff" opacity="0.22"/>
+        <text x="80" y="24" text-anchor="middle" fill="#c77dff" font-weight="600">✏ self-modifying</text>
+      </g>
+      <g transform="translate(20,142)">
+        <rect width="160" height="38" rx="19" fill="#ffbb00" opacity="0.18"/>
+        <text x="80" y="24" text-anchor="middle" fill="#ffbb00" font-weight="600">🧠 self-learning</text>
+      </g>
+      <g transform="translate(190,142)">
+        <rect width="160" height="38" rx="19" fill="#00d4ff" opacity="0.18"/>
+        <text x="80" y="24" text-anchor="middle" fill="#00d4ff" font-weight="600">🌙 autonomous</text>
+      </g>
+      <g transform="translate(105,192)">
+        <rect width="160" height="38" rx="19" fill="#ff9900" opacity="0.22"/>
+        <text x="80" y="24" text-anchor="middle" fill="#ff9900" font-weight="600">🚀 production</text>
+      </g>
+    </g>
+
+    <!-- inner pulse -->
+    <circle cx="185" cy="163" r="70" fill="#00ff88" opacity="0.05">
+      <animate attributeName="r" values="58;95;58" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.1;0.02;0.1" dur="3s" repeatCount="indefinite"/>
+    </circle>
+
+    <text x="185" y="275" text-anchor="middle" fill="#8fa3c7" font-family="system-ui,sans-serif" font-size="13">~165 lines of Python · Claude 4.6 Sonnet</text>
+  </g>
+
+  <!-- Surrounding services -->
+  <g font-family="system-ui,sans-serif" font-size="13">
+    <!-- Bedrock -->
+    <g transform="translate(50,130)">
+      <rect width="200" height="80" rx="10" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="100" y="32" text-anchor="middle" fill="#ffbb00" font-size="14" font-weight="700">Amazon Bedrock</text>
+      <text x="100" y="54" text-anchor="middle" fill="#8fa3c7">Claude 4.6 Sonnet</text>
+      <text x="100" y="72" text-anchor="middle" fill="#8fa3c7">InvokeModel</text>
+    </g>
+
+    <!-- Memory -->
+    <g transform="translate(50,250)">
+      <rect width="200" height="80" rx="10" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="100" y="32" text-anchor="middle" fill="#ffbb00" font-size="14" font-weight="700">AgentCore Memory</text>
+      <text x="100" y="54" text-anchor="middle" fill="#8fa3c7">semantic store</text>
+      <text x="100" y="72" text-anchor="middle" fill="#8fa3c7">actor-scoped</text>
+    </g>
+
+    <!-- CloudWatch -->
+    <g transform="translate(50,370)">
+      <rect width="200" height="80" rx="10" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="100" y="32" text-anchor="middle" fill="#00d4ff" font-size="14" font-weight="700">CloudWatch Logs</text>
+      <text x="100" y="54" text-anchor="middle" fill="#8fa3c7">tool calls</text>
+      <text x="100" y="72" text-anchor="middle" fill="#8fa3c7">observability</text>
+    </g>
+
+    <!-- Mobile -->
+    <g transform="translate(850,130)">
+      <rect width="200" height="80" rx="10" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="100" y="32" text-anchor="middle" fill="#00ff88" font-size="14" font-weight="700">📱 Mobile / Web</text>
+      <text x="100" y="54" text-anchor="middle" fill="#8fa3c7">invokes via ARN</text>
+      <text x="100" y="72" text-anchor="middle" fill="#8fa3c7">bedrock-agentcore</text>
+    </g>
+
+    <!-- Lambda -->
+    <g transform="translate(850,250)">
+      <rect width="200" height="80" rx="10" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="100" y="32" text-anchor="middle" fill="#00ff88" font-size="14" font-weight="700">⚡ Lambda / EventBridge</text>
+      <text x="100" y="54" text-anchor="middle" fill="#8fa3c7">scheduled triggers</text>
+      <text x="100" y="72" text-anchor="middle" fill="#8fa3c7">event-driven</text>
+    </g>
+
+    <!-- Another agent -->
+    <g transform="translate(850,370)">
+      <rect width="200" height="80" rx="10" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="100" y="32" text-anchor="middle" fill="#00ff88" font-size="14" font-weight="700">🤖 Another agent</text>
+      <text x="100" y="54" text-anchor="middle" fill="#8fa3c7">multi-agent mesh</text>
+      <text x="100" y="72" text-anchor="middle" fill="#8fa3c7">agent-as-a-tool</text>
+    </g>
+  </g>
+
+  <!-- Connections -->
+  <g stroke="url(#m7-s)" stroke-width="2.5" fill="none" marker-end="url(#m7-arr)" opacity="0.7">
+    <path d="M250 170 L365 215"/>
+    <path d="M250 290 L365 280"/>
+    <path d="M250 410 L365 355"/>
+    <path d="M735 215 L850 170"/>
+    <path d="M735 280 L850 290"/>
+    <path d="M735 355 L850 410"/>
+  </g>
+
+  <!-- Footer -->
+  <g font-family="system-ui,sans-serif">
+    <text x="550" y="510" text-anchor="middle" fill="#6b7a9a" font-size="14">from 20 lines of Python · to production in 60 minutes</text>
+    <text x="550" y="534" text-anchor="middle" fill="#6b7a9a" font-size="12">AIM308 · AWS New York Summit 2026</text>
+  </g>
+</svg>

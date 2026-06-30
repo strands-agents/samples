@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 480" width="1000" height="480" preserveAspectRatio="xMidYMid meet" style="max-width:100%;height:auto;" role="img" aria-label="Module 4 — AgentCore Memory extracts facts across sessions">
+  <title>Module 4 — Self-learning with AgentCore Memory</title>
+  <defs>
+    <linearGradient id="m4-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f1729"/><stop offset="1" stop-color="#1a2744"/></linearGradient>
+    <linearGradient id="m4-g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff9900"/><stop offset="1" stop-color="#ffbb00"/></linearGradient>
+    <marker id="m4-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#ffbb00"/></marker>
+  </defs>
+  <rect width="1000" height="480" fill="url(#m4-bg)"/>
+  <text x="500" y="42" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="26" font-weight="700">Self-learning · AgentCore Memory</text>
+  <text x="500" y="68" text-anchor="middle" fill="#8fa3c7" font-family="system-ui,sans-serif" font-size="15">Semantic extraction · actor-scoped · persists across sessions</text>
+
+  <g font-family="system-ui,sans-serif">
+    <!-- Session 1 -->
+    <g transform="translate(40,105)">
+      <rect width="290" height="160" rx="14" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="145" y="30" text-anchor="middle" fill="#00d4ff" font-size="13" font-weight="700" letter-spacing="1.5">SESSION 1 · MONDAY</text>
+      <g transform="translate(20,50)" font-family="ui-monospace,monospace" font-size="13">
+        <text x="0" y="18" fill="#8fa3c7">You: I'm learning Rust</text>
+        <text x="0" y="38" fill="#8fa3c7">     and I love vim.</text>
+        <text x="0" y="64" fill="#61afef">Agent: Cool, let me know</text>
+        <text x="0" y="84" fill="#61afef">if you want Rust help.</text>
+        <text x="0" y="110" fill="#ffbb00" font-weight="600">⚡ stored to memory</text>
+      </g>
+    </g>
+
+    <!-- Session 2 -->
+    <g transform="translate(40,290)">
+      <rect width="290" height="170" rx="14" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="145" y="30" text-anchor="middle" fill="#00d4ff" font-size="13" font-weight="700" letter-spacing="1.5">SESSION 2 · FRIDAY</text>
+      <g transform="translate(20,50)" font-family="ui-monospace,monospace" font-size="13">
+        <text x="0" y="18" fill="#8fa3c7">You: recommend an</text>
+        <text x="0" y="38" fill="#8fa3c7">     editor for my project</text>
+        <text x="0" y="66" fill="#ffbb00" font-weight="600">🧠 retrieved:</text>
+        <text x="0" y="86" fill="#ffbb00">   "loves vim"</text>
+        <text x="0" y="106" fill="#ffbb00">   "learning Rust"</text>
+        <text x="0" y="132" fill="#61afef">Agent: vim + rust-analyzer</text>
+      </g>
+    </g>
+
+    <!-- Arrows to memory -->
+    <g stroke="url(#m4-g)" stroke-width="3" fill="none" marker-end="url(#m4-a)">
+      <path d="M335 185 L445 240"/>
+      <path d="M445 260 L335 375"/>
+    </g>
+    <circle r="6" fill="#ffbb00">
+      <animateMotion dur="5s" repeatCount="indefinite" path="M335 185 L445 240 L445 260 L335 375"/>
+      <animate attributeName="opacity" values="0;1;1;1;0" dur="5s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- Memory core -->
+    <g transform="translate(445,215)">
+      <rect width="240" height="100" rx="50" fill="#2a1e4a" stroke="url(#m4-g)" stroke-width="2.5"/>
+      <text x="120" y="32" text-anchor="middle" fill="#ffbb00" font-size="13" font-weight="700" letter-spacing="1.5">AGENTCORE MEMORY</text>
+      <text x="120" y="62" text-anchor="middle" fill="#fff" font-size="18" font-weight="700">🧠 semantic store</text>
+      <text x="120" y="84" text-anchor="middle" fill="#8fa3c7" font-size="12">actorId: "cagatay"</text>
+    </g>
+
+    <!-- Extraction pipeline -->
+    <g transform="translate(700,130)">
+      <rect width="260" height="260" rx="14" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="130" y="30" text-anchor="middle" fill="#ffbb00" font-size="13" font-weight="700" letter-spacing="1.5">HOW IT LEARNS</text>
+      <g transform="translate(20,58)" fill="#fff" font-size="14">
+        <text y="0" font-weight="700">1. Conversation ingested</text>
+        <text y="22" fill="#8fa3c7" font-size="13">raw turns stored verbatim</text>
+        <text y="56" font-weight="700">2. Semantic extraction</text>
+        <text y="78" fill="#8fa3c7" font-size="13">~30s LLM summarizes:</text>
+        <text y="98" fill="#8fa3c7" font-size="13">→ "user prefers vim"</text>
+        <text y="118" fill="#8fa3c7" font-size="13">→ "learning Rust"</text>
+        <text y="152" font-weight="700">3. Retrieve on new turn</text>
+        <text y="174" fill="#8fa3c7" font-size="13">semantic search → top-k</text>
+        <text y="194" fill="#8fa3c7" font-size="13">injected into context</text>
+        <text y="226" fill="#00ff88" font-weight="700">→ scoped by actorId</text>
+      </g>
+    </g>
+  </g>
+</svg>

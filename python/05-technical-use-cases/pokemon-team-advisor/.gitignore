@@ -1,0 +1,6 @@
+api-data/
+pokedata
+artifacts/
+.venv/
+__pycache__/
+uv.lock

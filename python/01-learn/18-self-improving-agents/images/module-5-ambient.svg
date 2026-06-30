@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 420" width="1000" height="420" preserveAspectRatio="xMidYMid meet" style="max-width:100%;height:auto;" role="img" aria-label="Module 5 — ambient mode works in background while idle">
+  <title>Module 5 — Ambient autonomous mode</title>
+  <defs>
+    <linearGradient id="m5-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f1729"/><stop offset="1" stop-color="#1a2744"/></linearGradient>
+    <linearGradient id="m5-g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#00ff88"/><stop offset="1" stop-color="#00d4ff"/></linearGradient>
+    <marker id="m5-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#00ff88"/></marker>
+  </defs>
+  <rect width="1000" height="420" fill="url(#m5-bg)"/>
+  <text x="500" y="42" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="26" font-weight="700">Ambient mode · agent works while you idle</text>
+  <text x="500" y="68" text-anchor="middle" fill="#8fa3c7" font-family="system-ui,sans-serif" font-size="15">Detects idle · iterates on last topic · injects findings into next query</text>
+
+  <!-- Timeline axis -->
+  <g font-family="system-ui,sans-serif">
+    <line x1="80" y1="320" x2="920" y2="320" stroke="#3b4670" stroke-width="2"/>
+
+    <g stroke="#3b4670" stroke-width="1.5">
+      <line x1="175" y1="315" x2="175" y2="325"/>
+      <line x1="395" y1="315" x2="395" y2="325"/>
+      <line x1="615" y1="315" x2="615" y2="325"/>
+      <line x1="830" y1="315" x2="830" y2="325"/>
+    </g>
+    <g fill="#8fa3c7" font-size="13" text-anchor="middle" font-weight="600">
+      <text x="175" y="350">t=0 · user asks</text>
+      <text x="395" y="350">+30s · idle</text>
+      <text x="615" y="350">+60s · iter 1</text>
+      <text x="830" y="350">user returns</text>
+    </g>
+
+    <!-- Events -->
+    <!-- User query -->
+    <g transform="translate(125,130)">
+      <rect width="100" height="160" rx="10" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="50" y="24" text-anchor="middle" fill="#8fa3c7" font-size="12" font-weight="700">USER</text>
+      <text x="50" y="70" text-anchor="middle" font-size="32">💬</text>
+      <text x="50" y="108" text-anchor="middle" fill="#fff" font-size="13" font-weight="600">"research</text>
+      <text x="50" y="126" text-anchor="middle" fill="#fff" font-size="13" font-weight="600">MCP"</text>
+    </g>
+    <line x1="175" y1="290" x2="175" y2="315" stroke="#3b4670" stroke-width="1.5"/>
+
+    <!-- Idle threshold -->
+    <g transform="translate(345,130)">
+      <rect width="100" height="160" rx="10" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <text x="50" y="24" text-anchor="middle" fill="#8fa3c7" font-size="12" font-weight="700">IDLE</text>
+      <text x="50" y="76" text-anchor="middle" font-size="32">😴</text>
+      <text x="50" y="108" text-anchor="middle" fill="#fff" font-size="13" font-weight="600">watcher</text>
+      <text x="50" y="126" text-anchor="middle" fill="#fff" font-size="13" font-weight="600">waits 30s</text>
+    </g>
+    <line x1="395" y1="290" x2="395" y2="315" stroke="#3b4670" stroke-width="1.5"/>
+
+    <!-- Ambient iteration -->
+    <g transform="translate(565,130)">
+      <rect width="100" height="160" rx="10" fill="#2a1e4a" stroke="url(#m5-g)" stroke-width="2.5"/>
+      <text x="50" y="24" text-anchor="middle" fill="#00d4ff" font-size="12" font-weight="700">AMBIENT</text>
+      <text x="50" y="76" text-anchor="middle" font-size="32">🌙</text>
+      <text x="50" y="108" text-anchor="middle" fill="#00ff88" font-size="13" font-weight="600">deep dive</text>
+      <text x="50" y="126" text-anchor="middle" fill="#00ff88" font-size="13" font-weight="600">on MCP</text>
+      <circle cx="50" cy="80" r="40" fill="#00ff88" opacity="0.15">
+        <animate attributeName="r" values="34;48;34" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.3;0.05;0.3" dur="2s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+    <line x1="615" y1="290" x2="615" y2="315" stroke="url(#m5-g)" stroke-width="2.5"/>
+
+    <!-- User returns -->
+    <g transform="translate(780,130)">
+      <rect width="100" height="160" rx="10" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="50" y="24" text-anchor="middle" fill="#8fa3c7" font-size="12" font-weight="700">NEXT QUERY</text>
+      <text x="50" y="76" text-anchor="middle" font-size="32">🎁</text>
+      <text x="50" y="108" text-anchor="middle" fill="#fff" font-size="13" font-weight="600">findings</text>
+      <text x="50" y="126" text-anchor="middle" fill="#fff" font-size="13" font-weight="600">injected</text>
+    </g>
+    <line x1="830" y1="290" x2="830" y2="315" stroke="#3b4670" stroke-width="1.5"/>
+
+    <!-- Progress bar animated -->
+    <rect x="80" y="95" width="840" height="5" rx="2.5" fill="#1e2a4a"/>
+    <rect x="80" y="95" width="100" height="5" rx="2.5" fill="url(#m5-g)">
+      <animate attributeName="width" values="100;840;840" keyTimes="0;0.7;1" dur="6s" repeatCount="indefinite"/>
+    </rect>
+    <circle r="8" fill="#00ff88">
+      <animateMotion dur="6s" repeatCount="indefinite" path="M180 97 L920 97 L180 97"/>
+    </circle>
+  </g>
+</svg>

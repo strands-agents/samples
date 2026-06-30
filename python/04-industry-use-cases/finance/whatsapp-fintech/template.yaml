@@ -146,12 +146,53 @@ Resources:
       SourceArn: !Ref WhatsAppAWSTopic
 
 
+  # Customer-managed KMS key for SSE on WhatsAppAWSTopic.
+  #
+  # AWS End User Messaging Social (the WhatsApp publisher) must be granted
+  # kms:GenerateDataKey* and kms:Decrypt on the topic's encryption key. The
+  # AWS-managed key alias/aws/sns has a fixed key policy that cannot be
+  # modified, so a customer-managed KMS key is required. See:
+  # https://docs.aws.amazon.com/social-messaging/latest/userguide/managing-event-destinations-add.html#encrypted-amazon-sns-topic-policies
+  WhatsAppTopicEncryptionKey:
+    Type: AWS::KMS::Key
+    Properties:
+      Description: "CMK for WhatsAppAWSTopic SSE; grants End User Messaging Social publish access."
+      EnableKeyRotation: true
+      KeyPolicy:
+        Version: "2012-10-17"
+        Statement:
+          # Required root statement so the account isn't locked out of the key.
+          - Sid: AllowRootAccountAdministration
+            Effect: Allow
+            Principal:
+              AWS: !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:root"
+            Action: "kms:*"
+            Resource: "*"
+          # Lets End User Messaging Social encrypt inbound WhatsApp messages
+          # before publishing them to the SNS topic. Conditions scope this to
+          # this account's social-messaging resources only.
+          - Sid: AllowEndUserMessagingSocialPublish
+            Effect: Allow
+            Principal:
+              Service: "social-messaging.amazonaws.com"
+            Action:
+              - "kms:GenerateDataKey*"
+              - "kms:Decrypt"
+            Resource: "*"
+            Condition:
+              StringEquals:
+                "aws:SourceAccount": !Ref AWS::AccountId
+              ArnLike:
+                "aws:SourceArn": !Sub "arn:${AWS::Partition}:social-messaging:${AWS::Region}:${AWS::AccountId}:*"
+
+
   # SNS that will invoke lambda function
   WhatsAppAWSTopic:
     Type: AWS::SNS::Topic
-    DependsOn: 
+    DependsOn:
       - WhatsAppLambdaProcessor
     Properties:
+      KmsMasterKeyId: !Ref WhatsAppTopicEncryptionKey
       Subscription:
         - Endpoint: !GetAtt WhatsAppLambdaProcessor.Arn
           Protocol: "lambda"

@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" width="1000" height="440" preserveAspectRatio="xMidYMid meet" style="max-width:100%;height:auto;" role="img" aria-label="Module 2 — agent picks up new tools without restarting">
+  <title>Module 2 — Hot-reload self-extending tools</title>
+  <defs>
+    <linearGradient id="m2-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f1729"/><stop offset="1" stop-color="#1a2744"/></linearGradient>
+    <linearGradient id="m2-g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#00ff88"/><stop offset="1" stop-color="#00d4ff"/></linearGradient>
+    <marker id="m2-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#00ff88"/></marker>
+    <filter id="m2-glow"><feGaussianBlur stdDeviation="3"/></filter>
+  </defs>
+  <rect width="1000" height="440" fill="url(#m2-bg)"/>
+  <text x="500" y="42" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="26" font-weight="700">Self-extending · write a file, grow a tool</text>
+  <text x="500" y="68" text-anchor="middle" fill="#8fa3c7" font-family="system-ui,sans-serif" font-size="15">No restart · no redeploy · file watcher picks it up in &lt;1s</text>
+
+  <g font-family="system-ui,sans-serif">
+    <!-- Step A: You write a file -->
+    <g transform="translate(50,110)">
+      <rect width="280" height="280" rx="14" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="140" y="32" text-anchor="middle" fill="#8fa3c7" font-size="13" font-weight="700" letter-spacing="1.5">STEP 1 · YOU</text>
+      <text x="140" y="62" text-anchor="middle" fill="#fff" font-size="17" font-weight="700">Write tools/weather.py</text>
+      <g transform="translate(16,82)" font-family="ui-monospace,monospace" font-size="13">
+        <rect width="248" height="180" rx="8" fill="#0b1020" stroke="#2a3660"/>
+        <text x="14" y="28" fill="#c77dff">from</text><text x="52" y="28" fill="#fff"> strands</text><text x="120" y="28" fill="#c77dff">import</text><text x="182" y="28" fill="#fff"> tool</text>
+        <text x="14" y="60" fill="#c77dff">@tool</text>
+        <text x="14" y="82" fill="#c77dff">def </text><text x="50" y="82" fill="#61afef">weather</text><text x="110" y="82" fill="#fff">(city):</text>
+        <text x="30" y="104" fill="#98c379">"""Get weather."""</text>
+        <text x="30" y="126" fill="#c77dff">return</text><text x="85" y="126" fill="#fff"> fetch(city)</text>
+        <text x="14" y="162" fill="#00ff88" font-weight="600">💾 save ⌘S</text>
+      </g>
+    </g>
+
+    <!-- Arrow A→B -->
+    <g stroke="url(#m2-g)" stroke-width="3.5" fill="none" marker-end="url(#m2-a)">
+      <path d="M335 250 L400 250"/>
+    </g>
+    <circle r="6" fill="#00ff88" filter="url(#m2-glow)">
+      <animateMotion dur="4s" repeatCount="indefinite" path="M335 250 L400 250"/>
+      <animate attributeName="opacity" values="0;1;1;0" dur="4s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- Step B: File watcher -->
+    <g transform="translate(410,110)">
+      <rect width="250" height="280" rx="14" fill="#2a1e4a" stroke="url(#m2-g)" stroke-width="2.5"/>
+      <text x="125" y="32" text-anchor="middle" fill="#00d4ff" font-size="13" font-weight="700" letter-spacing="1.5">STEP 2 · STRANDS</text>
+      <text x="125" y="62" text-anchor="middle" fill="#fff" font-size="17" font-weight="700">File watcher fires</text>
+      <g transform="translate(125,150)">
+        <circle r="50" fill="#00ff88" opacity="0.15">
+          <animate attributeName="r" values="42;68;42" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.3;0.05;0.3" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <text y="14" text-anchor="middle" font-size="56">👁️</text>
+      </g>
+      <g fill="#8fa3c7" font-size="14" text-anchor="middle">
+        <text x="125" y="235">watchdog detects mtime</text>
+        <text x="125" y="258" fill="#00ff88" font-weight="600">↓ importlib.reload()</text>
+      </g>
+    </g>
+
+    <!-- Arrow B→C -->
+    <g stroke="url(#m2-g)" stroke-width="3.5" fill="none" marker-end="url(#m2-a)">
+      <path d="M665 250 L730 250"/>
+    </g>
+    <circle r="6" fill="#00ff88" filter="url(#m2-glow)">
+      <animateMotion dur="4s" repeatCount="indefinite" begin="1s" path="M665 250 L730 250"/>
+      <animate attributeName="opacity" values="0;1;1;0" dur="4s" repeatCount="indefinite" begin="1s"/>
+    </circle>
+
+    <!-- Step C: Agent uses new tool -->
+    <g transform="translate(740,110)">
+      <rect width="220" height="280" rx="14" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="110" y="32" text-anchor="middle" fill="#8fa3c7" font-size="13" font-weight="700" letter-spacing="1.5">STEP 3 · AGENT</text>
+      <text x="110" y="62" text-anchor="middle" fill="#fff" font-size="17" font-weight="700">Uses it immediately</text>
+      <g transform="translate(14,82)" font-family="ui-monospace,monospace" font-size="13">
+        <rect width="192" height="180" rx="8" fill="#0b1020" stroke="#2a3660"/>
+        <text x="12" y="26" fill="#8fa3c7">&gt; weather in NYC?</text>
+        <text x="12" y="58" fill="#c77dff">🔧 weather</text>
+        <text x="12" y="78" fill="#8fa3c7" font-size="12">  city: "NYC"</text>
+        <text x="12" y="110" fill="#61afef">💬 It's 68°F</text>
+        <text x="12" y="130" fill="#61afef">   and sunny.</text>
+        <text x="12" y="162" fill="#00ff88" font-weight="600">✓ new tool</text>
+        <text x="12" y="180" fill="#00ff88" font-weight="600">  worked!</text>
+      </g>
+    </g>
+  </g>
+</svg>

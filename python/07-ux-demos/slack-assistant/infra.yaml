@@ -1,0 +1,93 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Slack assistant app on ECS Express service
+
+Parameters:
+  Image:
+    Type: String
+    Description: Container image URI
+  SlackBotToken:
+    Type: String
+    NoEcho: true
+  SlackSigningSecret:
+    Type: String
+    NoEcho: true
+
+Resources:
+  BotTokenSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      SecretString: !Ref SlackBotToken
+
+  SigningSecretSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      SecretString: !Ref SlackSigningSecret
+
+  ExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal: { Service: ecs-tasks.amazonaws.com }
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+      Policies:
+        - PolicyName: ReadSecrets
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action: secretsmanager:GetSecretValue
+                Resource:
+                  - !Ref BotTokenSecret
+                  - !Ref SigningSecretSecret
+
+  InfrastructureRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal: { Service: ecs.amazonaws.com }
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSInfrastructureRoleforExpressGatewayServices
+
+  TaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal: { Service: ecs-tasks.amazonaws.com }
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: BedrockInvoke
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - bedrock:InvokeModel
+                  - bedrock:InvokeModelWithResponseStream
+                Resource: "*"
+
+  Service:
+    Type: AWS::ECS::ExpressGatewayService
+    Properties:
+      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+      InfrastructureRoleArn: !GetAtt InfrastructureRole.Arn
+      TaskRoleArn: !GetAtt TaskRole.Arn
+      HealthCheckPath: /health
+      PrimaryContainer:
+        Image: !Ref Image
+        ContainerPort: 3000
+        Secrets:
+          - Name: SLACK_BOT_TOKEN
+            ValueFrom: !Ref BotTokenSecret
+          - Name: SLACK_SIGNING_SECRET
+            ValueFrom: !Ref SigningSecretSecret
+
+Outputs:
+  SlackRequestURL:
+    Value: !Sub "https://${Service.Endpoint}/slack/events"

@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" width="900" height="400" preserveAspectRatio="xMidYMid meet" style="max-width:100%;height:auto;" role="img" aria-label="Module 1 — 20 lines of Python become a working agent">
+  <title>Module 1 — Hello Agent</title>
+  <defs>
+    <linearGradient id="m1-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f1729"/><stop offset="1" stop-color="#1a2744"/></linearGradient>
+    <linearGradient id="m1-g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#00ff88"/><stop offset="1" stop-color="#00d4ff"/></linearGradient>
+    <marker id="m1-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#00d4ff"/></marker>
+  </defs>
+  <rect width="900" height="400" fill="url(#m1-bg)"/>
+  <text x="450" y="42" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="26" font-weight="700">20 lines · one tool · working agent</text>
+  <text x="450" y="68" text-anchor="middle" fill="#8fa3c7" font-family="system-ui,sans-serif" font-size="15">The entire Strands hello-world, end to end</text>
+
+  <!-- Code panel -->
+  <g font-family="ui-monospace,SF Mono,monospace">
+    <rect x="40" y="100" width="380" height="260" rx="10" fill="#0b1020" stroke="#2a3660" stroke-width="1.5"/>
+    <text x="58" y="128" fill="#8fa3c7" font-size="12" font-family="system-ui,sans-serif">agent.py</text>
+    <g font-size="14">
+      <text x="58" y="158"><tspan fill="#c77dff">from</tspan> <tspan fill="#fff">strands</tspan> <tspan fill="#c77dff">import</tspan> <tspan fill="#fff">Agent</tspan></text>
+      <text x="58" y="180"><tspan fill="#c77dff">from</tspan> <tspan fill="#fff">strands_tools</tspan> <tspan fill="#c77dff">import</tspan> <tspan fill="#fff">shell</tspan></text>
+      <text x="58" y="212" fill="#fff">MODEL = <tspan fill="#98c379">"claude-sonnet-4-5"</tspan></text>
+      <text x="58" y="250" fill="#fff">agent = Agent(</text>
+      <text x="72" y="272" fill="#fff">model=MODEL,</text>
+      <text x="72" y="292" fill="#61afef">tools=[shell],</text>
+      <text x="72" y="312" fill="#fff">system_prompt=<tspan fill="#98c379">"helpful"</tspan>,</text>
+      <text x="58" y="332" fill="#fff">)</text>
+    </g>
+  </g>
+
+  <!-- arrow -->
+  <g stroke="url(#m1-g)" stroke-width="3.5" fill="none" marker-end="url(#m1-a)">
+    <path d="M430 230 L490 230"/>
+  </g>
+  <circle r="6" fill="#00ff88">
+    <animateMotion dur="3s" repeatCount="indefinite" path="M430 230 L490 230"/>
+    <animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Output panel -->
+  <g font-family="ui-monospace,SF Mono,monospace">
+    <rect x="500" y="100" width="370" height="260" rx="10" fill="#0b1020" stroke="#2a3660" stroke-width="1.5"/>
+    <text x="518" y="128" fill="#8fa3c7" font-size="12" font-family="system-ui,sans-serif">terminal</text>
+    <g font-size="14">
+      <text x="518" y="158" fill="#00ff88">$ python agent.py</text>
+      <text x="518" y="192" fill="#c77dff">🔧 tool: shell</text>
+      <text x="534" y="212" fill="#8fa3c7" font-size="13">command: ls -la</text>
+      <text x="534" y="232" fill="#8fa3c7" font-size="13">agent.py  requirements.txt</text>
+      <text x="518" y="270" fill="#61afef">💬 Claude:</text>
+      <text x="518" y="292" fill="#fff" font-size="13">I see 2 files: agent.py and</text>
+      <text x="518" y="312" fill="#fff" font-size="13">requirements.txt.</text>
+      <text x="518" y="346" fill="#00ff88" font-size="13">✓ Done in 1.8s</text>
+    </g>
+  </g>
+</svg>

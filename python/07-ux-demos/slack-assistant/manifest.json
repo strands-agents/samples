@@ -1,0 +1,42 @@
+{
+    "display_information": {
+        "name": "Strands Assistant"
+    },
+    "features": {
+        "app_home": {
+            "home_tab_enabled": false,
+	    "messages_tab_enabled": true,
+	    "messages_tab_read_only_enabled": false
+        },
+        "bot_user": {
+            "display_name": "Strands Assistant",
+            "always_online": false
+        },
+	"assistant_view": {
+	    "assistant_description": "Hi, I'm an AI assistant built with Strands!"
+	}
+    },
+    "oauth_config": {
+        "scopes": {
+            "bot": [
+                "assistant:write",
+                "chat:write",
+                "im:history"
+            ]
+        },
+        "pkce_enabled": false
+    },
+    "settings": {
+        "event_subscriptions": {
+            "bot_events": [
+                "assistant_thread_context_changed",
+                "assistant_thread_started",
+                "message.im"
+            ]
+        },
+        "org_deploy_enabled": false,
+        "socket_mode_enabled": true,
+        "token_rotation_enabled": false,
+        "is_mcp_enabled": false
+    }
+}

@@ -1,0 +1,9 @@
+[[bind]]
+mode = "copy"
+source = "./pokedata"
+destination = "/pokedata"
+
+[[bind]]
+mode = "direct"
+source = "./artifacts"
+destination = "/artifacts"

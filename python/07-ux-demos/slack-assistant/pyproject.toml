@@ -1,0 +1,35 @@
+[project]
+name = "slack-assistant"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.12"
+dependencies = [
+    "gunicorn>=25.3.0",
+    "slack-bolt>=1.28.0",
+    "strands-agents>=1.35.0",
+    "strands-agents-tools>=0.4.1",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.20.2",
+    "ruff>=0.15.11",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "Q", "W"]
+ignore = []
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "double"
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true

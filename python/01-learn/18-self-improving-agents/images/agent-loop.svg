@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" width="720" height="360" preserveAspectRatio="xMidYMid meet" style="max-width:100%;height:auto;" role="img" aria-label="Strands agent loop — user, model, tool, observation, answer">
+  <title>Strands agent loop</title>
+  <defs>
+    <linearGradient id="agl-g" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#00ff88"/><stop offset="1" stop-color="#00d4ff"/>
+    </linearGradient>
+    <marker id="agl-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#00d4ff"/>
+    </marker>
+  </defs>
+  <rect width="720" height="360" fill="#0f1729"/>
+
+  <text x="360" y="42" text-anchor="middle" fill="#fff" font-family="system-ui,-apple-system,sans-serif" font-size="22" font-weight="700">The Strands agent loop</text>
+
+  <g font-family="system-ui,-apple-system,sans-serif">
+    <!-- User -->
+    <g transform="translate(30,150)">
+      <rect width="140" height="80" rx="12" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="70" y="36" text-anchor="middle" fill="#fff" font-size="17" font-weight="700">User</text>
+      <text x="70" y="58" text-anchor="middle" fill="#8fa3c7" font-size="13">prompt</text>
+    </g>
+
+    <!-- Model -->
+    <g transform="translate(240,100)">
+      <rect width="180" height="180" rx="90" fill="#1e2a4a" stroke="url(#agl-g)" stroke-width="2.5"/>
+      <text x="90" y="75" text-anchor="middle" fill="#fff" font-size="19" font-weight="700">Claude 4.6</text>
+      <text x="90" y="102" text-anchor="middle" fill="#00ff88" font-size="14" font-weight="600">@ Bedrock</text>
+      <text x="90" y="128" text-anchor="middle" fill="#8fa3c7" font-size="12">"call a tool?"</text>
+    </g>
+
+    <!-- Tool -->
+    <g transform="translate(490,55)">
+      <rect width="200" height="90" rx="12" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="100" y="36" text-anchor="middle" fill="#fff" font-size="17" font-weight="700">@tool shell</text>
+      <text x="100" y="58" text-anchor="middle" fill="#8fa3c7" font-size="13">execute command</text>
+      <text x="100" y="76" text-anchor="middle" fill="#00ff88" font-size="12">ls · cat · grep</text>
+    </g>
+
+    <!-- Observation -->
+    <g transform="translate(490,235)">
+      <rect width="200" height="80" rx="12" fill="#1e2a4a" stroke="#3b4670" stroke-width="1.5"/>
+      <text x="100" y="36" text-anchor="middle" fill="#fff" font-size="17" font-weight="700">Observation</text>
+      <text x="100" y="58" text-anchor="middle" fill="#8fa3c7" font-size="13">output → back to model</text>
+    </g>
+  </g>
+
+  <!-- arrows -->
+  <g stroke="url(#agl-g)" stroke-width="2.5" fill="none" marker-end="url(#agl-arr)" opacity="0.85">
+    <path d="M170 190 L240 190"/>
+    <path d="M400 145 L490 100"/>
+    <path d="M620 145 C 680 185 680 210 620 250"/>
+    <path d="M490 265 C 440 260 420 230 420 210"/>
+  </g>
+
+  <!-- traveling pulse -->
+  <circle r="5" fill="#00ff88">
+    <animateMotion dur="5s" repeatCount="indefinite"
+      path="M170 190 L240 190 L330 190 L400 145 L490 100 L620 145 L660 190 L620 250 L490 275 L420 220 L330 190 L240 190"/>
+    <animate attributeName="opacity" values="0;1;1;0" dur="5s" repeatCount="indefinite"/>
+  </circle>
+</svg>

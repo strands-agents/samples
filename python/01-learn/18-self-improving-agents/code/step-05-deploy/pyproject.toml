@@ -1,0 +1,10 @@
+[project]
+name = "aim308-deploy-agent"
+version = "0.1.0"
+description = "AIM308 self-improving research agent for AgentCore Runtime"
+requires-python = ">=3.10"
+dependencies = [
+    "strands-agents",
+    "strands-agents-tools",
+    "bedrock-agentcore",
+]
