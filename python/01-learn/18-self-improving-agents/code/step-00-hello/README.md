@@ -12,7 +12,7 @@ python agent.py "hello, what can you do?"
 ## What to notice
 
 - **One import**: `from strands import Agent`
-- **One model**: Claude 4.6 Sonnet via Bedrock
+- **One model**: Claude Opus 4 (`global.anthropic.claude-opus-4-8`) via Bedrock
 - **One tool**: `shell` from `strands_tools`
 - **Zero orchestration**: the agent decides when to call the tool
 
