@@ -24,12 +24,12 @@ This tutorial consists of two parts:
 
 ## Models Compared
 
-**Claude Haiku** (us.anthropic.claude-3-5-haiku-20241022-v1:0)
+**Claude Haiku** (us.anthropic.claude-haiku-4-5-20251001-v1:0)
 - Fastest, most cost-effective
 - Optimized for simple, high-volume queries
 - Lower latency, lower cost per token
 
-**Claude Sonnet** (us.anthropic.claude-sonnet-4-0-20250514-v1:0)
+**Claude Sonnet** (us.anthropic.claude-sonnet-4-6)
 - Balanced speed and capability
 - Strong reasoning for complex tasks
 - Production-ready for most use cases

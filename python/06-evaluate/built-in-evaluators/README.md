@@ -36,7 +36,7 @@ This tutorial introduces the complete toolkit of built-in evaluators provided by
 
 2. **Enable Bedrock model access**:
    - Navigate to Amazon Bedrock console
-   - Enable access to Claude Sonnet 4.0 model
+   - Enable access to Claude Sonnet 4.6 model
    - Ensure your IAM role has `bedrock:InvokeModel` permissions
 
 ### Python Environment
@@ -127,7 +127,7 @@ Error: Unable to locate credentials
 ```
 Error: You don't have access to the requested model
 ```
-**Solution**: Enable Claude Sonnet 4.0 access in Amazon Bedrock console
+**Solution**: Enable Claude Sonnet 4.6 access in Amazon Bedrock console
 
 #### DuckDuckGo Rate Limit
 ```

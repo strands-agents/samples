@@ -545,9 +545,9 @@ if USE_SONNET_4:
         }
     )
 else:
-    # Claude 3.7 Sonnet with thinking mode
+    # Claude Sonnet 4.6 with thinking mode
     model = BedrockModel(
-        model_id="us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+        model_id="us.anthropic.claude-sonnet-4-6",
         additional_request_fields={
             "thinking": {
                 "type": "enabled",

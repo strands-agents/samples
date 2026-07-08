@@ -122,7 +122,7 @@ cd deploy
 | **S3**         | Frontend hosting | Static website bucket          |
 | **CloudFront** | CDN              | Global content distribution    |
 | **VPC**        | Networking       | Secure network infrastructure  |
-| **Bedrock**    | AI Services      | Claude 3.7 Sonnet model access |
+| **Bedrock**    | AI Services      | Claude Sonnet 4.6 model access |
 
 ## Development Workflow
 
@@ -204,7 +204,7 @@ This project follows an iterative development approach:
 
 | Service        | Purpose                              |
 | -------------- | ------------------------------------ |
-| AWS Bedrock    | AI model hosting (Claude 3.7 Sonnet) |
+| AWS Bedrock    | AI model hosting (Claude Sonnet 4.6) |
 | AWS EC2        | Application hosting                  |
 | AWS S3         | Static asset storage                 |
 | AWS CloudFront | Content delivery network             |
@@ -241,7 +241,7 @@ The application implements a modern, scalable architecture:
 - **React Frontend** - Responsive SPA with Tailwind CSS styling
 - **FastAPI Backend** - Async Python server with high performance
 - **MCP Integration** - Standardized protocol for tool communication
-- **AWS Bedrock** - Claude 3.7 Sonnet for advanced AI capabilities
+- **AWS Bedrock** - Claude Sonnet 4.6 for advanced AI capabilities
 - **Session Management** - Stateful conversation flow handling
 
 ## Contributing

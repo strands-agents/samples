@@ -14,7 +14,7 @@ def writer_team(market_research: str):
             content that captures attention and inspires action.
             """,
             # model=BedrockModel(
-            #     model_id="us.anthropic.claude-3-5-haiku-20241022-v1:0",
+            #     model_id="us.anthropic.claude-haiku-4-5-20251001-v1:0",
             # ),
         )
 
@@ -25,7 +25,7 @@ def writer_team(market_research: str):
             using file_write and editor tool. Create the file in current directory.
             """,
             # model=BedrockModel(
-            #     model_id="us.anthropic.claude-3-5-haiku-20241022-v1:0",
+            #     model_id="us.anthropic.claude-haiku-4-5-20251001-v1:0",
             # ),
             tools=[file_write, editor],
         )

@@ -23,7 +23,7 @@ This tutorial demonstrates comprehensive evaluation of multi-agent systems where
 
 ### AWS Requirements
 - AWS account with Bedrock access
-- Claude Sonnet 4.0 model enabled in Amazon Bedrock
+- Claude Sonnet 4.6 model enabled in Amazon Bedrock
 - Appropriate IAM permissions for Bedrock API calls
 - AWS credentials configured locally
 
@@ -215,7 +215,7 @@ AccessDeniedException: User is not authorized to perform: bedrock:InvokeModel
 **Solution**:
 - Verify your AWS account has Bedrock access enabled
 - Check IAM permissions include `bedrock:InvokeModel`
-- Ensure Claude Sonnet 4.0 model is enabled in your region
+- Ensure Claude Sonnet 4.6 model is enabled in your region
 
 ### Issue: Import Errors
 

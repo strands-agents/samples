@@ -233,7 +233,7 @@ The user has the ability to modify your set of built-in tools. Every time your t
 """
 
 # Global variables
-MODEL_ID = "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+MODEL_ID = "us.anthropic.claude-sonnet-4-6"
 REGION = "us-west-2"
 MAX_TOKENS = 1000
 TEMPERATURE = 0.3

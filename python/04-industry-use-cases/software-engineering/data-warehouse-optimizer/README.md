@@ -1,6 +1,6 @@
 # 🧠 Multi-Agent Data Warehouse Query Optimizer
 
-A multi-agent system to optimize SQL queries on a SQLite database, simulating a data warehouse like Amazon Redshift, using the Strands Agents SDK and Claude 3 Haiku.
+A multi-agent system to optimize SQL queries on a SQLite database, simulating a data warehouse like Amazon Redshift, using the Strands Agents SDK and Claude Haiku 4.5.
 
 ---
 ## Architecture Diagram
@@ -25,8 +25,8 @@ A multi-agent system to optimize SQL queries on a SQLite database, simulating a 
 
 - Python **3.10+**
 - [`uv`](https://github.com/astral-sh/uv) for dependency management.
-- Enable model access for Anthropic Claude 3.5 Haiku, follow instructions [here](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html).
-- Ensure you have relevant permissions to invoke Anthropic Claude 3.5 Haiku on Amazon Bedrock. Follow [guidance](https://strandsagents.com/latest/user-guide/quickstart/#configuring-credentials) to configure credentials correctly
+- Enable model access for Anthropic Claude Haiku 4.5, follow instructions [here](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html).
+- Ensure you have relevant permissions to invoke Anthropic Claude Haiku 4.5 on Amazon Bedrock. Follow [guidance](https://strandsagents.com/latest/user-guide/quickstart/#configuring-credentials) to configure credentials correctly
 - Specify the region using .env file, create the file using [.env.template](./.env.template). Default region is `us-east-1`.
 
 ## ⚙️ Setup
@@ -81,7 +81,7 @@ You can interact with the multi-agent query optimizer using the following CLI co
 | Database Initialization | `scripts/init_db.py`   | Initializes the SQLite database with required tables. |
 | System Prompts       | `utils/prompts.py`       | Defines system prompts for agents.                  |
 | SQLite Database      | `query_optimizer.db`     | Stores database tables.                             |
-| AWS Bedrock Integration | `main.py`              | Configures Claude 3 Haiku model.                    |
+| AWS Bedrock Integration | `main.py`              | Configures Claude Haiku 4.5 model.                    |
 | OpenTelemetry Logging| `main.py`                | Traces execution and logs reports.                  |
 
 

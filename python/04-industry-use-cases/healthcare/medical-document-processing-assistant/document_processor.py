@@ -93,7 +93,7 @@ def _use_bedrock_for_document(file_path: str) -> str:
             media_type = 'application/octet-stream'
         
         # Prepare request for Claude model
-        model_id = os.environ.get('BEDROCK_MODEL_ID', 'anthropic.claude-3-sonnet-20240229-v1:0')
+        model_id = os.environ.get('BEDROCK_MODEL_ID', 'us.anthropic.claude-sonnet-4-6')
         
         request_body = {
             "anthropic_version": "bedrock-2023-05-31",

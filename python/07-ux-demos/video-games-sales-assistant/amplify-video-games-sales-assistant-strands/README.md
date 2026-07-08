@@ -16,7 +16,7 @@ The application consists of two main components:
     - Uses your Strands Agent for data analysis and natural language processing
     - The application invokes the Strands Agent by calling the Application Load Balancer (ALB) endpoint
     - Communicates with the agent through HTTP requests to the ALB for interactive assistant functionality
-    - Directly invokes Claude 3.7 Sonnet model for chart generation and visualization
+    - Directly invokes Claude Sonnet 4.6 model for chart generation and visualization
 
 > [!IMPORTANT]
 > This sample application is for demonstration purposes only and is not production-ready. Please validate the code against your organization's security best practices.
@@ -133,10 +133,10 @@ echo "Table ARN: $QUESTION_ANSWERS_TABLE_ARN"
                 "bedrock:InvokeModel"
             ],
             "Resource": [
-                "arn:aws:bedrock:*:<account_id>:inference-profile/us.anthropic.claude-3-7-sonnet-20250219-v1:0",
-                "arn:aws:bedrock:us-east-2::foundation-model/anthropic.claude-3-7-sonnet-20250219-v1:0",
-                "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-7-sonnet-20250219-v1:0",
-                "arn:aws:bedrock:us-west-2::foundation-model/anthropic.claude-3-7-sonnet-20250219-v1:0"
+                "arn:aws:bedrock:*:<account_id>:inference-profile/us.anthropic.claude-sonnet-4-6",
+                "arn:aws:bedrock:us-east-2::foundation-model/us.anthropic.claude-sonnet-4-6",
+                "arn:aws:bedrock:us-east-1::foundation-model/us.anthropic.claude-sonnet-4-6",
+                "arn:aws:bedrock:us-west-2::foundation-model/us.anthropic.claude-sonnet-4-6"
             ]
         },
         {

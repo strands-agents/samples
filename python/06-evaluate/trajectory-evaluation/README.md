@@ -17,7 +17,7 @@ This tutorial demonstrates how to evaluate agent trajectories - the sequences of
 
 - Python 3.11 or higher
 - AWS account with Amazon Bedrock access
-- Anthropic Claude 3.7 Sonnet enabled on Amazon Bedrock
+- Anthropic Claude Sonnet 4.6 enabled on Amazon Bedrock
 - IAM permissions for Amazon Bedrock API access
 - Basic understanding of AI agents and multi-agent systems
 - Familiarity with Jupyter notebooks
@@ -63,7 +63,7 @@ export AWS_SECRET_ACCESS_KEY=your_secret_key
 ### 4. Verify Amazon Bedrock Access
 
 Ensure you have access to the required model:
-- Model: `us.anthropic.claude-sonnet-4-0-20250514-v1:0`
+- Model: `us.anthropic.claude-sonnet-4-6`
 - Service: Amazon Bedrock
 - Required permissions: `bedrock:InvokeModel`
 
@@ -181,7 +181,7 @@ export AWS_REGION=us-east-1
 
 **Solution**:
 1. Verify model access in Amazon Bedrock console
-2. Enable Claude Sonnet 4.0 model in your region
+2. Enable Claude Sonnet 4.6 model in your region
 3. Check IAM permissions include `bedrock:InvokeModel`
 4. Confirm you're using the correct model ID
 

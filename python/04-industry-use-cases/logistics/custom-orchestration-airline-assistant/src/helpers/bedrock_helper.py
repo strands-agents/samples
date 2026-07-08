@@ -42,10 +42,10 @@ BEDROCK_EAST_CONFIG = Config(
 
 BEDROCK_RT_EAST = boto3.client("bedrock-runtime", config = BEDROCK_EAST_CONFIG)
 
-HAIKU_MODEL_ID = "anthropic.claude-3-haiku-20240307-v1:0"
-SONNET35_MODEL_ID = "anthropic.claude-3-5-sonnet-20240620-v1:0"
-SONNET_MODEL_ID = "anthropic.claude-3-sonnet-20240229-v1:0"
-OPUS_MODEL_ID = "anthropic.claude-3-opus-20240229-v1:0"
+HAIKU_MODEL_ID = "us.anthropic.claude-haiku-4-5-20251001-v1:0"
+SONNET35_MODEL_ID = "us.anthropic.claude-sonnet-4-6"
+SONNET_MODEL_ID = "us.anthropic.claude-sonnet-4-6"
+OPUS_MODEL_ID = "us.anthropic.claude-opus-4-5-20251101-v1:0"
 
 LLAMA3_8B_MODEL_ID = "meta.llama3-8b-instruct-v1:0"
 LLAMA3_70B_MODEL_ID = "meta.llama3-70b-instruct-v1:0"

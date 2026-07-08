@@ -43,7 +43,7 @@ class SessionState:
 
         if "bedrock_model_id" not in st.session_state:
             st.session_state.bedrock_model_id = (
-                "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+                "us.anthropic.claude-sonnet-4-6"
             )
 
         if "streaming" not in st.session_state:

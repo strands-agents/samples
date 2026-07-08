@@ -8,7 +8,7 @@ This tutorial demonstrates how to deploy a Strands Agent to Amazon Bedrock Agent
 |---------|-------------|
 | Deployment target | Amazon Bedrock AgentCore Runtime |
 | Agent type | Single agent with Express server |
-| Model | Claude 3.5 Haiku via Amazon Bedrock |
+| Model | Claude Haiku 4.5 via Amazon Bedrock |
 
 ## Prerequisites
 

@@ -44,7 +44,7 @@ The following architecture diagram illustrates a reference solution for a genera
 
 The solution deploys the following AWS services through AWS CDK:
 
-- **Application Load Balancer and Fargate Container for Strands Agent**: Powers the ***Data Analyst Assistant*** that answers questions by generating SQL queries using Claude 3.7 Sonnet
+- **Application Load Balancer and Fargate Container for Strands Agent**: Powers the ***Data Analyst Assistant*** that answers questions by generating SQL queries using Claude Sonnet 4.6
   - Contains all the logic for agent configuration and tools
   - Built-in tools include:
     - Custom tools:
@@ -64,7 +64,7 @@ The solution deploys the following AWS services through AWS CDK:
 - **React Web Application**: Delivers the user interface for the assistant with integrated authentication
     - The application invokes the agent built with Strands Agents SDK for interacting with the assistant
     - Includes user sign-up, sign-in, and JWT token-based authentication
-    - For chart generation, the application directly invokes the Claude 3.7 Sonnet model
+    - For chart generation, the application directly invokes the Claude Sonnet 4.6 model
 
 > [!NOTE]
 > This solution includes **Amazon Cognito authentication** for secure user access. The backend validates JWT tokens from authenticated users, ensuring only authorized users can interact with the Data Analyst Assistant. The solution supports both development (authentication disabled) and production (authentication enabled) configurations.
@@ -78,10 +78,10 @@ The solution deploys the following AWS services through AWS CDK:
 The **user interaction workflow** operates as follows:
 
 - The web application sends user business questions to the agent built with Strands Agents SDK
-- The agent (powered by Claude 3.7 Sonnet) processes natural language and determines when to execute database queries
+- The agent (powered by Claude Sonnet 4.6) processes natural language and determines when to execute database queries
 - The agent's built-in tools execute SQL queries against the Aurora PostgreSQL database and formulate an answer to the question
 - After the agent's response is received by the web application, the raw data query results are retrieved from the DynamoDB table to display both the answer and the corresponding records
-- For chart generation, the application invokes a model (powered by Claude 3.7 Sonnet) to analyze the agent's answer and raw data query results to generate the necessary data to render an appropriate chart visualization
+- For chart generation, the application invokes a model (powered by Claude Sonnet 4.6) to analyze the agent's answer and raw data query results to generate the necessary data to render an appropriate chart visualization
 
 ### Strands Agent Architecture
 

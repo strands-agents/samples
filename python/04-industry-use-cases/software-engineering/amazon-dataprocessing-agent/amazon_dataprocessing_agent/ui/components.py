@@ -100,7 +100,7 @@ class UIComponents:
             st.markdown("### ⚙️ Agent Configuration")
 
             model_options = {
-                "Claude-3.7 Sonnet": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+                "Claude Sonnet 4.6": "us.anthropic.claude-sonnet-4-6",
                 "Claude-4 Sonnet": "us.anthropic.claude-sonnet-4-20250514-v1:0",
             }
 

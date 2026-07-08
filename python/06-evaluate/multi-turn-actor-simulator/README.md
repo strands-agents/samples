@@ -30,7 +30,7 @@ This tutorial demonstrates how to use ActorSimulator to evaluate conversational 
 
 ### AWS Configuration
 - Amazon Bedrock access enabled
-- Claude Sonnet 4.0 model access
+- Claude Sonnet 4.6 model access
 - IAM permissions for Bedrock model invocation
 
 ## Installation

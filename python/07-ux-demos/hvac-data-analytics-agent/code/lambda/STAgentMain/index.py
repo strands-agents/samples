@@ -49,7 +49,7 @@ api_client = boto3.client('apigatewaymanagementapi',
                         region_name = REGION)
 
 #Model id for the FM in Bedrock. Select a model that supports tools
-MODEL_ID = "us.anthropic.claude-3-5-haiku-20241022-v1:0"
+MODEL_ID = "us.anthropic.claude-haiku-4-5-20251001-v1:0"
 #System prompt for the agent. Explain here what you want the agent to be.
 SYSTEM_PROMPT = """  
                You are a smart data analytics assistant. You role is to follow the below steps to answer the questions asked by the human data analyst.

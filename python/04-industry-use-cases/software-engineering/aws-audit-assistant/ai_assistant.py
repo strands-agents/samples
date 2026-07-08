@@ -26,7 +26,7 @@ def report_generator(query: str) -> str:
 
 
 
-bedrock_model = BedrockModel(model_id="anthropic.claude-3-5-sonnet-20241022-v2:0", temperature=0.4)
+bedrock_model = BedrockModel(model_id="us.anthropic.claude-sonnet-4-6", temperature=0.4)
 agent = Agent(
     system_prompt="You are a helpful assistant.  Use the agents and tools to assist the user" \
     " when user asks for auditing a resource, first gather the best practices for that service or resource using doc agent" \

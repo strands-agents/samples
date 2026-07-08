@@ -140,7 +140,7 @@ def format_research_response(
     """
     try:
         bedrock_model = BedrockModel(
-            model_id="anthropic.claude-3-5-haiku-20241022-v1:0",
+            model_id="us.anthropic.claude-haiku-4-5-20251001-v1:0",
             region_name="us-east-1",
         )
         # Strands Agents SDK makes it easy to create a specialized agent
