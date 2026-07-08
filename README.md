@@ -147,6 +147,48 @@ Follow the instructions [here](https://strandsagents.com/latest/user-guide/quick
 - **[01-learn](./typescript/01-learn/)** - SDK tutorials for the TypeScript SDK
 - **[02-deploy](./typescript/02-deploy/)** - Deployment patterns for AgentCore
 
+## Amazon Bedrock Knowledge Bases
+
+Several samples demonstrate RAG using Amazon Bedrock Knowledge Bases. These samples support both **Managed Knowledge Bases** (recommended) and traditional vector search KBs.
+
+### Managed Knowledge Bases (Recommended)
+
+Managed knowledge bases let Bedrock handle embedding, storage, and retrieval automatically — no external vector store required:
+
+```python
+import os
+os.environ["KNOWLEDGE_BASE_ID"] = "ABCDEFGHIJ"
+os.environ["KNOWLEDGE_BASE_TYPE"] = "MANAGED"
+
+from strands import Agent
+from strands_tools import retrieve
+
+agent = Agent(tools=[retrieve])
+response = agent("What does our documentation say about deployment?")
+```
+
+Managed KBs support **agentic retrieval** with intelligent query decomposition and managed reranking. Set `USE_AGENTIC_RETRIEVAL=false` to disable and use simple managed search instead.
+
+> **SDK requirements:** `boto3 >= 1.43` for managed search and agentic retrieval.
+
+**Reranking options** for managed search: `MANAGED` (default — automatic), `NONE` (disable reranking), `CUSTOM` (your own Bedrock reranking model e.g. Cohere Rerank v3.5).
+
+**Required IAM Permissions:**
+```json
+{
+  "Effect": "Allow",
+  "Action": [
+    "bedrock:Retrieve",
+    "bedrock:AgenticRetrieveStream"
+  ],
+  "Resource": "arn:aws:bedrock:<region>:<account-id>:knowledge-base/<kb-id>"
+}
+```
+
+**Resources:** [Build a Managed KB](https://docs.aws.amazon.com/bedrock/latest/userguide/kb-build-managed.html) | [Retrieve API](https://docs.aws.amazon.com/bedrock/latest/userguide/kb-test-retrieve.html) | [Agentic Retrieval](https://docs.aws.amazon.com/bedrock/latest/userguide/kb-test-agentic.html)
+
+See [05-technical-use-cases](./python/05-technical-use-cases/) for Agentic RAG patterns.
+
 ## Contributing ❤️
 
 We welcome contributions! See our [Contributing Guide](CONTRIBUTING.md) for details on:

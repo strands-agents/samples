@@ -15,6 +15,7 @@ import * as events from "aws-cdk-lib/aws-events";
 import * as targets from "aws-cdk-lib/aws-events-targets";
 import {
   envNameType,
+  knowledgeBaseType,
   projectName,
   s3BucketProps,
   ssmParamDynamoDb,
@@ -24,6 +25,8 @@ import { NagSuppressions } from "cdk-nag";
 
 interface LambdaErrorAnalysisStackProps extends StackProps {
   envName: envNameType;
+  /** Knowledge Base type: "VECTOR" (default) or "MANAGED" */
+  knowledgeBaseType?: knowledgeBaseType;
 }
 
 export class LambdaErrorAnalysisStack extends Stack {
@@ -34,19 +37,56 @@ export class LambdaErrorAnalysisStack extends Stack {
   ) {
     super(scope, id, props);
 
-    // Create Knowledge Base using AWS Labs Level 3 Construct (much more reliable!)
-    const knowledgeBase = new bedrock.KnowledgeBase(
-      this,
-      `${projectName}-knowledge-base`,
-      {
-        embeddingsModel:
-          bedrock.BedrockFoundationModel.TITAN_EMBED_TEXT_V2_1024,
-        instruction:
-          "Use this knowledge base to answer questions about Lambda automation errors, " +
-          "troubleshooting, and best practices. It contains source code, documentation, " +
-          "and error analysis patterns for Lambda error analysis.",
-      }
-    );
+    // Determine Knowledge Base type from props (default: MANAGED)
+    const kbType: knowledgeBaseType = props.knowledgeBaseType || "MANAGED";
+
+    // Create Knowledge Base - supports both VECTOR and MANAGED types
+    let knowledgeBaseId: string;
+    let knowledgeBaseArn: string;
+    let vectorKnowledgeBase: bedrock.KnowledgeBase | undefined;
+
+    if (kbType === "MANAGED") {
+      // Managed Knowledge Base: Bedrock handles storage and embeddings automatically.
+      // No OpenSearch, no embedding model selection needed.
+      const managedKb = new cdk.aws_bedrock.CfnKnowledgeBase(
+        this,
+        `${projectName}-managed-knowledge-base`,
+        {
+          name: `${projectName}-managed-kb`,
+          description:
+            "Knowledge base for Lambda error analysis - contains source code, docs, and error patterns.",
+          roleArn: new iam.Role(this, `${projectName}-managed-kb-role`, {
+            assumedBy: new iam.ServicePrincipal("bedrock.amazonaws.com"),
+            description: "Execution role for managed Knowledge Base",
+          }).roleArn,
+          knowledgeBaseConfiguration: {
+            type: "MANAGED",
+            managedKnowledgeBaseConfiguration: {
+              embeddingModelType: "MANAGED",
+            },
+          },
+          // No storageConfiguration needed for managed KBs
+        } as any
+      );
+      knowledgeBaseId = managedKb.attrKnowledgeBaseId;
+      knowledgeBaseArn = managedKb.attrKnowledgeBaseArn;
+    } else {
+      // Vector Knowledge Base using AWS Labs Level 3 Construct (default)
+      vectorKnowledgeBase = new bedrock.KnowledgeBase(
+        this,
+        `${projectName}-knowledge-base`,
+        {
+          embeddingsModel:
+            bedrock.BedrockFoundationModel.TITAN_EMBED_TEXT_V2_1024,
+          instruction:
+            "Use this knowledge base to answer questions about Lambda automation errors, " +
+            "troubleshooting, and best practices. It contains source code, documentation, " +
+            "and error analysis patterns for Lambda error analysis.",
+        }
+      );
+      knowledgeBaseId = vectorKnowledgeBase.knowledgeBaseId;
+      knowledgeBaseArn = vectorKnowledgeBase.knowledgeBaseArn;
+    }
 
     // Create DynamoDB table for error analysis storage
     const errorAnalysisTable = new dynamodb.Table(
@@ -240,7 +280,7 @@ export class LambdaErrorAnalysisStack extends Stack {
     errorAnalyzerAgentRole.addToPolicy(
       new iam.PolicyStatement({
         actions: ["bedrock:Retrieve"],
-        resources: [knowledgeBase.knowledgeBaseArn],
+        resources: [knowledgeBaseArn],
       })
     );
 
@@ -285,31 +325,64 @@ export class LambdaErrorAnalysisStack extends Stack {
     );
 
     // S3 data source for Knowledge Base - only index knowledge_base/ folder
-    const sourceCodeDataSource = new bedrock.S3DataSource(
-      this,
-      `${projectName}-s3-data-source`,
-      {
-        bucket: sourceCodeBucket,
-        knowledgeBase: knowledgeBase,
-        dataSourceName: "lambda-source-code",
-        chunkingStrategy: bedrock.ChunkingStrategy.FIXED_SIZE,
-        maxTokens: 300,
-        overlapPercentage: 20,
-        inclusionPrefixes: ["knowledge_base/"], // Only index files in knowledge_base/ folder
-      }
-    );
+    // For MANAGED KBs, use CfnDataSource; for VECTOR KBs, use the L3 construct
+    let dataSourceId: string;
+
+    if (kbType === "MANAGED") {
+      const managedDataSource = new cdk.aws_bedrock.CfnDataSource(
+        this,
+        `${projectName}-managed-data-source`,
+        {
+          knowledgeBaseId: knowledgeBaseId,
+          name: "lambda-source-code",
+          dataSourceConfiguration: {
+            type: "MANAGED_KNOWLEDGE_BASE_CONNECTOR",
+          } as any,
+        }
+      );
+      managedDataSource.addPropertyOverride('DataSourceConfiguration.ManagedKnowledgeBaseConnectorConfiguration', {
+        ConnectorParameters: {
+          type: 'S3',
+          version: '1',
+          connectionConfiguration: {
+            bucketName: sourceCodeBucket.bucketName,
+            bucketOwnerAccountId: this.account,
+          },
+        },
+      });
+      dataSourceId = managedDataSource.attrDataSourceId;
+    } else {
+      const sourceCodeDataSource = new bedrock.S3DataSource(
+        this,
+        `${projectName}-s3-data-source`,
+        {
+          bucket: sourceCodeBucket,
+          knowledgeBase: vectorKnowledgeBase!,
+          dataSourceName: "lambda-source-code",
+          chunkingStrategy: bedrock.ChunkingStrategy.FIXED_SIZE,
+          maxTokens: 300,
+          overlapPercentage: 20,
+          inclusionPrefixes: ["knowledge_base/"], // Only index files in knowledge_base/ folder
+        }
+      );
+      dataSourceId = sourceCodeDataSource.dataSourceId;
+    }
 
     // Create SSM parameter with Knowledge Base ID
     new ssm.StringParameter(this, `${projectName}-kb-param`, {
       parameterName: `/${ssmParamKnowledgeBaseId}`,
-      stringValue: knowledgeBase.knowledgeBaseId,
+      stringValue: knowledgeBaseId,
       description: "Knowledge Base ID for error analysis",
     });
 
-    // Set Knowledge Base ID environment variable
+    // Set Knowledge Base ID and type environment variables
     errorAnalyzerAgent.addEnvironment(
       "KNOWLEDGE_BASE_ID",
-      knowledgeBase.knowledgeBaseId
+      knowledgeBaseId
+    );
+    errorAnalyzerAgent.addEnvironment(
+      "KNOWLEDGE_BASE_TYPE",
+      kbType
     );
 
     // Deploy Lambda code to S3
@@ -377,8 +450,13 @@ export class LambdaErrorAnalysisStack extends Stack {
 
     // CloudFormation Outputs
     new cdk.CfnOutput(this, "KnowledgeBaseId", {
-      value: knowledgeBase.knowledgeBaseId,
+      value: knowledgeBaseId,
       description: "Knowledge Base ID",
+    });
+
+    new cdk.CfnOutput(this, "KnowledgeBaseType", {
+      value: kbType,
+      description: "Knowledge Base Type (VECTOR or MANAGED)",
     });
 
     new cdk.CfnOutput(this, "SourceCodeBucketName", {
@@ -387,7 +465,7 @@ export class LambdaErrorAnalysisStack extends Stack {
     });
 
     new cdk.CfnOutput(this, "DataSourceId", {
-      value: sourceCodeDataSource.dataSourceId,
+      value: dataSourceId,
       description: "Knowledge Base Data Source ID",
     });
 
