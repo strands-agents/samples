@@ -128,4 +128,4 @@ Check out the example notebooks in this directory:
 - [Using MCP Tools](01-using-mcp-tools/mcp-agent.ipynb): Learn how to integrate MCP tools with your agent
 - [Custom Tools](02-custom-tools/custom-tools-with-strands-agents.ipynb): Learn how to create and use custom tools
 
-For more details, see the [Strands tools documentation](https://strandsagents.com/0.1.x/user-guide/concepts/tools/python-tools/).
+For more details, see the [Strands tools documentation](https://strandsagents.com/docs/user-guide/concepts/tools/custom-tools/).
