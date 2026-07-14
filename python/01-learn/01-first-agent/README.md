@@ -60,10 +60,10 @@ To run the interactive agent:
 
 ## Resources
 
-- Explore the [Strands documentation](https://strandsagents.com/latest/user-guide/quickstart/) for more detailed guides
-- Learn more about [Sessions and State](https://strandsagents.com/latest/user-guide/concepts/agents/sessions-state)
-- Understand the [Agent Loop](https://strandsagents.com/latest/user-guide/concepts/agents/agent-loop/)
-- Dive into [Context Management](https://strandsagents.com/latest/user-guide/concepts/agents/context-management/)
+- Explore the [Strands documentation](https://strandsagents.com/docs/user-guide/quickstart/python/) for more detailed guides
+- Learn more about [Session Management](https://strandsagents.com/docs/user-guide/concepts/agents/session-management/)
+- Understand the [Agent Loop](https://strandsagents.com/docs/user-guide/concepts/agents/agent-loop/)
+- Dive into [Context Management](https://strandsagents.com/docs/user-guide/concepts/context-management/)
 - Check out the [strands-agents-tools](https://github.com/strands-agents/tools) repository for pre-implemented tools
 - Try building your own task-specific agent by customizing the system prompt and adding relevant tools
 
