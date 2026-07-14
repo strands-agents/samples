@@ -1,0 +1,2 @@
+strands-agents[openai]
+strands-agents-tools

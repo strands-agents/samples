@@ -1,14 +1,14 @@
 # Model Providers in Strands Agents
 
-Strands Agents takes a model-driven approach and is not tied to a single model or vendor. A *model provider* is the adapter that connects your agent to a specific model, and the SDK ships with providers for Amazon Bedrock, Anthropic, Ollama, LiteLLM, OpenAI, and more. This tutorial shows three of them in practice: running a model locally with Ollama, reaching Azure OpenAI through LiteLLM, and calling OpenAI models hosted on Amazon Bedrock through the Responses API.
+Strands Agents takes a model-driven approach and is not tied to a single model or vendor. A *model provider* is the adapter that connects your agent to a specific model, and the SDK ships with providers for Amazon Bedrock, Anthropic, Ollama, LiteLLM, OpenAI, and more. This tutorial shows several of them in practice: running a model locally with Ollama, reaching Azure OpenAI through LiteLLM, calling OpenAI models hosted on Amazon Bedrock through the Responses API, and pointing Strands `OpenAIModel` at an OpenAI-compatible multi-model gateway (DaoXE).
 
 ## Tutorial Details
 
 | Information          | Details                                                                 |
 |----------------------|-------------------------------------------------------------------------|
 | **Agent structure**  | Single agent                                                            |
-| **Strands model providers** | `OllamaModel`, `LiteLLMModel`, `OpenAIResponsesModel`             |
-| **Where they run**          | Your local machine (Ollama), Azure OpenAI (via LiteLLM), Amazon Bedrock |
+| **Strands model providers** | `OllamaModel`, `LiteLLMModel`, `OpenAIResponsesModel`, `OpenAIModel` |
+| **Where they run**          | Your local machine (Ollama), Azure OpenAI (via LiteLLM), Amazon Bedrock, OpenAI-compatible gateways |
 | **Strands features** | Swapping model providers, passing a configured model to `Agent`         |
 
 ## Key Concepts
@@ -35,7 +35,7 @@ This is not the full list. See the [model providers documentation](https://stran
 
 - Python 3.10 or higher
 - Basic understanding of Python
-- Provider-specific requirements, called out in each sub-sample (Ollama installed locally, an Azure OpenAI deployment, or an AWS account with access to OpenAI models on Amazon Bedrock)
+- Provider-specific requirements, called out in each sub-sample (Ollama installed locally, an Azure OpenAI deployment, an AWS account with access to OpenAI models on Amazon Bedrock, or an OpenAI-compatible gateway API key)
 
 ## Tutorial Structure
 
@@ -46,16 +46,17 @@ Each sub-sample is self-contained and has its own `requirements.txt`.
 | [01-ollama-model/ollama-file-ops-agent.ipynb](./01-ollama-model/ollama-file-ops-agent.ipynb) | Run a model locally with `OllamaModel` and build a file-operations agent (`file_read`, `file_write`, `list_directory`). |
 | [02-openai-litellm/openai-litellm-agent.ipynb](./02-openai-litellm/openai-litellm-agent.ipynb) | Reach an Azure OpenAI model through `LiteLLMModel` and give the agent `current_time` and `current_weather` tools. |
 | [03-openai-responses-on-bedrock/openai-responses-agent.ipynb](./03-openai-responses-on-bedrock/openai-responses-agent.ipynb) | Call an OpenAI model hosted on Amazon Bedrock with `OpenAIResponsesModel` and the Responses API. |
+| [04-daoxe-model/daoxe-openai-agent.ipynb](./04-daoxe-model/daoxe-openai-agent.ipynb) | Point Strands `OpenAIModel` at the [DaoXE](https://daoxe.com) OpenAI-compatible multi-model gateway (`base_url=https://daoxe.com/v1`). Model IDs are account-scoped. Not available in mainland China. |
 
 ## Getting Started
 
 1. **Install dependencies** for the sub-sample you want to run:
    ```bash
-   cd 01-ollama-model        # or: 02-openai-litellm, 03-openai-responses-on-bedrock
+   cd 01-ollama-model        # or: 02-openai-litellm, 03-openai-responses-on-bedrock, 04-daoxe-model
    pip install -r requirements.txt
    ```
 
-2. **Run the notebook** in that folder and run the cells in order.
+2. **Run the notebook** in that folder and run the cells in order. The DaoXE sample also has a CLI script (`daoxe_openai_agent.py`).
 
 ## Project Structure
 
@@ -74,10 +75,14 @@ Each sub-sample is self-contained and has its own `requirements.txt`.
 │   ├── openai-responses-agent.ipynb
 │   ├── requirements.txt
 │   └── images/
+├── 04-daoxe-model/
+│   ├── daoxe-openai-agent.ipynb
+│   ├── daoxe_openai_agent.py
+│   ├── requirements.txt
+│   └── README.md
 └── README.md
 ```
 
 ## Cleanup
 
-The Ollama notebook writes local files (for example `sample.txt` and `readme.md`) in its folder when you run the examples; delete them to reset. The LiteLLM and Responses notebooks call hosted model APIs only and create no persistent resources.
-
+The Ollama notebook writes local files (for example `sample.txt` and `readme.md`) in its folder when you run the examples; delete them to reset. The LiteLLM, Responses, and DaoXE notebooks call hosted model APIs only and create no persistent resources.
