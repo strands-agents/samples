@@ -99,7 +99,7 @@ credential configuration is needed — the role is picked up automatically.
 2. **Clone the repository** (if not already done):
    ```bash
    git clone https://github.com/strands-agents/samples.git
-   cd samples/python/01-learn/19-session-management
+   cd samples/python/01-learn/20-session-management
    ```
 
 3. **Install dependencies** in the first cell of each notebook (already included):
@@ -112,7 +112,7 @@ credential configuration is needed — the role is picked up automatically.
 ## Project Structure
 
 ```
-19-session-management/
+20-session-management/
 ├── README.md
 ├── requirements.txt
 ├── 01-single-agent-persistence.ipynb
