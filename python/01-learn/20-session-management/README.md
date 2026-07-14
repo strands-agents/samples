@@ -22,31 +22,9 @@ This tutorial demonstrates how to persist agent conversation state across restar
 ## Prerequisites
 
 - Python 3.10 or higher
-- AWS account with Amazon Bedrock model access
-- Model access enabled in Amazon Bedrock
-- AWS credentials configured (for the S3 and DynamoDB sections)
-
-## AWS Credentials Setup
-
-Both notebooks include an optional setup cell at the top for configuring credentials.
-By default the notebooks use the standard boto3 credential chain (environment variables,
-`~/.aws/credentials`, IAM role, etc.).
-
-If you use a named AWS profile, uncomment and set the profile name in the setup cell:
-
-```python
-# os.environ["AWS_PROFILE"] = "your-profile-name"
-```
-
-The region and account ID are derived automatically from your active credentials:
-
-```python
-REGION = boto3.session.Session().region_name or "us-east-1"
-ACCOUNT_ID = boto3.client("sts").get_caller_identity()["Account"]
-```
-
-For SageMaker notebook instances or environments with an attached IAM role, no
-credential configuration is needed — the role is picked up automatically.
+- AWS account with Amazon Bedrock [model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) enabled
+- AWS credentials configured through the standard boto3 credential chain (environment variables, `~/.aws/credentials`, or an attached IAM role). Both notebooks include an optional setup cell for selecting a named profile with `AWS_PROFILE`; the region and account ID are derived from the active credentials.
+- IAM permissions for Amazon S3 and Amazon DynamoDB — the notebooks create and then delete a bucket and a table
 
 ## Tutorial Structure
 
@@ -69,45 +47,16 @@ credential configuration is needed — the role is picked up automatically.
 
 ## Getting Started
 
-### Option A: Local Machine
-
-1. **Create and activate a virtual environment:**
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
-
-2. **Install dependencies:**
+1. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Install Jupyter (if not already installed):**
-   ```bash
-   pip install jupyter
-   ```
+2. **Run the notebooks in order:**
+   - **Notebook 1**: Persist a single agent's conversation with each of the three backends
+   - **Notebook 2**: Persist Swarm and Graph orchestration state
 
-4. **Launch the notebooks:**
-   ```bash
-   jupyter notebook
-   ```
-
-### Option B: SageMaker Notebook Instance
-
-1. **Open a terminal** in your SageMaker notebook instance.
-
-2. **Clone the repository** (if not already done):
-   ```bash
-   git clone https://github.com/strands-agents/samples.git
-   cd samples/python/01-learn/20-session-management
-   ```
-
-3. **Install dependencies** in the first cell of each notebook (already included):
-   ```python
-   %pip install -q --upgrade strands-agents boto3
-   ```
-
-4. **Open the notebooks** from the Jupyter file browser and run them in order.
+3. **Verify persistence works** — in each section, a restore cell creates a brand-new agent with the same session ID and asks about a detail shared earlier. The agent answers correctly only because the state was loaded from the backend.
 
 ## Project Structure
 
