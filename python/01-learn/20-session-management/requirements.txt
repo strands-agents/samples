@@ -1,0 +1,3 @@
+strands-agents
+boto3>=1.26.0
+botocore[crt]
