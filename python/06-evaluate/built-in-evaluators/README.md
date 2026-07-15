@@ -184,7 +184,7 @@ After completing this tutorial, consider:
 - [Strands Agents Documentation](https://docs.strands.ai/agents)
 - [Strands Evals Documentation](https://docs.strands.ai/evals)
 - [Amazon Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
-- [Recipe Bot Source Code](../../01-learn/01-first-agent/02-simple-interactive-usecase/)
+- [Recipe Bot Source Code](../../01-learn/01-first-agent/recipe-bot-cli/)
 
 ## License
 

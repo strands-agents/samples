@@ -31,7 +31,7 @@ This tutorial walks you through building your first Strands agent. You start wit
 | Path | Description |
 |------|-------------|
 | [01-first-agent.ipynb](./01-first-agent.ipynb) | Quickstart notebook: create your first agent, add built-in and custom tools, invoke tools directly, configure logging, choose a model provider, and assemble a RecipeBot use case |
-| [02-simple-interactive-usecase/](./02-simple-interactive-usecase/) | The RecipeBot as a standalone command-line script |
+| [recipe-bot-cli/](./recipe-bot-cli/) | The RecipeBot as a standalone command-line script |
 
 The command-line script runs the RecipeBot interactively:
 
@@ -53,7 +53,7 @@ The command-line script runs the RecipeBot interactively:
 
 3. **Run the interactive RecipeBot from the command line:**
    ```bash
-   cd 02-simple-interactive-usecase
+   cd recipe-bot-cli
    pip install -r requirements.txt
    python recipe_bot.py
    ```
@@ -67,10 +67,9 @@ The command-line script runs the RecipeBot interactively:
 │   ├── simple_agent.png
 │   ├── agent_with_tools.png
 │   └── interactive_recipe_agent.png
-├── 02-simple-interactive-usecase/
+├── recipe-bot-cli/
 │   ├── recipe_bot.py
-│   ├── requirements.txt
-│   └── README.md
+│   └── requirements.txt
 └── README.md
 ```
 
