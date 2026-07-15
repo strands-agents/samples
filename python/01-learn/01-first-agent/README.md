@@ -1,70 +1,87 @@
 # Getting Started with Strands Agents
 
-This guide will help you understand the basic concepts of Strands Agents and get you up and running with your first agent.
+This tutorial walks you through building your first Strands agent. You start with a minimal agent, add built-in and custom tools, learn to invoke tools directly and configure logging, choose a model provider, and finish by assembling a small interactive RecipeBot you can run from the command line.
+
+![Architecture](./images/agent_with_tools.png)
+
+## Tutorial Details
+
+| Information            | Details                                                  |
+|------------------------|----------------------------------------------------------|
+| **Strands Features**   | `Agent`, `@tool` decorator, `BedrockModel`               |
+| **Agent Pattern**      | Single agent                                             |
+| **Tools**              | Built-in (`calculator`) and custom (`@tool`)             |
+| **Model**              | Claude Sonnet 4.5 on Amazon Bedrock (`us.anthropic.claude-sonnet-4-5-20250929-v1:0`) |
+
+## Key Concepts
+
+- **Agent**: The core component that manages the conversation and orchestrates tools
+- **Model**: The underlying LLM that powers the agent
+- **Tools**: Functions the agent can call to perform tasks. A tool's typed arguments and docstring become the input schema the model reads to decide when and how to call it.
 
 ## Prerequisites
 
-- Python 3.10 or later
-- AWS account configured with appropriate permissions
-- Basic understanding of Python programming
+- Python 3.10 or higher
+- An AWS account with credentials configured
+- Access to Anthropic Claude Sonnet 4.5 (`us.anthropic.claude-sonnet-4-5-20250929-v1:0`) on Amazon Bedrock (see [model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html))
+- Basic understanding of Python
 
-## Installation
+## Tutorial Structure
 
-Install Strands Agents and the tools package using pip:
+| Path | Description |
+|------|-------------|
+| [01-first-agent.ipynb](./01-first-agent.ipynb) | Quickstart notebook: create your first agent, add built-in and custom tools, invoke tools directly, configure logging, choose a model provider, and assemble a RecipeBot use case |
+| [02-simple-interactive-usecase/](./02-simple-interactive-usecase/) | The RecipeBot as a standalone command-line script |
 
-```bash
-pip install strands-agents strands-agents-tools
+The notebook also assembles an interactive RecipeBot:
+
+![RecipeBot](./images/interactive_recipe_agent.png)
+
+## Getting Started
+
+1. **Install dependencies:**
+   ```bash
+   pip install strands-agents strands-agents-tools
+   ```
+
+2. **Run the notebook:** open [`01-first-agent.ipynb`](./01-first-agent.ipynb) and run the cells in order. It covers:
+   - Creating a simple agent
+   - Adding built-in and custom tools
+   - Invoking tools directly with `agent.tool.<name>`
+   - Configuring logging
+   - Choosing and configuring a model provider
+
+3. **Run the interactive RecipeBot from the command line:**
+   ```bash
+   cd 02-simple-interactive-usecase
+   pip install -r requirements.txt
+   python recipe_bot.py
+   ```
+
+## Project Structure
+
+```
+01-first-agent/
+├── 01-first-agent.ipynb
+├── images/
+│   ├── simple_agent.png
+│   ├── agent_with_tools.png
+│   └── interactive_recipe_agent.png
+├── 02-simple-interactive-usecase/
+│   ├── recipe_bot.py
+│   ├── requirements.txt
+│   └── README.md
+└── README.md
 ```
 
-## Basic Concepts
+## Cleanup
 
-Strands Agents is a framework for building AI agents that can interact with AWS services and perform complex tasks. The key components are:
+This tutorial does not create any persistent AWS resources. The agent calls Amazon Bedrock for inference only, so there is nothing to clean up.
 
-1. **Agent**: The core component that manages the conversation and orchestrates tools
-2. **Model**: The underlying LLM (Large Language Model) that powers the agent
-3. **Tools**: Functions that the agent can use to perform specific tasks
-4. **Sessions and State**: Mechanisms for maintaining conversation history and agent state across interactions
-5. **Agent Loop**: The process flow of how agents receive input, process it, and generate responses
-6. **Context Management**: How agents maintain and manage conversation context, including memory and retrieval
+## Additional Resources
 
-## Quick Start Guide
-
-The `01-first-agent.ipynb` notebook in this directory provides a comprehensive guide with code examples for:
-
-1. **Creating a Simple Agent**: Learn how to initialize a basic agent with a system prompt
-2. **Adding Tools**: Discover how to enhance your agent with built-in and custom tools
-3. **Configuring Logging**: Set up proper logging for debugging and monitoring
-4. **Customizing the Agent**: Choose different models and configure their parameters
-
-## Running the Examples
-
-This folder contains a getting-started notebook and a simple usecase to help you get started:
-
-1. **01-first-agent.ipynb**: A Jupyter notebook with a comprehensive quickstart guide and a usecase.
-Here we'll build:
-![Architecture](./images/agent_with_tools.png)
-
-and a Recipe Agent:
-
-![Architecture](./images/interactive_recipe_agent.png)
-
-
-2. **02-simple-interactive-usecase/**: A directory containing a simple interactive cooking/Recipe agent to be run via the CLI.
-
-
-To run the interactive agent:
-
-1. Navigate to the directory: `cd 02-simple-interactive-usecase`
-2. Install the requirements: `pip install -r requirements.txt`
-3. Run the script: `python recipe_bot.py`
-
-## Resources
-
-- Explore the [Strands documentation](https://strandsagents.com/docs/user-guide/quickstart/python/) for more detailed guides
-- Learn more about [Session Management](https://strandsagents.com/docs/user-guide/concepts/agents/session-management/)
-- Understand the [Agent Loop](https://strandsagents.com/docs/user-guide/concepts/agents/agent-loop/)
-- Dive into [Context Management](https://strandsagents.com/docs/user-guide/concepts/context-management/)
-- Check out the [strands-agents-tools](https://github.com/strands-agents/tools) repository for pre-implemented tools
-- Try building your own task-specific agent by customizing the system prompt and adding relevant tools
-
-Happy building with Strands Agents! 🚀
+- [Strands documentation](https://strandsagents.com/docs/user-guide/quickstart/python/)
+- [Session Management](https://strandsagents.com/docs/user-guide/concepts/agents/session-management/)
+- [Agent Loop](https://strandsagents.com/docs/user-guide/concepts/agents/agent-loop/)
+- [Context Management](https://strandsagents.com/docs/user-guide/concepts/context-management/)
+- [strands-agents-tools](https://github.com/strands-agents/tools) repository for pre-implemented tools
