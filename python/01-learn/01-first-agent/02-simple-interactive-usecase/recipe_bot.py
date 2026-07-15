@@ -46,13 +46,13 @@ recipe_agent = Agent(
 
 
 if __name__ == "__main__":
-    print("\n👨‍🍳 RecipeBot: Ask me about recipes or cooking! Type 'exit' to quit.\n")
+    print("\nRecipeBot: Ask me about recipes or cooking! Type 'exit' to quit.\n")
 
     # Run the agent in a loop for interactive conversation
     while True:
         user_input = input("\nYou > ")
         if user_input.lower() == "exit":
-            print("Happy cooking! 🍽️")
+            print("Happy cooking!")
             break
         response = recipe_agent(user_input)
         print(f"\nRecipeBot > {response}")
