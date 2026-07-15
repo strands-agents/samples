@@ -45,14 +45,14 @@ Each sub-sample is self-contained and has its own `requirements.txt`.
 | Path | Description |
 |------|-------------|
 | [01-ollama-model/ollama_file_ops_agent.ipynb](./01-ollama-model/ollama_file_ops_agent.ipynb) | Run a model locally with `OllamaModel` and build a file-operations agent (`file_read`, `file_write`, `list_directory`). |
-| [02-openai-model/openai-litellm-agent.ipynb](./02-openai-model/openai-litellm-agent.ipynb) | Reach an Azure OpenAI model through `LiteLLMModel` and give the agent `current_time` and `current_weather` tools. |
+| [02-openai-litellm/openai-litellm-agent.ipynb](./02-openai-litellm/openai-litellm-agent.ipynb) | Reach an Azure OpenAI model through `LiteLLMModel` and give the agent `current_time` and `current_weather` tools. |
 | [03-openai-responses-on-bedrock/openai-responses-agent.ipynb](./03-openai-responses-on-bedrock/openai-responses-agent.ipynb) | Call an OpenAI model hosted on Amazon Bedrock with `OpenAIResponsesModel` and the Responses API. |
 
 ## Getting Started
 
 1. **Install dependencies** for the sub-sample you want to run:
    ```bash
-   cd 01-ollama-model        # or: 02-openai-model, 03-openai-responses-on-bedrock
+   cd 01-ollama-model        # or: 02-openai-litellm, 03-openai-responses-on-bedrock
    pip install -r requirements.txt
    ```
 
@@ -67,7 +67,7 @@ Each sub-sample is self-contained and has its own `requirements.txt`.
 │   ├── requirements.txt
 │   ├── images/
 │   └── sample_file/
-├── 02-openai-model/
+├── 02-openai-litellm/
 │   ├── openai-litellm-agent.ipynb
 │   ├── requirements.txt
 │   └── images/
