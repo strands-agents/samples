@@ -1,3 +1,2 @@
-uv
 strands-agents
-mcp
+ddgs
