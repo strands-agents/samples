@@ -29,7 +29,7 @@ Strands Agents supports several model providers out of the box:
 | [Ollama](https://strandsagents.com/docs/user-guide/concepts/model-providers/ollama/) | Run models locally for privacy or offline use. |
 | [LiteLLM](https://strandsagents.com/docs/user-guide/concepts/model-providers/litellm/) | Unified interface for OpenAI, Azure OpenAI, Mistral, and many other providers. |
 | [OpenAI](https://strandsagents.com/docs/user-guide/concepts/model-providers/openai/) | Direct access to OpenAI models, including the [Responses API](https://strandsagents.com/docs/user-guide/concepts/model-providers/openai-responses/). |
-| [Amazon Nova](https://strandsagents.com/docs/user-guide/concepts/model-providers/amazon-nova/), [Google Gemini](https://strandsagents.com/docs/user-guide/concepts/model-providers/google/), [Mistral](https://strandsagents.com/docs/user-guide/concepts/model-providers/mistral/), [Writer](https://strandsagents.com/docs/user-guide/concepts/model-providers/writer/) | Additional first-party providers. |
+| [Amazon Nova](https://strandsagents.com/docs/user-guide/concepts/model-providers/amazon-nova/), [Google Gemini](https://strandsagents.com/docs/user-guide/concepts/model-providers/google/), [Mistral](https://strandsagents.com/docs/user-guide/concepts/model-providers/mistral/), [Writer](https://strandsagents.com/docs/user-guide/concepts/model-providers/writer/) | Additional providers built into the SDK. |
 | [Custom Providers](https://strandsagents.com/docs/user-guide/concepts/model-providers/custom_model_provider/) | Build your own provider for specialized needs. |
 
 ## Prerequisites
