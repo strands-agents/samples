@@ -27,7 +27,7 @@ This tutorial covers the two ways to give a Strands agent tools: writing your ow
 
 ## Tutorial Structure
 
-| Notebook | Description |
+| Path | Description |
 |----------|-------------|
 | [01-using-mcp-tools/mcp-agent.ipynb](./01-using-mcp-tools/mcp-agent.ipynb) | Connect an agent to MCP servers over stdio and Streamable HTTP, use multiple servers together, and invoke MCP tools directly |
 | [02-custom-tools/custom-tools-with-strands-agents.ipynb](./02-custom-tools/custom-tools-with-strands-agents.ipynb) | Build custom tools with the `@tool` decorator and the `TOOL_SPEC` dictionary, handle tool errors, and inspect tool results |

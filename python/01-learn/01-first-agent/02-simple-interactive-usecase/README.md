@@ -8,7 +8,7 @@ Here is what we are building:
 
 ## Running the Recipe Bot
 
-1. Navigate to this directory: `cd /02-simple-interactive-usecase/`
+1. Navigate to this directory: `cd 02-simple-interactive-usecase`
 2. Install dependencies: `pip install -r requirements.txt`
 3. Run the bot: `python recipe_bot.py`
 

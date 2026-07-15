@@ -1,6 +1,6 @@
 # Getting Started with Strands Agents
 
-This tutorial walks you through building your first Strands agent. You start with a minimal agent, add built-in and custom tools, learn to invoke tools directly and configure logging, choose a model provider, and finish by assembling a small interactive RecipeBot you can run from the command line.
+This tutorial walks you through building your first Strands agent. You start with a minimal agent, add built-in and custom tools, invoke tools directly, configure logging, choose a model provider, and finish with a small interactive RecipeBot you can run from the command line.
 
 ![Architecture](./images/agent_with_tools.png)
 
@@ -33,7 +33,7 @@ This tutorial walks you through building your first Strands agent. You start wit
 | [01-first-agent.ipynb](./01-first-agent.ipynb) | Quickstart notebook: create your first agent, add built-in and custom tools, invoke tools directly, configure logging, choose a model provider, and assemble a RecipeBot use case |
 | [02-simple-interactive-usecase/](./02-simple-interactive-usecase/) | The RecipeBot as a standalone command-line script |
 
-The notebook also assembles an interactive RecipeBot:
+The command-line script runs the RecipeBot interactively:
 
 ![RecipeBot](./images/interactive_recipe_agent.png)
 
