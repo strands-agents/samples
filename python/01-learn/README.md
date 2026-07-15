@@ -8,7 +8,7 @@ Step-by-step guides from basic agent creation to multi-agent orchestration.
 |--------|-------------|-------------|
 | [`01-first-agent`](./01-first-agent/) | `Agent` class | Create your first agent with system prompts |
 | [`02-tools-and-mcp`](./02-tools-and-mcp/) | `@tool` decorator, MCP | Build custom tools and connect MCP servers |
-| [`03-model-providers`](./03-model-providers/) | `BedrockModel`, `OllamaModel`, `LiteLLMModel` | Switch between Bedrock, Ollama, and OpenAI |
+| [`03-model-providers`](./03-model-providers/) | `OllamaModel`, `LiteLLMModel`, `OpenAIResponsesModel` | Run a local Ollama model, reach Azure OpenAI via LiteLLM, and call OpenAI on Amazon Bedrock |
 | [`04-streaming`](./04-streaming/) | `stream_async`, callbacks | Stream responses in async/FastAPI apps |
 | [`05-guardrails`](./05-guardrails/) | `guardrails` parameter | Add content filtering with Bedrock Guardrails |
 | [`06-memory`](./06-memory/) | Memory tools | Persist agent memory across sessions |
