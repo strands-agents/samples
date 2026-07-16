@@ -7,7 +7,8 @@ pyyaml
 retrying
 strands-agents
 langfuse
-ragas
-langchain-aws
+ragas==0.4.3
+langchain-aws<0.3
+langchain-core<1.0
 pandas
 datasets>=4.0.0

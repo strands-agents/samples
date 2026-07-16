@@ -154,7 +154,9 @@ class KnowledgeBasesForAmazonBedrock:
             # self.kb_description = kb_description
             if data_bucket_name is None:
                 kb_name_temp = kb_name.replace("_", "-")
-                data_bucket_name = f"{kb_name_temp}-{self.suffix}"
+                # Use the AWS account id so the globally-unique S3 bucket name does not
+                # collide across concurrent workshop accounts (a short random suffix can).
+                data_bucket_name = f"{kb_name_temp}-{self.account_number}"
                 print(
                     f"KB bucket name not provided, creating a new one called: {data_bucket_name}"
                 )
