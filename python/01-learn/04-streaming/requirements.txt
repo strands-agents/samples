@@ -4,4 +4,3 @@ strands-agents
 strands-agents-tools
 uvicorn
 pydantic
-nest_asyncio
