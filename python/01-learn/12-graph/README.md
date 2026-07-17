@@ -10,4 +10,4 @@ An Agent Graph is a collection of AI agents organized in a specific topology whe
 
 ### Example
 
-To get started with building agents with these patterns. Navigate to `graph.ipynb` to build a graph using the **star topology**.
+To get started with building agents with these patterns. Navigate to `graph.ipynb` to build a graph using basic, parallel, and conditional topologies.

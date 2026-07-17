@@ -23,7 +23,7 @@ This tutorial demonstrates how to persist agent conversation state across restar
 
 - Python 3.10 or higher
 - AWS account with Amazon Bedrock [model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) enabled
-- AWS credentials configured through the standard boto3 credential chain (environment variables, `~/.aws/credentials`, or an attached IAM role). Both notebooks include an optional setup cell for selecting a named profile with `AWS_PROFILE`; the region and account ID are derived from the active credentials.
+- AWS credentials configured through the standard boto3 credential chain (environment variables, `~/.aws/credentials`, or an attached IAM role). Both notebooks include a setup cell that derives the region and account ID from the active credentials.
 - IAM permissions for Amazon S3 and Amazon DynamoDB — the notebooks create and then delete a bucket and a table
 
 ## Tutorial Structure
