@@ -7,9 +7,9 @@ transport and asks the agent to parse and chunk a public sample PDF.
 Transform MCP exposes an *asynchronous* document-processing pipeline through
 four tools:
 
-    transform_files(file_refs, stages) -> job_id
-    check_transform_status(job_id)     -> status
-    get_transform_results(job_id, output_format) -> rendered output
+    start_transform_job(file_refs, stages) -> job_id
+    check_job_status(job_id)     -> status
+    get_job_results(job_id, output_format) -> rendered output
     request_file_upload_url()          -> presigned URL for local files
 
 Because the pipeline is async, this sample gives the agent explicit
@@ -81,8 +81,8 @@ def main() -> None:
     mcp_client = build_mcp_client(api_key)
 
     with mcp_client:
-        # Discover the tools Transform MCP exposes (transform_files,
-        # check_transform_status, get_transform_results,
+        # Discover the tools Transform MCP exposes (start_transform_job,
+        # check_job_status, get_job_results,
         # request_file_upload_url).
         tools = mcp_client.list_tools_sync()
         print(f"Connected to Transform MCP. Discovered {len(tools)} tool(s):")
@@ -99,12 +99,12 @@ def main() -> None:
 Process this document using the Transform tools: {SAMPLE_PDF_URL}
 
 Follow these steps exactly:
-1. Call transform_files with file_refs=["{SAMPLE_PDF_URL}"] and stages
+1. Call start_transform_job with file_refs=["{SAMPLE_PDF_URL}"] and stages
    configured for a partition (strategy "auto") followed by a chunk stage
    with default settings. This returns a job_id.
-2. Call check_transform_status with that job_id repeatedly (waiting a few
+2. Call check_job_status with that job_id repeatedly (waiting a few
    seconds between calls) until the status indicates the job is complete.
-3. Call get_transform_results with the job_id and output_format="md".
+3. Call get_job_results with the job_id and output_format="md".
 4. Summarize the first two chunks of the returned markdown in 2-3 sentences.
 """
 

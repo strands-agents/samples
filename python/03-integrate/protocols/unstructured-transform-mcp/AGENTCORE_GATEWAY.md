@@ -52,7 +52,7 @@ response = client.create_gateway_target(
 )
 ```
 
-Transform MCP's browser OAuth/OIDC flow is a 3-legged, authorization-code grant. After `create_gateway_target` returns, the target sits in `CREATE_PENDING_AUTH` until an admin completes the authorization URL for that credential provider (a one-time, human-in-the-loop step). Once authorized, the Gateway can call the target's `tools/list` and indexes Transform's tools (`transform_files`, `check_transform_status`, `get_transform_results`, `request_file_upload_url`) into the Gateway's unified catalog.
+Transform MCP's browser OAuth/OIDC flow is a 3-legged, authorization-code grant. After `create_gateway_target` returns, the target sits in `CREATE_PENDING_AUTH` until an admin completes the authorization URL for that credential provider (a one-time, human-in-the-loop step). Once authorized, the Gateway can call the target's `tools/list` and indexes Transform's tools (`start_transform_job`, `check_job_status`, `get_job_results`, `request_file_upload_url`) into the Gateway's unified catalog.
 
 See the AWS docs for the full target configuration schema and current field names:
 

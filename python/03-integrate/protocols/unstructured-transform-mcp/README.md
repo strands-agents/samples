@@ -28,23 +28,23 @@ sequenceDiagram
     participant Transform as Unstructured Transform MCP<br/>(streamable-http)
 
     User->>Agent: "Parse and chunk this document: <PDF URL>"
-    Agent->>Transform: transform_files(file_refs, stages)
+    Agent->>Transform: start_transform_job(file_refs, stages)
     Transform-->>Agent: job_id
     loop Poll until complete
-        Agent->>Transform: check_transform_status(job_id)
+        Agent->>Transform: check_job_status(job_id)
         Transform-->>Agent: status
     end
-    Agent->>Transform: get_transform_results(job_id, output_format)
+    Agent->>Transform: get_job_results(job_id, output_format)
     Transform-->>Agent: rendered output (md/json/html/text)
     Agent-->>User: Summary of parsed & chunked document
 ```
 
-The agent connects to Transform MCP over `streamable-http`, authenticating with an Unstructured API key passed as a bearer token. It discovers the server's tools at runtime via `list_tools_sync()`, then drives the async pipeline: submit a job with `transform_files`, poll `check_transform_status`, and fetch the rendered output with `get_transform_results`.
+The agent connects to Transform MCP over `streamable-http`, authenticating with an Unstructured API key passed as a bearer token. It discovers the server's tools at runtime via `list_tools_sync()`, then drives the async pipeline: submit a job with `start_transform_job`, poll `check_job_status`, and fetch the rendered output with `get_job_results`.
 
 ### Key Features
 
 - **Hosted, remote MCP server**: no local binaries, containers, or native dependencies (e.g. LibreOffice, poppler) to install, just a URL and an API key.
-- **Async job pipeline**: `transform_files` returns a `job_id` immediately; the agent polls `check_transform_status` and fetches results with `get_transform_results` once complete, matching how a production integration would handle longer-running documents.
+- **Async job pipeline**: `start_transform_job` returns a `job_id` immediately; the agent polls `check_job_status` and fetches results with `get_job_results` once complete, matching how a production integration would handle longer-running documents.
 - **Configurable pipeline stages**: partition (`auto` / `fast` / `hi_res` / `vlm`), enrich (image descriptions, table-to-HTML, NER, generative OCR), chunk, and embed stages can be composed per request via the `stages` argument.
 - **Two auth paths**: browser OAuth/OIDC for interactive clients, or an API-key bearer token for headless frameworks like this one.
 
