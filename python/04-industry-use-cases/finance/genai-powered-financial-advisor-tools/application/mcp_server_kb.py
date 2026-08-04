@@ -10,8 +10,6 @@ from pathlib import Path
 import yaml
 
 from strands import Agent, tool
-from strands_tools import current_time, retrieve
-
 from mcp.server.fastmcp import FastMCP
 
 import boto3

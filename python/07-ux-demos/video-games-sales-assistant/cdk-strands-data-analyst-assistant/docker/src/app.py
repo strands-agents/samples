@@ -1,5 +1,4 @@
 from strands import Agent, tool
-from strands_tools import current_time
 from strands.models import BedrockModel
 from fastapi import FastAPI, HTTPException, Header
 from fastapi.responses import StreamingResponse
@@ -192,7 +191,7 @@ async def run_data_analyst_assistant_with_stream_response(bedrock_model, system_
         messages=message_history,
         model=bedrock_model,
         system_prompt=system_prompt,
-        tools=[current_time, get_tables_information, execute_sql_query],
+        tools=[get_tables_information, execute_sql_query],
         callback_handler=None
     )
 

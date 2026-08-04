@@ -12,7 +12,7 @@ from typing import Dict, Union
 import yfinance as yf
 from strands import Agent, tool
 from strands.models.bedrock import BedrockModel
-from strands_tools import think, http_request
+from strands_tools import http_request
 
 
 @tool
@@ -129,7 +129,7 @@ When user provides a company ticker:
    - Risk Assessment
 </output_format>""",
         model=BedrockModel(model_id="us.anthropic.claude-opus-4-6-v1"),
-        tools=[get_financial_metrics, http_request, think],
+        tools=[get_financial_metrics, http_request],
     )
 
 

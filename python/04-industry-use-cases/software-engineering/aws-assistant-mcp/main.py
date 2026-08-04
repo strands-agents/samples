@@ -20,8 +20,6 @@ from aws_cost_assistant import aws_cost_assistant
 from aws_documentation_researcher import aws_documentation_researcher
 from graph_creater import graph_creater
 from strands import Agent
-from strands_tools import think
-
 # Interactive mode when run directly
 
 SUPERVISOR_AGENT_PROMPT = """
@@ -52,7 +50,7 @@ Always confirm your understanding before routing to ensure accurate assistance.
 supervisor_agent = Agent(
     system_prompt=SUPERVISOR_AGENT_PROMPT,
     # stream_handler=None,
-    tools=[aws_documentation_researcher, graph_creater, aws_cost_assistant, think],
+    tools=[aws_documentation_researcher, graph_creater, aws_cost_assistant],
 )
 
 

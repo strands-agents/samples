@@ -17,9 +17,6 @@ from IPython.display import Image, display
 
 from strands import Agent, tool
 from strands.models import BedrockModel
-from strands_tools import think
-
-
 # Create directory for saved images if it doesn't exist
 SAVE_DIR = "generated_images"
 if not os.path.exists(SAVE_DIR):
@@ -113,7 +110,7 @@ When users want to:
 
 Always confirm actions and provide clear feedback about what was done.""",
         model=BedrockModel(model_id="us.amazon.nova-pro-v1:0", region="us-east-1"),
-        tools=[generate_image_nova, think],
+        tools=[generate_image_nova],
     )
 
 

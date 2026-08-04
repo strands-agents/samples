@@ -15,7 +15,7 @@ import yfinance as yf
 import requests
 from strands import Agent, tool
 from strands.models import BedrockModel
-from strands_tools import think, http_request
+from strands_tools import http_request
 
 
 @tool
@@ -433,7 +433,7 @@ When user provides a company ticker:
    - Overall Assessment
 </output_format>""",
         model=BedrockModel(model_id="us.anthropic.claude-opus-4-6-v1"),
-        tools=[get_company_info, get_stock_news, http_request, think],
+        tools=[get_company_info, get_stock_news, http_request],
     )
 
 

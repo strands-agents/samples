@@ -12,7 +12,7 @@ from typing import Dict, Union
 import yfinance as yf
 from strands import Agent, tool
 from strands.models.bedrock import BedrockModel
-from strands_tools import think, http_request
+from strands_tools import http_request
 
 
 @tool
@@ -98,7 +98,7 @@ When user provides a company name or ticker:
 3. Key Metrics Summary
 </output_format>""",
         model=BedrockModel(model_id="us.anthropic.claude-opus-4-6-v1"),
-        tools=[get_stock_prices, http_request, think],
+        tools=[get_stock_prices, http_request],
     )
 
 

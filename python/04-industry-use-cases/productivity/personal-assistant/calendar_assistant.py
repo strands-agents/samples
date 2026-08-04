@@ -1,7 +1,6 @@
 import os
 from strands import Agent, tool
 from strands.models import BedrockModel
-from strands_tools import current_time
 from calendar_tools import create_appointment, get_agenda, list_appointments, update_appointment
 from constants import SESSION_ID
 
@@ -26,7 +25,7 @@ def calendar_assistant(query: str) -> str:
 
 
 system_prompt = """You are a helpful calendar assistant that specializes in managing my appointments. 
-You have access to appointment management tools, and can check the current time to help me organize my schedule effectively. 
+You have access to appointment management tools to help me organize my schedule effectively. 
 Always provide the appointment id so that I can update it if required"""
 
 model = BedrockModel(
@@ -37,7 +36,6 @@ agent = Agent(
     model=model,
     system_prompt=system_prompt,
     tools=[
-        current_time,
         create_appointment,
         list_appointments,
         update_appointment,
@@ -56,7 +54,6 @@ if __name__ == "__main__":
     print("   📋 List all your appointments") 
     print("   🔄 Update existing appointments")
     print("   📆 Get your daily agenda")
-    print("   🕐 Check current time")
     print()
     print("💡 Tips:")
     print("   • Use dates in format: YYYY-MM-DD HH:MM")
