@@ -1,34 +1,13 @@
 """AWS Nova Sonic CLI Test - Use headset to avoid feedback (no echo cancellation)"""
 
-import operator
 
 import asyncio
 
 from strands.experimental.bidi.agent import BidiAgent
-from strands import tool
+from strands.vended_tools import sleep
 from strands.experimental.bidi.io.audio import BidiAudioIO
 from strands.experimental.bidi.io.text import BidiTextIO
 from strands.experimental.bidi.models.nova_sonic import BidiNovaSonicModel
-
-_OPS = {
-    "+": operator.add,
-    "-": operator.sub,
-    "*": operator.mul,
-    "/": operator.truediv,
-    "**": operator.pow,
-}
-
-
-@tool
-def calculator(a: float, b: float, op: str) -> float:
-    """Apply an arithmetic operator to two numbers.
-
-    Args:
-        a: Left operand.
-        b: Right operand.
-        op: One of "+", "-", "*", "/", "**".
-    """
-    return _OPS[op](a, b)
 
 async def main():
     audio_config = {}
@@ -44,11 +23,11 @@ async def main():
                 "endpointingSensitivity": "HIGH" # HIGH, MEDIUM, LOW
             }
         },
-        tools=[calculator],
+        tools=[sleep],
     )
 
-    agent = BidiAgent(model=model, tools=[calculator])
-    print("Nova Sonic - Try: 'What is 25 times 8?'")
+    agent = BidiAgent(model=model, tools=[sleep])
+    print("Nova Sonic - Try: 'Pause for 2 seconds'")
     await agent.run(inputs=[audio_io.input()], outputs=[audio_io.output(), text_io.output()])
 
 
