@@ -2,15 +2,15 @@
 Setup: export GOOGLE_API_KEY=your-key
 """
 
-
 import asyncio
 import os
 
 from strands.experimental.bidi.agent import BidiAgent
-from strands.vended_tools import sleep
 from strands.experimental.bidi.io.audio import BidiAudioIO
 from strands.experimental.bidi.io.text import BidiTextIO
 from strands.experimental.bidi.models.gemini_live import BidiGeminiLiveModel
+from strands.vended_tools import sleep
+
 
 async def main():
     audio_config={"input_sample_rate": 16000, "output_sample_rate": 24000}

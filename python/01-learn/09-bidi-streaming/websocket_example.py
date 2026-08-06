@@ -15,6 +15,7 @@ import webbrowser
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 
+from strands import tool
 from strands.experimental.bidi.agent import BidiAgent
 from strands.experimental.bidi.models.gemini_live import BidiGeminiLiveModel
 from strands.experimental.bidi.models.nova_sonic import BidiNovaSonicModel
@@ -24,7 +25,6 @@ from strands.experimental.bidi.types.events import (
     BidiImageInputEvent,
     BidiTextInputEvent,
 )
-from strands import tool
 
 _OPS = {
     "+": operator.add,

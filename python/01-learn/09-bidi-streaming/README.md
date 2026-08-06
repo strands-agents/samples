@@ -100,7 +100,7 @@ pip install -r requirements.txt
 
 Or install directly:
 ```bash
-pip install fastapi uvicorn strands-agents[bidi-all] strands-agents-tools
+pip install fastapi uvicorn strands-agents[bidi-all]
 ```
 
 3. **Set up credentials** (for the models you want to use)
@@ -247,7 +247,7 @@ Sent when the user interrupts the agent. Stop playing current audio and clear bu
 {
   "type": "tool_use_stream",
   "tool_name": "calculator",
-  "tool_input": {"operation": "multiply", "a": 25, "b": 8}
+  "tool_input": {"a": 25, "b": 8, "op": "*"}
 }
 ```
 Notification that the agent is executing a tool.
@@ -257,7 +257,7 @@ Notification that the agent is executing a tool.
 {
   "type": "tool_result",
   "tool_name": "calculator",
-  "result": 200
+  "result": 200.0
 }
 ```
 The result returned from tool execution.
@@ -309,7 +309,7 @@ agent = BidiAgent(
 )
 ```
 
-You can add additional tools from `strands_tools` or create custom tools following the Strands tools specification.
+You can add additional tools from `strands.vended_tools` or create custom tools following the Strands tools specification.
 
 ## Event Format Reference
 
@@ -420,9 +420,9 @@ Notifies that the agent is executing a tool.
   "current_tool_use": {
     "name": "calculator",
     "input": {
-      "operation": "multiply",
       "a": 25,
-      "b": 8
+      "b": 8,
+      "op": "*"
     }
   }
 }
@@ -441,7 +441,7 @@ Returns the result from tool execution.
   "tool_result": {
     "content": [
       {
-        "text": "200"
+        "text": "200.0"
       }
     ]
   }

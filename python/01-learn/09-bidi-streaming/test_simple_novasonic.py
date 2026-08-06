@@ -1,13 +1,13 @@
 """AWS Nova Sonic CLI Test - Use headset to avoid feedback (no echo cancellation)"""
 
-
 import asyncio
 
 from strands.experimental.bidi.agent import BidiAgent
-from strands.vended_tools import sleep
 from strands.experimental.bidi.io.audio import BidiAudioIO
 from strands.experimental.bidi.io.text import BidiTextIO
 from strands.experimental.bidi.models.nova_sonic import BidiNovaSonicModel
+from strands.vended_tools import sleep
+
 
 async def main():
     audio_config = {}
