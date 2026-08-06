@@ -1,7 +1,6 @@
 fastapi
 uv
 strands-agents
-strands-agents-tools
 uvicorn
 pydantic
 httpx

@@ -8,6 +8,7 @@ import uvicorn
 import boto3
 import json
 from uuid import uuid4
+from datetime import datetime, timezone
 import os
 
 # Import my tools
@@ -48,6 +49,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@tool
+def current_time() -> str:
+    """Get the current UTC date and time in ISO 8601 format."""
+    return datetime.now(timezone.utc).isoformat()
+
 
 def load_system_prompt():
     """
@@ -191,7 +199,7 @@ async def run_data_analyst_assistant_with_stream_response(bedrock_model, system_
         messages=message_history,
         model=bedrock_model,
         system_prompt=system_prompt,
-        tools=[get_tables_information, execute_sql_query],
+        tools=[current_time, get_tables_information, execute_sql_query],
         callback_handler=None
     )
 

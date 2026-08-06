@@ -1,4 +1,5 @@
 import operator
+from datetime import datetime, timezone
 
 import asyncio
 import streamlit as st
@@ -31,6 +32,12 @@ def calculator(a: float, b: float, op: str) -> float:
         op: One of "+", "-", "*", "/", "**".
     """
     return _OPS[op](a, b)
+
+
+@tool
+def current_time() -> str:
+    """Get the current UTC date and time in ISO 8601 format."""
+    return datetime.now(timezone.utc).isoformat()
 
 # Initialize session state for conversation history
 if "messages" not in st.session_state:
@@ -87,6 +94,7 @@ if "agent" not in st.session_state:
         model=model,
         system_prompt=system_prompt,
         tools=[
+            current_time,
             calculator,
             tools.create_appointment,
             tools.list_appointments,

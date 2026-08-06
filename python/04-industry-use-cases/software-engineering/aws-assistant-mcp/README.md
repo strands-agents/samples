@@ -9,7 +9,7 @@ AWS Assistant is a sophisticated multi-agent system designed to provide comprehe
 |Feature             |Description                                        |
 |--------------------|---------------------------------------------------|
 |Agent Structure     |Multi-agent architecture                           |
-|Native Tools        |think, file_write, python_repl, shell              |
+|Native Tools        |file_write, python_repl, shell                     |
 |Custom Agents       |aws_documentation_researcher, graph_creater, aws_cost_assistant|
 |MCP Servers         |[AWS Cost Explorer](https://github.com/aarora79/aws-cost-explorer-mcp-server), [AWS Documentation](https://awslabs.github.io/mcp/servers/aws-documentation-mcp-server/)               |
 |Model Provider      |Amazon Bedrock                                     |

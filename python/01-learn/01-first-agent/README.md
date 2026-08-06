@@ -10,7 +10,7 @@ This tutorial walks you through building your first Strands agent. You start wit
 |------------------------|----------------------------------------------------------|
 | **Strands Features**   | `Agent`, `@tool` decorator, `BedrockModel`               |
 | **Agent Pattern**      | Single agent                                             |
-| **Tools**              | Built-in (`calculator`) and custom (`@tool`)             |
+| **Tools**              | Custom tools via the `@tool` decorator                  |
 | **Model**              | Claude Sonnet 4.5 on Amazon Bedrock (`us.anthropic.claude-sonnet-4-5-20250929-v1:0`) |
 
 ## Key Concepts
@@ -41,7 +41,7 @@ The command-line script runs the RecipeBot interactively:
 
 1. **Install dependencies:**
    ```bash
-   pip install strands-agents strands-agents-tools
+   pip install strands-agents
    ```
 
 2. **Run the notebook:** open [`01-first-agent.ipynb`](./01-first-agent.ipynb) and run the cells in order. It covers:

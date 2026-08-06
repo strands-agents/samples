@@ -14,7 +14,7 @@ Under the hood, the SDK registers your model as a dynamic tool, the LLM calls it
 |------------------------|----------------------------------------------------------------------|
 | **Strands Features**   | Structured Output, Pydantic Validation, Tool Integration             |
 | **Agent Pattern**      | Single agent with structured output                                  |
-| **Tools**              | `calculator` (from strands-agents-tools)                             |
+| **Tools**              | `calculator` (defined in the notebook)                               |
 | **Model**              | Claude Sonnet 4.5 on Amazon Bedrock                                  |
 
 ## How It Works
