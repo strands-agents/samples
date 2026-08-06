@@ -1,5 +1,4 @@
 strands-agents==1.13.0
-strands-agents-tools==0.2.12
 fastapi==0.120.1
 uvicorn==0.38.0
 pydantic==2.12.3

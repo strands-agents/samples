@@ -106,7 +106,6 @@ async def websocket_endpoint(websocket: WebSocket, model_name: str):
                     "voice": "matthew",
                 }
             },
-            tools=[calculator],
         )
     elif model_name == "gemini":
         model = BidiGeminiLiveModel(client_config={"api_key": os.environ.get("GOOGLE_API_KEY")})

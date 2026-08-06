@@ -246,8 +246,7 @@ Sent when the user interrupts the agent. Stop playing current audio and clear bu
 ```json
 {
   "type": "tool_use_stream",
-  "tool_name": "calculator",
-  "tool_input": {"a": 25, "b": 8, "op": "*"}
+  "current_tool_use": {"name": "calculator", "input": {"a": 25, "b": 8, "op": "*"}}
 }
 ```
 Notification that the agent is executing a tool.
@@ -256,8 +255,7 @@ Notification that the agent is executing a tool.
 ```json
 {
   "type": "tool_result",
-  "tool_name": "calculator",
-  "result": 200.0
+  "tool_result": {"content": [{"text": "200.0"}]}
 }
 ```
 The result returned from tool execution.

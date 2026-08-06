@@ -17,6 +17,7 @@ from IPython.display import Image, display
 
 from strands import Agent, tool
 from strands.models import BedrockModel
+
 # Create directory for saved images if it doesn't exist
 SAVE_DIR = "generated_images"
 if not os.path.exists(SAVE_DIR):

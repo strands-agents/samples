@@ -23,9 +23,9 @@ async def main():
                 "endpointingSensitivity": "HIGH" # HIGH, MEDIUM, LOW
             }
         },
-        tools=[sleep],
     )
 
+    # Tools are registered on the agent, not the model.
     agent = BidiAgent(model=model, tools=[sleep])
     print("Nova Sonic - Try: 'Pause for 2 seconds'")
     await agent.run(inputs=[audio_io.input()], outputs=[audio_io.output(), text_io.output()])

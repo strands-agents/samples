@@ -13,7 +13,7 @@ This sample implements a personal assistant agent using Strands' [agents as tool
 - **List All Appointments**: View all scheduled appointments in a formatted list
 - **Update Appointments**: Modify existing appointments by ID
 - **Daily Agenda**: Get a formatted agenda for any specific date
-- **Time Awareness**: Built-in current time functionality
+- **Time Awareness**: A `current_time` tool defined in the sample
 
 ### 💻 Coding Assistant  
 - **Python REPL**: Execute Python code in a REPL environment with PTY support and state persistence.

@@ -12,7 +12,7 @@ from typing import Dict, Any
 
 from strands import Agent
 from strands.models import BedrockModel
-from strands_tools import retrieve, think
+from strands_tools import retrieve
 
 # ======== DEFAULT CONFIGURATION ========
 # Default values (will be used if not provided as command-line arguments)
@@ -81,7 +81,7 @@ def create_analyzer_agent(region: str) -> Agent:
 Focus on accuracy and clarity in your responses. When information is incomplete or uncertain, acknowledge the limitations.
 Organize your response in a structured format with clear sections when appropriate.""",
         model=BedrockModel(model_id="us.amazon.nova-pro-v1:0", region=region),
-        tools=[retrieve, think],
+        tools=[retrieve],
     )
 
 

@@ -1,34 +1,11 @@
 ## ⚠️⚠️ PLEASE READ :  The script agent creates and executes the script that may perform changes to your environment, always execute it from a sandbox (sample attached in sandbox folder) with readonly permissions to avoid any issues ⚠️⚠️
 
-import operator
-
 from strands import Agent, tool
 from strands.models.bedrock import BedrockModel
 from strands_tools import file_read, shell, http_request, python_repl, editor, journal
 from aws_document_agent import doc_retrieve as doc_agent
 from strands_boto_agent import code_assistant
 import os
-
-_OPS = {
-    "+": operator.add,
-    "-": operator.sub,
-    "*": operator.mul,
-    "/": operator.truediv,
-    "**": operator.pow,
-}
-
-
-@tool
-def calculator(a: float, b: float, op: str) -> float:
-    """Apply an arithmetic operator to two numbers.
-
-    Args:
-        a: Left operand.
-        b: Right operand.
-        op: One of "+", "-", "*", "/", "**".
-    """
-    return _OPS[op](a, b)
-
 os.environ["BYPASS_TOOL_CONSENT"] = "true"
 os.environ["STRANDS_TOOL_CONSOLE_MODE"] = "disabled"
 

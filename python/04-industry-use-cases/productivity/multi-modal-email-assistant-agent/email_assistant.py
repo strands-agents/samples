@@ -84,7 +84,7 @@ STEP 4 - FORMATTING AND REVIEW:
             #           http_request,
             retrieve_from_kb,
             generate_image_nova,
-            ],
+        ],
     )
 
 

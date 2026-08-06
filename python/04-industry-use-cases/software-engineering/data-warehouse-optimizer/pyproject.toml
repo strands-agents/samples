@@ -5,6 +5,5 @@ description = "Multi-Agent Data Warehouse Query Optimizer using SQLite and AWS B
 requires-python = ">=3.10"
 dependencies = [
     "strands-agents",
-    "strands-agents-tools",
     "boto3",
 ]

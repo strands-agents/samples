@@ -1,6 +1,7 @@
 import operator
 
 from strands import Agent, tool
+from strands.multiagent.a2a import A2AServer
 
 _OPS = {
     "+": operator.add,
@@ -22,7 +23,6 @@ def calculator(a: float, b: float, op: str) -> float:
     """
     return _OPS[op](a, b)
 
-from strands.multiagent.a2a import A2AServer
 
 # Create a Strands agent with calculator tool
 strands_agent = Agent(

@@ -133,8 +133,8 @@ streamlit run app_streaming.py --server.port 8080
     
 |Feature             |Description                                                |
 |--------------------|-----------------------------------------------------------|
-|Native tools used   |current_time, calculator                                   |
-|Custom tools created|create_appointment, list_appointments, update_appointments |
+|Native tools used   |none                                                       |
+|Custom tools created|current_time, calculator, create_appointment, list_appointments, update_appointments |
 |Agent Structure     |Single agent architecture                                  |
 
 
