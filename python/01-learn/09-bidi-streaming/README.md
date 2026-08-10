@@ -13,6 +13,7 @@ These samples demonstrates how to build voice-enabled AI agents using Strands wi
 
 ```python
 import operator
+from typing import Literal
 
 from strands.experimental.bidi.agent import BidiAgent
 from strands import tool
@@ -28,7 +29,7 @@ _OPS = {
 
 
 @tool
-def calculator(a: float, b: float, op: str) -> float:
+def calculator(a: float, b: float, op: Literal["+", "-", "*", "/", "**"]) -> float:
     """Apply an arithmetic operator to two numbers.
 
     Args:
@@ -246,7 +247,8 @@ Sent when the user interrupts the agent. Stop playing current audio and clear bu
 ```json
 {
   "type": "tool_use_stream",
-  "current_tool_use": {"name": "calculator", "input": {"a": 25, "b": 8, "op": "*"}}
+  "delta": {"toolUse": {"input": "{\"a\": 25"}},
+  "current_tool_use": {"toolUseId": "tooluse_abc123", "name": "calculator", "input": {"a": 25, "b": 8, "op": "*"}}
 }
 ```
 Notification that the agent is executing a tool.
@@ -255,7 +257,7 @@ Notification that the agent is executing a tool.
 ```json
 {
   "type": "tool_result",
-  "tool_result": {"content": [{"text": "200.0"}]}
+  "tool_result": {"toolUseId": "tooluse_abc123", "status": "success", "content": [{"text": "200.0"}]}
 }
 ```
 The result returned from tool execution.
@@ -276,6 +278,7 @@ Tools can be added to the `tools` parameter in `websocket_example.py`. The agent
 
 ```python
 import operator
+from typing import Literal
 
 from strands import tool
 
@@ -289,7 +292,7 @@ _OPS = {
 
 
 @tool
-def calculator(a: float, b: float, op: str) -> float:
+def calculator(a: float, b: float, op: Literal["+", "-", "*", "/", "**"]) -> float:
     """Apply an arithmetic operator to two numbers.
 
     Args:

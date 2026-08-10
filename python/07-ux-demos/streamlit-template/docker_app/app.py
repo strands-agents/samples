@@ -1,4 +1,5 @@
 import operator
+from typing import Literal
 from datetime import datetime, timezone
 
 import streamlit as st
@@ -23,7 +24,7 @@ _OPS = {
 
 
 @tool
-def calculator(a: float, b: float, op: str) -> float:
+def calculator(a: float, b: float, op: Literal["+", "-", "*", "/", "**"]) -> float:
     """Apply an arithmetic operator to two numbers.
 
     Args:

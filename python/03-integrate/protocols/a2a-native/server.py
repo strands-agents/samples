@@ -1,4 +1,5 @@
 import operator
+from typing import Literal
 
 from strands import Agent, tool
 from strands.multiagent.a2a import A2AServer
@@ -13,7 +14,7 @@ _OPS = {
 
 
 @tool
-def calculator(a: float, b: float, op: str) -> float:
+def calculator(a: float, b: float, op: Literal["+", "-", "*", "/", "**"]) -> float:
     """Apply an arithmetic operator to two numbers.
 
     Args:

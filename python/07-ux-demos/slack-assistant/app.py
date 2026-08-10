@@ -4,7 +4,7 @@ import logging
 import os
 import sys
 import time
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Literal
 
 from slack_bolt import App, Assistant, BoltContext, Say, SayStream, SetStatus, SetSuggestedPrompts
 from slack_bolt.adapter.socket_mode import SocketModeHandler
@@ -26,7 +26,7 @@ _OPS = {
 
 
 @tool
-def calculator(a: float, b: float, op: str) -> float:
+def calculator(a: float, b: float, op: Literal["+", "-", "*", "/", "**"]) -> float:
     """Apply an arithmetic operator to two numbers.
 
     Args:

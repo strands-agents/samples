@@ -4,6 +4,7 @@
 import json
 import logging
 import operator
+from typing import Literal
 import os
 import sys
 import threading
@@ -36,7 +37,7 @@ _OPS = {
 
 
 @tool
-def calculator(a: float, b: float, op: str) -> float:
+def calculator(a: float, b: float, op: Literal["+", "-", "*", "/", "**"]) -> float:
     """Apply an arithmetic operator to two numbers.
 
     Args:

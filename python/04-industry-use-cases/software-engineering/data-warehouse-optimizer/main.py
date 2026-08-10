@@ -12,7 +12,7 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
 from strands import Agent, tool
 from strands.models import BedrockModel
-from typing import Dict, Any
+from typing import Dict, Any, Literal
 from utils.prompts import analyzer_prompt, rewriter_prompt, validator_prompt
 from utils.tools import (
     get_query_execution_plan,
@@ -38,7 +38,7 @@ _OPS = {
 
 
 @tool
-def calculator(a: float, b: float, op: str) -> float:
+def calculator(a: float, b: float, op: Literal["+", "-", "*", "/", "**"]) -> float:
     """Apply an arithmetic operator to two numbers.
 
     Args:
