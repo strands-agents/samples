@@ -4,8 +4,11 @@ This sample connects a Strands Agent to the hosted Unstructured Transform MCP
 server (https://mcp.transform.unstructured.io) over the streamable-http
 transport and asks the agent to parse and chunk a public sample PDF.
 
-Transform MCP exposes an *asynchronous* document-processing pipeline through
-four tools:
+The server exposes seven tools total; this sample uses the four that cover
+the *asynchronous* document-processing pipeline (the remaining three,
+start_extraction_job, suggest_extraction_schema_for_file, and
+get_instructions, support schema-based structured data extraction and
+on-demand server guidance, outside the scope of this sample):
 
     start_transform_job(file_refs, stages) -> job_id
     check_job_status(job_id)     -> status
