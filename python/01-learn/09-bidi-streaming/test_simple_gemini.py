@@ -9,7 +9,7 @@ from strands.experimental.bidi.agent import BidiAgent
 from strands.experimental.bidi.io.audio import BidiAudioIO
 from strands.experimental.bidi.io.text import BidiTextIO
 from strands.experimental.bidi.models.gemini_live import BidiGeminiLiveModel
-from strands_tools import calculator
+from strands.vended_tools import sleep
 
 
 async def main():
@@ -23,8 +23,8 @@ async def main():
 
     model = BidiGeminiLiveModel(client_config={"api_key": api_key})
 
-    agent = BidiAgent(model=model, tools=[calculator])
-    print("Gemini Live - Try: 'What is 25 times 8?'")
+    agent = BidiAgent(model=model, tools=[sleep])
+    print("Gemini Live - Try: 'Pause for 2 seconds'")
     await agent.run(inputs=[audio_io.input()], outputs=[audio_io.output(), text_io.output()])
 
 

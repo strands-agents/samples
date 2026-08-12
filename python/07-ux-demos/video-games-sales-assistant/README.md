@@ -46,12 +46,10 @@ The solution deploys the following AWS services through AWS CDK:
 
 - **Application Load Balancer and Fargate Container for Strands Agent**: Powers the ***Data Analyst Assistant*** that answers questions by generating SQL queries using Claude Sonnet 4.6
   - Contains all the logic for agent configuration and tools
-  - Built-in tools include:
-    - Custom tools:
-        - execute_sql_query
-        - get_tables_information
-    - Strands tool:
-        - current_time
+  - Custom tools defined in the sample:
+    - execute_sql_query
+    - get_tables_information
+    - current_time
 - **Amazon Aurora PostgreSQL Serverless v2**: Stores the video game sales data with Data API enabled for secure access
 - **Amazon ECS on Fargate**: Hosts the Strands Agent service with container insights and auto-scaling capabilities
 - **Amazon DynamoDB**: Two tables for tracking users' conversations and raw query results
@@ -79,7 +77,7 @@ The **user interaction workflow** operates as follows:
 
 - The web application sends user business questions to the agent built with Strands Agents SDK
 - The agent (powered by Claude Sonnet 4.6) processes natural language and determines when to execute database queries
-- The agent's built-in tools execute SQL queries against the Aurora PostgreSQL database and formulate an answer to the question
+- The agent's tools execute SQL queries against the Aurora PostgreSQL database and formulate an answer to the question
 - After the agent's response is received by the web application, the raw data query results are retrieved from the DynamoDB table to display both the answer and the corresponding records
 - For chart generation, the application invokes a model (powered by Claude Sonnet 4.6) to analyze the agent's answer and raw data query results to generate the necessary data to render an appropriate chart visualization
 
@@ -89,8 +87,8 @@ The **user interaction workflow** operates as follows:
 
 | Feature | Description |
 |----------|----------|
-| Native Tools   | current_time - A built-in Strands tool that provides the current date and time information based on user's timezone. |
-| Custom Tools | get_tables_information - A custom tool that retrieves metadata about the database tables, including their structure, columns, and relationships, to help the agent understand the database schema.<br>execute_sql_query - A custom tool that allows the agent to run SQL queries against the PostgreSQL database based on the user's natural language questions, retrieving the requested data for analysis. |
+| Native Tools   | none |
+| Custom Tools | current_time - A tool defined in the sample that returns the current UTC date and time in ISO 8601 format.<br>get_tables_information - A custom tool that retrieves metadata about the database tables, including their structure, columns, and relationships, to help the agent understand the database schema.<br>execute_sql_query - A custom tool that allows the agent to run SQL queries against the PostgreSQL database based on the user's natural language questions, retrieving the requested data for analysis. |
 | Model Provider | Amazon Bedrock |
 
 ## Deployment Instructions

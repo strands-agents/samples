@@ -1,15 +1,44 @@
+import operator
+from typing import Literal
+from datetime import datetime, timezone
+
 import asyncio
 import streamlit as st
 from utils.auth import Auth
 from config_file import Config
 
-from strands import Agent
+from strands import Agent, tool
 from strands.models import BedrockModel
 
 import tools.list_appointments
 import tools.update_appointment
 import tools.create_appointment
-from strands_tools import calculator, current_time
+
+_OPS = {
+    "+": operator.add,
+    "-": operator.sub,
+    "*": operator.mul,
+    "/": operator.truediv,
+    "**": operator.pow,
+}
+
+
+@tool
+def calculator(a: float, b: float, op: Literal["+", "-", "*", "/", "**"]) -> float:
+    """Apply an arithmetic operator to two numbers.
+
+    Args:
+        a: Left operand.
+        b: Right operand.
+        op: One of "+", "-", "*", "/", "**".
+    """
+    return _OPS[op](a, b)
+
+
+@tool
+def current_time() -> str:
+    """Get the current UTC date and time in ISO 8601 format."""
+    return datetime.now(timezone.utc).isoformat()
 
 # Initialize session state for conversation history
 if "messages" not in st.session_state:

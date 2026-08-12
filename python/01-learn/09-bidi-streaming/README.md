@@ -12,9 +12,32 @@ A bidirectional streaming agent enables real-time, two-way voice conversations w
 These samples demonstrates how to build voice-enabled AI agents using Strands with models like AWS Nova Sonic, Google Gemini Live, and OpenAI Realtime API.
 
 ```python
+import operator
+from typing import Literal
+
 from strands.experimental.bidi.agent import BidiAgent
+from strands import tool
 from strands.experimental.bidi.models.nova_sonic import BidiNovaSonicModel
-from strands_tools import calculator
+
+_OPS = {
+    "+": operator.add,
+    "-": operator.sub,
+    "*": operator.mul,
+    "/": operator.truediv,
+    "**": operator.pow,
+}
+
+
+@tool
+def calculator(a: float, b: float, op: Literal["+", "-", "*", "/", "**"]) -> float:
+    """Apply an arithmetic operator to two numbers.
+
+    Args:
+        a: Left operand.
+        b: Right operand.
+        op: One of "+", "-", "*", "/", "**".
+    """
+    return _OPS[op](a, b)
 
 # Create a voice-enabled agent with tools
 agent = BidiAgent(
@@ -78,7 +101,7 @@ pip install -r requirements.txt
 
 Or install directly:
 ```bash
-pip install fastapi uvicorn strands-agents[bidi-all] strands-agents-tools
+pip install fastapi uvicorn strands-agents[bidi-all]
 ```
 
 3. **Set up credentials** (for the models you want to use)
@@ -224,8 +247,8 @@ Sent when the user interrupts the agent. Stop playing current audio and clear bu
 ```json
 {
   "type": "tool_use_stream",
-  "tool_name": "calculator",
-  "tool_input": {"operation": "multiply", "a": 25, "b": 8}
+  "delta": {"toolUse": {"input": "{\"a\": 25"}},
+  "current_tool_use": {"toolUseId": "tooluse_abc123", "name": "calculator", "input": {"a": 25, "b": 8, "op": "*"}}
 }
 ```
 Notification that the agent is executing a tool.
@@ -234,8 +257,7 @@ Notification that the agent is executing a tool.
 ```json
 {
   "type": "tool_result",
-  "tool_name": "calculator",
-  "result": 200
+  "tool_result": {"toolUseId": "tooluse_abc123", "status": "success", "content": [{"text": "200.0"}]}
 }
 ```
 The result returned from tool execution.
@@ -255,7 +277,31 @@ The result returned from tool execution.
 Tools can be added to the `tools` parameter in `websocket_example.py`. The agent is already configured with the calculator tool:
 
 ```python
-from strands_tools import calculator
+import operator
+from typing import Literal
+
+from strands import tool
+
+_OPS = {
+    "+": operator.add,
+    "-": operator.sub,
+    "*": operator.mul,
+    "/": operator.truediv,
+    "**": operator.pow,
+}
+
+
+@tool
+def calculator(a: float, b: float, op: Literal["+", "-", "*", "/", "**"]) -> float:
+    """Apply an arithmetic operator to two numbers.
+
+    Args:
+        a: Left operand.
+        b: Right operand.
+        op: One of "+", "-", "*", "/", "**".
+    """
+    return _OPS[op](a, b)
+
 
 agent = BidiAgent(
     model=model,
@@ -264,7 +310,7 @@ agent = BidiAgent(
 )
 ```
 
-You can add additional tools from `strands_tools` or create custom tools following the Strands tools specification.
+You can add additional tools from `strands.vended_tools` or create custom tools following the Strands tools specification.
 
 ## Event Format Reference
 
@@ -375,9 +421,9 @@ Notifies that the agent is executing a tool.
   "current_tool_use": {
     "name": "calculator",
     "input": {
-      "operation": "multiply",
       "a": 25,
-      "b": 8
+      "b": 8,
+      "op": "*"
     }
   }
 }
@@ -396,7 +442,7 @@ Returns the result from tool execution.
   "tool_result": {
     "content": [
       {
-        "text": "200"
+        "text": "200.0"
       }
     ]
   }

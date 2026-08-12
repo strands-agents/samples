@@ -12,8 +12,6 @@ import time
 
 from dotenv import load_dotenv
 from strands import Agent
-from strands_tools import think
-
 # Import spot tools directly
 from spot_mcp_server import (
     connect_to_robot,
@@ -275,10 +273,9 @@ async def main():
         robot_dock,
         robot_undock,
         robot_get_dock_status,
-        think,
     ]
 
-    print(f"\n✅ Loaded {len(tool_list) - 1} robot tools")
+    print(f"\n✅ Loaded {len(tool_list)} robot tools")
     print(f"🤖 Using model: {MODEL}")
 
     try:

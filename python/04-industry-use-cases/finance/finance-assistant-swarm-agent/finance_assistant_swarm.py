@@ -14,7 +14,6 @@ from typing import Dict, Any, List
 from strands import Agent, tool
 from strands.models import BedrockModel
 from strands.multiagent import Swarm
-from strands_tools import think
 import yfinance as yf
 
 from stock_price_agent import get_stock_prices, create_stock_price_agent
@@ -143,7 +142,7 @@ def create_orchestration_agent() -> Agent:
         WORKFLOW:
         1. Get real stock data using get_real_stock_data with the ticker symbol
         2. Get ONE collaborative analysis using analyze_company_with_collaborative_swarm — pass ONLY the ticker symbol (e.g. "ALK"), NOT a full sentence
-        3. Synthesize using think tool for deep strategic insights
+        3. Synthesize the findings into deep strategic insights
 
         CRITICAL RULES:
         - When calling analyze_company_with_collaborative_swarm, pass ONLY the stock ticker symbol (e.g. "ALK", "AAPL"), never a full sentence
@@ -159,7 +158,7 @@ def create_orchestration_agent() -> Agent:
         4. Market Sentiment Analysis (news + trends)
         5. Investment Recommendation (buy/hold/sell with rationale)""",
         model=BedrockModel(model_id=ORCHESTRATOR_MODEL_ID),
-        tools=[get_real_stock_data, analyze_company_with_collaborative_swarm, think],
+        tools=[get_real_stock_data, analyze_company_with_collaborative_swarm],
     )
 
 def create_initial_messages() -> List[Dict]:

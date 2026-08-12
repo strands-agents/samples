@@ -6,7 +6,7 @@ from strands.experimental.bidi.agent import BidiAgent
 from strands.experimental.bidi.io.audio import BidiAudioIO
 from strands.experimental.bidi.io.text import BidiTextIO
 from strands.experimental.bidi.models.nova_sonic import BidiNovaSonicModel
-from strands_tools import calculator
+from strands.vended_tools import sleep
 
 
 async def main():
@@ -23,11 +23,11 @@ async def main():
                 "endpointingSensitivity": "HIGH" # HIGH, MEDIUM, LOW
             }
         },
-        tools=[calculator],
     )
 
-    agent = BidiAgent(model=model, tools=[calculator])
-    print("Nova Sonic - Try: 'What is 25 times 8?'")
+    # Tools are registered on the agent, not the model.
+    agent = BidiAgent(model=model, tools=[sleep])
+    print("Nova Sonic - Try: 'Pause for 2 seconds'")
     await agent.run(inputs=[audio_io.input()], outputs=[audio_io.output(), text_io.output()])
 
 

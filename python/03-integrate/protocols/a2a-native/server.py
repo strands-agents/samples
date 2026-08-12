@@ -1,6 +1,29 @@
-from strands import Agent
+import operator
+from typing import Literal
+
+from strands import Agent, tool
 from strands.multiagent.a2a import A2AServer
-from strands_tools.calculator import calculator
+
+_OPS = {
+    "+": operator.add,
+    "-": operator.sub,
+    "*": operator.mul,
+    "/": operator.truediv,
+    "**": operator.pow,
+}
+
+
+@tool
+def calculator(a: float, b: float, op: Literal["+", "-", "*", "/", "**"]) -> float:
+    """Apply an arithmetic operator to two numbers.
+
+    Args:
+        a: Left operand.
+        b: Right operand.
+        op: One of "+", "-", "*", "/", "**".
+    """
+    return _OPS[op](a, b)
+
 
 # Create a Strands agent with calculator tool
 strands_agent = Agent(

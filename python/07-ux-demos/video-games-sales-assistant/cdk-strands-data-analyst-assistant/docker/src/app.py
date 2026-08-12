@@ -1,5 +1,4 @@
 from strands import Agent, tool
-from strands_tools import current_time
 from strands.models import BedrockModel
 from fastapi import FastAPI, HTTPException, Header
 from fastapi.responses import StreamingResponse
@@ -9,6 +8,7 @@ import uvicorn
 import boto3
 import json
 from uuid import uuid4
+from datetime import datetime, timezone
 import os
 
 # Import my tools
@@ -49,6 +49,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@tool
+def current_time() -> str:
+    """Get the current UTC date and time in ISO 8601 format."""
+    return datetime.now(timezone.utc).isoformat()
+
 
 def load_system_prompt():
     """

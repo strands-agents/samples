@@ -14,7 +14,7 @@ from typing import Dict, Any, List
 # Third-party imports
 from strands import Agent, tool
 from strands.models import BedrockModel
-from strands_tools import editor, think
+from strands_tools import editor
 
 # Import your existing 02-agents
 # Assuming these are in the same directory or in your Python path
@@ -84,7 +84,6 @@ STEP 4 - FORMATTING AND REVIEW:
             #           http_request,
             retrieve_from_kb,
             generate_image_nova,
-            think,
         ],
     )
 

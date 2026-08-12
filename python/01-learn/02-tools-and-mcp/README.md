@@ -8,13 +8,12 @@ This tutorial covers the two ways to give a Strands agent tools: writing your ow
 |------------------------|----------------------------------------------------------|
 | **Strands Features**   | `@tool` decorator, `TOOL_SPEC`, `MCPClient`              |
 | **Agent Pattern**      | Single agent                                             |
-| **Tools**              | Custom tools (`@tool`, `TOOL_SPEC`), built-in tools, MCP tools |
+| **Tools**              | Custom tools (`@tool`, `TOOL_SPEC`), MCP tools |
 | **Model**              | Claude Sonnet 4.5 on Amazon Bedrock (`us.anthropic.claude-sonnet-4-5-20250929-v1:0`) |
 
 ## Key Concepts
 
 - **Custom tools**: Define your own tools with the `@tool` decorator (a typed function plus a docstring) or with the `TOOL_SPEC` dictionary, which gives explicit control over the input schema and success or error results.
-- **Built-in tools**: Ready-made tools from the `strands-agents-tools` package, such as `calculator` and `current_time`.
 - **Model Context Protocol (MCP)**: An open protocol for connecting agents to external tool servers. The `MCPClient` connects over stdio or Streamable HTTP and exposes the server's tools, prompts, and resources.
 - **Direct tool invocation**: Call a tool yourself with `agent.tool.<name>` without going through the model.
 

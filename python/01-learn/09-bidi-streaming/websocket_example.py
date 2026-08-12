@@ -3,6 +3,8 @@
 
 import json
 import logging
+import operator
+from typing import Literal
 import os
 import sys
 import threading
@@ -14,6 +16,7 @@ import webbrowser
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 
+from strands import tool
 from strands.experimental.bidi.agent import BidiAgent
 from strands.experimental.bidi.models.gemini_live import BidiGeminiLiveModel
 from strands.experimental.bidi.models.nova_sonic import BidiNovaSonicModel
@@ -23,7 +26,27 @@ from strands.experimental.bidi.types.events import (
     BidiImageInputEvent,
     BidiTextInputEvent,
 )
-from strands_tools import calculator
+
+_OPS = {
+    "+": operator.add,
+    "-": operator.sub,
+    "*": operator.mul,
+    "/": operator.truediv,
+    "**": operator.pow,
+}
+
+
+@tool
+def calculator(a: float, b: float, op: Literal["+", "-", "*", "/", "**"]) -> float:
+    """Apply an arithmetic operator to two numbers.
+
+    Args:
+        a: Left operand.
+        b: Right operand.
+        op: One of "+", "-", "*", "/", "**".
+    """
+    return _OPS[op](a, b)
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -84,7 +107,6 @@ async def websocket_endpoint(websocket: WebSocket, model_name: str):
                     "voice": "matthew",
                 }
             },
-            tools=[calculator],
         )
     elif model_name == "gemini":
         model = BidiGeminiLiveModel(client_config={"api_key": os.environ.get("GOOGLE_API_KEY")})

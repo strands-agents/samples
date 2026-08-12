@@ -4,14 +4,15 @@ Multi-Agent Data Warehouse Query Optimizer using SQLite and AWS Bedrock.
 Main entry point with CLI interface.
 """
 
+import operator
+
 from botocore.exceptions import NoCredentialsError, ProfileNotFound
 from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
-from strands import Agent
-from strands_tools import calculator
+from strands import Agent, tool
 from strands.models import BedrockModel
-from typing import Dict, Any
+from typing import Dict, Any, Literal
 from utils.prompts import analyzer_prompt, rewriter_prompt, validator_prompt
 from utils.tools import (
     get_query_execution_plan,
@@ -26,6 +27,27 @@ import random
 import re
 import sqlite3
 import uuid
+
+_OPS = {
+    "+": operator.add,
+    "-": operator.sub,
+    "*": operator.mul,
+    "/": operator.truediv,
+    "**": operator.pow,
+}
+
+
+@tool
+def calculator(a: float, b: float, op: Literal["+", "-", "*", "/", "**"]) -> float:
+    """Apply an arithmetic operator to two numbers.
+
+    Args:
+        a: Left operand.
+        b: Right operand.
+        op: One of "+", "-", "*", "/", "**".
+    """
+    return _OPS[op](a, b)
+
 
 # Initialize OpenTelemetry
 trace.set_tracer_provider(TracerProvider())

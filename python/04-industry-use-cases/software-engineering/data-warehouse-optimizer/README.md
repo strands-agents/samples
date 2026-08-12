@@ -14,9 +14,9 @@ A multi-agent system to optimize SQL queries on a SQLite database, simulating a 
 | Feature           | Description                                                                  |
 |-------------------|------------------------------------------------------------------------------|
 | **Agent Structure** | Multi-agent architecture - Sequential                                       |
-| **Native Tools**    | `calculator`                                                                |
+| **Native Tools**    | none                                                                        |
 | **Custom Agents**   | `Analyzer Agent`, `Rewriter Agent`, `Validator Agent`                       |
-| **Custom Tools**    | `get_query_execution_plan`, `suggest_optimizations`, `validate_query_cost` |
+| **Custom Tools**    | `get_query_execution_plan`, `suggest_optimizations`, `validate_query_cost`, `calculator` |
 | **Model Provider**  | Amazon Bedrock                                                              |
 
 ---

@@ -1,8 +1,10 @@
+import operator
+
 import logging
 import os
 import sys
 import time
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Literal
 
 from slack_bolt import App, Assistant, BoltContext, Say, SayStream, SetStatus, SetSuggestedPrompts
 from slack_bolt.adapter.socket_mode import SocketModeHandler
@@ -13,7 +15,26 @@ from strands import Agent, tool
 from strands.hooks import AfterToolCallEvent, BeforeToolCallEvent
 from strands.models import BedrockModel
 from strands.types.content import Message
-from strands_tools import calculator
+
+_OPS = {
+    "+": operator.add,
+    "-": operator.sub,
+    "*": operator.mul,
+    "/": operator.truediv,
+    "**": operator.pow,
+}
+
+
+@tool
+def calculator(a: float, b: float, op: Literal["+", "-", "*", "/", "**"]) -> float:
+    """Apply an arithmetic operator to two numbers.
+
+    Args:
+        a: Left operand.
+        b: Right operand.
+        op: One of "+", "-", "*", "/", "**".
+    """
+    return _OPS[op](a, b)
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -47,7 +68,7 @@ def start_assistant_thread(
         say("How can I help you?")
 
         prompts: List[Dict[str, str]] = [
-            {"title": "Use a calculator", "message": "What is sin(0.4487)?"},
+            {"title": "Use a calculator", "message": "What is 144 ** 0.5?"},
             {"title": "Set a timer", "message": "Set a timer for 5 seconds"},
         ]
 

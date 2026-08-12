@@ -1,12 +1,18 @@
 import os
+from datetime import datetime, timezone
 from strands import Agent, tool
 from strands.models import BedrockModel
-from strands_tools import current_time
 from calendar_tools import create_appointment, get_agenda, list_appointments, update_appointment
 from constants import SESSION_ID
 
 # Show rich UI for tools in CLI
 os.environ["STRANDS_TOOL_CONSOLE_MODE"] = "enabled"
+
+
+@tool
+def current_time() -> str:
+    """Get the current UTC date and time in ISO 8601 format."""
+    return datetime.now(timezone.utc).isoformat()
 
 
 @tool
