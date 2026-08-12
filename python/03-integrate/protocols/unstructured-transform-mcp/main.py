@@ -4,16 +4,14 @@ This sample connects a Strands Agent to the hosted Unstructured Transform MCP
 server (https://mcp.transform.unstructured.io) over the streamable-http
 transport and asks the agent to parse and chunk a public sample PDF.
 
-The server exposes seven tools total; this sample uses the four that cover
-the *asynchronous* document-processing pipeline (the remaining three,
-start_extraction_job, suggest_extraction_schema_for_file, and
-get_instructions, support schema-based structured data extraction and
-on-demand server guidance, outside the scope of this sample):
-
-    start_transform_job(file_refs, stages) -> job_id
-    check_job_status(job_id)     -> status
-    get_job_results(job_id, output_format) -> rendered output
-    request_file_upload_url()          -> presigned URL for local files
+The server's *asynchronous* document-processing pipeline works the same way
+regardless of exact tool names: submit a file for processing, poll until
+it's done, then fetch the rendered result; a separate tool mints an upload
+URL for files that aren't already reachable over HTTPS. Unstructured adds
+tools and capabilities to this server as they ship new features, so this
+sample discovers the live toolset at connect time (see main()) rather than
+hardcoding names, and asks the agent to match tools to each step by
+description.
 
 Because the pipeline is async, this sample gives the agent explicit
 instructions to submit the job, poll for completion, and then fetch the
@@ -47,8 +45,8 @@ TRANSFORM_MCP_URL = "https://mcp.transform.unstructured.io"
 MODEL_ID = "us.anthropic.claude-sonnet-4-5-20250929-v1:0"
 
 # A small, stable, publicly-reachable PDF used purely to demonstrate the
-# pipeline end-to-end. Swap this for any https:// URL, or use
-# request_file_upload_url() first if you want to process a local file.
+# pipeline end-to-end. Swap this for any https:// URL, or use the
+# upload-URL tool first if you want to process a local file.
 SAMPLE_PDF_URL = "https://arxiv.org/pdf/1706.03762"
 
 
@@ -84,9 +82,8 @@ def main() -> None:
     mcp_client = build_mcp_client(api_key)
 
     with mcp_client:
-        # Discover the tools Transform MCP exposes (start_transform_job,
-        # check_job_status, get_job_results,
-        # request_file_upload_url).
+        # Discover the tools Transform MCP exposes live, rather than
+        # hardcoding names that Unstructured may rename or add to.
         tools = mcp_client.list_tools_sync()
         print(f"Connected to Transform MCP. Discovered {len(tools)} tool(s):")
         for tool in tools:
@@ -99,15 +96,18 @@ def main() -> None:
         # (submit -> poll -> fetch) is exercised deterministically, rather
         # than leaving the whole flow to the model's discretion.
         prompt = f"""
-Process this document using the Transform tools: {SAMPLE_PDF_URL}
+Process this document using the Transform tools available to you: {SAMPLE_PDF_URL}
+
+Check the tools available to you and use whichever ones match the steps
+below by description, since exact tool names may change over time.
 
 Follow these steps exactly:
-1. Call start_transform_job with file_refs=["{SAMPLE_PDF_URL}"] and stages
-   configured for a partition (strategy "auto") followed by a chunk stage
-   with default settings. This returns a job_id.
-2. Call check_job_status with that job_id repeatedly (waiting a few
-   seconds between calls) until the status indicates the job is complete.
-3. Call get_job_results with the job_id and output_format="md".
+1. Submit the file (file_refs=["{SAMPLE_PDF_URL}"]) for processing, with
+   stages configured for a partition (strategy "auto") followed by a chunk
+   stage with default settings. This returns a job ID.
+2. Check the job's status repeatedly (waiting a few seconds between
+   checks) until it reports as complete.
+3. Fetch the job's results with output_format="md".
 4. Summarize the first two chunks of the returned markdown in 2-3 sentences.
 """
 
