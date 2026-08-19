@@ -1,0 +1,5 @@
+agent:
+  model: "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+  system_prompt: "You're a helpful assistant. You can do simple math calculation, and tell the weather."
+  tools:
+    - weather_tool.weather
