@@ -37,12 +37,13 @@ pip install -r requirements.txt
 
 ### How this relates to the other guardrail samples
 
-Strands offers several ways to add guardrails. This sample is the **pure-Python, hooks-based** approach. The others live in [`03-integrate/guardrails/`](../../../03-integrate/guardrails/) and wrap managed or third-party services (NVIDIA NeMo, Llama Firewall, Alice WonderFence).
+Strands offers several ways to add guardrails. This sample is the **pure-Python, hooks-based** approach. The others are the managed **Amazon Bedrock Guardrails** sample and the **third-party integrations**.
 
 | Approach | Where | Best when |
 |----------|-------|-----------|
 | Custom Python filters via hooks | **this sample** | You want full control, model-agnostic logic, and no external dependency |
-| Managed / third-party guardrail services | [`03-integrate/guardrails/`](../../../03-integrate/guardrails/) | You want a vendor to handle content classification for you |
+| Managed Amazon Bedrock Guardrails | [`01-learn/05-guardrails/`](../../../01-learn/05-guardrails/) | You want AWS to handle content filtering, attached via model parameters |
+| Third-party guardrail services | [`03-integrate/guardrails/`](../../../03-integrate/guardrails/) | You want a vendor (NVIDIA NeMo, Llama Firewall, Alice WonderFence) to classify content for you |
 
 The value of the hooks-based approach: full control over validation logic (regex, keywords, custom classifiers), a model-agnostic implementation, testability in isolation without a live model, and composable filters you can mix and match per use case.
 
@@ -268,6 +269,7 @@ You've applied the hooks lifecycle to build a complete guardrail system for Stra
 ### Next steps
 
 - Revisit [`01-learn/16-hooks-lifecycle`](../../../01-learn/16-hooks-lifecycle/) for the full lifecycle event reference
-- Explore [`03-integrate/guardrails/`](../../../03-integrate/guardrails/) for managed and third-party guardrail integrations
+- See [`01-learn/05-guardrails/`](../../../01-learn/05-guardrails/) for the managed Amazon Bedrock Guardrails approach
+- Explore [`03-integrate/guardrails/`](../../../03-integrate/guardrails/) for third-party guardrail integrations
 - Add custom ML-based classifiers (toxicity, sentiment) as `ContentFilter` subclasses
 - Integrate with external moderation APIs by wrapping them in the `ContentFilter` interface
