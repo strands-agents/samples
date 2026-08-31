@@ -11,7 +11,7 @@ This tutorial demonstrates how to use the Strands Agents SDK to build and deploy
 | **Strands Features**   | Multi-agent orchestration, A2A protocol, MCP tool integration |
 | **Agent Pattern**      | Orchestrator + specialist agents                              |
 | **Tools**              | Custom HTTP tools (DummyJSON API), MCP tools (Amazon DynamoDB), A2A client tools |
-| **Model**              | Claude Sonnet 4 on Amazon Bedrock                             |
+| **Model**              | Claude Sonnet 4.6 on Amazon Bedrock                             |
 
 ## Key Concepts
 
@@ -26,7 +26,7 @@ This tutorial demonstrates how to use the Strands Agents SDK to build and deploy
 - Python 3.10 or higher
 - AWS CLI configured with appropriate permissions
 - Docker or Podman installed (optional if using AWS CodeBuild)
-- Claude Sonnet 4 model access in Amazon Bedrock (`us.anthropic.claude-sonnet-4-20250514-v1:0`)
+- Claude Sonnet 4.6 model access in Amazon Bedrock (`us.anthropic.claude-sonnet-4-6`)
 - IAM permissions to:
   - Create IAM roles and policies
   - Create Amazon ECR repositories

@@ -65,7 +65,6 @@ MISTRAL_L2_MODEL_ID = "mistral.mistral-large-2407-v1:0"
 NOVA_PRO_MODEL_ID = "us.amazon.nova-pro-v1:0"
 NOVA_LITE_MODEL_ID = "us.amazon.nova-lite-v1:0"
 NOVA_MICRO_MODEL_ID = "us.amazon.nova-micro-v1:0"
-NOVA_PREMIER_MODEL_ID ="us.amazon.nova-premier-v1:0"
 
 
 CLAUDE_ID_LIST = [ HAIKU_MODEL_ID, 
@@ -91,8 +90,7 @@ MISTRAL_ALL_LIST = MISTRAL_LIST + MISTRAL_V2_LIST
 
 NOVA_LIST = [ NOVA_PRO_MODEL_ID, 
              NOVA_LITE_MODEL_ID, 
-             NOVA_MICRO_MODEL_ID,
-            NOVA_PREMIER_MODEL_ID]
+             NOVA_MICRO_MODEL_ID]
 
 def get_bedrock_response( user_message="Hello!",
                          system = "",

@@ -101,7 +101,7 @@ class UIComponents:
 
             model_options = {
                 "Claude Sonnet 4.6": "us.anthropic.claude-sonnet-4-6",
-                "Claude-4 Sonnet": "us.anthropic.claude-sonnet-4-20250514-v1:0",
+                "Claude-4 Sonnet": "us.anthropic.claude-sonnet-4-6",
             }
 
             selected_model = st.selectbox(

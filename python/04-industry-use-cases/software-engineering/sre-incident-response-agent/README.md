@@ -35,7 +35,7 @@ Each specialist sub-agent is wrapped as a `@tool` function and passed to the sup
 
 - Python 3.11+
 - AWS CLI configured with appropriate credentials (`aws configure` or IAM role)
-- [Model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) enabled for Claude Sonnet 4 in Amazon Bedrock in your AWS region
+- [Model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) enabled for Claude Sonnet 4.6 in Amazon Bedrock in your AWS region
 - `kubectl` configured against your cluster (only required when `DRY_RUN=false`)
 - `helm` v3 installed (only required when `DRY_RUN=false`)
 
@@ -176,7 +176,7 @@ No infrastructure is provisioned by this sample. To clean up, deactivate the vir
 | `No active alarms found` when alarms exist | Namespace filter mismatch | Pass the exact Amazon CloudWatch namespace string, e.g. `AWS/ECS` |
 | `ResourceNotFoundException` on log fetch | Wrong log group name | Verify the log group name in the Amazon CloudWatch console |
 | `kubectl` commands fail | Cluster not configured | Run `kubectl config current-context` and confirm the correct cluster is active |
-| Amazon Bedrock `AccessDeniedException` | Model access not enabled | Enable Claude Sonnet 4 access in the Amazon Bedrock console |
+| Amazon Bedrock `AccessDeniedException` | Model access not enabled | Enable Claude Sonnet 4.6 access in the Amazon Bedrock console |
 | `.env` values not picked up | Missing `python-dotenv` | Ensure `pip install -r requirements.txt` completed successfully |
 
 ## Additional Resources

@@ -125,7 +125,7 @@ const Chat = ({ userName = "Guest User" }) => {
         setAnswers((prevState) => [...prevState, json]);
 
         const params = {
-          //bedrock_model_id: "us.anthropic.claude-3-5-haiku-20241022-v1:0", // You can change to the preferred model
+          //bedrock_model_id: "us.anthropic.claude-haiku-4-5-20251001-v1:0", // You can change to the preferred model
           prompt: my_query,
           prompt_uuid: queryUuid,
           user_timezone: timezone,

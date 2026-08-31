@@ -1,24 +1,6 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: MIT-0
 
-nova_premier = [
-    {
-        "bedrock_region": "us-west-2",  # Oregon
-        "model_type": "nova",
-        "model_id": "us.amazon.nova-premier-v1:0",
-    },
-    {
-        "bedrock_region": "us-east-1",  # N.Virginia
-        "model_type": "nova",
-        "model_id": "us.amazon.nova-premier-v1:0",
-    },
-    {
-        "bedrock_region": "us-east-2",  # Ohio
-        "model_type": "nova",
-        "model_id": "us.amazon.nova-premier-v1:0",
-    },
-]
-
 nova_pro_models = [  # Nova Pro
     {
         "bedrock_region": "us-west-2",  # Oregon
@@ -131,17 +113,17 @@ claude_4_sonnet_models = [  # Claude 4 Sonnet
     {
         "bedrock_region": "us-west-2",  # Oregon
         "model_type": "claude",
-        "model_id": "us.anthropic.claude-sonnet-4-20250514-v1:0",
+        "model_id": "us.anthropic.claude-sonnet-4-6",
     },
     {
         "bedrock_region": "us-east-1",  # N.Virginia
         "model_type": "claude",
-        "model_id": "us.anthropic.claude-sonnet-4-20250514-v1:0",
+        "model_id": "us.anthropic.claude-sonnet-4-6",
     },
     {
         "bedrock_region": "us-east-2",  # Ohio
         "model_type": "claude",
-        "model_id": "us.anthropic.claude-sonnet-4-20250514-v1:0",
+        "model_id": "us.anthropic.claude-sonnet-4-6",
     },
 ]
 
@@ -185,8 +167,6 @@ def get_model_info(model_name):
         models = claude_4_sonnet_models
     elif model_name == "Claude Sonnet 4.6":
         models = claude_sonnet_4_6_models
-    elif model_name == "Nova Premier":
-        models = nova_premier
     elif model_name == "Claude 4.5 Sonnet":
         models = claude_4_5_sonnet_models
     return models

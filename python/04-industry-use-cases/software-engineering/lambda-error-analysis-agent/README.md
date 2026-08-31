@@ -14,7 +14,7 @@ AI-powered Lambda error diagnostics that transforms generic error messages into 
 | **MCP Servers**        | None                                                            |
 | **Use Case Vertical**  | DevOps / Software Development                                   |
 | **Complexity**         | Advanced                                                        |
-| **Model Provider**     | Amazon Bedrock (Claude Sonnet 3.7, Claude Sonnet 4)             |
+| **Model Provider**     | Amazon Bedrock (Claude Sonnet 4.6)             |
 | **SDK Used**           | Strands Agents SDK, AWS CDK, boto3                              |
 
 ### Architecture
@@ -29,7 +29,7 @@ AI-powered Lambda error diagnostics that transforms generic error messages into 
    - `fetch_source_code` - Retrieves Lambda source from S3/deployment package
    - `fetch_cloudwatch_logs` - Gets execution logs filtered by request ID
    - `search_knowledge_base` - Queries Bedrock Knowledge Base for error patterns
-4. Claude Sonnet 4 analyzes with interleaved thinking and generates:
+4. Claude Sonnet 4.6 analyzes with interleaved thinking and generates:
    - Root cause identification
    - Specific fix recommendations
    - Confidence score (0.0-1.0) based on evidence quality
@@ -39,7 +39,7 @@ AI-powered Lambda error diagnostics that transforms generic error messages into 
 
 - **Automated Error Investigation** - No manual log diving, agent gathers all context automatically
 - **Multi-Source Analysis** - Combines source code, execution logs, and documentation for comprehensive insights
-- **Interleaved Thinking** - Claude Sonnet 4 reasons between tool calls for smarter investigation
+- **Interleaved Thinking** - Claude Sonnet 4.6 reasons between tool calls for smarter investigation
 - **Confidence Scoring** - Evidence-based scoring (0.0-1.0) indicates analysis reliability
 - **Historical Tracking** - All analyses stored in DynamoDB for pattern recognition
 - **Reusable Decorator** - Simple `@error_capture` wrapper for any Lambda function
@@ -54,7 +54,7 @@ AI-powered Lambda error diagnostics that transforms generic error messages into 
 - **Docker** installed and running (for building Lambda layers)
 - **Amazon Bedrock** [model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) enabled for:
   - Claude Sonnet 3.7 (`us.anthropic.claude-sonnet-4-6`)
-  - Claude Sonnet 4 (`us.anthropic.claude-sonnet-4-20250514-v1:0`)
+  - Claude Sonnet 4.6 (`us.anthropic.claude-sonnet-4-6`)
 
 ## Setup
 
@@ -167,7 +167,7 @@ Simulates a digital banking user registration service with 8 intentional bugs:
 
 ### Error Analyzer Agent
 
-Strands Agent with Claude Sonnet 4 featuring **interleaved thinking**:
+Strands Agent with Claude Sonnet 4.6 featuring **interleaved thinking**:
 
 - Reasons between tool calls for smarter investigation
 - Uses 3 custom tools: `fetch_source_code`, `fetch_cloudwatch_logs`, `search_knowledge_base`
@@ -226,7 +226,7 @@ Payload: {"profile": {"name": "Jane"}, "age": 25}
 - [Strands Agents SDK Documentation](https://strandsagents.com/latest/documentation/docs/)
 - [AWS CDK Developer Guide](https://docs.aws.amazon.com/cdk/v2/guide/home.html)
 - [Amazon Bedrock User Guide](https://docs.aws.amazon.com/bedrock/)
-- [Claude Sonnet 4 with Interleaved Thinking](https://www.anthropic.com/claude)
+- [Claude Sonnet 4.6 with Interleaved Thinking](https://www.anthropic.com/claude)
 - [AWS Lambda Best Practices](https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html)
 
 ---

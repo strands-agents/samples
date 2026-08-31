@@ -299,7 +299,7 @@ agent = Agent(
     description="Fetches product information from DummyJSON catalog for browsing and discovery",
     system_prompt=SYSTEM_PROMPT,
     model=BedrockModel(
-        model_id="us.anthropic.claude-sonnet-4-20250514-v1:0",
+        model_id="us.anthropic.claude-sonnet-4-6",
         region_name=region,
     ),
     tools=[search_products, get_products_by_category, get_all_products],

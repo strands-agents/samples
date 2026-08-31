@@ -151,7 +151,7 @@ order_agent = Agent(
     description="Looks up order information from DynamoDB for customers",
     system_prompt="Order agent initializing...",  # Updated in server_lifespan
     model=BedrockModel(
-        model_id="us.anthropic.claude-sonnet-4-20250514-v1:0",
+        model_id="us.anthropic.claude-sonnet-4-6",
         region_name=region,
     ),
     tools=[],  # Empty - MCP tools added in server_lifespan after startup
