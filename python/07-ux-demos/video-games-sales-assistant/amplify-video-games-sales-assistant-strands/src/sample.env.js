@@ -17,7 +17,7 @@ const WELCOME_MESSAGE =
 // ================================
 
 const MAX_LENGTH_INPUT_SEARCH = 140;
-const MODEL_ID_FOR_CHART = "us.anthropic.claude-3-7-sonnet-20250219-v1:0";
+const MODEL_ID_FOR_CHART = "us.anthropic.claude-sonnet-4-6";
 
 const CHART_PROMPT =
   '\n\

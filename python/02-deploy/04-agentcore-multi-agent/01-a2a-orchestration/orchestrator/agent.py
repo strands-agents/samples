@@ -179,7 +179,7 @@ def create_orchestrator(order_agent_url: str, product_agent_url: str) -> Agent:
         name="Ecommerce_Shopping_Orchestrator",
         description="Coordinates customer shopping queries using Order and Product agents",
         system_prompt=SYSTEM_PROMPT,
-        model=BedrockModel(model_id="us.anthropic.claude-sonnet-4-20250514-v1:0", region_name=region),
+        model=BedrockModel(model_id="us.anthropic.claude-sonnet-4-6", region_name=region),
         tools=[get_customer_context] + a2a_provider.tools,
         callback_handler=StreamingProgressHandler(),
     )

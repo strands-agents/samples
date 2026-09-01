@@ -38,7 +38,7 @@ STORE_SOURCE_CODE = os.environ.get('STORE_SOURCE_CODE', 'true').lower() == 'true
 # Log retrieval limits
 MAX_CLOUDWATCH_LOG_EVENTS = 10000  # CloudWatch API limit per request
 
-# Model selection switch (default: Claude Sonnet 4)
+# Model selection switch (default: Claude Sonnet 4.6)
 USE_SONNET_4 = os.environ.get('USE_SONNET_4', 'true').lower() == 'true'
 
 # Source code size limits for both S3 and Lambda retrieval
@@ -529,9 +529,9 @@ def search_knowledge_base(query: str) -> str:
 
 # Create the Strands Agent with model selection
 if USE_SONNET_4:
-    # Claude Sonnet 4 with Interleaved Thinking
+    # Claude Sonnet 4.6 with Interleaved Thinking
     model = BedrockModel(
-        model_id="us.anthropic.claude-sonnet-4-20250514-v1:0",  # Claude 4 Sonnet
+        model_id="us.anthropic.claude-sonnet-4-6",  # Claude 4 Sonnet
         max_tokens=8192,
         temperature=1,  # Required to be 1 when thinking is enabled
         additional_request_fields={

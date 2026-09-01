@@ -35,7 +35,7 @@ SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL", "")  # optional
 DRY_RUN = os.environ.get("DRY_RUN", "true").lower() == "true"
 
 MODEL_ID = os.environ.get(
-    "BEDROCK_MODEL_ID", "us.anthropic.claude-sonnet-4-20250514-v1:0"
+    "BEDROCK_MODEL_ID", "us.anthropic.claude-sonnet-4-6"
 )
 
 model = BedrockModel(

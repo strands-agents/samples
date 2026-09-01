@@ -147,7 +147,7 @@ class BaseLibraryAgent(ABC):
 
     def get_model_id(self) -> str:
         """Get the model ID for this agent."""
-        model_id = "openai.gpt-oss-120b"
+        model_id = "openai.gpt-oss-120b-1:0"
         logger.info(f"Library agent using model {model_id}")
         return model_id
 

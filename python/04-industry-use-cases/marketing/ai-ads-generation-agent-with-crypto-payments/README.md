@@ -14,7 +14,7 @@ An AI agent that creates complete advertising campaigns while autonomously payin
 | **MCP Servers**        | None                                                       |
 | **Use Case Vertical**  | Marketing & Advertising                                    |
 | **Complexity**         | Advanced                                                   |
-| **Model Provider**     | Amazon Bedrock (Claude Sonnet 4)                          |
+| **Model Provider**     | Amazon Bedrock (Claude Sonnet 4.6)                          |
 | **SDK Used**           | Strands Agents SDK + Coinbase AgentKit                    |
 
 ### Architecture
@@ -38,7 +38,7 @@ The sample demonstrates integration between multiple systems:
 
 - Python **3.10+**
 - [AWS CLI configured with appropriate credentials](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-quickstart.html)
-- [Model access](https://docs.aws.amazon.com/bedrock/latest/userguide/inference-prereq.html) for Claude Sonnet 4 on Amazon Bedrock
+- [Model access](https://docs.aws.amazon.com/bedrock/latest/userguide/inference-prereq.html) for Claude Sonnet 4.6 on Amazon Bedrock
 - [Coinbase Developer Platform account](https://docs.cdp.coinbase.com/get-started/quickstart) to get your coinbase API credentials and Wallet secret.
 - [OpenWeather API key](https://openweathermap.org/guide)
 - **⚠️ TESTNET ONLY**: Base Sepolia testnet wallet with test USDC

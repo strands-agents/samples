@@ -450,11 +450,6 @@ def get_all_mcp_tools():
 # Available models with new Claude versions
 AVAILABLE_MODELS = [
     {
-        "id": "us.anthropic.claude-sonnet-4-20250514-v1:0",
-        "name": "Claude Sonnet 4",
-        "description": "Most advanced Claude model with superior reasoning"
-    },
-    {
         "id": "us.anthropic.claude-sonnet-4-6",
         "name": "Claude Sonnet 4.6",
         "description": "Claude model with enhanced reasoning capabilities"
@@ -587,7 +582,7 @@ class ChatMessage(BaseModel):
     model_config = {"protected_namespaces": ()}
     
     message: str
-    model_id: Optional[str] = "us.anthropic.claude-sonnet-4-20250514-v1:0"
+    model_id: Optional[str] = "us.anthropic.claude-sonnet-4-6"
     session_id: Optional[str] = "default"
     images: Optional[List[ImageData]] = None
     history: Optional[List[Dict[str, Any]]] = None
@@ -1049,7 +1044,7 @@ async def get_sessions():
     return {"sessions": sessions, "count": len(sessions)}
 
 @app.get("/sessions/{session_id}/history")
-async def get_session_history(session_id: str, model_id: str = "us.anthropic.claude-sonnet-4-20250514-v1:0"):
+async def get_session_history(session_id: str, model_id: str = "us.anthropic.claude-sonnet-4-6"):
     """Get message history for a specific session"""
     
     # Check if the session exists in our in-memory store
