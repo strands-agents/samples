@@ -2,8 +2,7 @@
 
 The deploy lifecycle (create project, deploy, remove) runs through the AgentCore CLI directly
 in the notebook, and invocation is shown inline there too. These helpers cover the IAM execution
-role the agent runs with, looking up a runtime ARN, and verifying that resources are gone after
-cleanup.
+role the agent runs with, and verifying that resources are gone after cleanup.
 """
 
 import json
@@ -131,43 +130,6 @@ def delete_execution_role(agent_name):
         print(f"Role already deleted: {role_name}")
 
 
-def _list_runtime_names_to_arns():
-    """Return {agentRuntimeName: agentRuntimeArn} for every runtime in the account and Region."""
-    control = boto3.client("bedrock-agentcore-control")
-    runtimes = {}
-    kwargs = {}
-    while True:
-        page = control.list_agent_runtimes(**kwargs)
-        runtimes.update({r["agentRuntimeName"]: r["agentRuntimeArn"] for r in page["agentRuntimes"]})
-        if "nextToken" not in page:
-            return runtimes
-        kwargs["nextToken"] = page["nextToken"]
-
-
-def get_runtime_arn(project_name, agent_name):
-    """Look up a deployed agent's runtime ARN.
-
-    The AgentCore CLI names each runtime ``<project>_<agent>``. An application typically reads
-    the ARN from configuration; here it is looked up by name so the notebook has no hardcoded ARNs.
-
-    Args:
-        project_name: The CLI project name.
-        agent_name: The agent name as configured in the project.
-
-    Returns:
-        The AgentCore Runtime ARN.
-
-    Raises:
-        RuntimeError: No runtime with that name exists.
-    """
-    runtime_name = f"{project_name}_{agent_name}"
-    arn = _list_runtime_names_to_arns().get(runtime_name)
-    if arn is None:
-        raise RuntimeError(f"No AgentCore Runtime named {runtime_name} found. Has the deploy finished?")
-    print(arn)
-    return arn
-
-
 def assert_runtimes_absent(project_name, *agent_names):
     """Verify that no AgentCore Runtime remains for the given agents.
 
@@ -177,8 +139,12 @@ def assert_runtimes_absent(project_name, *agent_names):
         project_name: The CLI project name.
         *agent_names: Agent names as configured in the project.
     """
+    control = boto3.client("bedrock-agentcore-control")
+    pages = control.get_paginator("list_agent_runtimes").paginate()
+    existing = {r["agentRuntimeName"] for page in pages for r in page["agentRuntimes"]}
+
     expected = {f"{project_name}_{name}" for name in agent_names}
-    survivors = sorted(expected & set(_list_runtime_names_to_arns()))
+    survivors = sorted(expected & existing)
     if survivors:
         raise RuntimeError(f"Runtimes still exist: {survivors}")
     print(f"Verified: no runtime exists for {sorted(expected)}")
