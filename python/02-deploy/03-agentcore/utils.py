@@ -1,8 +1,8 @@
 """boto3 helpers for the parts of an AgentCore Runtime deployment that an application owns.
 
 The deploy lifecycle (create project, deploy, remove) runs through the AgentCore CLI directly
-in the notebook, and invocation is shown inline there too. These helpers cover the IAM execution
-role the agent runs with, and verifying that resources are gone after cleanup.
+in the notebook, and invocation is shown inline there too. These helpers create and delete the
+IAM execution role that an agent runs with.
 """
 
 import json
@@ -128,40 +128,3 @@ def delete_execution_role(agent_name):
         print(f"Deleted role: {role_name}")
     except iam.exceptions.NoSuchEntityException:
         print(f"Role already deleted: {role_name}")
-
-
-def assert_runtimes_absent(project_name, *agent_names):
-    """Verify that no AgentCore Runtime remains for the given agents.
-
-    Raises if any still exist, so a cleanup that silently did nothing cannot pass.
-
-    Args:
-        project_name: The CLI project name.
-        *agent_names: Agent names as configured in the project.
-    """
-    control = boto3.client("bedrock-agentcore-control")
-    pages = control.get_paginator("list_agent_runtimes").paginate()
-    existing = {r["agentRuntimeName"] for page in pages for r in page["agentRuntimes"]}
-
-    expected = {f"{project_name}_{name}" for name in agent_names}
-    survivors = sorted(expected & existing)
-    if survivors:
-        raise RuntimeError(f"Runtimes still exist: {survivors}")
-    print(f"Verified: no runtime exists for {sorted(expected)}")
-
-
-def assert_stack_absent(stack_name):
-    """Verify that the project's CloudFormation stack has been deleted.
-
-    Args:
-        stack_name: The stack name the AgentCore CLI deployed.
-    """
-    cfn = boto3.client("cloudformation")
-    try:
-        status = cfn.describe_stacks(StackName=stack_name)["Stacks"][0]["StackStatus"]
-    except cfn.exceptions.ClientError as e:
-        if "does not exist" in str(e):
-            print(f"Verified: stack {stack_name} is deleted")
-            return
-        raise
-    raise RuntimeError(f"Stack {stack_name} still exists with status {status}")
