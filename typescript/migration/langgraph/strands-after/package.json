@@ -1,0 +1,23 @@
+{
+  "name": "langgraph-migration-example",
+  "version": "1.0.0",
+  "description": "Case triage agent graph in Strands, the TypeScript result of migrating from LangGraph",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc && node dist/index.js"
+  },
+  "dependencies": {
+    "@strands-agents/sdk": "^1.19.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0"
+  }
+}
