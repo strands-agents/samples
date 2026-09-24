@@ -1,9 +1,10 @@
-database_name: 
+database_name:
 knowledge_base_description: financial advisor
-knowledge_base_id: 
-knowledge_base_name: 
+knowledge_base_id:
+knowledge_base_name:
+knowledge_base_type: VECTOR  # VECTOR (default, uses OpenSearch) or MANAGED (fully managed by Bedrock)
 project_name: financial-advisor
 project_short_name: fa
 region_name: us-west-2
-s3_bucket_name_for_athena: 
-s3_bucket_name_for_kb: 
+s3_bucket_name_for_athena:
+s3_bucket_name_for_kb:

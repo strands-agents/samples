@@ -2,7 +2,7 @@
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import { LambdaErrorAnalysisStack } from './cdk/stacks/lambda-error-analysis-agent-stack';
-import { projectName, envNameType } from './cdk/constant';
+import { projectName, envNameType, knowledgeBaseType } from './cdk/constant';
 import { AwsSolutionsChecks } from 'cdk-nag';
 
 const app = new cdk.App();
@@ -13,9 +13,14 @@ cdk.Aspects.of(app).add(new AwsSolutionsChecks({ verbose: true }));
 // Get environment name from context
 const envName = app.node.tryGetContext('envName') as envNameType || 'local';
 
+// Get knowledge base type from context: "MANAGED" (default) or "VECTOR"
+// Usage: cdk deploy -c knowledgeBaseType=MANAGED
+const kbType = app.node.tryGetContext('knowledgeBaseType') as knowledgeBaseType || 'MANAGED';
+
 // Create the stack
 new LambdaErrorAnalysisStack(app, `${projectName}Stack`, {
   envName: envName,
+  knowledgeBaseType: kbType,
   env: {
     account: process.env.CDK_DEFAULT_ACCOUNT,
     region: process.env.CDK_DEFAULT_REGION,
