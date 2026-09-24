@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 470" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#111"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="470" fill="#ffffff"/>
+  <text x="24" y="34" font-size="19" font-weight="700" fill="#111">Architecture — AI SDK on the client, Strands on the server</text>
+
+  <!-- Client column label -->
+  <text x="60" y="78" font-size="15" font-weight="700" fill="#111">Browser (Vercel AI SDK)</text>
+  <!-- Server column label -->
+  <text x="620" y="78" font-size="15" font-weight="700" fill="#111">Next.js route handler (Strands)</text>
+
+  <!-- Client box -->
+  <rect x="60" y="96" width="360" height="270" rx="8" fill="none" stroke="#111" stroke-width="2"/>
+  <text x="84" y="132" font-size="16" font-weight="700" fill="#111">app/page.tsx</text>
+  <text x="84" y="164" font-size="15" fill="#111">useChat()</text>
+  <text x="100" y="196" font-size="14" fill="#555">· owns messages</text>
+  <text x="100" y="222" font-size="14" fill="#555">· owns transport</text>
+  <text x="100" y="248" font-size="14" fill="#555">· renders parts</text>
+
+  <!-- Server box -->
+  <rect x="620" y="96" width="520" height="270" rx="8" fill="none" stroke="#111" stroke-width="2"/>
+  <text x="644" y="132" font-size="16" font-weight="700" fill="#111">app/api/chat/route.ts</text>
+  <text x="644" y="164" font-size="15" fill="#111">createAgent(sessionId)</text>
+  <text x="660" y="196" font-size="14" fill="#555">· VercelModel({ provider })</text>
+  <text x="660" y="222" font-size="14" fill="#555">· tools (Zod)</text>
+  <text x="660" y="248" font-size="14" fill="#555">· SessionManager (memory / file / s3)</text>
+  <text x="660" y="274" font-size="14" fill="#555">· LoggingPlugin (hooks)</text>
+  <line x1="644" y1="300" x2="1116" y2="300" stroke="#111" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="644" y="328" font-size="14" fill="#111">agent.stream() &#8594; UI message chunks</text>
+
+  <!-- Request arrow: client -> server -->
+  <line x1="420" y1="176" x2="620" y2="176" stroke="#111" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="520" y="164" font-size="13.5" fill="#111" text-anchor="middle">POST /api/chat</text>
+
+  <!-- Response arrow: server -> client -->
+  <line x1="620" y1="240" x2="420" y2="240" stroke="#111" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#arrow)"/>
+  <text x="520" y="260" font-size="13.5" fill="#111" text-anchor="middle">UI message stream</text>
+
+  <!-- Bottom note -->
+  <text x="60" y="416" font-size="13" fill="#555">The route handler translates Strands stream events into the AI SDK UI message stream protocol</text>
+  <text x="60" y="436" font-size="13" fill="#555">(text-delta, tool-input-available, tool-output-available), so useChat renders tokens and tool activity as they arrive.</text>
+</svg>
