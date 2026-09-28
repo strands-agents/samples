@@ -1,0 +1,59 @@
+# Simple Graph Configuration - Basic Processing
+# Based on the basic processing example from the graph tutorial
+# samples/01-tutorials/02-multi-agent-systems/03-graph-agent/graph.ipynb
+
+graph:
+  graph_id: "simple_research_workflow"
+  name: "Simple Research Workflow"
+  description: "Basic processing with one coordinator leading two specialists"
+
+  # Graph execution configuration
+  max_node_executions: null
+  execution_timeout: null
+  node_timeout: null
+  reset_on_revisit: false
+
+  # Nodes (agents)
+  nodes:
+    - node_id: "team_lead"
+      type: "agent"
+      config:
+        name: "coordinator"
+        model: "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+        system_prompt: "You are a research team leader coordinating specialists. Provide a short analysis, no need for follow ups"
+        tools: []
+
+    - node_id: "analyst"
+      type: "agent"
+      config:
+        name: "data_analyst"
+        model: "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+        system_prompt: "You are a data analyst coordinating with specialists. Provide a short analysis, no need for follow ups"
+        tools: []
+
+    - node_id: "expert"
+      type: "agent"
+      config:
+        name: "domain_expert"
+        model: "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+        system_prompt: "You are a domain expert coordinating with specialists. Provide a short analysis, no need for follow ups"
+        tools: []
+
+  # Edges (dependencies)
+  edges:
+    - from_node: "team_lead"
+      to_node: "analyst"
+      condition: null
+
+    - from_node: "team_lead"
+      to_node: "expert"
+      condition: null
+
+  # Entry points
+  entry_points:
+    - "team_lead"
+
+  metadata:
+    version: "1.0.0"
+    created_from: "graph tutorial basic processing example"
+    tags: ["simple", "coordination", "research"]

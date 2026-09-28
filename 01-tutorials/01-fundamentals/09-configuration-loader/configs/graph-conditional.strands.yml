@@ -1,0 +1,67 @@
+# Conditional Graph Configuration - Branching with Conditions
+# Based on the conditional branching example from the graph tutorial
+# samples/01-tutorials/02-multi-agent-systems/03-graph-agent/graph.ipynb
+
+graph:
+  graph_id: "conditional_routing_workflow"
+  name: "Conditional Routing Workflow"
+  description: "Conditional branching that routes requests to technical or business experts based on classification"
+
+  # Graph execution configuration
+  max_node_executions: null
+  execution_timeout: null
+  node_timeout: null
+  reset_on_revisit: false
+
+  # Nodes (agents)
+  nodes:
+    - node_id: "classifier"
+      type: "agent"
+      config:
+        name: "classifier"
+        model: "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+        system_prompt: "You are an agent responsible for classification of the report request, return only Technical or Business classification."
+        tools: []
+
+    - node_id: "technical_report"
+      type: "agent"
+      config:
+        name: "technical_expert"
+        model: "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+        system_prompt: "You are a technical expert that focuses on providing short summary from technical perspective"
+        tools: []
+
+    - node_id: "business_report"
+      type: "agent"
+      config:
+        name: "business_expert"
+        model: "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+        system_prompt: "You are a business expert that focuses on providing short summary from business perspective"
+        tools: []
+
+  # Edges with conditional routing
+  edges:
+    - from_node: "classifier"
+      to_node: "technical_report"
+      condition:
+        type: "function"
+        module: "workflow.conditions"
+        function: "is_technical"
+        description: "Routes to technical expert if classification contains 'technical'"
+
+    - from_node: "classifier"
+      to_node: "business_report"
+      condition:
+        type: "function"
+        module: "workflow.conditions"
+        function: "is_business"
+        description: "Routes to business expert if classification contains 'business'"
+
+  # Entry points
+  entry_points:
+    - "classifier"
+
+  metadata:
+    version: "1.0.0"
+    created_from: "graph tutorial conditional branching example"
+    tags: ["conditional", "routing", "classification", "technical", "business"]
