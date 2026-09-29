@@ -129,7 +129,9 @@ rm -rf .venv
 
 | Symptom                                   | Likely Cause                                | Fix                                                            |
 |-------------------------------------------|---------------------------------------------|----------------------------------------------------------------|
-| `/chat` returns a 500 about credentials   | No AWS/OpenAI credentials configured        | Configure the provider's credentials and model access          |
+| `/chat` returns `503` mentioning the provider | Provider credentials/model access missing or expired | Configure the provider's credentials and model access (see below) |
+| `Your session has expired`                | AWS login session expired                   | Reauthenticate (e.g. `aws login`), then retry                  |
+| `MissingDependencyException: ... botocore[crt]` | AWS login/SSO credential provider needs the crt extra | It's already a dependency; ensure the install completed (`uv pip install -e .`) |
 | Startup logs "could not connect" to MCP   | MCP server not running / wrong `MCP_SERVER_URL` | Start `python -m mcp_server.server`; check the URL/port    |
 | `stop_reason` is `limit_turns`            | Request hit the `MAX_TURNS` cap             | Raise `MAX_TURNS`, or accept it as the intended budget         |
 | Eval run errors on the judge model        | Evaluators need Bedrock access              | Configure AWS credentials with access to the judge model       |

@@ -12,6 +12,9 @@ dependencies = [
     "pydantic>=2.7.0",
     "pydantic-settings>=2.3.0",
     "httpx>=0.27.0",
+    # crt extra enables botocore's login/SSO credential providers used by some
+    # AWS setups (e.g. AWS CLI `login_session` profiles).
+    "botocore[crt]>=1.34.0",
 ]
 
 [project.optional-dependencies]

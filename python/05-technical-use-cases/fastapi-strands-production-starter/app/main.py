@@ -27,7 +27,7 @@ import threading
 from contextlib import asynccontextmanager
 from typing import Any
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel, Field
 from strands.tools.mcp import MCPClient
 
@@ -121,23 +121,38 @@ async def _watch_disconnect(request: Request, cancel_signal: threading.Event) ->
 async def chat(request: Request, body: ChatRequest) -> ChatResponse:
     """Run one agent turn with lifecycle limits and cancel-on-disconnect."""
     settings = app.state.settings
-    agent, session_manager = build_agent(
-        settings, session_id=body.session_id, mcp_tools=app.state.mcp_tools
-    )
 
-    # Cancellation driven from outside the agent: a client disconnect.
-    cancel_signal = threading.Event()
-    watcher = asyncio.create_task(_watch_disconnect(request, cancel_signal))
-
+    session_manager = None
+    watcher = None
     try:
+        agent, session_manager = build_agent(
+            settings, session_id=body.session_id, mcp_tools=app.state.mcp_tools
+        )
+
+        # Cancellation driven from outside the agent: a client disconnect.
+        cancel_signal = threading.Event()
+        watcher = asyncio.create_task(_watch_disconnect(request, cancel_signal))
+
         result = await agent.invoke_async(
             body.message,
             limits=settings.limits(),
             cancel_signal=cancel_signal,
         )
+    except Exception as exc:
+        logger.exception("chat invocation failed")
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                f"Agent invocation failed against the '{settings.model_provider}' provider: "
+                f"{exc}. Check that the provider's credentials and model access are configured "
+                "(see the README's provider section)."
+            ),
+        ) from exc
     finally:
-        watcher.cancel()
-        session_manager.close()
+        if watcher is not None:
+            watcher.cancel()
+        if session_manager is not None:
+            session_manager.close()
 
     return ChatResponse(
         session_id=body.session_id,
