@@ -54,6 +54,15 @@ def build_model(settings: Settings) -> Any:
             client_args={"api_key": settings.openai_api_key},
             model_id=settings.openai_model_id,
         )
+
+    # Bedrock: use an explicit boto3 session when a profile is configured, so
+    # named AWS profiles (e.g. SSO/login profiles) work; otherwise fall back to
+    # the default credential chain with the configured region.
+    if settings.aws_profile:
+        import boto3
+
+        session = boto3.Session(profile_name=settings.aws_profile, region_name=settings.aws_region)
+        return BedrockModel(boto_session=session, model_id=settings.bedrock_model_id)
     return BedrockModel(region_name=settings.aws_region, model_id=settings.bedrock_model_id)
 
 

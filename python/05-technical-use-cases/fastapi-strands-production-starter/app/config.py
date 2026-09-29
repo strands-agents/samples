@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     # Model provider
     model_provider: Literal["bedrock", "openai"] = "bedrock"
     aws_region: str = "us-east-1"
+    aws_profile: str | None = None
     bedrock_model_id: str = "us.amazon.nova-pro-v1:0"
     openai_api_key: str | None = None
     openai_model_id: str = "gpt-4o-mini"
@@ -43,6 +44,7 @@ class Settings(BaseSettings):
 
     @field_validator(
         "openai_api_key",
+        "aws_profile",
         "max_total_tokens",
         "mcp_server_url",
         "otel_exporter_otlp_endpoint",
