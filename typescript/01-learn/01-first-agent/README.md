@@ -5,8 +5,8 @@ Strands Agents is an open source SDK that takes a model-driven approach to build
 
 ## Prerequisites
 
-- Node.js 18.x or later
-- AWS account configured with appropriate permissions
+- Node.js 22 or later (required by `@strands-agents/sdk`)
+- AWS credentials configured with access to Amazon Bedrock, and the model enabled in your region
 - Basic understanding of TypeScript/JavaScript programming
 
 ## Creating Your First Agent
@@ -19,10 +19,10 @@ Strands Agents is an open source SDK that takes a model-driven approach to build
 
 The example in `src/firstAgent.ts` demonstrates how to:
 
-- Create a basic agent with Claude Sonnet 4.5 model from Amazon Bedrock
+- Create a basic agent with the Claude Sonnet 4.6 model from Amazon Bedrock
 - Configure the agent with a system prompt
 - Invoke the agent with a message
-- Handle and display the response
+- Stream the response to the console
 
 ## Running the Example
 
@@ -30,6 +30,12 @@ The example in `src/firstAgent.ts` demonstrates how to:
 cd typescript/01-learn/01-first-agent
 npm install
 npx tsx src/firstAgent.ts
+```
+
+To use a different Bedrock model or inference profile, set `MODEL_ID`:
+
+```bash
+MODEL_ID=us.anthropic.claude-haiku-4-5-20251001-v1:0 npx tsx src/firstAgent.ts
 ```
 
 
