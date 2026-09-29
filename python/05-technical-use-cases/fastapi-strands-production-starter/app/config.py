@@ -9,6 +9,7 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import Literal
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from strands.types.agent import Limits
 
@@ -39,6 +40,24 @@ class Settings(BaseSettings):
     # OpenTelemetry
     otel_exporter_otlp_endpoint: str | None = None
     otel_service_name: str = "fastapi-strands-starter"
+
+    @field_validator(
+        "openai_api_key",
+        "max_total_tokens",
+        "mcp_server_url",
+        "otel_exporter_otlp_endpoint",
+        mode="before",
+    )
+    @classmethod
+    def _empty_str_to_none(cls, value: object) -> object:
+        """Treat an empty/whitespace env value as unset (None).
+
+        A commented-out ``.env`` line left as ``KEY=`` yields ``""``; for
+        optional fields that should mean "not configured", not a parse error.
+        """
+        if isinstance(value, str) and value.strip() == "":
+            return None
+        return value
 
     def limits(self) -> Limits:
         """Build the per-invocation :class:`Limits` from the configured caps.
