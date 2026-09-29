@@ -115,7 +115,12 @@ The SDK ships File, S3, and Repository session managers, among others; SQLite is
 uv run python -m evals.eval_suite
 ```
 
-Results print to the console and are saved to `fastapi_starter_evaluation.json`. The evaluators use Amazon Bedrock (Claude) as the judge model by default, so this step needs AWS credentials with Bedrock access.
+Results print to the console and are saved to `fastapi_starter_evaluation.json`. The suite runs both the agent under test and the judge on Amazon Bedrock (Claude), regardless of the `MODEL_PROVIDER` configured for the service — `evals/eval_suite.py` builds the eval agent with `BedrockModel()` directly. So this step needs AWS credentials with Bedrock access even if you run the API on OpenAI.
+
+If you only have an `OPENAI_API_KEY`, run the OpenAI variant instead — same cases and rubrics, with both the agent and the judge on OpenAI:
+```bash
+uv run python -m evals.eval_suite_openai
+```
 
 ## Cleanup
 
@@ -133,6 +138,7 @@ rm -rf .venv
 | `Your session has expired`                | AWS login session expired                   | Reauthenticate (e.g. `aws login`), then retry                  |
 | `MissingDependencyException: ... botocore[crt]` | AWS login/SSO credential provider needs the crt extra | It's already a dependency; ensure the install completed (`uv pip install -e .`) |
 | Startup logs "could not connect" to MCP   | MCP server not running / wrong `MCP_SERVER_URL` | Start `python -m mcp_server.server`; check the URL/port    |
+| `error while attempting to bind on address ... address already in use` | Port 8080 is already taken by another process | Start on a free port (`--port 8081`), or free 8080 first   |
 | `stop_reason` is `limit_turns`            | Request hit the `MAX_TURNS` cap             | Raise `MAX_TURNS`, or accept it as the intended budget         |
 | Eval run errors on the judge model        | Evaluators need Bedrock access              | Configure AWS credentials with access to the judge model       |
 
