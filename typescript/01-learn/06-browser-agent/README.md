@@ -11,11 +11,11 @@ This tutorial demonstrates how to run a Strands Agent entirely in the browser us
 | Agent Structure | Single agent architecture |
 | Architecture | Client-side only (browser) |
 | Build Tool | Vite |
-| Model Providers | Amazon Bedrock (Claude Sonnet 4), OpenAI (GPT-4o) |
+| Model Providers | Amazon Bedrock (Claude Sonnet 4.6), OpenAI (GPT-4o) |
 
 ## Prerequisites
 
-- Node.js 18.x or later
+- Node.js 22 or later (the version `@strands-agents/sdk` supports)
 - One of the following:
   - AWS credentials with Amazon Bedrock access (Access Key ID, Secret Access Key, and optionally Session Token for temporary credentials)
   - OpenAI API key
@@ -88,7 +88,7 @@ const agent = new Agent({
 
 ```typescript
 import { Agent } from "@strands-agents/sdk";
-import { OpenAIModel } from "@strands-agents/sdk/openai";
+import { OpenAIModel } from "@strands-agents/sdk/models/openai";
 
 const agent = new Agent({
   model: new OpenAIModel({
@@ -110,10 +110,11 @@ Streaming displays the response progressively as it's generated, providing immed
 ```typescript
 for await (const event of agent.stream(userMessage)) {
   if (
-    event.type === "modelContentBlockDeltaEvent" &&
-    event.delta.type === "textDelta"
+    event.type === "modelStreamUpdateEvent" &&
+    event.event.type === "modelContentBlockDeltaEvent" &&
+    event.event.delta.type === "textDelta"
   ) {
-    responseText += event.delta.text;
+    responseText += event.event.delta.text;
     // Update UI with each chunk
   }
 }
