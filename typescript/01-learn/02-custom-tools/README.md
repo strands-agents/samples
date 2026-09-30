@@ -20,6 +20,38 @@ In this example we will guide you through creating custom tools using the Strand
 - **Asks before it acts on anything destructive.** Cancelling takes two steps: the agent shows the appointment and asks you to confirm before it deletes anything.
 - **Asks for what's missing** instead of inventing it. A title, a time and a location are enough; appointments last 60 minutes unless you say otherwise.
 
+## Walkthrough
+
+A real session on Amazon Bedrock (Claude Haiku 4.5), with the date fixed to Tuesday 6 October 2026 so "tomorrow" is 7 October.
+
+**1. Setup.** `--setup` asks for each setting and shows the current value in brackets. An invalid value is explained and asked again.
+
+![Setup wizard: each setting with its current value in brackets; an invalid date is rejected and asked again](images/walkthrough/01-setup.png)
+
+**2. Ready.** The header shows the settings in use, and the three sample requests are printed ready to copy.
+
+![Assistant ready: the settings header and the three sample requests](images/walkthrough/02-ready.png)
+
+**3. Book.** The agent books "Agent fun" for tomorrow at 3pm with `create_appointment`.
+
+![Request 1: the agent calls create_appointment and confirms the booking](images/walkthrough/03-book.png)
+
+**4. Move.** It finds the same appointment and changes the location with `update_appointment`.
+
+![Request 2: the agent calls update_appointment and moves the meeting to DC](images/walkthrough/04-move.png)
+
+**5. Clash.** 3pm is taken, so nothing is saved. The agent names the clash, lists times that are actually free, and asks you.
+
+![Request 3: the slot is busy; the agent lists free times and asks which one to use](images/walkthrough/05-clash.png)
+
+**6. Your answer.** You pick a time, and the agent books it.
+
+![The user answers "4pm works" and the agent books Design review at 4pm](images/walkthrough/06-answer.png)
+
+**7. Check.** `/calendar` reads the database directly, and `/config` shows each setting and where it came from.
+
+![/calendar shows both appointments; /config shows every setting and its source](images/walkthrough/07-calendar-config.png)
+
 ## Prerequisites
 
 - Node.js 22 or later (the version `@strands-agents/sdk` supports)
@@ -57,7 +89,7 @@ Everything shown in the assistant's header can be configured:
 
 ```
 Appointment assistant · model us.anthropic.claude-haiku-4-5-20251001-v1:0 · region us-east-1 · calendar appointments.db
-Today is Wednesday, 2026-09-30, and the local time is 18:36 (Asia/Calcutta).
+Today is Tuesday, 2026-10-06, and the local time is 09:00 (America/New_York, fixed for this demo).
 ```
 
 | Setting | Flag | Environment variable | Default |
