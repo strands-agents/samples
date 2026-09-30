@@ -19,15 +19,51 @@ import { z } from "zod";
 import { AppointmentDatabase, DEFAULT_DURATION_MINUTES, toMinutes } from "../database/AppointmentDatabase.js";
 
 const dateField = z.string().describe("Start time in local time, format YYYY-MM-DD HH:MM (24-hour)");
-const durationField = z
-  .number()
-  .int()
-  .positive()
-  .optional()
-  .describe(`Length in minutes (default ${DEFAULT_DURATION_MINUTES})`);
+/** Scheduling rules the tools apply; all configurable when the assistant starts. */
+export interface SchedulingOptions {
+  /** Length of an appointment when none is given, in minutes */
+  defaultDurationMinutes: number;
+  /** First and last hour of the working day, used for free-slot suggestions */
+  workdayStartHour: number;
+  workdayEndHour: number;
+}
+
+export const DEFAULT_SCHEDULING: SchedulingOptions = {
+  defaultDurationMinutes: DEFAULT_DURATION_MINUTES,
+  workdayStartHour: 9,
+  workdayEndHour: 18,
+};
 
 export class AppointmentTools {
-  constructor(private database: AppointmentDatabase) { }
+  private durationField;
+
+  constructor(
+    private database: AppointmentDatabase,
+    private scheduling: SchedulingOptions = DEFAULT_SCHEDULING
+  ) {
+    this.durationField = z
+      .number()
+      .int()
+      .positive()
+      .optional()
+      .describe(`Length in minutes (default ${scheduling.defaultDurationMinutes})`);
+  }
+
+  /** Up to three free start times on the same day, closest to the requested time. */
+  private nearestSlots(date: string, durationMinutes: number): string[] {
+    const wanted = toMinutes(date)!;
+    return this.freeSlots(date.slice(0, 10), durationMinutes)
+      .map((hhmm) => ({ hhmm, distance: Math.abs(toMinutes(`${date.slice(0, 10)} ${hhmm}`)! - wanted) }))
+      .sort((a, b) => a.distance - b.distance)
+      .slice(0, 3)
+      .map((slot) => slot.hhmm)
+      .sort();
+  }
+
+  private freeSlots(day: string, durationMinutes: number): string[] {
+    const { workdayStartHour, workdayEndHour } = this.scheduling;
+    return this.database.freeSlots(day, durationMinutes, workdayStartHour, workdayEndHour);
+  }
 
   /**
    * Describe a clash so the agent can explain it and offer alternatives.
@@ -39,7 +75,7 @@ export class AppointmentTools {
     return JSON.stringify(
       {
         status: "conflict",
-        message: "The calendar is busy at that time. Nothing was saved. Ask the user how to proceed, offering only start times from free_slots_that_day.",
+        message: "The calendar is busy at that time. Nothing was saved. Offer the user the suggested_start_times and ask how to proceed.",
         requested: { date, duration_minutes: durationMinutes },
         conflicts: conflicts.map(({ id, date, duration_minutes, title, location }) => ({
           id,
@@ -48,7 +84,7 @@ export class AppointmentTools {
           title,
           location,
         })),
-        free_slots_that_day: this.database.freeSlots(date.slice(0, 10), durationMinutes),
+        suggested_start_times: this.nearestSlots(date, durationMinutes),
       },
       null,
       2
@@ -68,7 +104,7 @@ export class AppointmentTools {
       // 3. Input schema of the tool
       inputSchema: z.object({
         date: dateField,
-        duration_minutes: durationField,
+        duration_minutes: this.durationField,
         location: z.string(),
         title: z.string(),
         description: z.string().optional().describe("Optional notes about the appointment"),
@@ -79,7 +115,7 @@ export class AppointmentTools {
         if (toMinutes(input.date) === undefined) {
           return `Invalid date "${input.date}". Use YYYY-MM-DD HH:MM.`;
         }
-        const duration = input.duration_minutes ?? DEFAULT_DURATION_MINUTES;
+        const duration = input.duration_minutes ?? this.scheduling.defaultDurationMinutes;
 
         // Refuse to double-book; the agent will ask the user what to do instead
         const conflict = this.conflictResult(input.date, duration);
@@ -139,7 +175,7 @@ export class AppointmentTools {
       inputSchema: z.object({
         appointment_id: z.string(), // Required appointment_id parameter
         date: dateField.optional(), // Optional date parameter
-        duration_minutes: durationField, // Optional duration parameter
+        duration_minutes: this.durationField, // Optional duration parameter
         location: z.string().optional(), // Optional location parameter
         title: z.string().optional(), // Optional title parameter
         description: z.string().optional(), // Optional description parameter
@@ -157,7 +193,7 @@ export class AppointmentTools {
           if (toMinutes(date) === undefined) return `Invalid date "${date}". Use YYYY-MM-DD HH:MM.`;
           const conflict = this.conflictResult(
             date,
-            updates.duration_minutes ?? current.duration_minutes ?? DEFAULT_DURATION_MINUTES,
+            updates.duration_minutes ?? current.duration_minutes ?? this.scheduling.defaultDurationMinutes,
             appointment_id
           );
           if (conflict) return conflict;
@@ -214,19 +250,19 @@ export class AppointmentTools {
     return tool({
       name: "check_availability",
       description:
-        "List the start times (09:00–18:00, on the hour and half hour) at which a meeting of the given length fits without overlapping anything, plus the appointments already booked that day. Only these start times are free; do not suggest others.",
+        "List the start times within working hours (on the hour and half hour) at which a meeting of the given length fits without overlapping anything, plus the appointments already booked that day. Only these start times are free; do not suggest others.",
       inputSchema: z.object({
         day: z.string().describe("Day in format YYYY-MM-DD"),
-        duration_minutes: durationField,
+        duration_minutes: this.durationField,
       }),
       callback: (input) => {
-        const duration = input.duration_minutes ?? DEFAULT_DURATION_MINUTES;
+        const duration = input.duration_minutes ?? this.scheduling.defaultDurationMinutes;
         return JSON.stringify(
           {
             day: input.day,
             duration_minutes: duration,
             booked: this.database.listAppointments().filter((a) => a.date.startsWith(input.day)),
-            free_slots: this.database.freeSlots(input.day, duration),
+            free_slots: this.freeSlots(input.day, duration),
           },
           null,
           2

@@ -41,25 +41,42 @@ This runs the **guided demo**:
 3. Tries to book "Design review" tomorrow at 3pm. **The calendar is busy**, so the agent stops, explains the clash, suggests free times, and asks you what to do.
 4. **Your turn.** Answer the agent (for example "4pm works"), then keep chatting as long as you like.
 
-### Modes and options
+### Modes
 
 | Command | What it does |
 |---|---|
 | `npx tsx src/index.ts` | Guided demo, then you take over |
+| `npx tsx src/index.ts --setup` | Choose your settings step by step, save them, then chat |
 | `npx tsx src/index.ts --chat` | Chat from the first turn, no scripted requests |
 | `npx tsx src/index.ts --auto` | The three scripted requests only, no input (useful for quick checks) |
-| `npx tsx src/index.ts --help` | Show all options |
+| `npx tsx src/index.ts --help` | Show every option |
 
-| Option | Environment variable | Default |
-|---|---|---|
-| `--region <region>` | `AWS_REGION` | `us-east-1` |
-| `--model <model-id>` | `MODEL_ID` | `us.anthropic.claude-haiku-4-5-20251001-v1:0` |
-| `--db <path>` | `APPOINTMENTS_DB` | `appointments.db` |
+### Settings
 
-Flags win over environment variables. For example:
+Everything shown in the assistant's header can be configured:
+
+```
+Appointment assistant · model us.anthropic.claude-haiku-4-5-20251001-v1:0 · region us-east-1 · calendar appointments.db
+Today is Wednesday, 2026-09-30, and the local time is 18:36 (Asia/Calcutta).
+```
+
+| Setting | Flag | Environment variable | Default |
+|---|---|---|---|
+| Bedrock region | `--region` | `AWS_REGION` | `us-east-1` |
+| Model ID or inference profile | `--model` | `MODEL_ID` | `us.anthropic.claude-haiku-4-5-20251001-v1:0` |
+| Calendar file | `--db` | `APPOINTMENTS_DB` | `appointments.db` |
+| Time zone for "today" and "tomorrow" | `--timezone` | `ASSISTANT_TIMEZONE` | your system time zone |
+| Fixed date and time, `YYYY-MM-DD HH:MM`, for rehearsing a demo | `--now` | `ASSISTANT_NOW` | the real clock |
+| Default appointment length, minutes | `--duration` | `ASSISTANT_DURATION` | `60` |
+| Working hours for free-slot suggestions | `--workday` | `ASSISTANT_WORKDAY` | `09-18` |
+
+Each value comes from, in order of priority: a flag, then an environment variable, then the config file (`assistant.config.json`, or `--config <path>`), then the default. Invalid values are rejected with a clear message before the assistant starts.
+
+`--setup` asks for each setting, shows the current value in brackets (press Enter to keep it), re-asks if a value is invalid, and saves the result to the config file, which is git-ignored because it holds personal settings. For example:
 
 ```bash
-npx tsx src/index.ts --chat --region us-west-2 --model global.anthropic.claude-sonnet-4-6
+npx tsx src/index.ts --chat --region us-west-2 --model global.anthropic.claude-sonnet-4-6 \
+  --timezone America/New_York --now "2026-12-24 09:00" --duration 30 --workday 08-17
 ```
 
 ### In the chat
@@ -68,7 +85,10 @@ npx tsx src/index.ts --chat --region us-west-2 --model global.anthropic.claude-s
 |---|---|
 | Any request in plain English | Talk to the assistant |
 | `/calendar` | Print the saved appointments straight from the database |
-| `/help` | Show example requests |
+| `/config` | Show every setting and where its value came from (flag, env, config file or default) |
+| `/set <setting> <value>` | Change a setting mid-conversation, e.g. `/set model global.anthropic.claude-sonnet-4-6` or `/set now clock`. The conversation carries on with the new setting. |
+| `/save` | Save the current settings to the config file |
+| `/help` | Show example requests and commands |
 | `exit` | Quit and print the final calendar |
 
 Delete `appointments.db` to start again with an empty calendar.
@@ -81,7 +101,8 @@ src/
 │   └── AppointmentDatabase.ts    # SQLite data access, overlap checks, free slots
 ├── tools/
 │   └── AppointmentTools.ts       # Tool definitions factory
-└── index.ts                      # Entry point: options, guided demo, chat loop
+├── config.ts                     # Settings: flags, environment, config file, validation
+└── index.ts                      # Entry point: setup, guided demo, chat loop
 ```
 
 ## Key Concepts
@@ -127,9 +148,9 @@ A tool result can tell the agent that it needs the user. When a slot is taken, `
 ```json
 {
   "status": "conflict",
-  "message": "The calendar is busy at that time. Nothing was saved. Ask the user how to proceed, offering only start times from free_slots_that_day.",
+  "message": "The calendar is busy at that time. Nothing was saved. Offer the user the suggested_start_times and ask how to proceed.",
   "conflicts": [{ "title": "Agent fun", "date": "2026-10-01 15:00", "duration_minutes": 60 }],
-  "free_slots_that_day": ["09:00", "09:30", "…", "14:00", "16:00", "16:30", "17:00"]
+  "suggested_start_times": ["13:30", "14:00", "16:00"]
 }
 ```
 
@@ -154,8 +175,8 @@ export class AppointmentDatabase {
 
 ```typescript
 const agent = new Agent({
-  model: new BedrockModel({ modelId: config.modelId, region: config.region }),
-  systemPrompt, // includes today's date, the default duration, and the clash rules
+  model: new BedrockModel({ modelId: settings.model, region: settings.region }),
+  systemPrompt, // includes today's date and time zone, default length, working hours and clash rules
   tools,
 });
 ```
