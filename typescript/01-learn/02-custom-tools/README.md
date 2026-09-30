@@ -17,7 +17,7 @@ In this example we will guide you through creating custom tools using the Strand
 - **Books, lists, moves and cancels appointments** in plain English: "Book a 30 minute call with Priya on Friday at 11am", "Move Design review to 4pm", "Cancel the gym session".
 - **Understands relative dates.** It is told today's date and your local time zone, so "tomorrow at 3pm" resolves correctly.
 - **Never double-books.** The tools check for overlapping appointments before saving. When a slot is busy, nothing is saved; the agent tells you what clashes, offers free times from the calendar, and waits for you to choose.
-- **Asks before it acts on anything destructive.** Cancelling takes two steps: the agent shows the appointment and asks you to confirm before it deletes anything.
+- **Asks before it cancels.** The agent shows you the appointment and asks you to confirm, then deletes it.
 - **Asks for what's missing** instead of inventing it. A title, a time and a location are enough; appointments last 60 minutes unless you say otherwise.
 
 ## Walkthrough
@@ -188,7 +188,7 @@ A tool result can tell the agent that it needs the user. When a slot is taken, `
 }
 ```
 
-The rule lives in the tool, so the agent cannot double-book even if it tries. `delete_appointment` works the same way: without `confirmed: true` it returns `needs_confirmation` and deletes nothing.
+The rule lives in the tool, so the agent cannot double-book even if it tries. `delete_appointment` has a lighter guard: called with `confirmed: false` it returns `needs_confirmation` and deletes nothing. The model sets that flag itself, though, so asking before cancelling relies on the prompt. For a hard guarantee, have the app ask the user directly, for example with Strands' human-in-the-loop interventions.
 
 ### Database Integration
 
