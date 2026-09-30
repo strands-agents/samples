@@ -126,6 +126,15 @@ const SCRIPTED = [
   "Also book 'Design review' tomorrow at 3pm in the office, to walk through the new calendar screens",
 ];
 
+/** The scripted requests as a copy-paste list; the third clashes with the first. */
+function samplePrompts(): string {
+  return (
+    "Try these, one at a time (copy and paste):\n\n" +
+    SCRIPTED.map((prompt, i) => `  ${i + 1}. ${prompt}`).join("\n") +
+    "\n\nThe third clashes with the first, so the assistant will ask you to pick another time."
+  );
+}
+
 /** Everything built from the settings. Rebuilt by /set, keeping the conversation. */
 interface Session {
   settings: Settings;
@@ -255,7 +264,7 @@ async function chat(session: Session, configPath: string): Promise<Session> {
       console.log(`${k} set to ${String(value) || "real clock"}. The conversation continues with the new setting.\n${header(session)}`);
     } else if (input === "/help") {
       console.log(
-        'Ask in plain English, e.g. "What\'s on tomorrow?", "Move Design review to 4pm", "Cancel Agent fun".\n' +
+        `${samplePrompts()}\n\nOr ask anything in plain English, e.g. "What's on tomorrow?", "Move Design review to 4pm", "Cancel Agent fun".\n\n` +
           "/calendar               show saved appointments\n" +
           "/config                 show settings and where each came from\n" +
           "/set <setting> <value>  change a setting, e.g. /set model global.anthropic.claude-sonnet-4-6\n" +
@@ -313,7 +322,7 @@ async function main() {
   if (!args.auto) {
     console.log(
       args.chat || args.setup
-        ? "\nChat with the assistant. Type /help for commands, or exit."
+        ? `\nChat with the assistant. Type /help for commands, or exit.\n\n${samplePrompts()}`
         : "\nYour turn: answer the assistant, for example by picking one of the free slots. Type /help for commands, or exit."
     );
     session = await chat(session, resolved.configPath);

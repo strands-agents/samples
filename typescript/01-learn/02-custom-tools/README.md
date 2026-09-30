@@ -81,6 +81,8 @@ npx tsx src/index.ts --chat --region us-west-2 --model global.anthropic.claude-s
 
 ### In the chat
 
+With `--setup` or `--chat`, the assistant starts by printing the three sample requests from the guided demo, ready to copy and paste. `/help` shows them again.
+
 | Type | To |
 |---|---|
 | Any request in plain English | Talk to the assistant |
