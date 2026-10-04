@@ -81,6 +81,30 @@ venv\Scripts\activate
 pip install strands-agents strands-agents-tools
 ```
 
+**Alternative: Use uv**
+
+If you prefer [uv](https://docs.astral.sh/uv/), install it using the [official installation instructions](https://docs.astral.sh/uv/getting-started/installation/) and follow these steps instead of Steps 1 and 2 above.
+
+Create a virtual environment:
+```bash
+uv venv
+```
+
+Activate it on macOS/Linux (bash or zsh):
+```bash
+source .venv/bin/activate
+```
+
+Or on Windows (PowerShell):
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Then install the same packages:
+```bash
+uv pip install strands-agents strands-agents-tools
+```
+
 **Your First Agent:**
 ```python
 from strands import Agent
