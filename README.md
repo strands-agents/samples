@@ -51,7 +51,7 @@ The examples in this repository are for **demonstration and educational purposes
 
 **Prerequisites:**
 - Python 3.10 or higher
-- pip package manager
+- pip package manager (not required when using the uv alternative below)
   - Verify with: `pip --version` or `pip3 --version`
   - Usually comes bundled with Python 3.4+ installers from python.org
   - If pip is missing, install using one of these methods:
@@ -99,6 +99,8 @@ Or on Windows (PowerShell):
 ```powershell
 .\.venv\Scripts\Activate.ps1
 ```
+
+If PowerShell blocks `Activate.ps1`, see Python's [Windows execution policy guidance](https://docs.python.org/3/library/venv.html#creating-virtual-environments) and follow any applicable organizational policies.
 
 Then install the same packages:
 ```bash
