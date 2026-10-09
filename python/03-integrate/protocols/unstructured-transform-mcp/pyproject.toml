@@ -1,0 +1,11 @@
+[project]
+name = "unstructured-transform-mcp"
+version = "0.1.0"
+description = "Strands Agent sample using the hosted Unstructured Transform MCP server for document processing"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "strands-agents>=0.1.0",
+    "strands-agents-tools>=0.1.0",
+    "mcp>=1.9.0",
+]
