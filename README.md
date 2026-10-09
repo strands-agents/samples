@@ -130,7 +130,7 @@ main();
 
 ### Model Provider Setup
 
-Follow the instructions [here](https://strandsagents.com/latest/user-guide/quickstart/#model-providers) to configure your model provider and model access.
+Follow the instructions [here](https://strandsagents.com/docs/user-guide/sdk/model-providers/) to configure your model provider and model access.
 
 ## Explore the Repository
 
