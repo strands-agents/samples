@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Virtual environments
+.venv/
+venv/
+
+# uv
+uv.lock
+
+# Ruff
+.ruff_cache/
+
+# Environment variables
+.env
+
+# SQLite session store
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+sessions.db
+
+# Evals output
+*.eval.json
+evaluation*.json
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
