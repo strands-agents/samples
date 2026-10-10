@@ -12,6 +12,7 @@ Step-by-step guides from basic agent creation to advanced patterns.
 | [`04-streaming`](./04-streaming/) | Stream responses (Coming Soon) |
 | [`05-agent-state`](./05-agent-state/) | Manage agent state |
 | [`06-browser-agent`](./06-browser-agent/) | Build browser-based agents |
+| [`07-express-chatbot`](./07-express-chatbot/) | Express chatbot with SSE streaming, Zod tools and MCP |
 
 ## Getting Started
 
