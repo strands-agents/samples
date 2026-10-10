@@ -1,0 +1,4 @@
+opentelemetry-exporter-otlp-proto-http
+strands-agents
+strands-agents-tools
+strands-agents-builder
