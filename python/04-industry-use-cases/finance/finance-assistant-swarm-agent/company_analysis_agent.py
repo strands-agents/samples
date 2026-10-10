@@ -15,7 +15,7 @@ import yfinance as yf
 import requests
 from strands import Agent, tool
 from strands.models import BedrockModel
-from strands_tools import http_request
+from strands.vended_tools import http_request
 
 
 @tool

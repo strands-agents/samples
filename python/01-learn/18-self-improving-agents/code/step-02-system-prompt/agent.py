@@ -11,7 +11,8 @@ from datetime import datetime
 from pathlib import Path
 
 from strands import Agent
-from strands_tools import shell, file_write
+from strands.vended_tools import shell
+from strands_tools import file_write
 
 from tools.system_prompt import system_prompt
 
