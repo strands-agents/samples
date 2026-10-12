@@ -100,6 +100,23 @@ def _check_command_availability(command: str) -> bool:
     return shutil.which(command) is not None
 
 
+def _escape_applescript_string(text: str) -> str:
+    """Escape a string for safe embedding in a double-quoted AppleScript
+    string literal.
+
+    _validate_and_sanitize_text() is a general-purpose sanitizer, not an
+    AppleScript escaper: it leaves both '"' and newlines intact, either of
+    which lets text interpolated into an `osascript -e "... \"{text}\" ..."`
+    argument break out of the literal and inject additional AppleScript
+    statements (e.g. `do shell script "..."`), even though that argument is
+    passed via subprocess's array form with no shell involved. Escape the
+    quote so it can't close the literal early, and flatten newlines/returns
+    (AppleScript's own statement separator) so a single interpolated value
+    can't span multiple statements.
+    """
+    return text.replace('"', '\\"').replace("\n", " ").replace("\r", " ")
+
+
 TOOL_SPEC = {
     "name": "notify",
     "description": "Send notifications to the main agent and optionally trigger system notifications",
@@ -163,11 +180,15 @@ def _show_system_notification(title, message):
                 logger.warning("osascript not available on macOS")
                 return False
 
-            # Use array syntax to prevent command injection
+            # Use array syntax to prevent shell injection, and escape the
+            # values themselves so they can't break out of the AppleScript
+            # string literals below (see _escape_applescript_string).
+            applescript_message = _escape_applescript_string(safe_message)
+            applescript_title = _escape_applescript_string(safe_title)
             cmd = [
                 "osascript",
                 "-e",
-                f'display notification "{safe_message}" with title "{safe_title}"',
+                f'display notification "{applescript_message}" with title "{applescript_title}"',
             ]
 
             result = subprocess.run(
