@@ -836,9 +836,16 @@ def generate_pdf_report(report_content: str, filename: str) -> str:
         # Ensure directory exists
         os.makedirs("outputs/reports", exist_ok=True)
 
+        # filename is caller-supplied (the agent composes it from the chat
+        # request) and was interpolated into the output path with no
+        # validation, so a value like "../../../etc/cron.d/x" escaped
+        # outputs/reports entirely. Strip any directory components so the
+        # report can only land inside outputs/reports.
+        safe_filename = os.path.basename(filename)
+
         # Add timestamp to filename
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        timestamped_filename = f"{filename}_{timestamp}"
+        timestamped_filename = f"{safe_filename}_{timestamp}"
 
         # Set up the PDF file
         filepath = f"outputs/reports/{timestamped_filename}.pdf"
