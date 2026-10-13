@@ -1,0 +1,26 @@
+{
+  "name": "07-express-chatbot",
+  "version": "1.0.0",
+  "description": "Express + Strands Agents TypeScript chatbot starter with SSE streaming, Zod tools, an MCP client and interventions for rate limiting and moderation",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "smoke": "tsx src/smoke.ts",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@strands-agents/sdk": "^1.19.0",
+    "express": "^5.1.0",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^20.0.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.0.0"
+  }
+}
