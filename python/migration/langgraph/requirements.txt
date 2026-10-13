@@ -1,0 +1,4 @@
+langgraph>=1.0
+langgraph-checkpoint-sqlite>=1.0
+langchain-aws>=1.0
+strands-agents
