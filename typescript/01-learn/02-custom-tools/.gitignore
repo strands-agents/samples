@@ -32,3 +32,6 @@ npm-debug.log*
 
 # TypeScript
 *.tsbuildinfo
+
+# Personal settings written by --setup
+assistant.config.json
