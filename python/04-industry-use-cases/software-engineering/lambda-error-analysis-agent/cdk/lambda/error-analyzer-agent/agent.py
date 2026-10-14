@@ -26,8 +26,11 @@ lambda_client = boto3.client('lambda')
 
 # Configure Knowledge Base for retrieve tool
 KNOWLEDGE_BASE_ID = os.environ.get('KNOWLEDGE_BASE_ID')
+# Knowledge Base type: "VECTOR" (default) or "MANAGED"
+KNOWLEDGE_BASE_TYPE = os.environ.get('KNOWLEDGE_BASE_TYPE', 'MANAGED').upper()
+
 if KNOWLEDGE_BASE_ID:
-    print(f"Knowledge Base configured: {KNOWLEDGE_BASE_ID}")
+    print(f"Knowledge Base configured: {KNOWLEDGE_BASE_ID} (type: {KNOWLEDGE_BASE_TYPE})")
 else:
     print("Warning: KNOWLEDGE_BASE_ID not found in environment variables")
 
@@ -433,10 +436,10 @@ def try_lambda_function_code(lambda_name: str) -> dict:
 def search_knowledge_base(query: str) -> str:
     """Search Knowledge Base for documentation, best practices, and error patterns"""
     global tool_execution_results
-    
+
     try:
-        print(f"Searching Knowledge Base for general knowledge: {query}")
-        
+        print(f"Searching Knowledge Base for general knowledge: {query} (type: {KNOWLEDGE_BASE_TYPE})")
+
         all_results = []
         retrieval_metadata = {
             'total_results': 0,
@@ -445,18 +448,21 @@ def search_knowledge_base(query: str) -> str:
             'max_score': 0.0,
             'confidence_level': 'low'
         }
-        
+
         # Search with error-focused query
+        # Build retrieve input based on KB type
         try:
+            retrieve_input = {
+                "text": query,
+                "score": 0.4,
+                "numberOfResults": 5,
+                "knowledgeBaseId": KNOWLEDGE_BASE_ID,
+                "region": os.environ.get('AWS_REGION', 'us-east-1'),
+            }
+
             result = retrieve.retrieve({
                 "toolUseId": str(uuid.uuid4()),
-                "input": {
-                    "text": query,
-                    "score": 0.4,
-                    "numberOfResults": 5,
-                    "knowledgeBaseId": KNOWLEDGE_BASE_ID,
-                    "region": os.environ.get('AWS_REGION', 'us-east-1'),
-                },
+                "input": retrieve_input,
             })
             
             if isinstance(result, dict) and result.get("status") == "success" and "content" in result:

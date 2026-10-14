@@ -280,9 +280,13 @@ def client_meeting_analysis(query: str) -> str:
         
         logger.info(f"📋 Using KB ID: {kb_id} (source: {kb_source})")
 
+        # Determine KB type from config (VECTOR or MANAGED)
+        kb_type = load_config().get("knowledge_base_type", "MANAGED").upper()
+
         os.environ.update({
-            "BYPASS_TOOL_CONSENT": "true", 
-            "KNOWLEDGE_BASE_ID": kb_id
+            "BYPASS_TOOL_CONSENT": "true",
+            "KNOWLEDGE_BASE_ID": kb_id,
+            "KNOWLEDGE_BASE_TYPE": kb_type,
         })
         
         model = get_model()
