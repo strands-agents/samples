@@ -22,7 +22,9 @@ import { AppointmentTools } from "./tools/AppointmentTools.js";
 
 // Agent Setup
 // This is the system prompt for the agent
-const systemPrompt = `You are a helpful personal assistant that specializes in managing my appointments and calendar. You have access to appointment management tools to help me organize my schedule effectively. Always provide the appointment id so that I can update it if required`;
+// Today's date is included so the agent can resolve relative dates such as "tomorrow".
+const today = new Date().toISOString().slice(0, 10);
+const systemPrompt = `You are a helpful personal assistant that specializes in managing my appointments and calendar. You have access to appointment management tools to help me organize my schedule effectively. Always provide the appointment id so that I can update it if required. Today's date is ${today}.`;
 
 async function main() {
   // Initialize database
@@ -41,6 +43,9 @@ async function main() {
     }),
     systemPrompt,
     tools,
+    // This sample prints each reply itself with an "Agent:" label, so turn off the
+    // agent's own streaming output to avoid printing every reply twice.
+    printer: false,
   });
 
   // ===============================
@@ -81,4 +86,7 @@ async function main() {
   database.close();
 }
 
-main().catch(console.error);
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});

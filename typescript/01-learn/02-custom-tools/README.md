@@ -13,7 +13,7 @@ In this example we will guide you through creating custom tools using the Strand
 
 ## Prerequisites
 
-- Node.js 18.x or later
+- Node.js 22 or later (the version `@strands-agents/sdk` supports)
 - AWS account with Amazon Bedrock access
 - Basic TypeScript knowledge
 

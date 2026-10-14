@@ -21,7 +21,7 @@ const addToCart = tool({
     quantity: z.number().default(1)
   }),
   callback: (input, context) => {
-    const userId = context?.agent.state.get('userId') as string;
+    const userId = context?.agent.appState.get('userId') as string;
     if (!userId) return { success: false, message: 'User not found', cart: null };
 
     const product = database.products[input.productName.toLowerCase()];
@@ -46,7 +46,7 @@ const viewCart = tool({
   description: 'Shows items in cart',
   inputSchema: z.object({ _: z.string().optional() }),
   callback: (input, context) => {
-    const userId = context?.agent.state.get('userId') as string;
+    const userId = context?.agent.appState.get('userId') as string;
     if (!userId) return { cart: [], total: 0, itemCount: 0 };
 
     const cart = database.getCart(userId);
@@ -62,7 +62,7 @@ const removeFromCart = tool({
     productName: z.string()
   }),
   callback: (input, context) => {
-    const userId = context?.agent.state.get('userId') as string;
+    const userId = context?.agent.appState.get('userId') as string;
     if (!userId) return { success: false, message: 'User not found', cart: null };
 
     const cart = database.getCart(userId);
@@ -83,11 +83,11 @@ const updatePreferences = tool({
     currency: z.string().optional()
   }),
   callback: (input, context) => {
-    const userId = context?.agent.state.get('userId') as string;
+    const userId = context?.agent.appState.get('userId') as string;
     const current = database.getPreferences(userId);
     const updated: Preferences = { ...current, ...input };
     database.savePreferences(userId, updated);
-    context?.agent.state.set('preferences', updated);
+    context?.agent.appState.set('preferences', updated);
     return { success: true, preferences: updated };
   }
 });
@@ -97,7 +97,7 @@ const getPreferences = tool({
   description: 'Gets user preferences',
   inputSchema: z.object({ _: z.string().optional() }),
   callback: (input, context) => {
-    const userId = context?.agent.state.get('userId') as string;
+    const userId = context?.agent.appState.get('userId') as string;
     const prefs = database.getPreferences(userId);
     return { preferences: prefs };
   }
@@ -112,23 +112,23 @@ export function createAgent(userId: string) {
     systemPrompt: 'You are a shopping assistant. Help users manage their cart and preferences.',
     messages: savedMessages,
     printer: false,
-    state: {
+    appState: {
       userId,
       preferences: savedPreferences,
       sessionStarted: new Date().toISOString()
     }
   });
 
-  agent.hooks.addCallback(MessageAddedEvent, (event) => {
-    const userId = event.agent.state.get('userId') as string;
+  agent.addHook(MessageAddedEvent, (event) => {
+    const userId = event.agent.appState.get('userId') as string;
     database.saveMessage(userId, event.message);
   });
 
-  agent.hooks.addCallback(BeforeToolCallEvent, (event) => {
+  agent.addHook(BeforeToolCallEvent, (event) => {
     console.log(`🛠️ TOOL USE: ${event.toolUse.name}`, event.toolUse.input);
   });
 
-  agent.hooks.addCallback(AfterToolCallEvent, (event) => {
+  agent.addHook(AfterToolCallEvent, (event) => {
     console.log(`🛠️ TOOL RESULT: ${event.toolUse.name}`, JSON.stringify(event.result.content[0], null, 2));
   });
 

@@ -34,7 +34,7 @@ The database is a simple JSON file-based implementation for demo purposes. In pr
 
 ### Prerequisites
 
-- Node.js 20+
+- Node.js 22+ (the version `@strands-agents/sdk` supports)
 - AWS Bedrock access
 
 ### Installation

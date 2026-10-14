@@ -10,21 +10,24 @@ async function chat() {
   console.log(`Shopping Assistant Ready for ${userId}! (type "exit" to quit)`);
   console.log(`Loaded ${agent.messages.length} previous messages from DB\n`);
 
-  const question = (prompt: string): Promise<string> => 
-    new Promise((resolve) => rl.question(prompt, resolve));
-
-  while (true) {
-    const input = await question('You: ');
-    if (input.toLowerCase() === 'exit') {
-      console.log('\n[Final State]', agent.state.getAll());
-      console.log('[Final Cart]', database.getCart(userId));
-      console.log(`[DB] Total messages saved: ${database.getMessages(userId).length}`);
-      rl.close();
+  // Reading lines with for-await ends cleanly when input closes (Ctrl+D or piped input).
+  process.stdout.write('You: ');
+  for await (const input of rl) {
+    if (input.trim().toLowerCase() === 'exit') {
       break;
     }
     const result = await agent.invoke(input);
     console.log(`\nAssistant: ${result.toString()}\n`);
+    process.stdout.write('You: ');
   }
+
+  console.log('\n[Final State]', agent.appState.getAll());
+  console.log('[Final Cart]', database.getCart(userId));
+  console.log(`[DB] Total messages saved: ${database.getMessages(userId).length}`);
+  rl.close();
 }
 
-chat();
+chat().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});

@@ -1,7 +1,7 @@
 import { Agent, tool } from '@strands-agents/sdk';
 import { BedrockModel } from '@strands-agents/sdk';
-import { OpenAIModel } from '@strands-agents/sdk/openai';
-import { httpRequest } from '@strands-agents/sdk/vended_tools/http_request'
+import { OpenAIModel } from '@strands-agents/sdk/models/openai';
+import { httpRequest } from '@strands-agents/sdk/vended-tools/http-request'
 import { z } from 'zod';
 
 const openaiModel = () => new OpenAIModel({

@@ -8,7 +8,7 @@
  */
 
 import { Agent, BedrockModel } from "@strands-agents/sdk";
-import { OpenAIModel } from "@strands-agents/sdk/openai";
+import { OpenAIModel } from "@strands-agents/sdk/models/openai";
 import { marked } from "marked";
 
 // Agent instance (initialized after credentials are provided)
@@ -74,6 +74,8 @@ credentialsForm.addEventListener("submit", async (e) => {
       }
 
       model = new BedrockModel({
+        // Pinned so the sample keeps working the same way when the SDK's default model changes.
+        modelId: "global.anthropic.claude-sonnet-4-6",
         region: region,
         clientConfig: {
           credentials: {
@@ -153,11 +155,13 @@ chatForm.addEventListener("submit", async (e) => {
     // Use streaming to show response as it's generated
     for await (const event of agent.stream(userMessage)) {
       // Handle text deltas for real-time display
+      // Model stream events arrive wrapped in a modelStreamUpdateEvent.
       if (
-        event.type === "modelContentBlockDeltaEvent" &&
-        event.delta.type === "textDelta"
+        event.type === "modelStreamUpdateEvent" &&
+        event.event.type === "modelContentBlockDeltaEvent" &&
+        event.event.delta.type === "textDelta"
       ) {
-        responseText += event.delta.text;
+        responseText += event.event.delta.text;
         responseDiv.innerHTML = marked.parse(responseText) as string;
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       }

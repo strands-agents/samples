@@ -50,7 +50,7 @@ const bedrockModel = new BedrockModel({
 Uses OpenAI GPT-4o:
 
 ```typescript
-import { OpenAIModel } from '@strands-agents/sdk/openai';
+import { OpenAIModel } from '@strands-agents/sdk/models/openai';
 
 const openaiModel = new OpenAIModel({
   modelId: 'gpt-4o',
@@ -72,7 +72,7 @@ const openaiModel = new OpenAIModel({
 
 ### Prerequisites
 
-- Node.js 20+
+- Node.js 22+ (the version `@strands-agents/sdk` supports)
 - AWS credentials (for Bedrock)
 - OpenAI API key (for OpenAI)
 
@@ -131,5 +131,5 @@ The agent will identify itself based on the provider you selected and use the ap
 - Each provider has its own configuration options
 - Model parameters like temperature and maxTokens control generation behavior
 - You can switch providers without changing your agent logic
-- OpenAI requires separate import: `@strands-agents/sdk/openai`
+- OpenAI requires separate import: `@strands-agents/sdk/models/openai`
 - Bedrock is exported from main package: `@strands-agents/sdk`
