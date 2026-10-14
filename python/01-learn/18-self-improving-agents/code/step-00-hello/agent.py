@@ -4,7 +4,7 @@ The minimum viable Strands agent. Claude Opus 4 + one tool (shell).
 """
 import sys
 from strands import Agent
-from strands_tools import shell
+from strands.vended_tools import shell
 
 MODEL_ID = "global.anthropic.claude-opus-4-8"
 

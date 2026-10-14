@@ -30,7 +30,8 @@ import os
 from ddgs import DDGS
 from ddgs.exceptions import DDGSException, RatelimitException
 from strands import Agent, tool
-from strands_tools import http_request, mem0_memory
+from strands.vended_tools import http_request
+from strands_tools import mem0_memory
 
 # Set up environment variables for AWS credentials and OpenSearch
 

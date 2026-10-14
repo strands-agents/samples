@@ -4,7 +4,8 @@ Adds load_tools_from_directory=True → agent can write new tools to ./tools/
 while running, and use them immediately.
 """
 from strands import Agent
-from strands_tools import shell, file_write
+from strands.vended_tools import shell
+from strands_tools import file_write
 
 MODEL_ID = "global.anthropic.claude-opus-4-8"
 
