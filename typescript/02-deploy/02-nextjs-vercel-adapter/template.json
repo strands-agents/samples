@@ -1,0 +1,59 @@
+{
+  "name": "Strands × Vercel AI SDK (Next.js)",
+  "slug": "strands--nextjs-strands-vercel-adapter-template",
+  "description": "A create-next-app-shaped template where the Vercel AI SDK owns the client (useChat) and the providers, and Strands Agents runs the loop, tools, sessions, and hooks inside the Next.js route handler through the VercelModel adapter. One-click deploy to Vercel, plus a container path to Amazon Bedrock AgentCore.",
+  "framework": "nextjs",
+  "type": "ai",
+  "useCase": ["Chatbot", "AI Agent"],
+  "demoUrl": "",
+  "repoUrl": "https://github.com/strands-agents/samples/tree/main/typescript/02-deploy/02-nextjs-vercel-adapter",
+  "relatedTemplates": [],
+  "tags": [
+    "strands-agents",
+    "vercel-ai-sdk",
+    "usechat",
+    "vercelmodel",
+    "amazon-bedrock",
+    "openai",
+    "agentcore",
+    "nextjs",
+    "app-router",
+    "streaming",
+    "tools",
+    "sessions"
+  ],
+  "environmentVariables": [
+    {
+      "key": "MODEL_PROVIDER",
+      "description": "Model provider: 'bedrock' (default) or 'openai'.",
+      "required": false,
+      "default": "bedrock"
+    },
+    {
+      "key": "AWS_REGION",
+      "description": "AWS region for Amazon Bedrock (when MODEL_PROVIDER=bedrock).",
+      "required": false
+    },
+    {
+      "key": "AWS_ACCESS_KEY_ID",
+      "description": "AWS access key id for Amazon Bedrock.",
+      "required": false
+    },
+    {
+      "key": "AWS_SECRET_ACCESS_KEY",
+      "description": "AWS secret access key for Amazon Bedrock.",
+      "required": false
+    },
+    {
+      "key": "OPENAI_API_KEY",
+      "description": "OpenAI API key (when MODEL_PROVIDER=openai).",
+      "required": false
+    },
+    {
+      "key": "SESSION_BACKEND",
+      "description": "Session persistence: 'memory' (default), 'file', or 's3'.",
+      "required": false,
+      "default": "memory"
+    }
+  ]
+}
