@@ -7,7 +7,6 @@ dependencies = [
     "gunicorn>=25.3.0",
     "slack-bolt>=1.28.0",
     "strands-agents>=1.35.0",
-    "strands-agents-tools>=0.4.1",
 ]
 
 [dependency-groups]
