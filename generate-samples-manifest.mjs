@@ -8,7 +8,7 @@
 // when a row links to the sample, else from the sample README's first
 // paragraph.
 
-import { readFileSync, readdirSync, writeFileSync, statSync, existsSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 
 const ROOT = path.resolve('.')
@@ -126,7 +126,9 @@ const samples = selected
     const language = parts[0]
     const categoryDir = parts[1]
     const dir = path.join(ROOT, r)
-    const notebook = readdirSync(dir).find((f) => f.endsWith('.ipynb'))
+    const notebook = readdirSync(dir)
+      .filter((file) => file.endsWith('.ipynb'))
+      .sort()[0]
     const enrich = enrichment.get(r)
     const categoryId = categoryDir.replace(/^\d+[-_]/, '')
     return {
@@ -154,8 +156,18 @@ for (const s of samples) {
   categories.push({ language: s.language, id: s.category, label: s.categoryLabel })
 }
 
-writeFileSync(
-  path.join(ROOT, 'samples.json'),
-  JSON.stringify({ version: 1, categories, samples }, null, 2) + '\n',
-)
-console.log(`wrote samples.json — ${samples.length} samples, ${categories.length} categories`)
+const manifestPath = path.join(ROOT, 'samples.json')
+const manifest = JSON.stringify({ version: 1, categories, samples }, null, 2) + '\n'
+
+if (process.argv.includes('--check')) {
+  const current = existsSync(manifestPath) ? readFileSync(manifestPath, 'utf8') : ''
+  if (current !== manifest) {
+    console.error('samples.json is out of date; run node generate-samples-manifest.mjs')
+    process.exitCode = 1
+  } else {
+    console.log(`samples.json is current — ${samples.length} samples, ${categories.length} categories`)
+  }
+} else {
+  writeFileSync(manifestPath, manifest)
+  console.log(`wrote samples.json — ${samples.length} samples, ${categories.length} categories`)
+}

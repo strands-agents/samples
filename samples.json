@@ -788,6 +788,17 @@
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/software-engineering/sre-incident-response-agent"
     },
     {
+      "id": "python/05-technical-use-cases/fastapi-strands-production-starter",
+      "language": "python",
+      "category": "technical-use-cases",
+      "categoryLabel": "Technical Use Cases",
+      "title": "Fastapi Strands Production Starter",
+      "description": "A single runnable Python service, in the shape of a benchmark chatbot repo (FastAPI, three tools, one model call), rebuilt on Strands Agents. It wires the production concerns you actually ship with: an OpenAI or Bedrock provider, max turns",
+      "tags": [],
+      "path": "python/05-technical-use-cases/fastapi-strands-production-starter",
+      "url": "https://github.com/strands-agents/samples/tree/main/python/05-technical-use-cases/fastapi-strands-production-starter"
+    },
+    {
       "id": "python/05-technical-use-cases/pokemon-team-advisor",
       "language": "python",
       "category": "technical-use-cases",
@@ -1094,6 +1105,17 @@
       "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/06-browser-agent"
     },
     {
+      "id": "typescript/01-learn/07-express-chatbot",
+      "language": "typescript",
+      "category": "learn",
+      "categoryLabel": "Learn",
+      "title": "Express Chatbot",
+      "description": "Express chatbot with SSE streaming, Zod tools and MCP",
+      "tags": [],
+      "path": "typescript/01-learn/07-express-chatbot",
+      "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/07-express-chatbot"
+    },
+    {
       "id": "typescript/02-deploy/01-agentcore",
       "language": "typescript",
       "category": "deploy",
@@ -1105,6 +1127,19 @@
       ],
       "path": "typescript/02-deploy/01-agentcore",
       "url": "https://github.com/strands-agents/samples/tree/main/typescript/02-deploy/01-agentcore"
+    },
+    {
+      "id": "typescript/02-deploy/02-nextjs-vercel-adapter",
+      "language": "typescript",
+      "category": "deploy",
+      "categoryLabel": "Deploy",
+      "title": "Nextjs Vercel Adapter",
+      "description": "Next.js chat app: Vercel AI SDK client + Strands server via the `VercelModel` adapter",
+      "tags": [
+        "Vercel · AgentCore · Docker"
+      ],
+      "path": "typescript/02-deploy/02-nextjs-vercel-adapter",
+      "url": "https://github.com/strands-agents/samples/tree/main/typescript/02-deploy/02-nextjs-vercel-adapter"
     }
   ]
 }
