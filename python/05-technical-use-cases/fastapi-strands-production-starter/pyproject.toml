@@ -5,7 +5,6 @@ description = "A production-minded FastAPI service built on Strands Agents: life
 requires-python = ">=3.10"
 dependencies = [
     "strands-agents>=1.44.0",
-    "strands-agents-tools>=0.2.0",
     "fastapi>=0.115.0",
     "uvicorn[standard]>=0.30.0",
     "mcp>=1.9.0,<2",

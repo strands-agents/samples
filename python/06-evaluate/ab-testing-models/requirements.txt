@@ -1,6 +1,5 @@
 # Strands Framework
 strands-agents>=1.6.0
-strands-agents-tools>=0.2.5
 strands-agents-evals>=0.2.0
 
 # AWS SDK
