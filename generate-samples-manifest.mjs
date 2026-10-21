@@ -188,6 +188,11 @@ const samples = selected
   })
   .sort((a, b) => a.id.localeCompare(b.id))
 
+function deriveSlug(sample) {
+  const segments = sample.path.split('/')
+  return [segments[0], ...segments.slice(2).map((segment) => segment.replace(/^\d+-/, ''))].join('/')
+}
+
 // Categories in numbered order, with friendly labels, for grouped rendering.
 const categories = []
 const seen = new Set()
@@ -197,6 +202,38 @@ for (const s of samples) {
   seen.add(key)
   categories.push({ language: s.language, id: s.category, label: s.categoryLabel })
 }
+
+function validateManifest() {
+  const categoryKeys = new Set(categories.map((category) => `${category.language}/${category.id}`))
+  const ids = new Set()
+  const slugs = new Set()
+
+  for (const sample of samples) {
+    if (!sample.title.trim()) throw new Error(`${sample.path} has no generated title`)
+    if (!sample.description.trim()) {
+      throw new Error(`${sample.path} has no description; add a README introduction or parent catalog entry`)
+    }
+    if (ids.has(sample.id)) throw new Error(`duplicate sample id: ${sample.id}`)
+    ids.add(sample.id)
+
+    const slug = deriveSlug(sample)
+    if (!/^[a-z0-9][a-z0-9/-]*$/.test(slug)) throw new Error(`${sample.path} generates an invalid slug: ${slug}`)
+    if (slugs.has(slug)) throw new Error(`duplicate generated sample slug: ${slug}`)
+    slugs.add(slug)
+
+    const categoryKey = `${sample.language}/${sample.category}`
+    if (!categoryKeys.has(categoryKey)) throw new Error(`${sample.path} references unknown category ${categoryKey}`)
+
+    const sampleDir = path.join(ROOT, sample.path)
+    if (!hasReadme(sampleDir)) {
+      if (!sample.notebook || !existsSync(path.join(sampleDir, sample.notebook))) {
+        throw new Error(`${sample.path} has no root README.md or generated notebook guide`)
+      }
+    }
+  }
+}
+
+validateManifest()
 
 const manifestPath = path.join(ROOT, 'samples.json')
 const manifest = JSON.stringify({ version: 1, categories, samples }, null, 2) + '\n'
