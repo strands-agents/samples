@@ -45,7 +45,7 @@ AWS Assistant is a sophisticated multi-agent system designed to provide comprehe
 
 3. Setup [aws-cost-explorer-mcp-server](https://github.com/aarora79/aws-cost-explorer-mcp-server) MCP server.
 
-4. Set up AWS credentials in `.env` using [.env.example](./.env.example).
+4. Configure AWS credentials for the account you want to query, for example with `aws configure`.
 
 5. Complete [prerequisites](https://github.com/aarora79/aws-cost-explorer-mcp-server?tab=readme-ov-file#prerequisites) for aws-cost-explorer-mcp-server.
 

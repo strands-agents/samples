@@ -14,12 +14,59 @@ import path from 'node:path'
 const ROOT = path.resolve('.')
 const LANGS = ['python', 'typescript']
 
+const TITLE_WORDS = new Map(
+  Object.entries({
+    ab: 'A/B',
+    a2a: 'A2A',
+    ag: 'AG',
+    agentcore: 'AgentCore',
+    ai: 'AI',
+    api: 'API',
+    aws: 'AWS',
+    cdk: 'CDK',
+    copilotkit: 'CopilotKit',
+    dsql: 'DSQL',
+    fastapi: 'FastAPI',
+    genai: 'GenAI',
+    hitl: 'HITL',
+    http: 'HTTP',
+    hvac: 'HVAC',
+    llm: 'LLM',
+    mcp: 'MCP',
+    nextjs: 'Next.js',
+    nvidia: 'NVIDIA',
+    rag: 'RAG',
+    sdk: 'SDK',
+    sql: 'SQL',
+    sre: 'SRE',
+    ui: 'UI',
+    ux: 'UX',
+    whatsapp: 'WhatsApp',
+  })
+)
+
 const titleCase = (s) =>
   s
     .replace(/^\d+[-_]/, '')
     .replace(/[-_]+/g, ' ')
-    .replace(/\b\w/g, (c) => c.toUpperCase())
+    .split(' ')
+    .map((word) => TITLE_WORDS.get(word.toLowerCase()) ?? word.replace(/^\w/, (c) => c.toUpperCase()))
+    .join(' ')
     .trim()
+
+function cleanDescription(value) {
+  const cleaned = value
+    .replace(/<br\s*\/?>/gi, ' ')
+    .replace(/<[^>]+>/g, '')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/[`*_]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+  if (cleaned.length <= 240) return cleaned
+  const prefix = cleaned.slice(0, 239)
+  const boundary = prefix.lastIndexOf(' ')
+  return `${prefix.slice(0, boundary > 160 ? boundary : 239).replace(/[,:;.!-]+$/, '')}…`
+}
 
 // ── collect every directory that has a README.md, under a language dir ──
 function walkDirs(dir, acc = []) {
@@ -90,15 +137,10 @@ function readmeBlurb(dir) {
       if (para.length) break
       continue
     }
-    if (line.startsWith('![') || line.startsWith('|') || line.startsWith('<')) continue
+    if (line.startsWith('>') || line.startsWith('![') || line.startsWith('|') || line.startsWith('<')) continue
     para.push(line)
   }
-  return para
-    .join(' ')
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-    .replace(/[`*_]/g, '')
-    .slice(0, 240)
-    .trim()
+  return para.join(' ')
 }
 
 const allDirs = LANGS.flatMap((l) => walkDirs(path.join(ROOT, l)))
@@ -137,7 +179,7 @@ const samples = selected
       category: categoryId,
       categoryLabel: LABEL_OVERRIDES[categoryId] ?? titleCase(categoryDir),
       title: titleCase(parts[parts.length - 1]),
-      description: enrich?.description || (hasReadme(dir) ? readmeBlurb(dir) : ''),
+      description: cleanDescription(enrich?.description || (hasReadme(dir) ? readmeBlurb(dir) : '')),
       tags: enrich?.tags ?? [],
       path: r,
       url: `https://github.com/strands-agents/samples/tree/main/${r}`,
