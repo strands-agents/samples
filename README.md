@@ -27,11 +27,15 @@
   <p>
     <a href="https://strandsagents.com/">Documentation</a>
     ◆ <a href="https://github.com/strands-agents/samples">Samples</a>
-    ◆ <a href="https://github.com/strands-agents/sdk-python">Python SDK</a>
-    ◆ <a href="https://github.com/strands-agents/sdk-typescript">TypeScript SDK</a> <img src="https://img.shields.io/badge/NEW-brightgreen" alt="New"/>
-    ◆ <a href="https://github.com/strands-agents/tools">Tools</a>
-    ◆ <a href="https://github.com/strands-agents/agent-builder">Agent Builder</a>
-    ◆ <a href="https://github.com/strands-agents/mcp-server">MCP Server</a>
+    ◆ <a href="https://github.com/strands-agents/harness-sdk/tree/main/strands-cli">CLI</a>
+    ◆ <a href="https://github.com/strands-agents/harness-sdk/tree/main/strands-mcp">MCP Server</a>
+    <br>
+    Harness (<a href="https://github.com/strands-agents/harness-sdk/tree/main/harness-py">Python</a>, <a href="https://github.com/strands-agents/harness-sdk/tree/main/harness-ts">TypeScript</a>)
+    ◆ SDK (<a href="https://github.com/strands-agents/harness-sdk/tree/main/strands-py">Python</a>, <a href="https://github.com/strands-agents/harness-sdk/tree/main/strands-ts">TypeScript</a>)
+    ◆ <a href="https://github.com/strands-agents/box">Box</a>
+    ◆ <a href="https://github.com/strands-agents/shell">Shell</a>
+    ◆ <a href="https://github.com/strands-agents/evals">Evals</a>
+    ◆ <a href="https://github.com/strands-labs">Labs</a>
   </p>
 </div>
 
@@ -78,8 +82,10 @@ venv\Scripts\activate
 
 **Step 2: Install**
 ```bash
-pip install strands-agents strands-agents-tools
+pip install strands-agents
 ```
+
+This installs the core SDK, which is all the first agent below needs. Many samples need additional packages, so check each sample's README and `requirements.txt` or `pyproject.toml` before running it.
 
 **Alternative: Use uv**
 
@@ -102,9 +108,9 @@ Or on Windows (PowerShell):
 
 If PowerShell blocks `Activate.ps1`, see Python's [Windows execution policy guidance](https://docs.python.org/3/library/venv.html#creating-virtual-environments) and follow any applicable organizational policies.
 
-Then install the same packages:
+Then install the same package:
 ```bash
-uv pip install strands-agents strands-agents-tools
+uv pip install strands-agents
 ```
 
 **Your First Agent:**
