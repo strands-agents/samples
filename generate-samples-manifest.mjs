@@ -2,10 +2,10 @@
 // repo so downstream consumers (e.g. the docs site) can render a styled,
 // grouped, filterable catalog without scraping prose.
 //
-// A "sample" is the shallowest README-bearing directory under a category
-// (nested apps inside a sample are folded into it). Titles come from the
-// folder name; descriptions/tags are lifted from the curated README tables
-// when a row links to the sample, else from the sample README's first
+// A "sample" is the shallowest README- or notebook-bearing directory under
+// a category (nested apps inside a sample are folded into it). Titles come
+// from the folder name; descriptions/tags are lifted from the curated README
+// tables when a row links to the sample, else from the sample README's first
 // paragraph.
 
 import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
@@ -162,31 +162,33 @@ for (const r of candidates) {
   selected.push(r)
 }
 
+// Keep each record minimal: path is its identity, category labels live in the
+// category list, and a notebook is only needed when no root README is present.
 const samples = selected
   .map((r) => {
     const parts = r.split('/')
     const language = parts[0]
     const categoryDir = parts[1]
     const dir = path.join(ROOT, r)
-    const notebook = readdirSync(dir)
-      .filter((file) => file.endsWith('.ipynb'))
-      .sort()[0]
+    const readme = hasReadme(dir)
+    const notebook = readme
+      ? undefined
+      : readdirSync(dir)
+          .filter((file) => file.endsWith('.ipynb'))
+          .sort()[0]
     const enrich = enrichment.get(r)
     const categoryId = categoryDir.replace(/^\d+[-_]/, '')
     return {
-      id: r,
       language,
       category: categoryId,
-      categoryLabel: LABEL_OVERRIDES[categoryId] ?? titleCase(categoryDir),
       title: titleCase(parts[parts.length - 1]),
-      description: cleanDescription(enrich?.description || (hasReadme(dir) ? readmeBlurb(dir) : '')),
-      tags: enrich?.tags ?? [],
+      description: cleanDescription(enrich?.description || (readme ? readmeBlurb(dir) : '')),
+      ...(enrich?.tags.length ? { tags: enrich.tags } : {}),
       path: r,
-      url: `https://github.com/strands-agents/samples/tree/main/${r}`,
       ...(notebook ? { notebook } : {}),
     }
   })
-  .sort((a, b) => a.id.localeCompare(b.id))
+  .sort((a, b) => a.path.localeCompare(b.path))
 
 function deriveSlug(sample) {
   const segments = sample.path.split('/')
@@ -200,12 +202,16 @@ for (const s of samples) {
   const key = `${s.language}/${s.category}`
   if (seen.has(key)) continue
   seen.add(key)
-  categories.push({ language: s.language, id: s.category, label: s.categoryLabel })
+  categories.push({
+    language: s.language,
+    id: s.category,
+    label: LABEL_OVERRIDES[s.category] ?? titleCase(s.category),
+  })
 }
 
 function validateManifest() {
   const categoryKeys = new Set(categories.map((category) => `${category.language}/${category.id}`))
-  const ids = new Set()
+  const paths = new Set()
   const slugs = new Set()
 
   for (const sample of samples) {
@@ -213,8 +219,8 @@ function validateManifest() {
     if (!sample.description.trim()) {
       throw new Error(`${sample.path} has no description; add a README introduction or parent catalog entry`)
     }
-    if (ids.has(sample.id)) throw new Error(`duplicate sample id: ${sample.id}`)
-    ids.add(sample.id)
+    if (paths.has(sample.path)) throw new Error(`duplicate sample path: ${sample.path}`)
+    paths.add(sample.path)
 
     const slug = deriveSlug(sample)
     if (!/^[a-z0-9][a-z0-9/-]*$/.test(slug)) throw new Error(`${sample.path} generates an invalid slug: ${slug}`)
@@ -225,7 +231,9 @@ function validateManifest() {
     if (!categoryKeys.has(categoryKey)) throw new Error(`${sample.path} references unknown category ${categoryKey}`)
 
     const sampleDir = path.join(ROOT, sample.path)
-    if (!hasReadme(sampleDir)) {
+    if (hasReadme(sampleDir)) {
+      if (sample.notebook) throw new Error(`${sample.path} should use its root README.md instead of a notebook guide`)
+    } else {
       if (!sample.notebook || !existsSync(path.join(sampleDir, sample.notebook))) {
         throw new Error(`${sample.path} has no root README.md or generated notebook guide`)
       }
