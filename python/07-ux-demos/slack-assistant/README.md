@@ -53,7 +53,7 @@ cp .slack_secrets.example .slack_secrets
 3. Log into your Slack workspace and create a Slack app at https://api.slack.com/apps/new. Select "From a manifest" and paste
 in the contents of the file `manifest.json` in this sample project.
 
-4. Once the app is created, navigate to "OAuth & Permissions" and click the "Install to <workspace>" button under "OAuth Tokens". Copy
+4. Once the app is created, navigate to "OAuth & Permissions" and click the "Install to `<workspace>`" button under "OAuth Tokens". Copy
 the token into .slack_secrets assigned to the `SLACK_BOT_TOKEN` environment variable.
 
 5. Navigate to "Basic Information" and click "Generate Token and Scopes" in the "App-Level Tokens" section. Give the token any name and add the
