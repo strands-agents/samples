@@ -917,6 +917,17 @@
       "notebook": "05-multi-turn-actor-simulator.ipynb"
     },
     {
+      "id": "python/06-evaluate/red-teaming",
+      "language": "python",
+      "category": "evaluate",
+      "categoryLabel": "Evaluate",
+      "title": "Red Teaming",
+      "description": "This sample red-teams a small returns-desk agent for a made-up shop, Tidewater Outfitters, built on Strands Agents. The attacks come from the red-teaming feature in Strands Evals 1.7.0. The point of the sample: an eval's score and the agent",
+      "tags": [],
+      "path": "python/06-evaluate/red-teaming",
+      "url": "https://github.com/strands-agents/samples/tree/main/python/06-evaluate/red-teaming"
+    },
+    {
       "id": "python/06-evaluate/trajectory-evaluation",
       "language": "python",
       "category": "evaluate",
