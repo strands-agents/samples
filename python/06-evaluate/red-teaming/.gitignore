@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+*.egg-info/
+dist/
+build/
+
+# uv
+.uv/
+
+# Tooling
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# OS
+.DS_Store
+
+# Live run evidence
+runs/
+
+# Generated attack suite (run.py rewrites it on every run)
+suite/refund_desk_goat.json
