@@ -1,0 +1,38 @@
+[project]
+name = "sample-strands-evals-refund-desk"
+version = "0.1.0"
+description = "Red-team a refund-desk agent with Strands Evals before your customers do."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "strands-agents==1.62.0",
+    "strands-agents-evals==1.7.0",
+]
+
+[dependency-groups]
+dev = [
+    "mypy==2.4.0",
+    "pytest==9.1.1",
+    "ruff==0.17.1",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
+
+[tool.mypy]
+strict = true
+mypy_path = "src"
+explicit_package_bases = true
+
+[[tool.mypy.overrides]]
+# strands-agents-evals 1.7.0 and botocore ship no py.typed marker.
+module = ["strands_evals", "strands_evals.*", "botocore", "botocore.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

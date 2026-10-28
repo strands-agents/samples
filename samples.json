@@ -648,6 +648,13 @@
     {
       "language": "python",
       "category": "evaluate",
+      "title": "Red Teaming",
+      "description": "This sample red-teams a small returns-desk agent for a made-up shop, Tidewater Outfitters, built on Strands Agents. The attacks come from the red-teaming feature in Strands Evals 1.7.0. The point of the sample: an eval's score and the…",
+      "path": "python/06-evaluate/red-teaming"
+    },
+    {
+      "language": "python",
+      "category": "evaluate",
       "title": "Trajectory Evaluation",
       "description": "This tutorial demonstrates how to evaluate agent trajectories - the sequences of tool calls, reasoning steps, and decisions agents make to complete tasks. Learn to evaluate not just what agents produce, but how they think and execute.",
       "path": "python/06-evaluate/trajectory-evaluation"
