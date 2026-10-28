@@ -162,8 +162,7 @@ for (const r of candidates) {
   selected.push(r)
 }
 
-// Keep each record minimal: path is its identity, category labels live in the
-// category list, and a notebook is only needed when no root README is present.
+// Keep the version 1 record shape stable for downstream consumers.
 const samples = selected
   .map((r) => {
     const parts = r.split('/')
@@ -171,24 +170,25 @@ const samples = selected
     const categoryDir = parts[1]
     const dir = path.join(ROOT, r)
     const readme = hasReadme(dir)
-    const notebook = readme
-      ? undefined
-      : readdirSync(dir)
-          .filter((file) => file.endsWith('.ipynb'))
-          .sort()[0]
+    const notebook = readdirSync(dir)
+      .filter((file) => file.endsWith('.ipynb'))
+      .sort()[0]
     const enrich = enrichment.get(r)
     const categoryId = categoryDir.replace(/^\d+[-_]/, '')
     return {
+      id: r,
       language,
       category: categoryId,
+      categoryLabel: LABEL_OVERRIDES[categoryId] ?? titleCase(categoryDir),
       title: titleCase(parts[parts.length - 1]),
       description: cleanDescription(enrich?.description || (readme ? readmeBlurb(dir) : '')),
-      ...(enrich?.tags.length ? { tags: enrich.tags } : {}),
+      tags: enrich?.tags ?? [],
       path: r,
+      url: `https://github.com/strands-agents/samples/tree/main/${r}`,
       ...(notebook ? { notebook } : {}),
     }
   })
-  .sort((a, b) => a.path.localeCompare(b.path))
+  .sort((a, b) => a.id.localeCompare(b.id))
 
 function deriveSlug(sample) {
   const segments = sample.path.split('/')
@@ -212,9 +212,12 @@ for (const s of samples) {
 function validateManifest() {
   const categoryKeys = new Set(categories.map((category) => `${category.language}/${category.id}`))
   const paths = new Set()
+  const ids = new Set()
   const slugs = new Set()
 
   for (const sample of samples) {
+    if (ids.has(sample.id)) throw new Error(`duplicate sample id: ${sample.id}`)
+    ids.add(sample.id)
     if (!sample.title.trim()) throw new Error(`${sample.path} has no generated title`)
     if (!sample.description.trim()) {
       throw new Error(`${sample.path} has no description; add a README introduction or parent catalog entry`)
@@ -231,12 +234,11 @@ function validateManifest() {
     if (!categoryKeys.has(categoryKey)) throw new Error(`${sample.path} references unknown category ${categoryKey}`)
 
     const sampleDir = path.join(ROOT, sample.path)
-    if (hasReadme(sampleDir)) {
-      if (sample.notebook) throw new Error(`${sample.path} should use its root README.md instead of a notebook guide`)
-    } else {
-      if (!sample.notebook || !existsSync(path.join(sampleDir, sample.notebook))) {
-        throw new Error(`${sample.path} has no root README.md or generated notebook guide`)
-      }
+    if (!hasReadme(sampleDir) && !sample.notebook) {
+      throw new Error(`${sample.path} has no root README.md or generated notebook guide`)
+    }
+    if (sample.notebook && !existsSync(path.join(sampleDir, sample.notebook))) {
+      throw new Error(`${sample.path} references a missing notebook guide`)
     }
   }
 }
