@@ -27,6 +27,8 @@ Contributions via pull requests are much appreciated. Before sending us a pull r
 2. You check existing open, and recently merged, pull requests to make sure someone else hasn't addressed the problem already.
 3. You open an issue to discuss any significant work - we would hate for your time to be wasted.
 4. For new samples, follow the project structure guidelines in [`.github/templates/use-cases/structure.md`](.github/templates/use-cases/structure.md) and use the README template in [`.github/templates/use-cases/readme.md`](.github/templates/use-cases/readme.md).
+5. After adding, moving, or removing a sample, or changing catalog metadata in a README, run `node generate-samples-manifest.mjs`. The documentation site reads `samples.json` during its build. A sample with multiple notebooks must include a root README that indexes them.
+6. After changing the manifest generator, run `node --test generate-samples-manifest.test.mjs`.
 
 To send us a pull request, please:
 
