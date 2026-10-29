@@ -1,7 +1,7 @@
 from mcp.server import FastMCP
 import json
 import os
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 # Create a new MCP server
 mcp = FastMCP("Email History Server")
@@ -19,7 +19,7 @@ def load_emails() -> List[Dict]:
 @mcp.tool(description="Get sent emails with optional filtering")
 def get_emails(
     limit: int = 10,
-    subject_contains: str = None
+    subject_contains: Optional[str] = None
 ) -> List[Dict]:
     """Get sent emails with optional filtering."""
     emails = load_emails()
