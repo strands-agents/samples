@@ -2,13 +2,9 @@ name: Samples manifest
 
 on:
   pull_request:
-    paths:
-      - 'python/**'
-      - 'typescript/**'
-      - 'README.md'
-      - 'generate-samples-manifest.mjs'
-      - 'samples.json'
-      - '.github/workflows/samples-manifest.yml'
+  push:
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -18,12 +14,15 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '22'
+
+      - name: Test samples manifest generator
+        run: node --test generate-samples-manifest.test.mjs
 
       - name: Verify samples manifest
         run: node generate-samples-manifest.mjs --check

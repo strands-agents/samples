@@ -13,6 +13,7 @@ import path from 'node:path'
 
 const ROOT = path.resolve('.')
 const LANGS = ['python', 'typescript']
+const IGNORED_DIRS = new Set(['__pycache__', 'node_modules', 'venv'])
 
 const TITLE_WORDS = new Map(
   Object.entries({
@@ -55,11 +56,20 @@ const titleCase = (s) =>
     .trim()
 
 function cleanDescription(value) {
-  const cleaned = value
+  const codeSpans = []
+  const protectedValue = value.replace(/(`+)(.*?)\1/g, (_match, _fence, code) => {
+    const index = codeSpans.push(code) - 1
+    return `\uE000${index}\uE001`
+  })
+  const cleaned = protectedValue
     .replace(/<br\s*\/?>/gi, ' ')
     .replace(/<[^>]+>/g, '')
     .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-    .replace(/[`*_]/g, '')
+    .replace(/\*\*([^*\n]+)\*\*/g, '$1')
+    .replace(/__([^_\n]+)__/g, '$1')
+    .replace(/(^|[\s(])\*([^*\n]+)\*(?=$|[\s).,!?;:])/g, '$1$2')
+    .replace(/(^|[\s(])_([^_\n]+)_(?=$|[\s).,!?;:])/g, '$1$2')
+    .replace(/\uE000(\d+)\uE001/g, (_match, index) => codeSpans[Number(index)])
     .replace(/\s+/g, ' ')
     .trim()
   if (cleaned.length <= 240) return cleaned
@@ -70,9 +80,10 @@ function cleanDescription(value) {
 
 // ── collect every directory that has a README.md, under a language dir ──
 function walkDirs(dir, acc = []) {
-  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+  const entries = readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))
+  for (const entry of entries) {
     if (!entry.isDirectory()) continue
-    if (entry.name.startsWith('.')) continue
+    if (entry.name.startsWith('.') || IGNORED_DIRS.has(entry.name)) continue
     const full = path.join(dir, entry.name)
     acc.push(full)
     walkDirs(full, acc)
@@ -90,17 +101,18 @@ const isCategoryRoot = (relPath) => /^[a-z]+\/[^/]+$/.test(relPath)
 // A handful of category labels want casing the title-caser can't infer.
 const LABEL_OVERRIDES = { 'ux-demos': 'UX Demos' }
 
-// ── parse README tables into a { resolvedPath -> {description, tags} } map ──
+// ── parse category README tables into a { resolvedPath -> {description, tags} } map ──
 // Rows look like: | [`folder`](./path/) | Feature | Description |  (2 or 3 cols)
-function buildEnrichment(allDirs) {
+function buildEnrichment(categoryDirs) {
   const map = new Map()
-  const readmes = [ROOT, ...allDirs].filter((d) => existsSync(path.join(d, 'README.md')))
-  for (const dir of readmes) {
+  for (const dir of categoryDirs) {
+    if (!existsSync(path.join(dir, 'README.md'))) continue
     const md = readFileSync(path.join(dir, 'README.md'), 'utf8')
     for (const line of md.split('\n')) {
       const m = line.match(/^\|\s*\[[^\]]*\]\(([^)]+)\)\s*\|(.*)\|\s*$/)
       if (!m) continue
-      const href = m[1].replace(/^\.\//, '').replace(/\/$/, '')
+      if (!m[1].startsWith('./')) continue
+      const href = m[1].slice(2).replace(/\/$/, '')
       const cells = m[2].split('|').map((c) => c.trim())
       const description = cells[cells.length - 1]
       const tags =
@@ -114,7 +126,9 @@ function buildEnrichment(allDirs) {
               .filter(Boolean)
           : []
       const resolved = rel(path.resolve(dir, href))
-      if (description) map.set(resolved, { description, tags })
+      if (!description) continue
+      if (map.has(resolved)) throw new Error(`duplicate catalog metadata for ${resolved}`)
+      map.set(resolved, { description, tags })
     }
   }
   return map
@@ -143,11 +157,17 @@ function readmeBlurb(dir) {
   return para.join(' ')
 }
 
-const allDirs = LANGS.flatMap((l) => walkDirs(path.join(ROOT, l)))
-const enrichment = buildEnrichment(allDirs)
+const categoryDirs = LANGS.flatMap((language) =>
+  readdirSync(path.join(ROOT, language), { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && /^\d+[-_]/.test(entry.name))
+    .map((entry) => path.join(ROOT, language, entry.name))
+    .sort((a, b) => a.localeCompare(b))
+)
+const allDirs = categoryDirs.flatMap((dir) => [dir, ...walkDirs(dir)])
+const enrichment = buildEnrichment(categoryDirs)
 
-// Greedy shallowest-first selection: a README dir is a sample unless it sits
-// inside an already-selected sample (its nested apps fold into it).
+// Greedy shallowest-first selection: a README or notebook dir is a sample
+// unless it sits inside an already-selected sample (its nested apps fold in).
 const candidates = allDirs
   .map(rel)
   .filter((r) => {
@@ -170,9 +190,13 @@ const samples = selected
     const categoryDir = parts[1]
     const dir = path.join(ROOT, r)
     const readme = hasReadme(dir)
-    const notebook = readdirSync(dir)
+    const notebooks = readdirSync(dir)
       .filter((file) => file.endsWith('.ipynb'))
-      .sort()[0]
+      .sort()
+    if (!readme && notebooks.length > 1) {
+      throw new Error(`${r} has multiple notebooks but no root README.md to index them`)
+    }
+    const notebook = notebooks[0]
     const enrich = enrichment.get(r)
     const categoryId = categoryDir.replace(/^\d+[-_]/, '')
     return {
@@ -205,7 +229,7 @@ for (const s of samples) {
   categories.push({
     language: s.language,
     id: s.category,
-    label: LABEL_OVERRIDES[s.category] ?? titleCase(s.category),
+    label: s.categoryLabel,
   })
 }
 
