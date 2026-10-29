@@ -67,5 +67,5 @@ The custom-tools notebook creates a local SQLite file (`appointments.db`) in its
 - [Custom tools](https://strandsagents.com/docs/user-guide/concepts/tools/custom-tools/)
 - [MCP tools](https://strandsagents.com/docs/user-guide/concepts/tools/mcp-tools/)
 - [Model Context Protocol](https://modelcontextprotocol.io/)
-- [strands-agents-tools](https://github.com/strands-agents/tools) repository for pre-implemented tools
+- [SDK-vended tools](https://strandsagents.com/docs/user-guide/sdk/tools/vended-tools/) for prebuilt tools maintained with the SDK
 
