@@ -64,6 +64,11 @@
     },
     {
       "language": "typescript",
+      "id": "industry-use-cases",
+      "label": "Industry Use Cases"
+    },
+    {
+      "language": "typescript",
       "id": "migration",
       "label": "Migration"
     }
@@ -1457,6 +1462,18 @@
           "url": "https://strandsagents.com/docs/user-guide/sdk/agents/session-management/"
         }
       ]
+    },
+    {
+      "id": "typescript/04-industry-use-cases/productivity/calendar-assistant",
+      "language": "typescript",
+      "category": "industry-use-cases",
+      "categoryLabel": "Industry Use Cases",
+      "title": "Calendar Assistant",
+      "description": "Terminal calendar assistant with custom tools, a SQLite calendar, clash handling and configurable settings",
+      "tags": [],
+      "path": "typescript/04-industry-use-cases/productivity/calendar-assistant",
+      "url": "https://github.com/strands-agents/samples/tree/main/typescript/04-industry-use-cases/productivity/calendar-assistant",
+      "slug": "typescript/productivity/calendar-assistant"
     },
     {
       "id": "typescript/migration/langgraph",
