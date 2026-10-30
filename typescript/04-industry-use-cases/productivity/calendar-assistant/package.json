@@ -1,0 +1,27 @@
+{
+  "name": "calendar-assistant",
+  "version": "1.0.0",
+  "description": "Interactive calendar assistant built with Strands Agents in TypeScript",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "clean": "rm -rf dist *.db"
+  },
+  "dependencies": {
+    "@strands-agents/sdk": "^1.19.0",
+    "better-sqlite3": "^13.0.0",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.0",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.0.0"
+  }
+}

@@ -50,6 +50,11 @@
       "language": "typescript",
       "id": "deploy",
       "label": "Deploy"
+    },
+    {
+      "language": "typescript",
+      "id": "industry-use-cases",
+      "label": "Industry Use Cases"
     }
   ],
   "samples": [
@@ -1151,6 +1156,17 @@
       ],
       "path": "typescript/02-deploy/02-nextjs-vercel-adapter",
       "url": "https://github.com/strands-agents/samples/tree/main/typescript/02-deploy/02-nextjs-vercel-adapter"
+    },
+    {
+      "id": "typescript/04-industry-use-cases/productivity/calendar-assistant",
+      "language": "typescript",
+      "category": "industry-use-cases",
+      "categoryLabel": "Industry Use Cases",
+      "title": "Calendar Assistant",
+      "description": "Terminal calendar assistant with custom tools, a SQLite calendar, clash handling and configurable settings",
+      "tags": [],
+      "path": "typescript/04-industry-use-cases/productivity/calendar-assistant",
+      "url": "https://github.com/strands-agents/samples/tree/main/typescript/04-industry-use-cases/productivity/calendar-assistant"
     }
   ]
 }
