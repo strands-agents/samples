@@ -5,14 +5,14 @@ Knowledge Base RAG (Retrieval Augmented Generation) Agent
 A tool for retrieving and analyzing information from Amazon Bedrock Knowledge Bases.
 """
 
-import os
-import uuid
+import asyncio
 import argparse
 from typing import Dict, Any
 
 from strands import Agent
+from strands.memory import MemoryManager
 from strands.models import BedrockModel
-from strands_tools import retrieve
+from strands.vended_memory_stores.bedrock_knowledge_base import BedrockKnowledgeBaseStore
 
 # ======== DEFAULT CONFIGURATION ========
 # Default values (will be used if not provided as command-line arguments)
@@ -20,6 +20,20 @@ DEFAULT_KB_ID = "<YOUR_KB_ID>"  # Replace with your actual KB ID
 DEFAULT_REGION = "us-east-1"  # Set to the region where your KB is located
 DEFAULT_MIN_SCORE = 0.4
 # ======================================
+
+
+def _kb_memory_manager(kb_id: str, min_score: float, region: str) -> MemoryManager:
+    """Build a read-only memory manager backed by the Bedrock Knowledge Base."""
+    store = BedrockKnowledgeBaseStore(
+        config={"knowledge_base_id": kb_id, "region_name": region},
+        name="knowledge_base",
+        writable=False,
+        min_score=min_score,
+        max_search_results=5,
+    )
+    # injection=False: retrieval stays agent-driven via the search tool,
+    # matching the behavior of the deprecated `retrieve` tool this replaces.
+    return MemoryManager(stores=[store], injection=False)
 
 
 def retrieve_from_kb(
@@ -37,27 +51,18 @@ def retrieve_from_kb(
     Returns:
         Dictionary containing retrieval results
     """
-    # Set environment variables for the retrieve tool
-    os.environ["KNOWLEDGE_BASE_ID"] = kb_id
-    os.environ["MIN_SCORE"] = str(min_score)
-    os.environ["AWS_REGION"] = region
-
     try:
-        # Call the retrieve tool directly
-        retrieve_response = retrieve.retrieve(
-            {
-                "toolUseId": str(uuid.uuid4()),
-                "input": {
-                    "text": query,
-                    "score": min_score,
-                    "numberOfResults": 5,
-                    "knowledgeBaseId": kb_id,
-                    "region": region,
-                },
-            }
-        )
+        manager = _kb_memory_manager(kb_id, min_score, region)
+        entries = asyncio.run(manager.search(query))
 
-        return retrieve_response
+        if not entries:
+            return {
+                "status": "error",
+                "message": "No results found in the knowledge base.",
+            }
+
+        retrieved_text = "\n\n".join(entry.content for entry in entries)
+        return {"status": "success", "content": [{"text": retrieved_text}]}
     except Exception as e:
         print(f"Error details: {str(e)}")
         return {
@@ -66,12 +71,14 @@ def retrieve_from_kb(
         }
 
 
-def create_analyzer_agent(region: str) -> Agent:
+def create_analyzer_agent(region: str, kb_id: str, min_score: float) -> Agent:
     """
     Create an agent specialized in analyzing retrieved content.
 
     Args:
         region: AWS region for Bedrock
+        kb_id: Knowledge Base ID the agent can search
+        min_score: Minimum relevance score for knowledge base results
 
     Returns:
         Configured Phoenix Agent
@@ -81,7 +88,7 @@ def create_analyzer_agent(region: str) -> Agent:
 Focus on accuracy and clarity in your responses. When information is incomplete or uncertain, acknowledge the limitations.
 Organize your response in a structured format with clear sections when appropriate.""",
         model=BedrockModel(model_id="us.amazon.nova-pro-v1:0", region=region),
-        tools=[retrieve],
+        memory_manager=_kb_memory_manager(kb_id, min_score, region),
     )
 
 
@@ -97,7 +104,7 @@ def run_kb_rag(kb_id: str, min_score: float, region: str) -> None:
     print(f"\n🔍 Knowledge Base Query System (Using KB: {kb_id} in region: {region})\n")
 
     # Create the analyzer agent
-    analyzer = create_analyzer_agent(region)
+    analyzer = create_analyzer_agent(region, kb_id, min_score)
 
     while True:
         query = input("\nQuery> ")
@@ -158,9 +165,6 @@ Please analyze this information and provide insights about: {query}"""
                 print("\nDebug Information:")
                 print(f"KB ID: {kb_id}")
                 print(f"Region: {region}")
-                print(
-                    f"Environment variables: KNOWLEDGE_BASE_ID={os.environ.get('KNOWLEDGE_BASE_ID')}, AWS_REGION={os.environ.get('AWS_REGION')}"
-                )
 
         except Exception as e:
             print(f"Error: {str(e)}\n")
