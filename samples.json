@@ -519,6 +519,17 @@
       "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/protocols/a2a-native"
     },
     {
+      "id": "python/03-integrate/tools/deed-page",
+      "language": "python",
+      "category": "integrate",
+      "categoryLabel": "Integrate",
+      "title": "Deed Page",
+      "description": "A Strands agent that writes a self-contained HTML page and publishes it to a public HTTPS URL with deed.page, so the result of a run is a link people can open rather than a file on the machine that ran the agent.",
+      "tags": [],
+      "path": "python/03-integrate/tools/deed-page",
+      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/tools/deed-page"
+    },
+    {
       "id": "python/03-integrate/tools/exa",
       "language": "python",
       "category": "integrate",
