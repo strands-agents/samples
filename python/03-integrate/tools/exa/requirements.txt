@@ -1,5 +1,0 @@
-strands-agents[otel]
-strands-agents-tools
-boto3
-python-dotenv
-aws-opentelemetry-distro>=0.14.2

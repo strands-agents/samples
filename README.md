@@ -9,11 +9,11 @@
   </div>
 
   <h1>
-    Strands Agents Samples
+    Strands Agents Examples
   </h1>
 
   <h2>
-    A model-driven approach to building AI agents in just a few lines of code.
+    End-to-end applications and workshop curriculum for Strands Agents.
   </h2>
 
   <div align="center">
@@ -39,11 +39,16 @@
   </p>
 </div>
 
-Welcome to the Strands Agents Samples repository!
+This repository has two intentionally narrow purposes:
 
-Explore easy-to-use examples to get started with <a href="https://strandsagents.com">Strands Agents</a>.
+- Preserve the compatibility-sensitive Python and TypeScript workshop curriculum.
+- Develop a small number of complete, deployable reference applications that combine multiple Strands components around a real user outcome.
 
-The examples in this repository are for **demonstration and educational purposes** only. They demonstrate concepts and techniques but are **not intended for direct use in production**. Always apply proper **security** and **testing** procedures before using in production environments.
+Focused SDK concepts, provider setup, integrations, and evaluation techniques belong in the [Strands documentation](https://strandsagents.com/). Experimental, privileged, physical-device, and best-effort demonstrations belong in [Strands Labs](https://github.com/strands-labs).
+
+The previous broad catalog is preserved at commit [`2776a90`](https://github.com/strands-agents/samples/tree/2776a90cc510aa3a79163ac9847f7a4088a20daa). See the [legacy catalog ledger](./docs/LEGACY_CATALOG.md) for every removed example and its intended disposition.
+
+The retained applications are starting points for focused follow-up work; they should not yet be treated as production-ready. Apply workload-specific security, privacy, testing, reliability, and operational controls before production use.
 
 ## Quick Start
 
@@ -164,32 +169,28 @@ main();
 
 Follow the instructions [here](https://strandsagents.com/docs/user-guide/sdk/model-providers/) to configure your model provider and model access.
 
-## Explore the Repository
+## Repository contents
 
-### <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" width="20" height="20"/> Python Samples
+### Protected workshops
 
-- **[01-learn](./python/01-learn/)** - SDK tutorials covering fundamentals, multi-agent systems, and streaming
-- **[02-deploy](./python/02-deploy/)** - Deployment patterns for Lambda, Fargate, and AgentCore
-- **[03-integrate](./python/03-integrate/)** - Integrations with AWS services, databases, and third-party tools
-- **[04-industry-use-cases](./python/04-industry-use-cases/)** - Industry applications (finance, healthcare, retail, productivity, etc.)
-- **[05-technical-use-cases](./python/05-technical-use-cases/)** - Architectural patterns including Agentic RAG
-- **[06-evaluate](./python/06-evaluate/)** - Evaluation tutorials and testing patterns
-- **[07-ux-demos](./python/07-ux-demos/)** - Full-stack applications with user interfaces
-- **[08-edge](./python/08-edge/)** - Edge device integrations including physical AI and robotics
+- [Python workshop](./python/01-learn/)
+- [TypeScript workshop](./typescript/01-learn/)
 
-### <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" width="20" height="20"/> TypeScript Samples
+These trees are pulled into an external workshop. Their paths, structure, and existing `samples.json` records are protected by CI. See the [workshop compatibility policy](./docs/WORKSHOP_COMPATIBILITY.md).
 
-- **[01-learn](./typescript/01-learn/)** - SDK tutorials for the TypeScript SDK
-- **[02-deploy](./typescript/02-deploy/)** - Deployment patterns for AgentCore
+### Retained application seeds
+
+- [FastAPI Strands production starter](./python/05-technical-use-cases/fastapi-strands-production-starter/)
+- [Human-in-the-loop approval agent](./python/07-ux-demos/human-in-the-loop-approval-agent/)
+- [Next.js Vercel adapter](./typescript/02-deploy/02-nextjs-vercel-adapter/)
+
+Each application will be reviewed and improved in its own pull request. New examples should solve a distinct end-to-end outcome rather than demonstrate a single component.
+
+The documentation website currently consumes `samples.json`. The compatibility manifest retains workshop records, so the website must filter the exact `python/01-learn/` and `typescript/01-learn/` prefixes before the next catalog deployment.
 
 ## Contributing ❤️
 
-We welcome contributions! See our [Contributing Guide](CONTRIBUTING.md) for details on:
-- Reporting bugs & features
-- Development setup
-- Contributing via Pull Requests
-- Code of Conduct
-- Reporting of security issues
+See the [Contributing Guide](CONTRIBUTING.md). New standalone examples are paused while the retained applications are rebuilt and the catalog contract is simplified.
 
 ## Stay in touch with the team
 Come meet the Strands team and other users on [**Discord**](https://discord.com/invite/strands)

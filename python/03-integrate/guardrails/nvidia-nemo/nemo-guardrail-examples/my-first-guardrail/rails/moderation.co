@@ -1,8 +1,0 @@
-define user express insult
-  "you are stupid"
-  "that's a dumb answer"
-
-define flow block insults
-  user express insult
-  bot refuse to respond
-  """I'd prefer not to continue this conversation if the language is not respectful."""

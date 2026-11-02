@@ -6,6 +6,16 @@ documentation, we greatly value feedback and contributions from our community.
 Please read through this document before submitting any issues or pull requests to ensure we have all the necessary
 information to effectively respond to your bug report or contribution.
 
+## Repository scope
+
+This repository is intentionally being reduced to:
+
+- Complete applications that solve a distinct user outcome with multiple Strands components.
+- The compatibility-sensitive workshop curriculum in `python/01-learn` and `typescript/01-learn`.
+
+New standalone examples are paused while the retained applications are reviewed and rebuilt. Focused SDK concepts, model-provider setup, integrations, and evaluation techniques should be contributed to the main Strands documentation instead. Experimental, privileged, physical-device, or best-effort demonstrations should be proposed to Strands Labs.
+
+Do not move, rename, renumber, consolidate, or delete either `01-learn` tree without coordinating the external workshop release. Ordinary pull requests are checked to ensure both workshop trees and their existing `samples.json` records remain unchanged.
 
 ## Reporting Bugs/Feature Requests
 
@@ -26,7 +36,7 @@ Contributions via pull requests are much appreciated. Before sending us a pull r
 1. You are working against the latest source on the *main* branch.
 2. You check existing open, and recently merged, pull requests to make sure someone else hasn't addressed the problem already.
 3. You open an issue to discuss any significant work - we would hate for your time to be wasted.
-4. For new samples, follow the project structure guidelines in [`.github/templates/use-cases/structure.md`](.github/templates/use-cases/structure.md) and use the README template in [`.github/templates/use-cases/readme.md`](.github/templates/use-cases/readme.md).
+4. Discuss any proposed application with the maintainers first. It should solve a distinct end-to-end outcome, use multiple meaningful Strands components, and have an identified maintainer.
 5. After adding, moving, or removing a sample, or changing catalog metadata in a README, run `node generate-samples-manifest.mjs`. The documentation site reads `samples.json` during its build. A sample with multiple notebooks must include a root README that indexes them.
 6. After changing the manifest generator, run `node --test generate-samples-manifest.test.mjs`.
 

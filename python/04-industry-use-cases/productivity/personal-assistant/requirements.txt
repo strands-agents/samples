@@ -1,5 +1,0 @@
-uv
-strands-agents
-strands-agents-tools
-mcp
-urllib3>=2.6.0

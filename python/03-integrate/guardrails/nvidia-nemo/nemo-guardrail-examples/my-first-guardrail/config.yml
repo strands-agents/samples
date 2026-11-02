@@ -1,7 +1,0 @@
-# https://github.com/NVIDIA/NeMo-Guardrails/tree/develop/examples/configs/guardrails_only
-rails:
-  input:
-    flows:
-      - dummy input rail
-      - allow input
-      - block insults

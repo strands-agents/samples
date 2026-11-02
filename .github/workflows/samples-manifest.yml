@@ -12,9 +12,12 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-24.04
+    timeout-minutes: 5
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v7
@@ -26,3 +29,9 @@ jobs:
 
       - name: Verify samples manifest
         run: node generate-samples-manifest.mjs --check
+
+      - name: Protect workshop compatibility
+        if: >-
+          github.event_name == 'pull_request' &&
+          !contains(github.event.pull_request.labels.*.name, 'workshop-compatible-change')
+        run: node verify-workshop-compatibility.mjs "${{ github.event.pull_request.base.sha }}"

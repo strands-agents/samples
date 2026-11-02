@@ -1,13 +1,13 @@
-# Strands Agents TypeScript Samples and Tutorials
+# Strands Agents TypeScript Examples
 
 Build AI agents with the Strands Agents TypeScript SDK.
 
 ## Index
 
-| Folder | Description |
-|--------|-------------|
-| [`01-learn`](./01-learn/) | **Build foundational skills.** Progressive tutorials from creating your first agent to advanced patterns |
-| [`02-deploy`](./02-deploy/) | **Take agents to production.** Reference patterns for managed runtime deployments |
+| Content | Purpose |
+|---------|---------|
+| [`01-learn`](./01-learn/) | Protected workshop curriculum |
+| [`nextjs-vercel-adapter`](./02-deploy/02-nextjs-vercel-adapter/) | Retained TypeScript full-stack application seed |
 
 ## Getting Started
 
