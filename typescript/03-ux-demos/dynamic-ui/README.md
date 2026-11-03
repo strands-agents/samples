@@ -8,7 +8,7 @@ The sample is a small workout log, but the pattern carries over to any app: defi
 
 ## Overview
 
-### Sample details
+### Sample Details
 
 | Information            | Details                                                         |
 |------------------------|-----------------------------------------------------------------|
@@ -38,7 +38,7 @@ sequenceDiagram
     B->>S: form submit / button click as "[ui action] ..." message
 ```
 
-### Key features
+### Key Features
 
 - **The schema is the contract.** `src/catalog.ts` defines every component with Zod. That schema is the `render_ui` tool's input, so the model can only produce components your app supports, and Strands validates them before your code sees them. The same schema gives you the `Component` TypeScript type.
 - **The agent chooses the layout.** Different questions get different UI: totals become stat cards, trends become a bar chart, lists become a table, and "I want to log a workout" becomes a form.
@@ -62,15 +62,15 @@ npm install
 npm start
 ```
 
-Open http://127.0.0.1:8000 and try:
+Open http://127.0.0.1:8000. The server only listens on `127.0.0.1` and has no authentication, so it's for local use. Set `PORT` to change the port.
 
-- "How has my training been this month?"
-- "Show my runs from the last two weeks"
-- "I want to log a workout", then fill in and submit the form
+## Example Queries
 
-The server only listens on `127.0.0.1` and has no authentication, so it's for local use. Set `PORT` to change the port.
+- "How has my training been this month?" (stats, a weekly bar chart and a table)
+- "Show my runs from the last two weeks" (a table)
+- "I want to log a workout" (a form; submit it and the agent logs the workout and shows the updated totals)
 
-## How it works
+## How It Works
 
 **1. Define the catalog** (`src/catalog.ts`). Each component is a Zod object with a `type` literal, combined into a discriminated union. Descriptions are written for the model, because they end up in the tool schema.
 
@@ -104,7 +104,7 @@ tool({
 
 **5. Send interactions back.** A form submit becomes a message like `[ui action] log_workout {"activity": "swim", "minutes": "40"}`, and the system prompt tells the agent how to handle it.
 
-## Using this in your own app
+## Using This in Your Own App
 
 - Replace `src/catalog.ts` with the components your design system already has, and keep the props small and display-ready (formatted strings rather than raw values the client has to format).
 - Write the renderer in your own frontend framework. In React it's the same lookup table with a component per `type`, typed with the exported `Component` type.
@@ -112,7 +112,7 @@ tool({
 - To render while the model is still writing, switch from `agent.invoke(...)` to `agent.stream(...)` and forward the tool input as it streams.
 - Each chat keeps its agent in server memory and the workout log isn't persisted, which keeps the sample short. A real app would add a [session manager](https://strandsagents.com/docs/user-guide/sdk/agents/session-management/) and a database.
 
-## Project structure
+## Project Structure
 
 | File | Purpose |
 |------|---------|
@@ -124,6 +124,13 @@ tool({
 | `data/workouts.json` | Sample workouts, with dates relative to today |
 
 A Python version of this sample lives in [`python/07-ux-demos/dynamic-ui`](../../../python/07-ux-demos/dynamic-ui/) and uses the same web client.
+
+## Additional Resources
+
+- [Custom tools](https://strandsagents.com/docs/user-guide/sdk/tools/custom-tools/): defining tools like `render_ui` with typed input schemas
+- [Streaming](https://strandsagents.com/docs/user-guide/sdk/streaming/): rendering components while the model is still writing
+- [Session management](https://strandsagents.com/docs/user-guide/sdk/agents/session-management/): persisting conversations across restarts
+- [AG-UI and CopilotKit sample](../../../python/07-ux-demos/ag-ui-copilotkit-integration/): tool-based generative UI with a protocol and frontend framework
 
 ## Disclaimer
 
