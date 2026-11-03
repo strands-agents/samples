@@ -50,6 +50,11 @@
       "language": "typescript",
       "id": "deploy",
       "label": "Deploy"
+    },
+    {
+      "language": "typescript",
+      "id": "ux-demos",
+      "label": "UX Demos"
     }
   ],
   "samples": [
@@ -962,6 +967,17 @@
       "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/ag-ui-copilotkit-integration"
     },
     {
+      "id": "python/07-ux-demos/dynamic-ui",
+      "language": "python",
+      "category": "ux-demos",
+      "categoryLabel": "UX Demos",
+      "title": "Dynamic UI",
+      "description": "An agent that answers with UI, not just text. You ask a question, the agent picks components from a catalog the app defines (stats, charts, tables, forms, buttons), and the browser renders them. When someone submits a form or clicks a…",
+      "tags": [],
+      "path": "python/07-ux-demos/dynamic-ui",
+      "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/dynamic-ui"
+    },
+    {
       "id": "python/07-ux-demos/human-in-the-loop-approval-agent",
       "language": "python",
       "category": "ux-demos",
@@ -1151,6 +1167,17 @@
       ],
       "path": "typescript/02-deploy/02-nextjs-vercel-adapter",
       "url": "https://github.com/strands-agents/samples/tree/main/typescript/02-deploy/02-nextjs-vercel-adapter"
+    },
+    {
+      "id": "typescript/03-ux-demos/dynamic-ui",
+      "language": "typescript",
+      "category": "ux-demos",
+      "categoryLabel": "UX Demos",
+      "title": "Dynamic UI",
+      "description": "An agent that chooses which UI components to render and reacts to form and button interactions",
+      "tags": [],
+      "path": "typescript/03-ux-demos/dynamic-ui",
+      "url": "https://github.com/strands-agents/samples/tree/main/typescript/03-ux-demos/dynamic-ui"
     }
   ]
 }

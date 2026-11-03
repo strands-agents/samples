@@ -1,0 +1,22 @@
+{
+  "name": "dynamic-ui",
+  "version": "1.0.0",
+  "description": "A Strands agent that chooses which UI components to render in the browser",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/server.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@strands-agents/sdk": "^1.23.0",
+    "express": "^5.1.0",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^20.0.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.0.0"
+  }
+}
