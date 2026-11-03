@@ -8,6 +8,7 @@ Build AI agents with the Strands Agents TypeScript SDK.
 |--------|-------------|
 | [`01-learn`](./01-learn/) | **Build foundational skills.** Progressive tutorials from creating your first agent to advanced patterns |
 | [`02-deploy`](./02-deploy/) | **Take agents to production.** Reference patterns for managed runtime deployments |
+| [`03-ux-demos`](./03-ux-demos/) | **Build user interfaces.** Agents that drive what the user sees, like dynamically rendered components |
 
 ## Getting Started
 

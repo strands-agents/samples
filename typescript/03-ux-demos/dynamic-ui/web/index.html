@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Workout log, rendered by an agent</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Workout log</h1>
+        <p>Ask about your training. The agent decides which components to show.</p>
+      </header>
+
+      <section id="transcript" aria-live="polite"></section>
+
+      <div id="suggestions">
+        <button type="button">How has my training been this month?</button>
+        <button type="button">Show my runs from the last two weeks</button>
+        <button type="button">I want to log a workout</button>
+      </div>
+
+      <form id="composer">
+        <input id="prompt" name="prompt" autocomplete="off" placeholder="Ask something..." />
+        <button type="submit">Send</button>
+      </form>
+    </main>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
