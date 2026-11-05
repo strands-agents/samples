@@ -45,15 +45,6 @@
         "python/07-ux-demos/dynamic-ui",
         "typescript/03-ux-demos/dynamic-ui"
       ]
-    },
-    {
-      "id": "migrate",
-      "label": "Migrate",
-      "description": "Move an existing agent application to Strands.",
-      "samples": [
-        "python/migration/langgraph",
-        "typescript/migration/langgraph"
-      ]
     }
   ],
   "samples": {
@@ -146,16 +137,6 @@
         }
       ]
     },
-    "python/migration/langgraph": {
-      "title": "Migrate from LangGraph",
-      "family": "langgraph-migration",
-      "docs": [
-        {
-          "label": "Migrate from LangGraph",
-          "url": "https://strandsagents.com/docs/user-guide/migrate/langgraph/"
-        }
-      ]
-    },
     "typescript/01-learn/07-express-chatbot": {
       "docs": [
         {
@@ -190,16 +171,6 @@
         {
           "label": "Session management",
           "url": "https://strandsagents.com/docs/user-guide/sdk/agents/session-management/"
-        }
-      ]
-    },
-    "typescript/migration/langgraph": {
-      "title": "Migrate from LangGraph",
-      "family": "langgraph-migration",
-      "docs": [
-        {
-          "label": "Migrate from LangGraph",
-          "url": "https://strandsagents.com/docs/user-guide/migrate/langgraph/"
         }
       ]
     }

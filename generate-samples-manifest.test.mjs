@@ -132,7 +132,6 @@ test('merges ordered collections and website metadata', async (t) => {
   const root = await createFixture(t, {
     description: 'A complete application',
     metadata: {
-      title: 'Build a Complete Example',
       family: 'example-family',
       docs: [{ label: 'Tools', url: 'https://example.com/docs/tools' }],
     },
@@ -160,12 +159,10 @@ test('merges ordered collections and website metadata', async (t) => {
   ])
   assert.deepEqual(
     {
-      title: manifest.samples[0].title,
       family: manifest.samples[0].family,
       docs: manifest.samples[0].docs,
     },
     {
-      title: 'Build a Complete Example',
       family: 'example-family',
       docs: [{ label: 'Tools', url: 'https://example.com/docs/tools' }],
     }

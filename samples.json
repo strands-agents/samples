@@ -113,15 +113,6 @@
         "python/07-ux-demos/dynamic-ui",
         "typescript/03-ux-demos/dynamic-ui"
       ]
-    },
-    {
-      "id": "migrate",
-      "label": "Migrate",
-      "description": "Move an existing agent application to Strands.",
-      "samples": [
-        "python/migration/langgraph",
-        "typescript/migration/langgraph"
-      ]
     }
   ],
   "samples": [
@@ -1294,19 +1285,12 @@
       "language": "python",
       "category": "migration",
       "categoryLabel": "Migration",
-      "title": "Migrate from LangGraph",
+      "title": "LangGraph",
       "description": "Compare the same three-stage case-triage workflow before and after a migration from LangGraph to Strands Agents. The pair keeps the public entry point and business flow aligned so the framework differences are easy to inspect.",
       "tags": [],
       "path": "python/migration/langgraph",
       "url": "https://github.com/strands-agents/samples/tree/main/python/migration/langgraph",
-      "slug": "python/migration/langgraph",
-      "family": "langgraph-migration",
-      "docs": [
-        {
-          "label": "Migrate from LangGraph",
-          "url": "https://strandsagents.com/docs/user-guide/migrate/langgraph/"
-        }
-      ]
+      "slug": "python/migration/langgraph"
     },
     {
       "id": "typescript/01-learn/01-first-agent",
@@ -1468,19 +1452,12 @@
       "language": "typescript",
       "category": "migration",
       "categoryLabel": "Migration",
-      "title": "Migrate from LangGraph",
+      "title": "LangGraph",
       "description": "Compare the same three-stage case-triage workflow before and after a migration from LangGraph.js to the Strands Agents TypeScript SDK. Both implementations preserve the public entry point and business flow for a direct framework comparison.",
       "tags": [],
       "path": "typescript/migration/langgraph",
       "url": "https://github.com/strands-agents/samples/tree/main/typescript/migration/langgraph",
-      "slug": "typescript/migration/langgraph",
-      "family": "langgraph-migration",
-      "docs": [
-        {
-          "label": "Migrate from LangGraph",
-          "url": "https://strandsagents.com/docs/user-guide/migrate/langgraph/"
-        }
-      ]
+      "slug": "typescript/migration/langgraph"
     }
   ]
 }
