@@ -147,6 +147,7 @@
       ]
     },
     "python/migration/langgraph": {
+      "title": "Migrate from LangGraph",
       "family": "langgraph-migration",
       "docs": [
         {
@@ -193,6 +194,7 @@
       ]
     },
     "typescript/migration/langgraph": {
+      "title": "Migrate from LangGraph",
       "family": "langgraph-migration",
       "docs": [
         {

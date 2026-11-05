@@ -18,7 +18,7 @@ const ROOT = path.resolve('.')
 const LANGS = ['python', 'typescript']
 const IGNORED_DIRS = new Set(['__pycache__', 'node_modules', 'venv'])
 const CATALOG_PATH = path.join(ROOT, 'samples-catalog.json')
-const SAMPLE_METADATA_KEYS = new Set(['family', 'docs'])
+const SAMPLE_METADATA_KEYS = new Set(['title', 'family', 'docs'])
 
 const TITLE_WORDS = new Map(
   Object.entries({
@@ -367,6 +367,10 @@ function validateCatalog(catalog, discoveredSamples) {
     assertObject(sampleMetadata, label)
     assertOnlyKeys(sampleMetadata, SAMPLE_METADATA_KEYS, label)
     const editorial = {}
+    if (sampleMetadata.title !== undefined) {
+      assertNonEmptyString(sampleMetadata.title, `${sampleId}.title`)
+      editorial.title = sampleMetadata.title
+    }
     if (sampleMetadata.family !== undefined) {
       assertNonEmptyString(sampleMetadata.family, `${sampleId}.family`)
       if (!/^[a-z0-9][a-z0-9-]*$/.test(sampleMetadata.family)) {
