@@ -2,29 +2,55 @@
   "version": 1,
   "collections": [
     {
-      "id": "featured",
-      "label": "Featured end-to-end samples",
-      "description": "Complete journeys that combine multiple Strands capabilities in a runnable application or workshop.",
+      "id": "learn",
+      "label": "Learn",
+      "description": "Guided projects for learning advanced Strands patterns.",
+      "samples": [
+        "python/01-learn/18-self-improving-agents",
+        "typescript/01-learn/07-express-chatbot"
+      ]
+    },
+    {
+      "id": "deploy",
+      "label": "Deploy",
+      "description": "Take Strands applications from local development to production.",
+      "samples": [
+        "python/02-deploy/04-agentcore-multi-agent/01-a2a-orchestration",
+        "typescript/02-deploy/02-nextjs-vercel-adapter"
+      ]
+    },
+    {
+      "id": "industry-use-cases",
+      "label": "Industry use cases",
+      "description": "Apply Strands to real operational and business workflows.",
+      "samples": [
+        "python/04-industry-use-cases/software-engineering/lambda-error-analysis-agent"
+      ]
+    },
+    {
+      "id": "technical-use-cases",
+      "label": "Technical use cases",
+      "description": "Solve common engineering problems with complete Strands implementations.",
       "samples": [
         "python/05-technical-use-cases/fastapi-strands-production-starter",
-        "typescript/02-deploy/02-nextjs-vercel-adapter",
-        "python/02-deploy/04-agentcore-multi-agent/01-a2a-orchestration",
+        "python/05-technical-use-cases/steering/library-book-renewal-agent"
+      ]
+    },
+    {
+      "id": "user-experiences",
+      "label": "User experiences",
+      "description": "Build interactive agent interfaces and human approval flows.",
+      "samples": [
         "python/07-ux-demos/human-in-the-loop-approval-agent",
-        "python/01-learn/18-self-improving-agents",
-        "python/04-industry-use-cases/software-engineering/lambda-error-analysis-agent",
-        "python/05-technical-use-cases/steering/library-book-renewal-agent",
         "python/07-ux-demos/dynamic-ui",
         "typescript/03-ux-demos/dynamic-ui"
       ]
     },
     {
-      "id": "amplifying-ai",
-      "label": "Amplifying AI",
-      "description": "Application starters and migration companions created through the Amplifying AI program.",
+      "id": "migrate",
+      "label": "Migrate",
+      "description": "Move an existing agent application to Strands.",
       "samples": [
-        "python/05-technical-use-cases/fastapi-strands-production-starter",
-        "typescript/02-deploy/02-nextjs-vercel-adapter",
-        "typescript/01-learn/07-express-chatbot",
         "python/migration/langgraph",
         "typescript/migration/langgraph"
       ]
