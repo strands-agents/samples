@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "catalog": "curated",
   "categories": [
     {
       "language": "python",

@@ -66,6 +66,7 @@ test('preserves inline code while cleaning Markdown and HTML', async (t) => {
   assert.equal(result.status, 0, result.stderr)
 
   const manifest = JSON.parse(await readFile(path.join(root, 'samples.json'), 'utf8'))
+  assert.equal(manifest.catalog, 'curated')
   assert.equal(
     manifest.samples[0].description,
     'Use foo_bar in <workspace>; calculate a*b; read docs; keep bold, emphasis, and HTML.'

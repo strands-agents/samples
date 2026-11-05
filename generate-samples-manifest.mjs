@@ -201,7 +201,8 @@ for (const r of candidates) {
   selected.push(r)
 }
 
-// Keep the existing version 1 fields stable; editorial fields are additive.
+// Keep the existing version 1 fields stable; the catalog mode and editorial
+// fields are additive.
 const baseSamples = selected
   .map((r) => {
     const parts = r.split('/')
@@ -510,7 +511,8 @@ function validateManifest() {
 validateManifest()
 
 const manifestPath = path.join(ROOT, 'samples.json')
-const manifest = JSON.stringify({ version: 1, categories, collections, samples }, null, 2) + '\n'
+const manifest =
+  JSON.stringify({ version: 1, catalog: 'curated', categories, collections, samples }, null, 2) + '\n'
 
 if (process.argv.includes('--check')) {
   const current = existsSync(manifestPath) ? readFileSync(manifestPath, 'utf8') : ''
