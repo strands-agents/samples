@@ -1,0 +1,624 @@
+{
+  "version": 1,
+  "collections": [
+    {
+      "id": "featured",
+      "label": "Featured end-to-end samples",
+      "description": "Complete journeys that combine multiple Strands capabilities in a runnable application or workshop.",
+      "samples": [
+        "python/05-technical-use-cases/fastapi-strands-production-starter",
+        "typescript/02-deploy/02-nextjs-vercel-adapter",
+        "python/02-deploy/04-agentcore-multi-agent/01-a2a-orchestration",
+        "python/07-ux-demos/human-in-the-loop-approval-agent",
+        "python/01-learn/18-self-improving-agents",
+        "python/04-industry-use-cases/software-engineering/lambda-error-analysis-agent",
+        "python/05-technical-use-cases/steering/library-book-renewal-agent",
+        "python/07-ux-demos/dynamic-ui",
+        "typescript/03-ux-demos/dynamic-ui"
+      ]
+    },
+    {
+      "id": "amplifying-ai",
+      "label": "Amplifying AI",
+      "description": "Application starters and migration companions created through the Amplifying AI program.",
+      "samples": [
+        "python/05-technical-use-cases/fastapi-strands-production-starter",
+        "typescript/02-deploy/02-nextjs-vercel-adapter",
+        "typescript/01-learn/07-express-chatbot",
+        "python/migration/langgraph",
+        "typescript/migration/langgraph"
+      ]
+    }
+  ],
+  "samples": {
+    "python/01-learn/01-first-agent": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/01-learn/02-tools-and-mcp": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/01-learn/03-model-providers": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/01-learn/04-streaming": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/01-learn/05-guardrails": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/01-learn/06-memory": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/01-learn/07-aws-services": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/01-learn/08-observability": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/01-learn/09-bidi-streaming": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/01-learn/10-agents-as-tools": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/01-learn/11-swarm": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/01-learn/12-graph": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/01-learn/13-human-in-the-loop": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/01-learn/14-plugins": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/01-learn/15-skills": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/01-learn/16-hooks-lifecycle": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/01-learn/17-conversation-management": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/01-learn/18-self-improving-agents": {
+      "placement": "featured",
+      "kind": "workshop",
+      "capabilities": [
+        "dynamic-tools",
+        "dynamic-system-prompts",
+        "memory",
+        "agentcore"
+      ],
+      "docs": [
+        {
+          "label": "Strands Agents documentation",
+          "url": "https://strandsagents.com/"
+        }
+      ]
+    },
+    "python/01-learn/19-structured-output": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/01-learn/20-session-management": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/02-deploy/01-lambda": {
+      "placement": "repo-only",
+      "kind": "workshop"
+    },
+    "python/02-deploy/02-fargate": {
+      "placement": "repo-only",
+      "kind": "workshop"
+    },
+    "python/02-deploy/03-agentcore": {
+      "placement": "repo-only",
+      "kind": "workshop"
+    },
+    "python/02-deploy/04-agentcore-multi-agent/01-a2a-orchestration": {
+      "placement": "featured",
+      "kind": "workshop",
+      "capabilities": [
+        "multi-agent",
+        "a2a",
+        "mcp",
+        "agentcore",
+        "session-management"
+      ],
+      "docs": [
+        {
+          "label": "Agent-to-Agent",
+          "url": "https://strandsagents.com/latest/documentation/docs/user-guide/concepts/multi-agent/agent-to-agent/"
+        },
+        {
+          "label": "MCP tools",
+          "url": "https://strandsagents.com/latest/documentation/docs/user-guide/concepts/tools/mcp-tools/"
+        },
+        {
+          "label": "Deploy to Amazon Bedrock AgentCore",
+          "url": "https://strandsagents.com/latest/documentation/docs/user-guide/deploy/deploy_to_bedrock_agentcore/"
+        }
+      ]
+    },
+    "python/03-integrate/databases/aurora-dsql": {
+      "placement": "repo-only",
+      "kind": "integration"
+    },
+    "python/03-integrate/databases/neptune": {
+      "placement": "repo-only",
+      "kind": "integration"
+    },
+    "python/03-integrate/databases/supabase": {
+      "placement": "repo-only",
+      "kind": "integration"
+    },
+    "python/03-integrate/guardrails/alice-wonderfence": {
+      "placement": "repo-only",
+      "kind": "integration"
+    },
+    "python/03-integrate/guardrails/llama-firewall": {
+      "placement": "repo-only",
+      "kind": "integration"
+    },
+    "python/03-integrate/guardrails/nvidia-nemo": {
+      "placement": "repo-only",
+      "kind": "integration"
+    },
+    "python/03-integrate/memory/zep-ai": {
+      "placement": "repo-only",
+      "kind": "integration"
+    },
+    "python/03-integrate/observability/arize": {
+      "placement": "repo-only",
+      "kind": "integration"
+    },
+    "python/03-integrate/protocols/a2a": {
+      "placement": "repo-only",
+      "kind": "integration"
+    },
+    "python/03-integrate/protocols/a2a-native": {
+      "placement": "repo-only",
+      "kind": "integration"
+    },
+    "python/03-integrate/tools/exa": {
+      "placement": "repo-only",
+      "kind": "integration"
+    },
+    "python/03-integrate/tools/nova-act": {
+      "placement": "repo-only",
+      "kind": "integration"
+    },
+    "python/03-integrate/tools/tavily": {
+      "placement": "repo-only",
+      "kind": "integration"
+    },
+    "python/03-integrate/voice/nova-sonic": {
+      "placement": "repo-only",
+      "kind": "integration"
+    },
+    "python/04-industry-use-cases/finance/finance-assistant-swarm-agent": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/04-industry-use-cases/finance/genai-powered-financial-advisor-tools": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/04-industry-use-cases/finance/personal-finance-assistant": {
+      "placement": "repo-only",
+      "kind": "workshop"
+    },
+    "python/04-industry-use-cases/finance/whatsapp-fintech": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/04-industry-use-cases/healthcare/medical-document-processing-assistant": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/04-industry-use-cases/logistics/custom-orchestration-airline-assistant": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/04-industry-use-cases/marketing/ai-ads-generation-agent-with-crypto-payments": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/04-industry-use-cases/marketing/startup-advisor-mcp": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/04-industry-use-cases/productivity/multi-modal-email-assistant-agent": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/04-industry-use-cases/productivity/personal-assistant": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/04-industry-use-cases/productivity/research-agent": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/04-industry-use-cases/productivity/scrum-master-assistant": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/04-industry-use-cases/retail/restaurant-assistant": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/04-industry-use-cases/software-engineering/amazon-dataprocessing-agent": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/04-industry-use-cases/software-engineering/aws-assistant-mcp": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/04-industry-use-cases/software-engineering/aws-audit-assistant": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/04-industry-use-cases/software-engineering/code-assistant": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/04-industry-use-cases/software-engineering/data-warehouse-optimizer": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/04-industry-use-cases/software-engineering/lambda-error-analysis-agent": {
+      "placement": "featured",
+      "kind": "application",
+      "capabilities": [
+        "event-driven",
+        "rag",
+        "observability",
+        "infrastructure-as-code"
+      ],
+      "docs": [
+        {
+          "label": "Strands Agents SDK",
+          "url": "https://strandsagents.com/latest/documentation/docs/"
+        }
+      ]
+    },
+    "python/04-industry-use-cases/software-engineering/sre-incident-response-agent": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/05-technical-use-cases/fastapi-strands-production-starter": {
+      "placement": "featured",
+      "kind": "application",
+      "capabilities": [
+        "fastapi",
+        "tools",
+        "mcp",
+        "session-management",
+        "streaming",
+        "observability",
+        "evaluation"
+      ],
+      "docs": [
+        {
+          "label": "Strands Agents documentation",
+          "url": "https://strandsagents.com/"
+        },
+        {
+          "label": "Evaluation SDK",
+          "url": "https://strandsagents.com/docs/user-guide/evals-sdk/"
+        },
+        {
+          "label": "Session management",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/memory/overview/"
+        }
+      ],
+      "program": "amplifying-ai"
+    },
+    "python/05-technical-use-cases/pokemon-team-advisor": {
+      "placement": "repo-only",
+      "kind": "workshop"
+    },
+    "python/05-technical-use-cases/rag/agentic-rag/adaptive-structured-rag": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/05-technical-use-cases/rag/agentic-rag/corrective-rag": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/05-technical-use-cases/rag/agentic-rag/unstructured-structured-rag": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/05-technical-use-cases/steering/library-book-renewal-agent": {
+      "placement": "featured",
+      "kind": "workshop",
+      "capabilities": [
+        "steering",
+        "agent-sops",
+        "graphs",
+        "evaluation"
+      ],
+      "docs": [
+        {
+          "label": "Steering providers",
+          "url": "https://strandsagents.com/docs/user-guide/concepts/plugins/steering/"
+        },
+        {
+          "label": "Evaluation SDK quickstart",
+          "url": "https://strandsagents.com/latest/documentation/docs/user-guide/evals-sdk/quickstart/"
+        }
+      ]
+    },
+    "python/06-evaluate/ab-testing-models": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/06-evaluate/built-in-evaluators": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/06-evaluate/custom-evaluators": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/06-evaluate/dataset-generation": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/06-evaluate/multi-agent-evaluation": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/06-evaluate/multi-turn-actor-simulator": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/06-evaluate/red-teaming": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/06-evaluate/trajectory-evaluation": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "python/07-ux-demos/ag-ui-copilotkit-integration": {
+      "placement": "repo-only",
+      "kind": "integration"
+    },
+    "python/07-ux-demos/dynamic-ui": {
+      "placement": "featured",
+      "kind": "application",
+      "family": "dynamic-ui",
+      "capabilities": [
+        "custom-tools",
+        "streaming",
+        "dynamic-ui"
+      ],
+      "docs": [
+        {
+          "label": "Custom tools",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/tools/custom-tools/"
+        },
+        {
+          "label": "Streaming",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/streaming/"
+        },
+        {
+          "label": "Session management",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/agents/session-management/"
+        }
+      ],
+      "variants": [
+        "typescript/03-ux-demos/dynamic-ui"
+      ]
+    },
+    "python/07-ux-demos/human-in-the-loop-approval-agent": {
+      "placement": "featured",
+      "kind": "application",
+      "capabilities": [
+        "human-in-the-loop",
+        "interrupts",
+        "graphs",
+        "session-management",
+        "user-interface"
+      ],
+      "docs": [
+        {
+          "label": "Interrupts",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/interrupts/"
+        },
+        {
+          "label": "Multi-agent graphs",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/multi-agent/graph/"
+        }
+      ]
+    },
+    "python/07-ux-demos/hvac-data-analytics-agent": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/07-ux-demos/slack-assistant": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/07-ux-demos/strands-playground": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/07-ux-demos/streamlit-template": {
+      "placement": "repo-only",
+      "kind": "workshop"
+    },
+    "python/07-ux-demos/triage-agent": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/07-ux-demos/video-games-sales-assistant": {
+      "placement": "repo-only",
+      "kind": "application"
+    },
+    "python/08-edge/strands-spot-agent": {
+      "placement": "repo-only",
+      "kind": "integration"
+    },
+    "python/migration/langgraph": {
+      "placement": "reference",
+      "kind": "migration",
+      "family": "langgraph-migration",
+      "capabilities": [
+        "migration",
+        "graphs",
+        "session-management"
+      ],
+      "docs": [
+        {
+          "label": "Migrate from LangGraph",
+          "url": "https://strandsagents.com/docs/user-guide/migrate/langgraph/"
+        }
+      ],
+      "program": "amplifying-ai",
+      "variants": [
+        "typescript/migration/langgraph"
+      ]
+    },
+    "typescript/01-learn/01-first-agent": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "typescript/01-learn/02-custom-tools": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "typescript/01-learn/03-model-providers": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "typescript/01-learn/04-streaming": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "typescript/01-learn/05-agent-state": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "typescript/01-learn/06-browser-agent": {
+      "placement": "repo-only",
+      "kind": "concept"
+    },
+    "typescript/01-learn/07-express-chatbot": {
+      "placement": "reference",
+      "kind": "application",
+      "capabilities": [
+        "express",
+        "streaming",
+        "tools",
+        "mcp"
+      ],
+      "docs": [
+        {
+          "label": "TypeScript Agent API",
+          "url": "https://strandsagents.com/docs/api/typescript/Agent/"
+        }
+      ],
+      "program": "amplifying-ai"
+    },
+    "typescript/02-deploy/01-agentcore": {
+      "placement": "repo-only",
+      "kind": "workshop"
+    },
+    "typescript/02-deploy/02-nextjs-vercel-adapter": {
+      "placement": "featured",
+      "kind": "application",
+      "capabilities": [
+        "nextjs",
+        "vercel-ai-sdk",
+        "streaming",
+        "tools",
+        "hooks",
+        "session-management",
+        "agentcore"
+      ],
+      "docs": [
+        {
+          "label": "Strands Agents documentation",
+          "url": "https://strandsagents.com/"
+        },
+        {
+          "label": "VercelModel adapter",
+          "url": "https://github.com/strands-agents/harness-sdk/blob/main/strands-ts/src/models/vercel.ts"
+        }
+      ],
+      "program": "amplifying-ai"
+    },
+    "typescript/03-ux-demos/dynamic-ui": {
+      "placement": "featured",
+      "kind": "application",
+      "family": "dynamic-ui",
+      "capabilities": [
+        "custom-tools",
+        "streaming",
+        "dynamic-ui"
+      ],
+      "docs": [
+        {
+          "label": "Custom tools",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/tools/custom-tools/"
+        },
+        {
+          "label": "Streaming",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/streaming/"
+        },
+        {
+          "label": "Session management",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/agents/session-management/"
+        }
+      ],
+      "variants": [
+        "python/07-ux-demos/dynamic-ui"
+      ]
+    },
+    "typescript/migration/langgraph": {
+      "placement": "reference",
+      "kind": "migration",
+      "family": "langgraph-migration",
+      "capabilities": [
+        "migration",
+        "graphs",
+        "session-management"
+      ],
+      "docs": [
+        {
+          "label": "Migrate from LangGraph",
+          "url": "https://strandsagents.com/docs/user-guide/migrate/langgraph/"
+        }
+      ],
+      "program": "amplifying-ai",
+      "variants": [
+        "python/migration/langgraph"
+      ]
+    }
+  }
+}
