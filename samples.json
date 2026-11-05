@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "catalog": "curated",
   "categories": [
     {
       "language": "python",
@@ -42,6 +43,11 @@
       "label": "Edge"
     },
     {
+      "language": "python",
+      "id": "migration",
+      "label": "Migration"
+    },
+    {
       "language": "typescript",
       "id": "learn",
       "label": "Learn"
@@ -55,6 +61,59 @@
       "language": "typescript",
       "id": "ux-demos",
       "label": "UX Demos"
+    },
+    {
+      "language": "typescript",
+      "id": "migration",
+      "label": "Migration"
+    }
+  ],
+  "collections": [
+    {
+      "id": "learn",
+      "label": "Learn",
+      "description": "Guided projects for learning advanced Strands patterns.",
+      "samples": [
+        "python/01-learn/18-self-improving-agents",
+        "typescript/01-learn/07-express-chatbot"
+      ]
+    },
+    {
+      "id": "deploy",
+      "label": "Deploy",
+      "description": "Take Strands applications from local development to production.",
+      "samples": [
+        "python/02-deploy/04-agentcore-multi-agent/01-a2a-orchestration",
+        "typescript/02-deploy/02-nextjs-vercel-adapter"
+      ]
+    },
+    {
+      "id": "industry-use-cases",
+      "label": "Industry use cases",
+      "description": "Apply Strands to real operational and business workflows.",
+      "samples": [
+        "python/04-industry-use-cases/software-engineering/lambda-error-analysis-agent"
+      ]
+    },
+    {
+      "id": "technical-use-cases",
+      "label": "Technical use cases",
+      "description": "Solve common engineering problems with complete Strands implementations.",
+      "samples": [
+        "python/05-technical-use-cases/fastapi-strands-production-starter",
+        "python/05-technical-use-cases/steering/library-book-renewal-agent",
+        "python/06-evaluate/red-teaming"
+      ]
+    },
+    {
+      "id": "user-experiences",
+      "label": "User experiences",
+      "description": "Build interactive agent interfaces and human approval flows.",
+      "samples": [
+        "python/07-ux-demos/human-in-the-loop-approval-agent",
+        "python/07-ux-demos/dynamic-ui",
+        "typescript/03-ux-demos/dynamic-ui"
+      ]
     }
   ],
   "samples": [
@@ -70,7 +129,8 @@
       ],
       "path": "python/01-learn/01-first-agent",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/01-first-agent",
-      "notebook": "01-first-agent.ipynb"
+      "notebook": "01-first-agent.ipynb",
+      "slug": "python/first-agent"
     },
     {
       "id": "python/01-learn/02-tools-and-mcp",
@@ -84,7 +144,8 @@
         "MCP"
       ],
       "path": "python/01-learn/02-tools-and-mcp",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/02-tools-and-mcp"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/02-tools-and-mcp",
+      "slug": "python/tools-and-mcp"
     },
     {
       "id": "python/01-learn/03-model-providers",
@@ -99,7 +160,8 @@
         "OpenAIResponsesModel"
       ],
       "path": "python/01-learn/03-model-providers",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/03-model-providers"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/03-model-providers",
+      "slug": "python/model-providers"
     },
     {
       "id": "python/01-learn/04-streaming",
@@ -114,7 +176,8 @@
       ],
       "path": "python/01-learn/04-streaming",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/04-streaming",
-      "notebook": "streaming.ipynb"
+      "notebook": "streaming.ipynb",
+      "slug": "python/streaming"
     },
     {
       "id": "python/01-learn/05-guardrails",
@@ -128,7 +191,8 @@
       ],
       "path": "python/01-learn/05-guardrails",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/05-guardrails",
-      "notebook": "bedrock_guardrails_sample.ipynb"
+      "notebook": "bedrock_guardrails_sample.ipynb",
+      "slug": "python/guardrails"
     },
     {
       "id": "python/01-learn/06-memory",
@@ -142,7 +206,8 @@
       ],
       "path": "python/01-learn/06-memory",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/06-memory",
-      "notebook": "personal_agent_with_memory.ipynb"
+      "notebook": "personal_agent_with_memory.ipynb",
+      "slug": "python/memory"
     },
     {
       "id": "python/01-learn/07-aws-services",
@@ -157,7 +222,8 @@
       ],
       "path": "python/01-learn/07-aws-services",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/07-aws-services",
-      "notebook": "connecting-with-aws-services.ipynb"
+      "notebook": "connecting-with-aws-services.ipynb",
+      "slug": "python/aws-services"
     },
     {
       "id": "python/01-learn/08-observability",
@@ -172,7 +238,8 @@
       ],
       "path": "python/01-learn/08-observability",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/08-observability",
-      "notebook": "Observability-and-Evaluation-sample.ipynb"
+      "notebook": "Observability-and-Evaluation-sample.ipynb",
+      "slug": "python/observability"
     },
     {
       "id": "python/01-learn/09-bidi-streaming",
@@ -185,7 +252,8 @@
         "BidiAgent"
       ],
       "path": "python/01-learn/09-bidi-streaming",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/09-bidi-streaming"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/09-bidi-streaming",
+      "slug": "python/bidi-streaming"
     },
     {
       "id": "python/01-learn/10-agents-as-tools",
@@ -199,7 +267,8 @@
       ],
       "path": "python/01-learn/10-agents-as-tools",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/10-agents-as-tools",
-      "notebook": "agent-as-tools.ipynb"
+      "notebook": "agent-as-tools.ipynb",
+      "slug": "python/agents-as-tools"
     },
     {
       "id": "python/01-learn/11-swarm",
@@ -213,7 +282,8 @@
       ],
       "path": "python/01-learn/11-swarm",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/11-swarm",
-      "notebook": "swarm.ipynb"
+      "notebook": "swarm.ipynb",
+      "slug": "python/swarm"
     },
     {
       "id": "python/01-learn/12-graph",
@@ -227,7 +297,8 @@
       ],
       "path": "python/01-learn/12-graph",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/12-graph",
-      "notebook": "graph.ipynb"
+      "notebook": "graph.ipynb",
+      "slug": "python/graph"
     },
     {
       "id": "python/01-learn/13-human-in-the-loop",
@@ -242,7 +313,8 @@
       ],
       "path": "python/01-learn/13-human-in-the-loop",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/13-human-in-the-loop",
-      "notebook": "strands_hitl.ipynb"
+      "notebook": "strands_hitl.ipynb",
+      "slug": "python/human-in-the-loop"
     },
     {
       "id": "python/01-learn/14-plugins",
@@ -257,7 +329,8 @@
       ],
       "path": "python/01-learn/14-plugins",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/14-plugins",
-      "notebook": "plugins-in-strands.ipynb"
+      "notebook": "plugins-in-strands.ipynb",
+      "slug": "python/plugins"
     },
     {
       "id": "python/01-learn/15-skills",
@@ -272,7 +345,8 @@
       ],
       "path": "python/01-learn/15-skills",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/15-skills",
-      "notebook": "agent-skills.ipynb"
+      "notebook": "agent-skills.ipynb",
+      "slug": "python/skills"
     },
     {
       "id": "python/01-learn/16-hooks-lifecycle",
@@ -290,7 +364,8 @@
       ],
       "path": "python/01-learn/16-hooks-lifecycle",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/16-hooks-lifecycle",
-      "notebook": "01_hooks_basics.ipynb"
+      "notebook": "01_hooks_basics.ipynb",
+      "slug": "python/hooks-lifecycle"
     },
     {
       "id": "python/01-learn/17-conversation-management",
@@ -306,14 +381,15 @@
       ],
       "path": "python/01-learn/17-conversation-management",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/17-conversation-management",
-      "notebook": "conversation-management.ipynb"
+      "notebook": "conversation-management.ipynb",
+      "slug": "python/conversation-management"
     },
     {
       "id": "python/01-learn/18-self-improving-agents",
       "language": "python",
       "category": "learn",
       "categoryLabel": "Learn",
-      "title": "Self Improving Agents",
+      "title": "Self-Improving Agent Workshop",
       "description": "Build a self-extending, self-modifying, autonomous agent and deploy it (6 steps, AIM308)",
       "tags": [
         "load_tools_from_directory",
@@ -321,7 +397,14 @@
         "AgentCore Memory + Runtime"
       ],
       "path": "python/01-learn/18-self-improving-agents",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/18-self-improving-agents"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/18-self-improving-agents",
+      "slug": "python/self-improving-agents",
+      "docs": [
+        {
+          "label": "Strands Agents documentation",
+          "url": "https://strandsagents.com/"
+        }
+      ]
     },
     {
       "id": "python/01-learn/19-structured-output",
@@ -338,7 +421,8 @@
       ],
       "path": "python/01-learn/19-structured-output",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/19-structured-output",
-      "notebook": "structured-output.ipynb"
+      "notebook": "structured-output.ipynb",
+      "slug": "python/structured-output"
     },
     {
       "id": "python/01-learn/20-session-management",
@@ -355,7 +439,8 @@
       ],
       "path": "python/01-learn/20-session-management",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/20-session-management",
-      "notebook": "01-single-agent-persistence.ipynb"
+      "notebook": "01-single-agent-persistence.ipynb",
+      "slug": "python/session-management"
     },
     {
       "id": "python/02-deploy/01-lambda",
@@ -369,7 +454,8 @@
       ],
       "path": "python/02-deploy/01-lambda",
       "url": "https://github.com/strands-agents/samples/tree/main/python/02-deploy/01-lambda",
-      "notebook": "deploy-agent.ipynb"
+      "notebook": "deploy-agent.ipynb",
+      "slug": "python/lambda"
     },
     {
       "id": "python/02-deploy/02-fargate",
@@ -383,7 +469,8 @@
       ],
       "path": "python/02-deploy/02-fargate",
       "url": "https://github.com/strands-agents/samples/tree/main/python/02-deploy/02-fargate",
-      "notebook": "deploy-agent.ipynb"
+      "notebook": "deploy-agent.ipynb",
+      "slug": "python/fargate"
     },
     {
       "id": "python/02-deploy/03-agentcore",
@@ -397,19 +484,35 @@
       ],
       "path": "python/02-deploy/03-agentcore",
       "url": "https://github.com/strands-agents/samples/tree/main/python/02-deploy/03-agentcore",
-      "notebook": "deploy-agent.ipynb"
+      "notebook": "deploy-agent.ipynb",
+      "slug": "python/agentcore"
     },
     {
       "id": "python/02-deploy/04-agentcore-multi-agent/01-a2a-orchestration",
       "language": "python",
       "category": "deploy",
       "categoryLabel": "Deploy",
-      "title": "A2A Orchestration",
+      "title": "A2A Shopping Assistant on AgentCore",
       "description": "This tutorial demonstrates how to use the Strands Agents SDK to build and deploy a multi-agent system on Amazon Bedrock AgentCore. You will create three specialized agents, each running in its own managed runtime, that discover and…",
       "tags": [],
       "path": "python/02-deploy/04-agentcore-multi-agent/01-a2a-orchestration",
       "url": "https://github.com/strands-agents/samples/tree/main/python/02-deploy/04-agentcore-multi-agent/01-a2a-orchestration",
-      "notebook": "01-a2a-server-product-agent.ipynb"
+      "notebook": "01-a2a-server-product-agent.ipynb",
+      "slug": "python/agentcore-multi-agent/a2a-orchestration",
+      "docs": [
+        {
+          "label": "Agent-to-Agent",
+          "url": "https://strandsagents.com/latest/documentation/docs/user-guide/concepts/multi-agent/agent-to-agent/"
+        },
+        {
+          "label": "MCP tools",
+          "url": "https://strandsagents.com/latest/documentation/docs/user-guide/concepts/tools/mcp-tools/"
+        },
+        {
+          "label": "Deploy to Amazon Bedrock AgentCore",
+          "url": "https://strandsagents.com/latest/documentation/docs/user-guide/deploy/deploy_to_bedrock_agentcore/"
+        }
+      ]
     },
     {
       "id": "python/03-integrate/databases/aurora-dsql",
@@ -420,7 +523,8 @@
       "description": "Amazon Aurora DSQL is a serverless, distributed relational database service optimized for transactional workloads. Aurora DSQL offers virtually unlimited scale and doesn't require you to manage infrastructure. The active-active highly…",
       "tags": [],
       "path": "python/03-integrate/databases/aurora-dsql",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/databases/aurora-dsql"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/databases/aurora-dsql",
+      "slug": "python/databases/aurora-dsql"
     },
     {
       "id": "python/03-integrate/databases/neptune",
@@ -431,7 +535,8 @@
       "description": "Amazon Neptune is a fully managed graph database service by Amazon Web Services (AWS). It's designed to store and query billions of relationships with low latency, making it suitable for applications that rely on highly connected datasets.",
       "tags": [],
       "path": "python/03-integrate/databases/neptune",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/databases/neptune"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/databases/neptune",
+      "slug": "python/databases/neptune"
     },
     {
       "id": "python/03-integrate/databases/supabase",
@@ -443,7 +548,8 @@
       "tags": [],
       "path": "python/03-integrate/databases/supabase",
       "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/databases/supabase",
-      "notebook": "supabase-integration.ipynb"
+      "notebook": "supabase-integration.ipynb",
+      "slug": "python/databases/supabase"
     },
     {
       "id": "python/03-integrate/guardrails/alice-wonderfence",
@@ -454,7 +560,8 @@
       "description": "Example for integrating Strands Agent with Alice WonderFence for adaptive, real-time protection of production AI systems.",
       "tags": [],
       "path": "python/03-integrate/guardrails/alice-wonderfence",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/guardrails/alice-wonderfence"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/guardrails/alice-wonderfence",
+      "slug": "python/guardrails/alice-wonderfence"
     },
     {
       "id": "python/03-integrate/guardrails/llama-firewall",
@@ -465,7 +572,8 @@
       "description": "Example for integrating Strands Agent with Meta's Llama Firewall for local model-based input filtering and safety checks.",
       "tags": [],
       "path": "python/03-integrate/guardrails/llama-firewall",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/guardrails/llama-firewall"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/guardrails/llama-firewall",
+      "slug": "python/guardrails/llama-firewall"
     },
     {
       "id": "python/03-integrate/guardrails/nvidia-nemo",
@@ -476,7 +584,8 @@
       "description": "Example for integrating Strands Agent with NVIDIA NeMo Guardrails for configurable, rule-based content filtering and conversation flow control.",
       "tags": [],
       "path": "python/03-integrate/guardrails/nvidia-nemo",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/guardrails/nvidia-nemo"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/guardrails/nvidia-nemo",
+      "slug": "python/guardrails/nvidia-nemo"
     },
     {
       "id": "python/03-integrate/memory/zep-ai",
@@ -487,7 +596,8 @@
       "description": "Minimal proof-of-concept for a personal dining assistant agent using Zep AI's graph-based memory and the Strands framework.",
       "tags": [],
       "path": "python/03-integrate/memory/zep-ai",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/memory/zep-ai"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/memory/zep-ai",
+      "slug": "python/memory/zep-ai"
     },
     {
       "id": "python/03-integrate/observability/arize",
@@ -499,7 +609,8 @@
       "tags": [],
       "path": "python/03-integrate/observability/arize",
       "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/observability/arize",
-      "notebook": "Arize-Observability-openinference-strands.ipynb"
+      "notebook": "Arize-Observability-openinference-strands.ipynb",
+      "slug": "python/observability/arize"
     },
     {
       "id": "python/03-integrate/protocols/a2a",
@@ -510,7 +621,8 @@
       "description": "An example Strands agent that helps with searching AWS documentation.",
       "tags": [],
       "path": "python/03-integrate/protocols/a2a",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/protocols/a2a"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/protocols/a2a",
+      "slug": "python/protocols/a2a"
     },
     {
       "id": "python/03-integrate/protocols/a2a-native",
@@ -521,7 +633,8 @@
       "description": "This sample demonstrates Strands' native support for the Agent-to-Agent (A2A) protocol, showcasing how to create both A2A servers and clients for inter-agent communication.",
       "tags": [],
       "path": "python/03-integrate/protocols/a2a-native",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/protocols/a2a-native"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/protocols/a2a-native",
+      "slug": "python/protocols/a2a-native"
     },
     {
       "id": "python/03-integrate/tools/exa",
@@ -532,7 +645,8 @@
       "description": "A conversational AI agent that demonstrates the full power of Exa's search and content extraction capabilities through a practical research workflow using Strands Agents.",
       "tags": [],
       "path": "python/03-integrate/tools/exa",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/tools/exa"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/tools/exa",
+      "slug": "python/tools/exa"
     },
     {
       "id": "python/03-integrate/tools/nova-act",
@@ -543,7 +657,8 @@
       "description": "Amazon Nova Act is an AI model trained to perform actions within a web browser. Nova Act is currently in research preview and can be accesed via the Nova Act SDK on Amazon Nova. Nova Act is an agentic model which can accept natural…",
       "tags": [],
       "path": "python/03-integrate/tools/nova-act",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/tools/nova-act"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/tools/nova-act",
+      "slug": "python/tools/nova-act"
     },
     {
       "id": "python/03-integrate/tools/tavily",
@@ -555,7 +670,8 @@
       "tags": [],
       "path": "python/03-integrate/tools/tavily",
       "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/tools/tavily",
-      "notebook": "deep-research.ipynb"
+      "notebook": "deep-research.ipynb",
+      "slug": "python/tools/tavily"
     },
     {
       "id": "python/03-integrate/voice/nova-sonic",
@@ -566,7 +682,8 @@
       "description": "The Amazon Nova Sonic model provides real-time, conversational interactions through bidirectional audio streaming, enabling natural, human-like conversational experiences.",
       "tags": [],
       "path": "python/03-integrate/voice/nova-sonic",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/voice/nova-sonic"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/voice/nova-sonic",
+      "slug": "python/voice/nova-sonic"
     },
     {
       "id": "python/04-industry-use-cases/finance/finance-assistant-swarm-agent",
@@ -577,7 +694,8 @@
       "description": "Multi-agent swarm system that autonomously generates comprehensive equity research reports with stock analysis, financial metrics, and news sentiment tracking",
       "tags": [],
       "path": "python/04-industry-use-cases/finance/finance-assistant-swarm-agent",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/finance/finance-assistant-swarm-agent"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/finance/finance-assistant-swarm-agent",
+      "slug": "python/finance/finance-assistant-swarm-agent"
     },
     {
       "id": "python/04-industry-use-cases/finance/genai-powered-financial-advisor-tools",
@@ -588,7 +706,8 @@
       "description": "Wealth advisory tool suite with Streamlit UI for client meeting analysis, portfolio performance tracking, and PDF report generation using MCP and Graph patterns",
       "tags": [],
       "path": "python/04-industry-use-cases/finance/genai-powered-financial-advisor-tools",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/finance/genai-powered-financial-advisor-tools"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/finance/genai-powered-financial-advisor-tools",
+      "slug": "python/finance/genai-powered-financial-advisor-tools"
     },
     {
       "id": "python/04-industry-use-cases/finance/personal-finance-assistant",
@@ -600,7 +719,8 @@
       "tags": [],
       "path": "python/04-industry-use-cases/finance/personal-finance-assistant",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/finance/personal-finance-assistant",
-      "notebook": "lab1-foundations.ipynb"
+      "notebook": "lab1-foundations.ipynb",
+      "slug": "python/finance/personal-finance-assistant"
     },
     {
       "id": "python/04-industry-use-cases/finance/whatsapp-fintech",
@@ -611,7 +731,8 @@
       "description": "WhatsApp for Business integration with multi-agent architecture handling daily promotions, credit card transactions, and payment scheduling",
       "tags": [],
       "path": "python/04-industry-use-cases/finance/whatsapp-fintech",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/finance/whatsapp-fintech"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/finance/whatsapp-fintech",
+      "slug": "python/finance/whatsapp-fintech"
     },
     {
       "id": "python/04-industry-use-cases/healthcare/medical-document-processing-assistant",
@@ -622,7 +743,8 @@
       "description": "Clinical document processing agent that extracts diagnoses, medications, and treatments, enriching them with ICD-10, RxNorm, and SNOMED CT medical codes",
       "tags": [],
       "path": "python/04-industry-use-cases/healthcare/medical-document-processing-assistant",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/healthcare/medical-document-processing-assistant"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/healthcare/medical-document-processing-assistant",
+      "slug": "python/healthcare/medical-document-processing-assistant"
     },
     {
       "id": "python/04-industry-use-cases/logistics/custom-orchestration-airline-assistant",
@@ -633,7 +755,8 @@
       "description": "Airline customer service demonstrating four orchestration patterns (ReAct, REWOO, REWOO-ReAct Hybrid, Reflexion) using GraphBuilder with tau-bench dataset",
       "tags": [],
       "path": "python/04-industry-use-cases/logistics/custom-orchestration-airline-assistant",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/logistics/custom-orchestration-airline-assistant"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/logistics/custom-orchestration-airline-assistant",
+      "slug": "python/logistics/custom-orchestration-airline-assistant"
     },
     {
       "id": "python/04-industry-use-cases/marketing/ai-ads-generation-agent-with-crypto-payments",
@@ -645,7 +768,8 @@
       "tags": [],
       "path": "python/04-industry-use-cases/marketing/ai-ads-generation-agent-with-crypto-payments",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/marketing/ai-ads-generation-agent-with-crypto-payments",
-      "notebook": "agentkit-x402-strands.ipynb"
+      "notebook": "agentkit-x402-strands.ipynb",
+      "slug": "python/marketing/ai-ads-generation-agent-with-crypto-payments"
     },
     {
       "id": "python/04-industry-use-cases/marketing/startup-advisor-mcp",
@@ -656,7 +780,8 @@
       "description": "Startup advisory swarm agent for market research, competitive analysis, and campaign copywriting using Perplexity MCP server for web search",
       "tags": [],
       "path": "python/04-industry-use-cases/marketing/startup-advisor-mcp",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/marketing/startup-advisor-mcp"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/marketing/startup-advisor-mcp",
+      "slug": "python/marketing/startup-advisor-mcp"
     },
     {
       "id": "python/04-industry-use-cases/productivity/multi-modal-email-assistant-agent",
@@ -667,7 +792,8 @@
       "description": "Multi-modal email assistant with RAG pipeline for document ingestion (audio, video, text) and AI image generation for enterprise communication",
       "tags": [],
       "path": "python/04-industry-use-cases/productivity/multi-modal-email-assistant-agent",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/productivity/multi-modal-email-assistant-agent"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/productivity/multi-modal-email-assistant-agent",
+      "slug": "python/productivity/multi-modal-email-assistant-agent"
     },
     {
       "id": "python/04-industry-use-cases/productivity/personal-assistant",
@@ -678,7 +804,8 @@
       "description": "Productivity assistant using agents-as-tools pattern with calendar management, coding REPL, and web search via Perplexity MCP",
       "tags": [],
       "path": "python/04-industry-use-cases/productivity/personal-assistant",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/productivity/personal-assistant"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/productivity/personal-assistant",
+      "slug": "python/productivity/personal-assistant"
     },
     {
       "id": "python/04-industry-use-cases/productivity/research-agent",
@@ -689,7 +816,8 @@
       "description": "Self-improving autonomous research agent with hot-reload tool creation, persistent memory, and multi-model support (Bedrock, OpenAI, Ollama)",
       "tags": [],
       "path": "python/04-industry-use-cases/productivity/research-agent",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/productivity/research-agent"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/productivity/research-agent",
+      "slug": "python/productivity/research-agent"
     },
     {
       "id": "python/04-industry-use-cases/productivity/scrum-master-assistant",
@@ -700,7 +828,8 @@
       "description": "Agile development assistant that converts meeting notes and sprint planning discussions into structured, actionable JIRA tickets",
       "tags": [],
       "path": "python/04-industry-use-cases/productivity/scrum-master-assistant",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/productivity/scrum-master-assistant"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/productivity/scrum-master-assistant",
+      "slug": "python/productivity/scrum-master-assistant"
     },
     {
       "id": "python/04-industry-use-cases/retail/restaurant-assistant",
@@ -712,7 +841,8 @@
       "tags": [],
       "path": "python/04-industry-use-cases/retail/restaurant-assistant",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/retail/restaurant-assistant",
-      "notebook": "restaurant-assistant.ipynb"
+      "notebook": "restaurant-assistant.ipynb",
+      "slug": "python/retail/restaurant-assistant"
     },
     {
       "id": "python/04-industry-use-cases/software-engineering/amazon-dataprocessing-agent",
@@ -723,7 +853,8 @@
       "description": "Natural language interface for AWS data engineering with Streamlit UI - manage AWS Glue ETL jobs, Athena SQL queries, and EMR clusters via MCP",
       "tags": [],
       "path": "python/04-industry-use-cases/software-engineering/amazon-dataprocessing-agent",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/software-engineering/amazon-dataprocessing-agent"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/software-engineering/amazon-dataprocessing-agent",
+      "slug": "python/software-engineering/amazon-dataprocessing-agent"
     },
     {
       "id": "python/04-industry-use-cases/software-engineering/aws-assistant-mcp",
@@ -734,7 +865,8 @@
       "description": "AWS cloud resource management assistant using Model Context Protocol (MCP) for infrastructure operations",
       "tags": [],
       "path": "python/04-industry-use-cases/software-engineering/aws-assistant-mcp",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/software-engineering/aws-assistant-mcp"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/software-engineering/aws-assistant-mcp",
+      "slug": "python/software-engineering/aws-assistant-mcp"
     },
     {
       "id": "python/04-industry-use-cases/software-engineering/aws-audit-assistant",
@@ -745,7 +877,8 @@
       "description": "AWS compliance auditor that checks EC2, S3, IAM, and other resources against security best practices and generates remediation reports",
       "tags": [],
       "path": "python/04-industry-use-cases/software-engineering/aws-audit-assistant",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/software-engineering/aws-audit-assistant"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/software-engineering/aws-audit-assistant",
+      "slug": "python/software-engineering/aws-audit-assistant"
     },
     {
       "id": "python/04-industry-use-cases/software-engineering/code-assistant",
@@ -756,7 +889,8 @@
       "description": "Coding companion with Python REPL, shell access, and file editing capabilities for development workflows",
       "tags": [],
       "path": "python/04-industry-use-cases/software-engineering/code-assistant",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/software-engineering/code-assistant"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/software-engineering/code-assistant",
+      "slug": "python/software-engineering/code-assistant"
     },
     {
       "id": "python/04-industry-use-cases/software-engineering/data-warehouse-optimizer",
@@ -767,19 +901,27 @@
       "description": "Multi-agent system for SQLite query optimization with OpenTelemetry observability logging and collaborative agent coordination",
       "tags": [],
       "path": "python/04-industry-use-cases/software-engineering/data-warehouse-optimizer",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/software-engineering/data-warehouse-optimizer"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/software-engineering/data-warehouse-optimizer",
+      "slug": "python/software-engineering/data-warehouse-optimizer"
     },
     {
       "id": "python/04-industry-use-cases/software-engineering/lambda-error-analysis-agent",
       "language": "python",
       "category": "industry-use-cases",
       "categoryLabel": "Industry Use Cases",
-      "title": "Lambda Error Analysis Agent",
+      "title": "AWS Lambda Failure Analysis Agent",
       "description": "Event-driven Lambda error diagnostics using CDK, EventBridge, and Bedrock Knowledge Base RAG for root cause analysis with confidence scoring",
       "tags": [],
       "path": "python/04-industry-use-cases/software-engineering/lambda-error-analysis-agent",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/software-engineering/lambda-error-analysis-agent",
-      "notebook": "deploy-agent.ipynb"
+      "notebook": "deploy-agent.ipynb",
+      "slug": "python/software-engineering/lambda-error-analysis-agent",
+      "docs": [
+        {
+          "label": "Strands Agents SDK",
+          "url": "https://strandsagents.com/latest/documentation/docs/"
+        }
+      ]
     },
     {
       "id": "python/04-industry-use-cases/software-engineering/sre-incident-response-agent",
@@ -790,18 +932,34 @@
       "description": "Multi-agent SRE incident response system that detects CloudWatch alarms, performs AI-powered root cause analysis, applies Kubernetes/Helm remediations, and posts Slack incident reports",
       "tags": [],
       "path": "python/04-industry-use-cases/software-engineering/sre-incident-response-agent",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/software-engineering/sre-incident-response-agent"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/software-engineering/sre-incident-response-agent",
+      "slug": "python/software-engineering/sre-incident-response-agent"
     },
     {
       "id": "python/05-technical-use-cases/fastapi-strands-production-starter",
       "language": "python",
       "category": "technical-use-cases",
       "categoryLabel": "Technical Use Cases",
-      "title": "FastAPI Strands Production Starter",
+      "title": "Production Agent API with FastAPI",
       "description": "A single runnable Python service, in the shape of a benchmark chatbot repo (FastAPI, three tools, one model call), rebuilt on Strands Agents. It wires the production concerns you actually ship with: an OpenAI or Bedrock provider, max…",
       "tags": [],
       "path": "python/05-technical-use-cases/fastapi-strands-production-starter",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/05-technical-use-cases/fastapi-strands-production-starter"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/05-technical-use-cases/fastapi-strands-production-starter",
+      "slug": "python/fastapi-strands-production-starter",
+      "docs": [
+        {
+          "label": "Strands Agents documentation",
+          "url": "https://strandsagents.com/"
+        },
+        {
+          "label": "Evaluation SDK",
+          "url": "https://strandsagents.com/docs/user-guide/evals-sdk/"
+        },
+        {
+          "label": "Session management",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/memory/overview/"
+        }
+      ]
     },
     {
       "id": "python/05-technical-use-cases/pokemon-team-advisor",
@@ -812,7 +970,8 @@
       "description": "An agent that picks the best Pokémon for competitive team building. Demonstrates three Strands features working together:",
       "tags": [],
       "path": "python/05-technical-use-cases/pokemon-team-advisor",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/05-technical-use-cases/pokemon-team-advisor"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/05-technical-use-cases/pokemon-team-advisor",
+      "slug": "python/pokemon-team-advisor"
     },
     {
       "id": "python/05-technical-use-cases/rag/agentic-rag/adaptive-structured-rag",
@@ -823,7 +982,8 @@
       "description": "An Adaptive Structured RAG agent that converts natural language questions into SQL queries with self-correcting feedback loops. This agent features dual-mode support for both local SQLite databases and AWS Athena, and intelligent error…",
       "tags": [],
       "path": "python/05-technical-use-cases/rag/agentic-rag/adaptive-structured-rag",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/05-technical-use-cases/rag/agentic-rag/adaptive-structured-rag"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/05-technical-use-cases/rag/agentic-rag/adaptive-structured-rag",
+      "slug": "python/rag/agentic-rag/adaptive-structured-rag"
     },
     {
       "id": "python/05-technical-use-cases/rag/agentic-rag/corrective-rag",
@@ -835,7 +995,8 @@
       "tags": [],
       "path": "python/05-technical-use-cases/rag/agentic-rag/corrective-rag",
       "url": "https://github.com/strands-agents/samples/tree/main/python/05-technical-use-cases/rag/agentic-rag/corrective-rag",
-      "notebook": "0-prerequisites.ipynb"
+      "notebook": "0-prerequisites.ipynb",
+      "slug": "python/rag/agentic-rag/corrective-rag"
     },
     {
       "id": "python/05-technical-use-cases/rag/agentic-rag/unstructured-structured-rag",
@@ -847,18 +1008,30 @@
       "tags": [],
       "path": "python/05-technical-use-cases/rag/agentic-rag/unstructured-structured-rag",
       "url": "https://github.com/strands-agents/samples/tree/main/python/05-technical-use-cases/rag/agentic-rag/unstructured-structured-rag",
-      "notebook": "0-prerequisites-structured-kb.ipynb"
+      "notebook": "0-prerequisites-structured-kb.ipynb",
+      "slug": "python/rag/agentic-rag/unstructured-structured-rag"
     },
     {
       "id": "python/05-technical-use-cases/steering/library-book-renewal-agent",
       "language": "python",
       "category": "technical-use-cases",
       "categoryLabel": "Technical Use Cases",
-      "title": "Library Book Renewal Agent",
+      "title": "Book Renewal Agent: Control Strategies",
       "description": "Demonstrates different approaches to controlling AI agent behavior with a librarian agent. Users can chat with the agent, ask questions, and request to renew a book.",
       "tags": [],
       "path": "python/05-technical-use-cases/steering/library-book-renewal-agent",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/05-technical-use-cases/steering/library-book-renewal-agent"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/05-technical-use-cases/steering/library-book-renewal-agent",
+      "slug": "python/steering/library-book-renewal-agent",
+      "docs": [
+        {
+          "label": "Steering providers",
+          "url": "https://strandsagents.com/docs/user-guide/concepts/plugins/steering/"
+        },
+        {
+          "label": "Evaluation SDK quickstart",
+          "url": "https://strandsagents.com/latest/documentation/docs/user-guide/evals-sdk/quickstart/"
+        }
+      ]
     },
     {
       "id": "python/06-evaluate/ab-testing-models",
@@ -870,7 +1043,8 @@
       "tags": [],
       "path": "python/06-evaluate/ab-testing-models",
       "url": "https://github.com/strands-agents/samples/tree/main/python/06-evaluate/ab-testing-models",
-      "notebook": "07a-ab-testing-build-agents.ipynb"
+      "notebook": "07a-ab-testing-build-agents.ipynb",
+      "slug": "python/ab-testing-models"
     },
     {
       "id": "python/06-evaluate/built-in-evaluators",
@@ -882,7 +1056,8 @@
       "tags": [],
       "path": "python/06-evaluate/built-in-evaluators",
       "url": "https://github.com/strands-agents/samples/tree/main/python/06-evaluate/built-in-evaluators",
-      "notebook": "01-built-in-evaluators.ipynb"
+      "notebook": "01-built-in-evaluators.ipynb",
+      "slug": "python/built-in-evaluators"
     },
     {
       "id": "python/06-evaluate/custom-evaluators",
@@ -894,7 +1069,8 @@
       "tags": [],
       "path": "python/06-evaluate/custom-evaluators",
       "url": "https://github.com/strands-agents/samples/tree/main/python/06-evaluate/custom-evaluators",
-      "notebook": "02-custom-evaluators.ipynb"
+      "notebook": "02-custom-evaluators.ipynb",
+      "slug": "python/custom-evaluators"
     },
     {
       "id": "python/06-evaluate/dataset-generation",
@@ -906,7 +1082,8 @@
       "tags": [],
       "path": "python/06-evaluate/dataset-generation",
       "url": "https://github.com/strands-agents/samples/tree/main/python/06-evaluate/dataset-generation",
-      "notebook": "03-dataset-generation.ipynb"
+      "notebook": "03-dataset-generation.ipynb",
+      "slug": "python/dataset-generation"
     },
     {
       "id": "python/06-evaluate/multi-agent-evaluation",
@@ -918,7 +1095,8 @@
       "tags": [],
       "path": "python/06-evaluate/multi-agent-evaluation",
       "url": "https://github.com/strands-agents/samples/tree/main/python/06-evaluate/multi-agent-evaluation",
-      "notebook": "06-multi-agent-evaluation.ipynb"
+      "notebook": "06-multi-agent-evaluation.ipynb",
+      "slug": "python/multi-agent-evaluation"
     },
     {
       "id": "python/06-evaluate/multi-turn-actor-simulator",
@@ -930,18 +1108,30 @@
       "tags": [],
       "path": "python/06-evaluate/multi-turn-actor-simulator",
       "url": "https://github.com/strands-agents/samples/tree/main/python/06-evaluate/multi-turn-actor-simulator",
-      "notebook": "05-multi-turn-actor-simulator.ipynb"
+      "notebook": "05-multi-turn-actor-simulator.ipynb",
+      "slug": "python/multi-turn-actor-simulator"
     },
     {
       "id": "python/06-evaluate/red-teaming",
       "language": "python",
       "category": "evaluate",
       "categoryLabel": "Evaluate",
-      "title": "Red Teaming",
+      "title": "Red-Team a Refund Agent",
       "description": "This sample red-teams a small returns-desk agent for a made-up shop, Tidewater Outfitters, built on Strands Agents. The attacks come from the red-teaming feature in Strands Evals 1.7.0. The point of the sample: an eval's score and the…",
       "tags": [],
       "path": "python/06-evaluate/red-teaming",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/06-evaluate/red-teaming"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/06-evaluate/red-teaming",
+      "slug": "python/red-teaming",
+      "docs": [
+        {
+          "label": "Red teaming",
+          "url": "https://strandsagents.com/docs/user-guide/evals-sdk/red-teaming/"
+        },
+        {
+          "label": "Red teaming quickstart",
+          "url": "https://strandsagents.com/docs/user-guide/evals-sdk/red-teaming/quickstart/"
+        }
+      ]
     },
     {
       "id": "python/06-evaluate/trajectory-evaluation",
@@ -953,7 +1143,8 @@
       "tags": [],
       "path": "python/06-evaluate/trajectory-evaluation",
       "url": "https://github.com/strands-agents/samples/tree/main/python/06-evaluate/trajectory-evaluation",
-      "notebook": "04-trajectory-evaluation.ipynb"
+      "notebook": "04-trajectory-evaluation.ipynb",
+      "slug": "python/trajectory-evaluation"
     },
     {
       "id": "python/07-ux-demos/ag-ui-copilotkit-integration",
@@ -964,29 +1155,57 @@
       "description": "A sample demonstrating how to build rich, interactive AI chat experiences using Strands Agents SDK with AG-UI protocol and CopilotKit frontend. The sample app is an AgentCore documentation assistant that helps users learn about Amazon…",
       "tags": [],
       "path": "python/07-ux-demos/ag-ui-copilotkit-integration",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/ag-ui-copilotkit-integration"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/ag-ui-copilotkit-integration",
+      "slug": "python/ag-ui-copilotkit-integration"
     },
     {
       "id": "python/07-ux-demos/dynamic-ui",
       "language": "python",
       "category": "ux-demos",
       "categoryLabel": "UX Demos",
-      "title": "Dynamic UI",
+      "title": "Agent-Generated Workout Tracker UI",
       "description": "An agent that answers with UI, not just text. You ask a question, the agent picks components from a catalog the app defines (stats, charts, tables, forms, buttons), and the browser renders them. When someone submits a form or clicks a…",
       "tags": [],
       "path": "python/07-ux-demos/dynamic-ui",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/dynamic-ui"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/dynamic-ui",
+      "slug": "python/dynamic-ui",
+      "family": "dynamic-ui",
+      "docs": [
+        {
+          "label": "Custom tools",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/tools/custom-tools/"
+        },
+        {
+          "label": "Streaming",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/streaming/"
+        },
+        {
+          "label": "Session management",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/agents/session-management/"
+        }
+      ]
     },
     {
       "id": "python/07-ux-demos/human-in-the-loop-approval-agent",
       "language": "python",
       "category": "ux-demos",
       "categoryLabel": "UX Demos",
-      "title": "Human In The Loop Approval Agent",
+      "title": "Human-in-the-Loop Order Approval",
       "description": "An order approval system that demonstrates human-in-the-loop workflows using Strands Agents' interrupt/resume pattern. A multi-agent graph evaluates incoming orders — assessing risk factors like customer history, order value, and…",
       "tags": [],
       "path": "python/07-ux-demos/human-in-the-loop-approval-agent",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/human-in-the-loop-approval-agent"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/human-in-the-loop-approval-agent",
+      "slug": "python/human-in-the-loop-approval-agent",
+      "docs": [
+        {
+          "label": "Interrupts",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/interrupts/"
+        },
+        {
+          "label": "Multi-agent graphs",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/multi-agent/graph/"
+        }
+      ]
     },
     {
       "id": "python/07-ux-demos/hvac-data-analytics-agent",
@@ -997,7 +1216,8 @@
       "description": "A lightweight conversational AI agent built with Strands SDK that assists facility managers and building operators with HVAC (Heating, Ventilation, and Air Conditioning) data analytics in physical smart buildings. The agent queries…",
       "tags": [],
       "path": "python/07-ux-demos/hvac-data-analytics-agent",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/hvac-data-analytics-agent"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/hvac-data-analytics-agent",
+      "slug": "python/hvac-data-analytics-agent"
     },
     {
       "id": "python/07-ux-demos/slack-assistant",
@@ -1008,7 +1228,8 @@
       "description": "This sample application demonstrates a simple chat assistant built with Strands that has two basic tools available: a calculator and a timer. Once installed into a Slack workspace, the app backend can be run on a development machine in…",
       "tags": [],
       "path": "python/07-ux-demos/slack-assistant",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/slack-assistant"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/slack-assistant",
+      "slug": "python/slack-assistant"
     },
     {
       "id": "python/07-ux-demos/strands-playground",
@@ -1019,7 +1240,8 @@
       "description": "A web-based interactive playground for experimenting with the Strands SDK, allowing users to quickly test and prototype AI agents with configurable system prompts, model parameters, and tool selection. The Strands Playground provides the…",
       "tags": [],
       "path": "python/07-ux-demos/strands-playground",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/strands-playground"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/strands-playground",
+      "slug": "python/strands-playground"
     },
     {
       "id": "python/07-ux-demos/streamlit-template",
@@ -1030,7 +1252,8 @@
       "description": "This app demonstrates how to build and deploy a GenAI agent with a web user interface using Streamlit and AWS CDK. While the demo uses a simple appointment management agent (described in the agent description section), the main focus is…",
       "tags": [],
       "path": "python/07-ux-demos/streamlit-template",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/streamlit-template"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/streamlit-template",
+      "slug": "python/streamlit-template"
     },
     {
       "id": "python/07-ux-demos/triage-agent",
@@ -1041,7 +1264,8 @@
       "description": "This is AI Triage Agent, a demonstration of an AI-powered medical triage system that showcases intelligent patient assessment through \"structured decision tree navigation\". The project leverages Amazon Bedrock through the Strands AI…",
       "tags": [],
       "path": "python/07-ux-demos/triage-agent",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/triage-agent"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/triage-agent",
+      "slug": "python/triage-agent"
     },
     {
       "id": "python/07-ux-demos/video-games-sales-assistant",
@@ -1052,7 +1276,8 @@
       "description": "This solution provides a Generative AI application reference that allows users to interact with data through a natural language interface. The solution leverages Strands Agents SDK to build an agent that connects to a PostgreSQL database…",
       "tags": [],
       "path": "python/07-ux-demos/video-games-sales-assistant",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/video-games-sales-assistant"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/video-games-sales-assistant",
+      "slug": "python/video-games-sales-assistant"
     },
     {
       "id": "python/08-edge/strands-spot-agent",
@@ -1063,7 +1288,20 @@
       "description": "An AI-powered control system for Boston Dynamics Spot robots using the Strands framework. Works with any LLM supported by Strands (Claude, GPT-4, Llama, etc.).",
       "tags": [],
       "path": "python/08-edge/strands-spot-agent",
-      "url": "https://github.com/strands-agents/samples/tree/main/python/08-edge/strands-spot-agent"
+      "url": "https://github.com/strands-agents/samples/tree/main/python/08-edge/strands-spot-agent",
+      "slug": "python/strands-spot-agent"
+    },
+    {
+      "id": "python/migration/langgraph",
+      "language": "python",
+      "category": "migration",
+      "categoryLabel": "Migration",
+      "title": "LangGraph",
+      "description": "Compare the same three-stage case-triage workflow before and after a migration from LangGraph to Strands Agents. The pair keeps the public entry point and business flow aligned so the framework differences are easy to inspect.",
+      "tags": [],
+      "path": "python/migration/langgraph",
+      "url": "https://github.com/strands-agents/samples/tree/main/python/migration/langgraph",
+      "slug": "python/migration/langgraph"
     },
     {
       "id": "typescript/01-learn/01-first-agent",
@@ -1074,7 +1312,8 @@
       "description": "Create your first agent",
       "tags": [],
       "path": "typescript/01-learn/01-first-agent",
-      "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/01-first-agent"
+      "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/01-first-agent",
+      "slug": "typescript/first-agent"
     },
     {
       "id": "typescript/01-learn/02-custom-tools",
@@ -1085,7 +1324,8 @@
       "description": "Build custom tools",
       "tags": [],
       "path": "typescript/01-learn/02-custom-tools",
-      "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/02-custom-tools"
+      "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/02-custom-tools",
+      "slug": "typescript/custom-tools"
     },
     {
       "id": "typescript/01-learn/03-model-providers",
@@ -1096,7 +1336,8 @@
       "description": "Configure different model providers",
       "tags": [],
       "path": "typescript/01-learn/03-model-providers",
-      "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/03-model-providers"
+      "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/03-model-providers",
+      "slug": "typescript/model-providers"
     },
     {
       "id": "typescript/01-learn/04-streaming",
@@ -1107,7 +1348,8 @@
       "description": "Stream responses (Coming Soon)",
       "tags": [],
       "path": "typescript/01-learn/04-streaming",
-      "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/04-streaming"
+      "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/04-streaming",
+      "slug": "typescript/streaming"
     },
     {
       "id": "typescript/01-learn/05-agent-state",
@@ -1118,7 +1360,8 @@
       "description": "Manage agent state",
       "tags": [],
       "path": "typescript/01-learn/05-agent-state",
-      "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/05-agent-state"
+      "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/05-agent-state",
+      "slug": "typescript/agent-state"
     },
     {
       "id": "typescript/01-learn/06-browser-agent",
@@ -1129,18 +1372,26 @@
       "description": "Build browser-based agents",
       "tags": [],
       "path": "typescript/01-learn/06-browser-agent",
-      "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/06-browser-agent"
+      "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/06-browser-agent",
+      "slug": "typescript/browser-agent"
     },
     {
       "id": "typescript/01-learn/07-express-chatbot",
       "language": "typescript",
       "category": "learn",
       "categoryLabel": "Learn",
-      "title": "Express Chatbot",
+      "title": "Streaming Express Chatbot with MCP",
       "description": "Express chatbot with SSE streaming, Zod tools and MCP",
       "tags": [],
       "path": "typescript/01-learn/07-express-chatbot",
-      "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/07-express-chatbot"
+      "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/07-express-chatbot",
+      "slug": "typescript/express-chatbot",
+      "docs": [
+        {
+          "label": "TypeScript Agent API",
+          "url": "https://strandsagents.com/docs/api/typescript/Agent/"
+        }
+      ]
     },
     {
       "id": "typescript/02-deploy/01-agentcore",
@@ -1153,31 +1404,71 @@
         "Amazon Bedrock AgentCore"
       ],
       "path": "typescript/02-deploy/01-agentcore",
-      "url": "https://github.com/strands-agents/samples/tree/main/typescript/02-deploy/01-agentcore"
+      "url": "https://github.com/strands-agents/samples/tree/main/typescript/02-deploy/01-agentcore",
+      "slug": "typescript/agentcore"
     },
     {
       "id": "typescript/02-deploy/02-nextjs-vercel-adapter",
       "language": "typescript",
       "category": "deploy",
       "categoryLabel": "Deploy",
-      "title": "Next.js Vercel Adapter",
+      "title": "Next.js Chat App with Vercel AI SDK",
       "description": "Next.js chat app: Vercel AI SDK client + Strands server via the VercelModel adapter",
       "tags": [
         "Vercel · AgentCore · Docker"
       ],
       "path": "typescript/02-deploy/02-nextjs-vercel-adapter",
-      "url": "https://github.com/strands-agents/samples/tree/main/typescript/02-deploy/02-nextjs-vercel-adapter"
+      "url": "https://github.com/strands-agents/samples/tree/main/typescript/02-deploy/02-nextjs-vercel-adapter",
+      "slug": "typescript/nextjs-vercel-adapter",
+      "docs": [
+        {
+          "label": "Strands Agents documentation",
+          "url": "https://strandsagents.com/"
+        },
+        {
+          "label": "VercelModel adapter",
+          "url": "https://github.com/strands-agents/harness-sdk/blob/main/strands-ts/src/models/vercel.ts"
+        }
+      ]
     },
     {
       "id": "typescript/03-ux-demos/dynamic-ui",
       "language": "typescript",
       "category": "ux-demos",
       "categoryLabel": "UX Demos",
-      "title": "Dynamic UI",
+      "title": "Agent-Generated Workout Tracker UI",
       "description": "An agent that chooses which UI components to render and reacts to form and button interactions",
       "tags": [],
       "path": "typescript/03-ux-demos/dynamic-ui",
-      "url": "https://github.com/strands-agents/samples/tree/main/typescript/03-ux-demos/dynamic-ui"
+      "url": "https://github.com/strands-agents/samples/tree/main/typescript/03-ux-demos/dynamic-ui",
+      "slug": "typescript/dynamic-ui",
+      "family": "dynamic-ui",
+      "docs": [
+        {
+          "label": "Custom tools",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/tools/custom-tools/"
+        },
+        {
+          "label": "Streaming",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/streaming/"
+        },
+        {
+          "label": "Session management",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/agents/session-management/"
+        }
+      ]
+    },
+    {
+      "id": "typescript/migration/langgraph",
+      "language": "typescript",
+      "category": "migration",
+      "categoryLabel": "Migration",
+      "title": "LangGraph",
+      "description": "Compare the same three-stage case-triage workflow before and after a migration from LangGraph.js to the Strands Agents TypeScript SDK. Both implementations preserve the public entry point and business flow for a direct framework comparison.",
+      "tags": [],
+      "path": "typescript/migration/langgraph",
+      "url": "https://github.com/strands-agents/samples/tree/main/typescript/migration/langgraph",
+      "slug": "typescript/migration/langgraph"
     }
   ]
 }

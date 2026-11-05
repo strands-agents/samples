@@ -1,0 +1,202 @@
+{
+  "version": 1,
+  "collections": [
+    {
+      "id": "learn",
+      "label": "Learn",
+      "description": "Guided projects for learning advanced Strands patterns.",
+      "samples": [
+        "python/01-learn/18-self-improving-agents",
+        "typescript/01-learn/07-express-chatbot"
+      ]
+    },
+    {
+      "id": "deploy",
+      "label": "Deploy",
+      "description": "Take Strands applications from local development to production.",
+      "samples": [
+        "python/02-deploy/04-agentcore-multi-agent/01-a2a-orchestration",
+        "typescript/02-deploy/02-nextjs-vercel-adapter"
+      ]
+    },
+    {
+      "id": "industry-use-cases",
+      "label": "Industry use cases",
+      "description": "Apply Strands to real operational and business workflows.",
+      "samples": [
+        "python/04-industry-use-cases/software-engineering/lambda-error-analysis-agent"
+      ]
+    },
+    {
+      "id": "technical-use-cases",
+      "label": "Technical use cases",
+      "description": "Solve common engineering problems with complete Strands implementations.",
+      "samples": [
+        "python/05-technical-use-cases/fastapi-strands-production-starter",
+        "python/05-technical-use-cases/steering/library-book-renewal-agent",
+        "python/06-evaluate/red-teaming"
+      ]
+    },
+    {
+      "id": "user-experiences",
+      "label": "User experiences",
+      "description": "Build interactive agent interfaces and human approval flows.",
+      "samples": [
+        "python/07-ux-demos/human-in-the-loop-approval-agent",
+        "python/07-ux-demos/dynamic-ui",
+        "typescript/03-ux-demos/dynamic-ui"
+      ]
+    }
+  ],
+  "samples": {
+    "python/01-learn/18-self-improving-agents": {
+      "title": "Self-Improving Agent Workshop",
+      "docs": [
+        {
+          "label": "Strands Agents documentation",
+          "url": "https://strandsagents.com/"
+        }
+      ]
+    },
+    "python/02-deploy/04-agentcore-multi-agent/01-a2a-orchestration": {
+      "title": "A2A Shopping Assistant on AgentCore",
+      "docs": [
+        {
+          "label": "Agent-to-Agent",
+          "url": "https://strandsagents.com/latest/documentation/docs/user-guide/concepts/multi-agent/agent-to-agent/"
+        },
+        {
+          "label": "MCP tools",
+          "url": "https://strandsagents.com/latest/documentation/docs/user-guide/concepts/tools/mcp-tools/"
+        },
+        {
+          "label": "Deploy to Amazon Bedrock AgentCore",
+          "url": "https://strandsagents.com/latest/documentation/docs/user-guide/deploy/deploy_to_bedrock_agentcore/"
+        }
+      ]
+    },
+    "python/04-industry-use-cases/software-engineering/lambda-error-analysis-agent": {
+      "title": "AWS Lambda Failure Analysis Agent",
+      "docs": [
+        {
+          "label": "Strands Agents SDK",
+          "url": "https://strandsagents.com/latest/documentation/docs/"
+        }
+      ]
+    },
+    "python/05-technical-use-cases/fastapi-strands-production-starter": {
+      "title": "Production Agent API with FastAPI",
+      "docs": [
+        {
+          "label": "Strands Agents documentation",
+          "url": "https://strandsagents.com/"
+        },
+        {
+          "label": "Evaluation SDK",
+          "url": "https://strandsagents.com/docs/user-guide/evals-sdk/"
+        },
+        {
+          "label": "Session management",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/memory/overview/"
+        }
+      ]
+    },
+    "python/05-technical-use-cases/steering/library-book-renewal-agent": {
+      "title": "Book Renewal Agent: Control Strategies",
+      "docs": [
+        {
+          "label": "Steering providers",
+          "url": "https://strandsagents.com/docs/user-guide/concepts/plugins/steering/"
+        },
+        {
+          "label": "Evaluation SDK quickstart",
+          "url": "https://strandsagents.com/latest/documentation/docs/user-guide/evals-sdk/quickstart/"
+        }
+      ]
+    },
+    "python/06-evaluate/red-teaming": {
+      "title": "Red-Team a Refund Agent",
+      "docs": [
+        {
+          "label": "Red teaming",
+          "url": "https://strandsagents.com/docs/user-guide/evals-sdk/red-teaming/"
+        },
+        {
+          "label": "Red teaming quickstart",
+          "url": "https://strandsagents.com/docs/user-guide/evals-sdk/red-teaming/quickstart/"
+        }
+      ]
+    },
+    "python/07-ux-demos/dynamic-ui": {
+      "title": "Agent-Generated Workout Tracker UI",
+      "family": "dynamic-ui",
+      "docs": [
+        {
+          "label": "Custom tools",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/tools/custom-tools/"
+        },
+        {
+          "label": "Streaming",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/streaming/"
+        },
+        {
+          "label": "Session management",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/agents/session-management/"
+        }
+      ]
+    },
+    "python/07-ux-demos/human-in-the-loop-approval-agent": {
+      "title": "Human-in-the-Loop Order Approval",
+      "docs": [
+        {
+          "label": "Interrupts",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/interrupts/"
+        },
+        {
+          "label": "Multi-agent graphs",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/multi-agent/graph/"
+        }
+      ]
+    },
+    "typescript/01-learn/07-express-chatbot": {
+      "title": "Streaming Express Chatbot with MCP",
+      "docs": [
+        {
+          "label": "TypeScript Agent API",
+          "url": "https://strandsagents.com/docs/api/typescript/Agent/"
+        }
+      ]
+    },
+    "typescript/02-deploy/02-nextjs-vercel-adapter": {
+      "title": "Next.js Chat App with Vercel AI SDK",
+      "docs": [
+        {
+          "label": "Strands Agents documentation",
+          "url": "https://strandsagents.com/"
+        },
+        {
+          "label": "VercelModel adapter",
+          "url": "https://github.com/strands-agents/harness-sdk/blob/main/strands-ts/src/models/vercel.ts"
+        }
+      ]
+    },
+    "typescript/03-ux-demos/dynamic-ui": {
+      "title": "Agent-Generated Workout Tracker UI",
+      "family": "dynamic-ui",
+      "docs": [
+        {
+          "label": "Custom tools",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/tools/custom-tools/"
+        },
+        {
+          "label": "Streaming",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/streaming/"
+        },
+        {
+          "label": "Session management",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/agents/session-management/"
+        }
+      ]
+    }
+  }
+}

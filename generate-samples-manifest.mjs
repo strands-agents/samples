@@ -1,6 +1,9 @@
 // Generates samples.json: a machine-readable index of every sample in this
 // repo so downstream consumers (e.g. the docs site) can render a styled,
-// grouped, filterable catalog without scraping prose.
+// grouped, filterable catalog without scraping prose. samples-catalog.json is
+// the hand-maintained editorial layer: collections explicitly publish and
+// order website samples; every discovered sample omitted from them stays
+// repository-only.
 //
 // A "sample" is the shallowest README- or notebook-bearing directory under
 // a category (nested apps inside a sample are folded into it). Titles come
@@ -14,6 +17,8 @@ import path from 'node:path'
 const ROOT = path.resolve('.')
 const LANGS = ['python', 'typescript']
 const IGNORED_DIRS = new Set(['__pycache__', 'node_modules', 'venv'])
+const CATALOG_PATH = path.join(ROOT, 'samples-catalog.json')
+const SAMPLE_METADATA_KEYS = new Set(['title', 'family', 'docs'])
 
 const TITLE_WORDS = new Map(
   Object.entries({
@@ -32,6 +37,7 @@ const TITLE_WORDS = new Map(
     hitl: 'HITL',
     http: 'HTTP',
     hvac: 'HVAC',
+    langgraph: 'LangGraph',
     llm: 'LLM',
     mcp: 'MCP',
     nextjs: 'Next.js',
@@ -95,8 +101,9 @@ const hasReadme = (d) => existsSync(path.join(d, 'README.md'))
 const hasNotebook = (d) => readdirSync(d).some((f) => f.endsWith('.ipynb'))
 const rel = (d) => path.relative(ROOT, d).split(path.sep).join('/')
 
-// A category root is exactly `<lang>/<NN-name>` — never a sample itself.
+// A category root is exactly `<lang>/<category>` — never a sample itself.
 const isCategoryRoot = (relPath) => /^[a-z]+\/[^/]+$/.test(relPath)
+const isCategoryDir = (name) => /^\d+[-_]/.test(name) || name === 'migration'
 
 // A handful of category labels want casing the title-caser can't infer.
 const LABEL_OVERRIDES = { 'ux-demos': 'UX Demos' }
@@ -159,7 +166,7 @@ function readmeBlurb(dir) {
 
 const categoryDirs = LANGS.flatMap((language) =>
   readdirSync(path.join(ROOT, language), { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() && /^\d+[-_]/.test(entry.name))
+    .filter((entry) => entry.isDirectory() && isCategoryDir(entry.name))
     .map((entry) => path.join(ROOT, language, entry.name))
     .sort((a, b) => a.localeCompare(b))
 )
@@ -182,8 +189,9 @@ for (const r of candidates) {
   selected.push(r)
 }
 
-// Keep the version 1 record shape stable for downstream consumers.
-const samples = selected
+// Keep the existing version 1 fields stable; the catalog mode and editorial
+// fields are additive.
+const baseSamples = selected
   .map((r) => {
     const parts = r.split('/')
     const language = parts[0]
@@ -216,8 +224,197 @@ const samples = selected
 
 function deriveSlug(sample) {
   const segments = sample.path.split('/')
-  return [segments[0], ...segments.slice(2).map((segment) => segment.replace(/^\d+-/, ''))].join('/')
+  const categoryDir = segments[1]
+  const categorySegments = /^\d+[-_]/.test(categoryDir)
+    ? []
+    : [categoryDir.replace(/^\d+[-_]/, '')]
+  return [
+    segments[0],
+    ...categorySegments,
+    ...segments.slice(2).map((segment) => segment.replace(/^\d+[-_]/, '')),
+  ].join('/')
 }
+
+function assertObject(value, label) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error(`${label} must be an object`)
+  }
+}
+
+function assertOnlyKeys(value, allowed, label) {
+  for (const key of Object.keys(value)) {
+    if (!allowed.has(key)) throw new Error(`${label} has unsupported field: ${key}`)
+  }
+}
+
+function assertNonEmptyString(value, label) {
+  if (typeof value !== 'string' || !value.trim()) throw new Error(`${label} must be a non-empty string`)
+}
+
+function validateStringArray(value, label) {
+  if (!Array.isArray(value) || value.length === 0) {
+    throw new Error(`${label} must be a non-empty array`)
+  }
+  const seenValues = new Set()
+  for (const item of value) {
+    assertNonEmptyString(item, `${label} entry`)
+    if (seenValues.has(item)) throw new Error(`${label} contains duplicate value: ${item}`)
+    seenValues.add(item)
+  }
+  return [...value]
+}
+
+function validateDocs(value, sampleId) {
+  if (!Array.isArray(value) || value.length === 0) {
+    throw new Error(`${sampleId}.docs must be a non-empty array`)
+  }
+  return value.map((doc, index) => {
+    const label = `${sampleId}.docs[${index}]`
+    assertObject(doc, label)
+    assertOnlyKeys(doc, new Set(['label', 'url']), label)
+    assertNonEmptyString(doc.label, `${label}.label`)
+    assertNonEmptyString(doc.url, `${label}.url`)
+    let url
+    try {
+      url = new URL(doc.url)
+    } catch {
+      throw new Error(`${label}.url must be an absolute URL`)
+    }
+    if (url.protocol !== 'https:') {
+      throw new Error(`${label}.url must use https`)
+    }
+    return { label: doc.label, url: doc.url }
+  })
+}
+
+function readCatalog() {
+  if (!existsSync(CATALOG_PATH)) {
+    throw new Error('samples-catalog.json is required to define website collections')
+  }
+
+  let catalog
+  try {
+    catalog = JSON.parse(readFileSync(CATALOG_PATH, 'utf8'))
+  } catch (error) {
+    throw new Error(`unable to parse samples-catalog.json: ${error.message}`)
+  }
+  assertObject(catalog, 'samples-catalog.json')
+  assertOnlyKeys(catalog, new Set(['version', 'collections', 'samples']), 'samples-catalog.json')
+  if (catalog.version !== 1) throw new Error('samples-catalog.json.version must be 1')
+  if (!Array.isArray(catalog.collections)) throw new Error('samples-catalog.json.collections must be an array')
+  assertObject(catalog.samples, 'samples-catalog.json.samples')
+  return catalog
+}
+
+function validateCatalog(catalog, discoveredSamples) {
+  const discoveredIds = new Set(discoveredSamples.map((sample) => sample.id))
+
+  const collectionIds = new Set()
+  const membership = new Map()
+  const collections = catalog.collections.map((collection, index) => {
+    const label = `samples-catalog.json.collections[${index}]`
+    assertObject(collection, label)
+    assertOnlyKeys(collection, new Set(['id', 'label', 'description', 'samples']), label)
+    assertNonEmptyString(collection.id, `${label}.id`)
+    if (!/^[a-z0-9][a-z0-9-]*$/.test(collection.id)) {
+      throw new Error(`${label}.id must be a lowercase slug`)
+    }
+    if (collectionIds.has(collection.id)) throw new Error(`duplicate collection id: ${collection.id}`)
+    collectionIds.add(collection.id)
+    assertNonEmptyString(collection.label, `${label}.label`)
+    if (collection.description !== undefined) {
+      assertNonEmptyString(collection.description, `${label}.description`)
+    }
+    const sampleIds = validateStringArray(collection.samples, `${label}.samples`)
+    for (const sampleId of sampleIds) {
+      if (!discoveredIds.has(sampleId)) {
+        throw new Error(`${label}.samples references unknown sample: ${sampleId}`)
+      }
+      if (membership.has(sampleId)) {
+        throw new Error(`${sampleId} belongs to more than one website collection`)
+      }
+      membership.set(sampleId, collection.id)
+    }
+    return {
+      id: collection.id,
+      label: collection.label,
+      ...(collection.description ? { description: collection.description } : {}),
+      samples: sampleIds,
+    }
+  })
+
+  const metadataIds = new Set(Object.keys(catalog.samples))
+  const unknownMetadataIds = [...metadataIds].filter((sampleId) => !discoveredIds.has(sampleId))
+  if (unknownMetadataIds.length > 0) {
+    throw new Error(`samples-catalog.json references unknown samples: ${unknownMetadataIds.join(', ')}`)
+  }
+  const unpublishedMetadataIds = [...metadataIds].filter((sampleId) => !membership.has(sampleId))
+  if (unpublishedMetadataIds.length > 0) {
+    throw new Error(
+      `samples-catalog.json defines website metadata for unpublished samples: ${unpublishedMetadataIds.join(', ')}`
+    )
+  }
+  const publishedIds = [...membership.keys()]
+  const missingMetadataIds = publishedIds.filter((sampleId) => !metadataIds.has(sampleId))
+  if (missingMetadataIds.length > 0) {
+    throw new Error(`samples-catalog.json is missing website metadata for: ${missingMetadataIds.join(', ')}`)
+  }
+
+  const metadata = new Map()
+  for (const sampleId of publishedIds) {
+    const sampleMetadata = catalog.samples[sampleId]
+    const label = `samples-catalog.json.samples[${JSON.stringify(sampleId)}]`
+    assertObject(sampleMetadata, label)
+    assertOnlyKeys(sampleMetadata, SAMPLE_METADATA_KEYS, label)
+    const editorial = {}
+    if (sampleMetadata.title !== undefined) {
+      assertNonEmptyString(sampleMetadata.title, `${sampleId}.title`)
+      editorial.title = sampleMetadata.title
+    }
+    if (sampleMetadata.family !== undefined) {
+      assertNonEmptyString(sampleMetadata.family, `${sampleId}.family`)
+      if (!/^[a-z0-9][a-z0-9-]*$/.test(sampleMetadata.family)) {
+        throw new Error(`${sampleId}.family must be a lowercase slug`)
+      }
+      editorial.family = sampleMetadata.family
+    }
+    if (sampleMetadata.docs === undefined) {
+      throw new Error(`${sampleId} is published but has no documentation links`)
+    }
+    editorial.docs = validateDocs(sampleMetadata.docs, sampleId)
+    metadata.set(sampleId, editorial)
+  }
+
+  const samplesById = new Map(discoveredSamples.map((sample) => [sample.id, sample]))
+  const families = new Map()
+  for (const [sampleId, editorial] of metadata) {
+    if (!editorial.family) continue
+    const collectionId = membership.get(sampleId)
+    const language = samplesById.get(sampleId).language
+    const family = families.get(editorial.family)
+    if (!family) {
+      families.set(editorial.family, { collectionId, languages: new Set([language]) })
+      continue
+    }
+    if (family.collectionId !== collectionId) {
+      throw new Error(`family ${editorial.family} spans multiple website collections`)
+    }
+    if (family.languages.has(language)) {
+      throw new Error(`family ${editorial.family} has more than one published ${language} sample`)
+    }
+    family.languages.add(language)
+  }
+
+  return { collections, metadata }
+}
+
+const catalog = readCatalog()
+const { collections, metadata } = validateCatalog(catalog, baseSamples)
+const samples = baseSamples.map((sample) => ({
+  ...sample,
+  slug: deriveSlug(sample),
+  ...(metadata.get(sample.id) ?? {}),
+}))
 
 // Categories in numbered order, with friendly labels, for grouped rendering.
 const categories = []
@@ -249,7 +446,7 @@ function validateManifest() {
     if (paths.has(sample.path)) throw new Error(`duplicate sample path: ${sample.path}`)
     paths.add(sample.path)
 
-    const slug = deriveSlug(sample)
+    const slug = sample.slug
     if (!/^[a-z0-9][a-z0-9/-]*$/.test(slug)) throw new Error(`${sample.path} generates an invalid slug: ${slug}`)
     if (slugs.has(slug)) throw new Error(`duplicate generated sample slug: ${slug}`)
     slugs.add(slug)
@@ -270,7 +467,8 @@ function validateManifest() {
 validateManifest()
 
 const manifestPath = path.join(ROOT, 'samples.json')
-const manifest = JSON.stringify({ version: 1, categories, samples }, null, 2) + '\n'
+const manifest =
+  JSON.stringify({ version: 1, catalog: 'curated', categories, collections, samples }, null, 2) + '\n'
 
 if (process.argv.includes('--check')) {
   const current = existsSync(manifestPath) ? readFileSync(manifestPath, 'utf8') : ''
@@ -278,9 +476,13 @@ if (process.argv.includes('--check')) {
     console.error('samples.json is out of date; run node generate-samples-manifest.mjs')
     process.exitCode = 1
   } else {
-    console.log(`samples.json is current — ${samples.length} samples, ${categories.length} categories`)
+    console.log(
+      `samples.json is current — ${samples.length} samples, ${categories.length} categories, ${collections.length} collections`
+    )
   }
 } else {
   writeFileSync(manifestPath, manifest)
-  console.log(`wrote samples.json — ${samples.length} samples, ${categories.length} categories`)
+  console.log(
+    `wrote samples.json — ${samples.length} samples, ${categories.length} categories, ${collections.length} collections`
+  )
 }
