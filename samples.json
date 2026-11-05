@@ -101,7 +101,8 @@
       "description": "Solve common engineering problems with complete Strands implementations.",
       "samples": [
         "python/05-technical-use-cases/fastapi-strands-production-starter",
-        "python/05-technical-use-cases/steering/library-book-renewal-agent"
+        "python/05-technical-use-cases/steering/library-book-renewal-agent",
+        "python/06-evaluate/red-teaming"
       ]
     },
     {
@@ -388,7 +389,7 @@
       "language": "python",
       "category": "learn",
       "categoryLabel": "Learn",
-      "title": "Self Improving Agents",
+      "title": "Self-Improving Agent Workshop",
       "description": "Build a self-extending, self-modifying, autonomous agent and deploy it (6 steps, AIM308)",
       "tags": [
         "load_tools_from_directory",
@@ -491,7 +492,7 @@
       "language": "python",
       "category": "deploy",
       "categoryLabel": "Deploy",
-      "title": "A2A Orchestration",
+      "title": "A2A Shopping Assistant on AgentCore",
       "description": "This tutorial demonstrates how to use the Strands Agents SDK to build and deploy a multi-agent system on Amazon Bedrock AgentCore. You will create three specialized agents, each running in its own managed runtime, that discover and…",
       "tags": [],
       "path": "python/02-deploy/04-agentcore-multi-agent/01-a2a-orchestration",
@@ -908,7 +909,7 @@
       "language": "python",
       "category": "industry-use-cases",
       "categoryLabel": "Industry Use Cases",
-      "title": "Lambda Error Analysis Agent",
+      "title": "AWS Lambda Failure Analysis Agent",
       "description": "Event-driven Lambda error diagnostics using CDK, EventBridge, and Bedrock Knowledge Base RAG for root cause analysis with confidence scoring",
       "tags": [],
       "path": "python/04-industry-use-cases/software-engineering/lambda-error-analysis-agent",
@@ -939,7 +940,7 @@
       "language": "python",
       "category": "technical-use-cases",
       "categoryLabel": "Technical Use Cases",
-      "title": "FastAPI Strands Production Starter",
+      "title": "Production Agent API with FastAPI",
       "description": "A single runnable Python service, in the shape of a benchmark chatbot repo (FastAPI, three tools, one model call), rebuilt on Strands Agents. It wires the production concerns you actually ship with: an OpenAI or Bedrock provider, max…",
       "tags": [],
       "path": "python/05-technical-use-cases/fastapi-strands-production-starter",
@@ -1015,7 +1016,7 @@
       "language": "python",
       "category": "technical-use-cases",
       "categoryLabel": "Technical Use Cases",
-      "title": "Library Book Renewal Agent",
+      "title": "Book Renewal Agent: Control Strategies",
       "description": "Demonstrates different approaches to controlling AI agent behavior with a librarian agent. Users can chat with the agent, ask questions, and request to renew a book.",
       "tags": [],
       "path": "python/05-technical-use-cases/steering/library-book-renewal-agent",
@@ -1115,12 +1116,22 @@
       "language": "python",
       "category": "evaluate",
       "categoryLabel": "Evaluate",
-      "title": "Red Teaming",
+      "title": "Red-Team a Refund Agent",
       "description": "This sample red-teams a small returns-desk agent for a made-up shop, Tidewater Outfitters, built on Strands Agents. The attacks come from the red-teaming feature in Strands Evals 1.7.0. The point of the sample: an eval's score and the…",
       "tags": [],
       "path": "python/06-evaluate/red-teaming",
       "url": "https://github.com/strands-agents/samples/tree/main/python/06-evaluate/red-teaming",
-      "slug": "python/red-teaming"
+      "slug": "python/red-teaming",
+      "docs": [
+        {
+          "label": "Red teaming",
+          "url": "https://strandsagents.com/docs/user-guide/evals-sdk/red-teaming/"
+        },
+        {
+          "label": "Red teaming quickstart",
+          "url": "https://strandsagents.com/docs/user-guide/evals-sdk/red-teaming/quickstart/"
+        }
+      ]
     },
     {
       "id": "python/06-evaluate/trajectory-evaluation",
@@ -1152,7 +1163,7 @@
       "language": "python",
       "category": "ux-demos",
       "categoryLabel": "UX Demos",
-      "title": "Dynamic UI",
+      "title": "Agent-Generated Workout Tracker UI",
       "description": "An agent that answers with UI, not just text. You ask a question, the agent picks components from a catalog the app defines (stats, charts, tables, forms, buttons), and the browser renders them. When someone submits a form or clicks a…",
       "tags": [],
       "path": "python/07-ux-demos/dynamic-ui",
@@ -1179,7 +1190,7 @@
       "language": "python",
       "category": "ux-demos",
       "categoryLabel": "UX Demos",
-      "title": "Human In The Loop Approval Agent",
+      "title": "Human-in-the-Loop Order Approval",
       "description": "An order approval system that demonstrates human-in-the-loop workflows using Strands Agents' interrupt/resume pattern. A multi-agent graph evaluates incoming orders — assessing risk factors like customer history, order value, and…",
       "tags": [],
       "path": "python/07-ux-demos/human-in-the-loop-approval-agent",
@@ -1369,7 +1380,7 @@
       "language": "typescript",
       "category": "learn",
       "categoryLabel": "Learn",
-      "title": "Express Chatbot",
+      "title": "Streaming Express Chatbot with MCP",
       "description": "Express chatbot with SSE streaming, Zod tools and MCP",
       "tags": [],
       "path": "typescript/01-learn/07-express-chatbot",
@@ -1401,7 +1412,7 @@
       "language": "typescript",
       "category": "deploy",
       "categoryLabel": "Deploy",
-      "title": "Next.js Vercel Adapter",
+      "title": "Next.js Chat App with Vercel AI SDK",
       "description": "Next.js chat app: Vercel AI SDK client + Strands server via the VercelModel adapter",
       "tags": [
         "Vercel · AgentCore · Docker"
@@ -1425,7 +1436,7 @@
       "language": "typescript",
       "category": "ux-demos",
       "categoryLabel": "UX Demos",
-      "title": "Dynamic UI",
+      "title": "Agent-Generated Workout Tracker UI",
       "description": "An agent that chooses which UI components to render and reacts to form and button interactions",
       "tags": [],
       "path": "typescript/03-ux-demos/dynamic-ui",

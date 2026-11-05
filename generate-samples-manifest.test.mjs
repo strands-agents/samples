@@ -132,6 +132,7 @@ test('merges ordered collections and website metadata', async (t) => {
   const root = await createFixture(t, {
     description: 'A complete application',
     metadata: {
+      title: 'Build a Complete Example',
       family: 'example-family',
       docs: [{ label: 'Tools', url: 'https://example.com/docs/tools' }],
     },
@@ -159,10 +160,12 @@ test('merges ordered collections and website metadata', async (t) => {
   ])
   assert.deepEqual(
     {
+      title: manifest.samples[0].title,
       family: manifest.samples[0].family,
       docs: manifest.samples[0].docs,
     },
     {
+      title: 'Build a Complete Example',
       family: 'example-family',
       docs: [{ label: 'Tools', url: 'https://example.com/docs/tools' }],
     }
@@ -218,6 +221,18 @@ test('requires documentation links for published samples', async (t) => {
   result = runGenerator(root)
   assert.notEqual(result.status, 0)
   assert.match(result.stderr, /published but has no documentation links/)
+})
+
+test('requires non-empty editorial titles', async (t) => {
+  const root = await createFixture(t, {
+    description: 'Published application',
+    metadata: { title: ' ', docs: DOCS },
+    collections: [{ id: 'learn', label: 'Learn', samples: [SAMPLE_ID] }],
+  })
+
+  const result = runGenerator(root)
+  assert.notEqual(result.status, 0)
+  assert.match(result.stderr, /title must be a non-empty string/)
 })
 
 test('requires secure documentation links', async (t) => {
