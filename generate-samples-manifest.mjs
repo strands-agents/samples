@@ -1,8 +1,8 @@
 // Generates samples.json: a machine-readable index of every sample in this
 // repo so downstream consumers (e.g. the docs site) can render a styled,
 // grouped, filterable catalog without scraping prose. samples-catalog.json is
-// the hand-maintained editorial layer: every discovered sample must have an
-// explicit placement and kind before the manifest can be generated.
+// the hand-maintained editorial layer: collections publish samples, while the
+// repositoryOnly list records samples that intentionally stay off the website.
 //
 // A "sample" is the shallowest README- or notebook-bearing directory under
 // a category (nested apps inside a sample are folded into it). Titles come
@@ -17,20 +17,7 @@ const ROOT = path.resolve('.')
 const LANGS = ['python', 'typescript']
 const IGNORED_DIRS = new Set(['__pycache__', 'node_modules', 'venv'])
 const CATALOG_PATH = path.join(ROOT, 'samples-catalog.json')
-const PLACEMENTS = new Set(['featured', 'reference', 'repo-only'])
-const KINDS = new Set(['application', 'workshop', 'concept', 'integration', 'migration'])
-const SAMPLE_METADATA_KEYS = new Set([
-  'placement',
-  'kind',
-  'family',
-  'capabilities',
-  'docs',
-  'program',
-  'maturity',
-  'owner',
-  'lastValidated',
-  'variants',
-])
+const SAMPLE_METADATA_KEYS = new Set(['family', 'docs'])
 
 const TITLE_WORDS = new Map(
   Object.entries({
@@ -263,9 +250,9 @@ function assertNonEmptyString(value, label) {
   if (typeof value !== 'string' || !value.trim()) throw new Error(`${label} must be a non-empty string`)
 }
 
-function validateStringArray(value, label) {
-  if (!Array.isArray(value) || value.length === 0) {
-    throw new Error(`${label} must be a non-empty array`)
+function validateStringArray(value, label, allowEmpty = false) {
+  if (!Array.isArray(value) || (!allowEmpty && value.length === 0)) {
+    throw new Error(`${label} must be ${allowEmpty ? 'an array' : 'a non-empty array'}`)
   }
   const seenValues = new Set()
   for (const item of value) {
@@ -299,19 +286,9 @@ function validateDocs(value, sampleId) {
   })
 }
 
-function validateDate(value, label) {
-  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    throw new Error(`${label} must use YYYY-MM-DD`)
-  }
-  const parsed = new Date(`${value}T00:00:00Z`)
-  if (Number.isNaN(parsed.valueOf()) || parsed.toISOString().slice(0, 10) !== value) {
-    throw new Error(`${label} is not a valid date`)
-  }
-}
-
 function readCatalog() {
   if (!existsSync(CATALOG_PATH)) {
-    throw new Error('samples-catalog.json is required; classify every discovered sample before publishing')
+    throw new Error('samples-catalog.json is required; classify every discovered sample')
   }
 
   let catalog
@@ -321,27 +298,25 @@ function readCatalog() {
     throw new Error(`unable to parse samples-catalog.json: ${error.message}`)
   }
   assertObject(catalog, 'samples-catalog.json')
-  assertOnlyKeys(catalog, new Set(['version', 'collections', 'samples']), 'samples-catalog.json')
+  assertOnlyKeys(
+    catalog,
+    new Set(['version', 'collections', 'repositoryOnly', 'samples']),
+    'samples-catalog.json'
+  )
   if (catalog.version !== 1) throw new Error('samples-catalog.json.version must be 1')
   if (!Array.isArray(catalog.collections)) throw new Error('samples-catalog.json.collections must be an array')
+  if (!Array.isArray(catalog.repositoryOnly)) {
+    throw new Error('samples-catalog.json.repositoryOnly must be an array')
+  }
   assertObject(catalog.samples, 'samples-catalog.json.samples')
   return catalog
 }
 
 function validateCatalog(catalog, discoveredSamples) {
   const discoveredIds = new Set(discoveredSamples.map((sample) => sample.id))
-  const catalogIds = new Set(Object.keys(catalog.samples))
-  const missingIds = [...discoveredIds].filter((id) => !catalogIds.has(id))
-  const unknownIds = [...catalogIds].filter((id) => !discoveredIds.has(id))
-  if (missingIds.length) {
-    throw new Error(`samples-catalog.json is missing metadata for: ${missingIds.join(', ')}`)
-  }
-  if (unknownIds.length) {
-    throw new Error(`samples-catalog.json references unknown samples: ${unknownIds.join(', ')}`)
-  }
 
   const collectionIds = new Set()
-  const membership = new Map(discoveredSamples.map((sample) => [sample.id, []]))
+  const membership = new Map()
   const collections = catalog.collections.map((collection, index) => {
     const label = `samples-catalog.json.collections[${index}]`
     assertObject(collection, label)
@@ -361,7 +336,10 @@ function validateCatalog(catalog, discoveredSamples) {
       if (!discoveredIds.has(sampleId)) {
         throw new Error(`${label}.samples references unknown sample: ${sampleId}`)
       }
-      membership.get(sampleId).push(collection.id)
+      if (membership.has(sampleId)) {
+        throw new Error(`${sampleId} belongs to more than one website collection`)
+      }
+      membership.set(sampleId, collection.id)
     }
     return {
       id: collection.id,
@@ -371,82 +349,82 @@ function validateCatalog(catalog, discoveredSamples) {
     }
   })
 
+  const repositoryOnly = validateStringArray(
+    catalog.repositoryOnly,
+    'samples-catalog.json.repositoryOnly',
+    true
+  )
+  for (const sampleId of repositoryOnly) {
+    if (!discoveredIds.has(sampleId)) {
+      throw new Error(`samples-catalog.json.repositoryOnly references unknown sample: ${sampleId}`)
+    }
+    if (membership.has(sampleId)) {
+      throw new Error(`${sampleId} is both repository-only and published in a website collection`)
+    }
+  }
+
+  const classifiedIds = new Set([...repositoryOnly, ...membership.keys()])
+  const unclassifiedIds = [...discoveredIds].filter((sampleId) => !classifiedIds.has(sampleId))
+  if (unclassifiedIds.length > 0) {
+    throw new Error(`samples-catalog.json does not classify: ${unclassifiedIds.join(', ')}`)
+  }
+
+  const metadataIds = new Set(Object.keys(catalog.samples))
+  const unknownMetadataIds = [...metadataIds].filter((sampleId) => !discoveredIds.has(sampleId))
+  if (unknownMetadataIds.length > 0) {
+    throw new Error(`samples-catalog.json references unknown samples: ${unknownMetadataIds.join(', ')}`)
+  }
+  const unpublishedMetadataIds = [...metadataIds].filter((sampleId) => !membership.has(sampleId))
+  if (unpublishedMetadataIds.length > 0) {
+    throw new Error(
+      `samples-catalog.json defines website metadata for repository-only samples: ${unpublishedMetadataIds.join(', ')}`
+    )
+  }
+  const publishedIds = [...membership.keys()]
+  const missingMetadataIds = publishedIds.filter((sampleId) => !metadataIds.has(sampleId))
+  if (missingMetadataIds.length > 0) {
+    throw new Error(`samples-catalog.json is missing website metadata for: ${missingMetadataIds.join(', ')}`)
+  }
+
   const metadata = new Map()
-  for (const sample of discoveredSamples) {
-    const sampleMetadata = catalog.samples[sample.id]
-    const label = `samples-catalog.json.samples[${JSON.stringify(sample.id)}]`
+  for (const sampleId of publishedIds) {
+    const sampleMetadata = catalog.samples[sampleId]
+    const label = `samples-catalog.json.samples[${JSON.stringify(sampleId)}]`
     assertObject(sampleMetadata, label)
     assertOnlyKeys(sampleMetadata, SAMPLE_METADATA_KEYS, label)
-    if (!PLACEMENTS.has(sampleMetadata.placement)) {
-      throw new Error(`${sample.id}.placement must be one of: ${[...PLACEMENTS].join(', ')}`)
-    }
-    if (!KINDS.has(sampleMetadata.kind)) {
-      throw new Error(`${sample.id}.kind must be one of: ${[...KINDS].join(', ')}`)
-    }
-
-    const editorial = {
-      placement: sampleMetadata.placement,
-      kind: sampleMetadata.kind,
-    }
-    const collectionMembership = membership.get(sample.id)
-    if (collectionMembership.length) editorial.collections = collectionMembership
+    const editorial = {}
     if (sampleMetadata.family !== undefined) {
-      assertNonEmptyString(sampleMetadata.family, `${sample.id}.family`)
+      assertNonEmptyString(sampleMetadata.family, `${sampleId}.family`)
       if (!/^[a-z0-9][a-z0-9-]*$/.test(sampleMetadata.family)) {
-        throw new Error(`${sample.id}.family must be a lowercase slug`)
+        throw new Error(`${sampleId}.family must be a lowercase slug`)
       }
       editorial.family = sampleMetadata.family
     }
-    if (sampleMetadata.capabilities !== undefined) {
-      editorial.capabilities = validateStringArray(sampleMetadata.capabilities, `${sample.id}.capabilities`)
+    if (sampleMetadata.docs === undefined) {
+      throw new Error(`${sampleId} is published but has no documentation links`)
     }
-    if (sampleMetadata.docs !== undefined) editorial.docs = validateDocs(sampleMetadata.docs, sample.id)
-    for (const field of ['program', 'maturity', 'owner']) {
-      if (sampleMetadata[field] === undefined) continue
-      assertNonEmptyString(sampleMetadata[field], `${sample.id}.${field}`)
-      editorial[field] = sampleMetadata[field]
-    }
-    if (sampleMetadata.lastValidated !== undefined) {
-      validateDate(sampleMetadata.lastValidated, `${sample.id}.lastValidated`)
-      editorial.lastValidated = sampleMetadata.lastValidated
-    }
-    if (sampleMetadata.variants !== undefined) {
-      const variants = validateStringArray(sampleMetadata.variants, `${sample.id}.variants`)
-      for (const variant of variants) {
-        if (!discoveredIds.has(variant)) {
-          throw new Error(`${sample.id}.variants references unknown sample: ${variant}`)
-        }
-        if (variant === sample.id) throw new Error(`${sample.id}.variants must not reference itself`)
-      }
-      editorial.variants = variants
-    }
-    if (editorial.placement === 'featured' && collectionMembership.length === 0) {
-      throw new Error(`${sample.id} is featured but does not belong to a collection`)
-    }
-    if (editorial.placement === 'featured' && !editorial.capabilities) {
-      throw new Error(`${sample.id} is featured but has no capabilities`)
-    }
-    if (editorial.placement === 'featured' && !editorial.docs) {
-      throw new Error(`${sample.id} is featured but has no documentation links`)
-    }
-    if (editorial.placement === 'repo-only' && collectionMembership.length > 0) {
-      throw new Error(`${sample.id} is repo-only but belongs to a website collection`)
-    }
-    metadata.set(sample.id, editorial)
+    editorial.docs = validateDocs(sampleMetadata.docs, sampleId)
+    metadata.set(sampleId, editorial)
   }
 
+  const samplesById = new Map(discoveredSamples.map((sample) => [sample.id, sample]))
+  const families = new Map()
   for (const [sampleId, editorial] of metadata) {
-    if (!editorial.variants) continue
-    if (!editorial.family) throw new Error(`${sampleId} defines variants but has no family`)
-    for (const variantId of editorial.variants) {
-      const variant = metadata.get(variantId)
-      if (variant.family !== editorial.family) {
-        throw new Error(`${sampleId} and variant ${variantId} must use the same family`)
-      }
-      if (!variant.variants?.includes(sampleId)) {
-        throw new Error(`${sampleId} and variant ${variantId} must reference each other`)
-      }
+    if (!editorial.family) continue
+    const collectionId = membership.get(sampleId)
+    const language = samplesById.get(sampleId).language
+    const family = families.get(editorial.family)
+    if (!family) {
+      families.set(editorial.family, { collectionId, languages: new Set([language]) })
+      continue
     }
+    if (family.collectionId !== collectionId) {
+      throw new Error(`family ${editorial.family} spans multiple website collections`)
+    }
+    if (family.languages.has(language)) {
+      throw new Error(`family ${editorial.family} has more than one published ${language} sample`)
+    }
+    family.languages.add(language)
   }
 
   return { collections, metadata }
@@ -457,7 +435,7 @@ const { collections, metadata } = validateCatalog(catalog, baseSamples)
 const samples = baseSamples.map((sample) => ({
   ...sample,
   slug: deriveSlug(sample),
-  ...metadata.get(sample.id),
+  ...(metadata.get(sample.id) ?? {}),
 }))
 
 // Categories in numbered order, with friendly labels, for grouped rendering.

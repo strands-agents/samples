@@ -27,8 +27,8 @@ Contributions via pull requests are much appreciated. Before sending us a pull r
 2. You check existing open, and recently merged, pull requests to make sure someone else hasn't addressed the problem already.
 3. You open an issue to discuss any significant work - we would hate for your time to be wasted.
 4. For new samples, follow the project structure guidelines in [`.github/templates/use-cases/structure.md`](.github/templates/use-cases/structure.md) and use the README template in [`.github/templates/use-cases/readme.md`](.github/templates/use-cases/readme.md).
-5. Classify every new or moved sample in [`samples-catalog.json`](samples-catalog.json). `placement` is required: use `featured` only for a complete, maintained journey, `reference` for a direct documentation companion, and `repo-only` when the source should remain in the repository without generating a website route. `kind` is also required and must be `application`, `workshop`, `concept`, `integration`, or `migration`.
-6. Add featured samples to an ordered collection and include relevant `capabilities` and `docs`. Use a shared `family` plus reciprocal `variants` when multiple languages implement one catalog card.
+5. Classify every new or moved sample in [`samples-catalog.json`](samples-catalog.json). Add complete website journeys to exactly one ordered collection; add all other samples to `repositoryOnly`.
+6. Add `docs` metadata for every published sample. Use a shared `family` when multiple languages implement one catalog card; every member of a family must stay in the same collection.
 7. After adding, moving, or removing a sample, or changing metadata in `samples-catalog.json` or a catalog README, run `node generate-samples-manifest.mjs`. The documentation site reads the generated `samples.json` during its build and uses its generated `catalog: "curated"` marker to enable the curated catalog contract. A sample with multiple notebooks must include a root README that indexes them.
 8. After changing the manifest generator, run `node --test generate-samples-manifest.test.mjs`.
 

@@ -138,9 +138,7 @@
       "path": "python/01-learn/01-first-agent",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/01-first-agent",
       "notebook": "01-first-agent.ipynb",
-      "slug": "python/first-agent",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/first-agent"
     },
     {
       "id": "python/01-learn/02-tools-and-mcp",
@@ -155,9 +153,7 @@
       ],
       "path": "python/01-learn/02-tools-and-mcp",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/02-tools-and-mcp",
-      "slug": "python/tools-and-mcp",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/tools-and-mcp"
     },
     {
       "id": "python/01-learn/03-model-providers",
@@ -173,9 +169,7 @@
       ],
       "path": "python/01-learn/03-model-providers",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/03-model-providers",
-      "slug": "python/model-providers",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/model-providers"
     },
     {
       "id": "python/01-learn/04-streaming",
@@ -191,9 +185,7 @@
       "path": "python/01-learn/04-streaming",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/04-streaming",
       "notebook": "streaming.ipynb",
-      "slug": "python/streaming",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/streaming"
     },
     {
       "id": "python/01-learn/05-guardrails",
@@ -208,9 +200,7 @@
       "path": "python/01-learn/05-guardrails",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/05-guardrails",
       "notebook": "bedrock_guardrails_sample.ipynb",
-      "slug": "python/guardrails",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/guardrails"
     },
     {
       "id": "python/01-learn/06-memory",
@@ -225,9 +215,7 @@
       "path": "python/01-learn/06-memory",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/06-memory",
       "notebook": "personal_agent_with_memory.ipynb",
-      "slug": "python/memory",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/memory"
     },
     {
       "id": "python/01-learn/07-aws-services",
@@ -243,9 +231,7 @@
       "path": "python/01-learn/07-aws-services",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/07-aws-services",
       "notebook": "connecting-with-aws-services.ipynb",
-      "slug": "python/aws-services",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/aws-services"
     },
     {
       "id": "python/01-learn/08-observability",
@@ -261,9 +247,7 @@
       "path": "python/01-learn/08-observability",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/08-observability",
       "notebook": "Observability-and-Evaluation-sample.ipynb",
-      "slug": "python/observability",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/observability"
     },
     {
       "id": "python/01-learn/09-bidi-streaming",
@@ -277,9 +261,7 @@
       ],
       "path": "python/01-learn/09-bidi-streaming",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/09-bidi-streaming",
-      "slug": "python/bidi-streaming",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/bidi-streaming"
     },
     {
       "id": "python/01-learn/10-agents-as-tools",
@@ -294,9 +276,7 @@
       "path": "python/01-learn/10-agents-as-tools",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/10-agents-as-tools",
       "notebook": "agent-as-tools.ipynb",
-      "slug": "python/agents-as-tools",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/agents-as-tools"
     },
     {
       "id": "python/01-learn/11-swarm",
@@ -311,9 +291,7 @@
       "path": "python/01-learn/11-swarm",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/11-swarm",
       "notebook": "swarm.ipynb",
-      "slug": "python/swarm",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/swarm"
     },
     {
       "id": "python/01-learn/12-graph",
@@ -328,9 +306,7 @@
       "path": "python/01-learn/12-graph",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/12-graph",
       "notebook": "graph.ipynb",
-      "slug": "python/graph",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/graph"
     },
     {
       "id": "python/01-learn/13-human-in-the-loop",
@@ -346,9 +322,7 @@
       "path": "python/01-learn/13-human-in-the-loop",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/13-human-in-the-loop",
       "notebook": "strands_hitl.ipynb",
-      "slug": "python/human-in-the-loop",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/human-in-the-loop"
     },
     {
       "id": "python/01-learn/14-plugins",
@@ -364,9 +338,7 @@
       "path": "python/01-learn/14-plugins",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/14-plugins",
       "notebook": "plugins-in-strands.ipynb",
-      "slug": "python/plugins",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/plugins"
     },
     {
       "id": "python/01-learn/15-skills",
@@ -382,9 +354,7 @@
       "path": "python/01-learn/15-skills",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/15-skills",
       "notebook": "agent-skills.ipynb",
-      "slug": "python/skills",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/skills"
     },
     {
       "id": "python/01-learn/16-hooks-lifecycle",
@@ -403,9 +373,7 @@
       "path": "python/01-learn/16-hooks-lifecycle",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/16-hooks-lifecycle",
       "notebook": "01_hooks_basics.ipynb",
-      "slug": "python/hooks-lifecycle",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/hooks-lifecycle"
     },
     {
       "id": "python/01-learn/17-conversation-management",
@@ -422,9 +390,7 @@
       "path": "python/01-learn/17-conversation-management",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/17-conversation-management",
       "notebook": "conversation-management.ipynb",
-      "slug": "python/conversation-management",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/conversation-management"
     },
     {
       "id": "python/01-learn/18-self-improving-agents",
@@ -441,17 +407,6 @@
       "path": "python/01-learn/18-self-improving-agents",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/18-self-improving-agents",
       "slug": "python/self-improving-agents",
-      "placement": "featured",
-      "kind": "workshop",
-      "collections": [
-        "learn"
-      ],
-      "capabilities": [
-        "dynamic-tools",
-        "dynamic-system-prompts",
-        "memory",
-        "agentcore"
-      ],
       "docs": [
         {
           "label": "Strands Agents documentation",
@@ -475,9 +430,7 @@
       "path": "python/01-learn/19-structured-output",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/19-structured-output",
       "notebook": "structured-output.ipynb",
-      "slug": "python/structured-output",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/structured-output"
     },
     {
       "id": "python/01-learn/20-session-management",
@@ -495,9 +448,7 @@
       "path": "python/01-learn/20-session-management",
       "url": "https://github.com/strands-agents/samples/tree/main/python/01-learn/20-session-management",
       "notebook": "01-single-agent-persistence.ipynb",
-      "slug": "python/session-management",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/session-management"
     },
     {
       "id": "python/02-deploy/01-lambda",
@@ -512,9 +463,7 @@
       "path": "python/02-deploy/01-lambda",
       "url": "https://github.com/strands-agents/samples/tree/main/python/02-deploy/01-lambda",
       "notebook": "deploy-agent.ipynb",
-      "slug": "python/lambda",
-      "placement": "repo-only",
-      "kind": "workshop"
+      "slug": "python/lambda"
     },
     {
       "id": "python/02-deploy/02-fargate",
@@ -529,9 +478,7 @@
       "path": "python/02-deploy/02-fargate",
       "url": "https://github.com/strands-agents/samples/tree/main/python/02-deploy/02-fargate",
       "notebook": "deploy-agent.ipynb",
-      "slug": "python/fargate",
-      "placement": "repo-only",
-      "kind": "workshop"
+      "slug": "python/fargate"
     },
     {
       "id": "python/02-deploy/03-agentcore",
@@ -546,9 +493,7 @@
       "path": "python/02-deploy/03-agentcore",
       "url": "https://github.com/strands-agents/samples/tree/main/python/02-deploy/03-agentcore",
       "notebook": "deploy-agent.ipynb",
-      "slug": "python/agentcore",
-      "placement": "repo-only",
-      "kind": "workshop"
+      "slug": "python/agentcore"
     },
     {
       "id": "python/02-deploy/04-agentcore-multi-agent/01-a2a-orchestration",
@@ -562,18 +507,6 @@
       "url": "https://github.com/strands-agents/samples/tree/main/python/02-deploy/04-agentcore-multi-agent/01-a2a-orchestration",
       "notebook": "01-a2a-server-product-agent.ipynb",
       "slug": "python/agentcore-multi-agent/a2a-orchestration",
-      "placement": "featured",
-      "kind": "workshop",
-      "collections": [
-        "deploy"
-      ],
-      "capabilities": [
-        "multi-agent",
-        "a2a",
-        "mcp",
-        "agentcore",
-        "session-management"
-      ],
       "docs": [
         {
           "label": "Agent-to-Agent",
@@ -599,9 +532,7 @@
       "tags": [],
       "path": "python/03-integrate/databases/aurora-dsql",
       "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/databases/aurora-dsql",
-      "slug": "python/databases/aurora-dsql",
-      "placement": "repo-only",
-      "kind": "integration"
+      "slug": "python/databases/aurora-dsql"
     },
     {
       "id": "python/03-integrate/databases/neptune",
@@ -613,9 +544,7 @@
       "tags": [],
       "path": "python/03-integrate/databases/neptune",
       "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/databases/neptune",
-      "slug": "python/databases/neptune",
-      "placement": "repo-only",
-      "kind": "integration"
+      "slug": "python/databases/neptune"
     },
     {
       "id": "python/03-integrate/databases/supabase",
@@ -628,9 +557,7 @@
       "path": "python/03-integrate/databases/supabase",
       "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/databases/supabase",
       "notebook": "supabase-integration.ipynb",
-      "slug": "python/databases/supabase",
-      "placement": "repo-only",
-      "kind": "integration"
+      "slug": "python/databases/supabase"
     },
     {
       "id": "python/03-integrate/guardrails/alice-wonderfence",
@@ -642,9 +569,7 @@
       "tags": [],
       "path": "python/03-integrate/guardrails/alice-wonderfence",
       "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/guardrails/alice-wonderfence",
-      "slug": "python/guardrails/alice-wonderfence",
-      "placement": "repo-only",
-      "kind": "integration"
+      "slug": "python/guardrails/alice-wonderfence"
     },
     {
       "id": "python/03-integrate/guardrails/llama-firewall",
@@ -656,9 +581,7 @@
       "tags": [],
       "path": "python/03-integrate/guardrails/llama-firewall",
       "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/guardrails/llama-firewall",
-      "slug": "python/guardrails/llama-firewall",
-      "placement": "repo-only",
-      "kind": "integration"
+      "slug": "python/guardrails/llama-firewall"
     },
     {
       "id": "python/03-integrate/guardrails/nvidia-nemo",
@@ -670,9 +593,7 @@
       "tags": [],
       "path": "python/03-integrate/guardrails/nvidia-nemo",
       "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/guardrails/nvidia-nemo",
-      "slug": "python/guardrails/nvidia-nemo",
-      "placement": "repo-only",
-      "kind": "integration"
+      "slug": "python/guardrails/nvidia-nemo"
     },
     {
       "id": "python/03-integrate/memory/zep-ai",
@@ -684,9 +605,7 @@
       "tags": [],
       "path": "python/03-integrate/memory/zep-ai",
       "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/memory/zep-ai",
-      "slug": "python/memory/zep-ai",
-      "placement": "repo-only",
-      "kind": "integration"
+      "slug": "python/memory/zep-ai"
     },
     {
       "id": "python/03-integrate/observability/arize",
@@ -699,9 +618,7 @@
       "path": "python/03-integrate/observability/arize",
       "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/observability/arize",
       "notebook": "Arize-Observability-openinference-strands.ipynb",
-      "slug": "python/observability/arize",
-      "placement": "repo-only",
-      "kind": "integration"
+      "slug": "python/observability/arize"
     },
     {
       "id": "python/03-integrate/protocols/a2a",
@@ -713,9 +630,7 @@
       "tags": [],
       "path": "python/03-integrate/protocols/a2a",
       "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/protocols/a2a",
-      "slug": "python/protocols/a2a",
-      "placement": "repo-only",
-      "kind": "integration"
+      "slug": "python/protocols/a2a"
     },
     {
       "id": "python/03-integrate/protocols/a2a-native",
@@ -727,9 +642,7 @@
       "tags": [],
       "path": "python/03-integrate/protocols/a2a-native",
       "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/protocols/a2a-native",
-      "slug": "python/protocols/a2a-native",
-      "placement": "repo-only",
-      "kind": "integration"
+      "slug": "python/protocols/a2a-native"
     },
     {
       "id": "python/03-integrate/tools/exa",
@@ -741,9 +654,7 @@
       "tags": [],
       "path": "python/03-integrate/tools/exa",
       "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/tools/exa",
-      "slug": "python/tools/exa",
-      "placement": "repo-only",
-      "kind": "integration"
+      "slug": "python/tools/exa"
     },
     {
       "id": "python/03-integrate/tools/nova-act",
@@ -755,9 +666,7 @@
       "tags": [],
       "path": "python/03-integrate/tools/nova-act",
       "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/tools/nova-act",
-      "slug": "python/tools/nova-act",
-      "placement": "repo-only",
-      "kind": "integration"
+      "slug": "python/tools/nova-act"
     },
     {
       "id": "python/03-integrate/tools/tavily",
@@ -770,9 +679,7 @@
       "path": "python/03-integrate/tools/tavily",
       "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/tools/tavily",
       "notebook": "deep-research.ipynb",
-      "slug": "python/tools/tavily",
-      "placement": "repo-only",
-      "kind": "integration"
+      "slug": "python/tools/tavily"
     },
     {
       "id": "python/03-integrate/voice/nova-sonic",
@@ -784,9 +691,7 @@
       "tags": [],
       "path": "python/03-integrate/voice/nova-sonic",
       "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/voice/nova-sonic",
-      "slug": "python/voice/nova-sonic",
-      "placement": "repo-only",
-      "kind": "integration"
+      "slug": "python/voice/nova-sonic"
     },
     {
       "id": "python/04-industry-use-cases/finance/finance-assistant-swarm-agent",
@@ -798,9 +703,7 @@
       "tags": [],
       "path": "python/04-industry-use-cases/finance/finance-assistant-swarm-agent",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/finance/finance-assistant-swarm-agent",
-      "slug": "python/finance/finance-assistant-swarm-agent",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/finance/finance-assistant-swarm-agent"
     },
     {
       "id": "python/04-industry-use-cases/finance/genai-powered-financial-advisor-tools",
@@ -812,9 +715,7 @@
       "tags": [],
       "path": "python/04-industry-use-cases/finance/genai-powered-financial-advisor-tools",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/finance/genai-powered-financial-advisor-tools",
-      "slug": "python/finance/genai-powered-financial-advisor-tools",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/finance/genai-powered-financial-advisor-tools"
     },
     {
       "id": "python/04-industry-use-cases/finance/personal-finance-assistant",
@@ -827,9 +728,7 @@
       "path": "python/04-industry-use-cases/finance/personal-finance-assistant",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/finance/personal-finance-assistant",
       "notebook": "lab1-foundations.ipynb",
-      "slug": "python/finance/personal-finance-assistant",
-      "placement": "repo-only",
-      "kind": "workshop"
+      "slug": "python/finance/personal-finance-assistant"
     },
     {
       "id": "python/04-industry-use-cases/finance/whatsapp-fintech",
@@ -841,9 +740,7 @@
       "tags": [],
       "path": "python/04-industry-use-cases/finance/whatsapp-fintech",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/finance/whatsapp-fintech",
-      "slug": "python/finance/whatsapp-fintech",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/finance/whatsapp-fintech"
     },
     {
       "id": "python/04-industry-use-cases/healthcare/medical-document-processing-assistant",
@@ -855,9 +752,7 @@
       "tags": [],
       "path": "python/04-industry-use-cases/healthcare/medical-document-processing-assistant",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/healthcare/medical-document-processing-assistant",
-      "slug": "python/healthcare/medical-document-processing-assistant",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/healthcare/medical-document-processing-assistant"
     },
     {
       "id": "python/04-industry-use-cases/logistics/custom-orchestration-airline-assistant",
@@ -869,9 +764,7 @@
       "tags": [],
       "path": "python/04-industry-use-cases/logistics/custom-orchestration-airline-assistant",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/logistics/custom-orchestration-airline-assistant",
-      "slug": "python/logistics/custom-orchestration-airline-assistant",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/logistics/custom-orchestration-airline-assistant"
     },
     {
       "id": "python/04-industry-use-cases/marketing/ai-ads-generation-agent-with-crypto-payments",
@@ -884,9 +777,7 @@
       "path": "python/04-industry-use-cases/marketing/ai-ads-generation-agent-with-crypto-payments",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/marketing/ai-ads-generation-agent-with-crypto-payments",
       "notebook": "agentkit-x402-strands.ipynb",
-      "slug": "python/marketing/ai-ads-generation-agent-with-crypto-payments",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/marketing/ai-ads-generation-agent-with-crypto-payments"
     },
     {
       "id": "python/04-industry-use-cases/marketing/startup-advisor-mcp",
@@ -898,9 +789,7 @@
       "tags": [],
       "path": "python/04-industry-use-cases/marketing/startup-advisor-mcp",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/marketing/startup-advisor-mcp",
-      "slug": "python/marketing/startup-advisor-mcp",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/marketing/startup-advisor-mcp"
     },
     {
       "id": "python/04-industry-use-cases/productivity/multi-modal-email-assistant-agent",
@@ -912,9 +801,7 @@
       "tags": [],
       "path": "python/04-industry-use-cases/productivity/multi-modal-email-assistant-agent",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/productivity/multi-modal-email-assistant-agent",
-      "slug": "python/productivity/multi-modal-email-assistant-agent",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/productivity/multi-modal-email-assistant-agent"
     },
     {
       "id": "python/04-industry-use-cases/productivity/personal-assistant",
@@ -926,9 +813,7 @@
       "tags": [],
       "path": "python/04-industry-use-cases/productivity/personal-assistant",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/productivity/personal-assistant",
-      "slug": "python/productivity/personal-assistant",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/productivity/personal-assistant"
     },
     {
       "id": "python/04-industry-use-cases/productivity/research-agent",
@@ -940,9 +825,7 @@
       "tags": [],
       "path": "python/04-industry-use-cases/productivity/research-agent",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/productivity/research-agent",
-      "slug": "python/productivity/research-agent",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/productivity/research-agent"
     },
     {
       "id": "python/04-industry-use-cases/productivity/scrum-master-assistant",
@@ -954,9 +837,7 @@
       "tags": [],
       "path": "python/04-industry-use-cases/productivity/scrum-master-assistant",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/productivity/scrum-master-assistant",
-      "slug": "python/productivity/scrum-master-assistant",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/productivity/scrum-master-assistant"
     },
     {
       "id": "python/04-industry-use-cases/retail/restaurant-assistant",
@@ -969,9 +850,7 @@
       "path": "python/04-industry-use-cases/retail/restaurant-assistant",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/retail/restaurant-assistant",
       "notebook": "restaurant-assistant.ipynb",
-      "slug": "python/retail/restaurant-assistant",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/retail/restaurant-assistant"
     },
     {
       "id": "python/04-industry-use-cases/software-engineering/amazon-dataprocessing-agent",
@@ -983,9 +862,7 @@
       "tags": [],
       "path": "python/04-industry-use-cases/software-engineering/amazon-dataprocessing-agent",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/software-engineering/amazon-dataprocessing-agent",
-      "slug": "python/software-engineering/amazon-dataprocessing-agent",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/software-engineering/amazon-dataprocessing-agent"
     },
     {
       "id": "python/04-industry-use-cases/software-engineering/aws-assistant-mcp",
@@ -997,9 +874,7 @@
       "tags": [],
       "path": "python/04-industry-use-cases/software-engineering/aws-assistant-mcp",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/software-engineering/aws-assistant-mcp",
-      "slug": "python/software-engineering/aws-assistant-mcp",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/software-engineering/aws-assistant-mcp"
     },
     {
       "id": "python/04-industry-use-cases/software-engineering/aws-audit-assistant",
@@ -1011,9 +886,7 @@
       "tags": [],
       "path": "python/04-industry-use-cases/software-engineering/aws-audit-assistant",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/software-engineering/aws-audit-assistant",
-      "slug": "python/software-engineering/aws-audit-assistant",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/software-engineering/aws-audit-assistant"
     },
     {
       "id": "python/04-industry-use-cases/software-engineering/code-assistant",
@@ -1025,9 +898,7 @@
       "tags": [],
       "path": "python/04-industry-use-cases/software-engineering/code-assistant",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/software-engineering/code-assistant",
-      "slug": "python/software-engineering/code-assistant",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/software-engineering/code-assistant"
     },
     {
       "id": "python/04-industry-use-cases/software-engineering/data-warehouse-optimizer",
@@ -1039,9 +910,7 @@
       "tags": [],
       "path": "python/04-industry-use-cases/software-engineering/data-warehouse-optimizer",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/software-engineering/data-warehouse-optimizer",
-      "slug": "python/software-engineering/data-warehouse-optimizer",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/software-engineering/data-warehouse-optimizer"
     },
     {
       "id": "python/04-industry-use-cases/software-engineering/lambda-error-analysis-agent",
@@ -1055,17 +924,6 @@
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/software-engineering/lambda-error-analysis-agent",
       "notebook": "deploy-agent.ipynb",
       "slug": "python/software-engineering/lambda-error-analysis-agent",
-      "placement": "featured",
-      "kind": "application",
-      "collections": [
-        "industry-use-cases"
-      ],
-      "capabilities": [
-        "event-driven",
-        "rag",
-        "observability",
-        "infrastructure-as-code"
-      ],
       "docs": [
         {
           "label": "Strands Agents SDK",
@@ -1083,9 +941,7 @@
       "tags": [],
       "path": "python/04-industry-use-cases/software-engineering/sre-incident-response-agent",
       "url": "https://github.com/strands-agents/samples/tree/main/python/04-industry-use-cases/software-engineering/sre-incident-response-agent",
-      "slug": "python/software-engineering/sre-incident-response-agent",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/software-engineering/sre-incident-response-agent"
     },
     {
       "id": "python/05-technical-use-cases/fastapi-strands-production-starter",
@@ -1098,20 +954,6 @@
       "path": "python/05-technical-use-cases/fastapi-strands-production-starter",
       "url": "https://github.com/strands-agents/samples/tree/main/python/05-technical-use-cases/fastapi-strands-production-starter",
       "slug": "python/fastapi-strands-production-starter",
-      "placement": "featured",
-      "kind": "application",
-      "collections": [
-        "technical-use-cases"
-      ],
-      "capabilities": [
-        "fastapi",
-        "tools",
-        "mcp",
-        "session-management",
-        "streaming",
-        "observability",
-        "evaluation"
-      ],
       "docs": [
         {
           "label": "Strands Agents documentation",
@@ -1125,8 +967,7 @@
           "label": "Session management",
           "url": "https://strandsagents.com/docs/user-guide/sdk/memory/overview/"
         }
-      ],
-      "program": "amplifying-ai"
+      ]
     },
     {
       "id": "python/05-technical-use-cases/pokemon-team-advisor",
@@ -1138,9 +979,7 @@
       "tags": [],
       "path": "python/05-technical-use-cases/pokemon-team-advisor",
       "url": "https://github.com/strands-agents/samples/tree/main/python/05-technical-use-cases/pokemon-team-advisor",
-      "slug": "python/pokemon-team-advisor",
-      "placement": "repo-only",
-      "kind": "workshop"
+      "slug": "python/pokemon-team-advisor"
     },
     {
       "id": "python/05-technical-use-cases/rag/agentic-rag/adaptive-structured-rag",
@@ -1152,9 +991,7 @@
       "tags": [],
       "path": "python/05-technical-use-cases/rag/agentic-rag/adaptive-structured-rag",
       "url": "https://github.com/strands-agents/samples/tree/main/python/05-technical-use-cases/rag/agentic-rag/adaptive-structured-rag",
-      "slug": "python/rag/agentic-rag/adaptive-structured-rag",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/rag/agentic-rag/adaptive-structured-rag"
     },
     {
       "id": "python/05-technical-use-cases/rag/agentic-rag/corrective-rag",
@@ -1167,9 +1004,7 @@
       "path": "python/05-technical-use-cases/rag/agentic-rag/corrective-rag",
       "url": "https://github.com/strands-agents/samples/tree/main/python/05-technical-use-cases/rag/agentic-rag/corrective-rag",
       "notebook": "0-prerequisites.ipynb",
-      "slug": "python/rag/agentic-rag/corrective-rag",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/rag/agentic-rag/corrective-rag"
     },
     {
       "id": "python/05-technical-use-cases/rag/agentic-rag/unstructured-structured-rag",
@@ -1182,9 +1017,7 @@
       "path": "python/05-technical-use-cases/rag/agentic-rag/unstructured-structured-rag",
       "url": "https://github.com/strands-agents/samples/tree/main/python/05-technical-use-cases/rag/agentic-rag/unstructured-structured-rag",
       "notebook": "0-prerequisites-structured-kb.ipynb",
-      "slug": "python/rag/agentic-rag/unstructured-structured-rag",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/rag/agentic-rag/unstructured-structured-rag"
     },
     {
       "id": "python/05-technical-use-cases/steering/library-book-renewal-agent",
@@ -1197,17 +1030,6 @@
       "path": "python/05-technical-use-cases/steering/library-book-renewal-agent",
       "url": "https://github.com/strands-agents/samples/tree/main/python/05-technical-use-cases/steering/library-book-renewal-agent",
       "slug": "python/steering/library-book-renewal-agent",
-      "placement": "featured",
-      "kind": "workshop",
-      "collections": [
-        "technical-use-cases"
-      ],
-      "capabilities": [
-        "steering",
-        "agent-sops",
-        "graphs",
-        "evaluation"
-      ],
       "docs": [
         {
           "label": "Steering providers",
@@ -1230,9 +1052,7 @@
       "path": "python/06-evaluate/ab-testing-models",
       "url": "https://github.com/strands-agents/samples/tree/main/python/06-evaluate/ab-testing-models",
       "notebook": "07a-ab-testing-build-agents.ipynb",
-      "slug": "python/ab-testing-models",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/ab-testing-models"
     },
     {
       "id": "python/06-evaluate/built-in-evaluators",
@@ -1245,9 +1065,7 @@
       "path": "python/06-evaluate/built-in-evaluators",
       "url": "https://github.com/strands-agents/samples/tree/main/python/06-evaluate/built-in-evaluators",
       "notebook": "01-built-in-evaluators.ipynb",
-      "slug": "python/built-in-evaluators",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/built-in-evaluators"
     },
     {
       "id": "python/06-evaluate/custom-evaluators",
@@ -1260,9 +1078,7 @@
       "path": "python/06-evaluate/custom-evaluators",
       "url": "https://github.com/strands-agents/samples/tree/main/python/06-evaluate/custom-evaluators",
       "notebook": "02-custom-evaluators.ipynb",
-      "slug": "python/custom-evaluators",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/custom-evaluators"
     },
     {
       "id": "python/06-evaluate/dataset-generation",
@@ -1275,9 +1091,7 @@
       "path": "python/06-evaluate/dataset-generation",
       "url": "https://github.com/strands-agents/samples/tree/main/python/06-evaluate/dataset-generation",
       "notebook": "03-dataset-generation.ipynb",
-      "slug": "python/dataset-generation",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/dataset-generation"
     },
     {
       "id": "python/06-evaluate/multi-agent-evaluation",
@@ -1290,9 +1104,7 @@
       "path": "python/06-evaluate/multi-agent-evaluation",
       "url": "https://github.com/strands-agents/samples/tree/main/python/06-evaluate/multi-agent-evaluation",
       "notebook": "06-multi-agent-evaluation.ipynb",
-      "slug": "python/multi-agent-evaluation",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/multi-agent-evaluation"
     },
     {
       "id": "python/06-evaluate/multi-turn-actor-simulator",
@@ -1305,9 +1117,7 @@
       "path": "python/06-evaluate/multi-turn-actor-simulator",
       "url": "https://github.com/strands-agents/samples/tree/main/python/06-evaluate/multi-turn-actor-simulator",
       "notebook": "05-multi-turn-actor-simulator.ipynb",
-      "slug": "python/multi-turn-actor-simulator",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/multi-turn-actor-simulator"
     },
     {
       "id": "python/06-evaluate/red-teaming",
@@ -1319,9 +1129,7 @@
       "tags": [],
       "path": "python/06-evaluate/red-teaming",
       "url": "https://github.com/strands-agents/samples/tree/main/python/06-evaluate/red-teaming",
-      "slug": "python/red-teaming",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/red-teaming"
     },
     {
       "id": "python/06-evaluate/trajectory-evaluation",
@@ -1334,9 +1142,7 @@
       "path": "python/06-evaluate/trajectory-evaluation",
       "url": "https://github.com/strands-agents/samples/tree/main/python/06-evaluate/trajectory-evaluation",
       "notebook": "04-trajectory-evaluation.ipynb",
-      "slug": "python/trajectory-evaluation",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "python/trajectory-evaluation"
     },
     {
       "id": "python/07-ux-demos/ag-ui-copilotkit-integration",
@@ -1348,9 +1154,7 @@
       "tags": [],
       "path": "python/07-ux-demos/ag-ui-copilotkit-integration",
       "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/ag-ui-copilotkit-integration",
-      "slug": "python/ag-ui-copilotkit-integration",
-      "placement": "repo-only",
-      "kind": "integration"
+      "slug": "python/ag-ui-copilotkit-integration"
     },
     {
       "id": "python/07-ux-demos/dynamic-ui",
@@ -1363,17 +1167,7 @@
       "path": "python/07-ux-demos/dynamic-ui",
       "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/dynamic-ui",
       "slug": "python/dynamic-ui",
-      "placement": "featured",
-      "kind": "application",
-      "collections": [
-        "user-experiences"
-      ],
       "family": "dynamic-ui",
-      "capabilities": [
-        "custom-tools",
-        "streaming",
-        "dynamic-ui"
-      ],
       "docs": [
         {
           "label": "Custom tools",
@@ -1387,9 +1181,6 @@
           "label": "Session management",
           "url": "https://strandsagents.com/docs/user-guide/sdk/agents/session-management/"
         }
-      ],
-      "variants": [
-        "typescript/03-ux-demos/dynamic-ui"
       ]
     },
     {
@@ -1403,18 +1194,6 @@
       "path": "python/07-ux-demos/human-in-the-loop-approval-agent",
       "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/human-in-the-loop-approval-agent",
       "slug": "python/human-in-the-loop-approval-agent",
-      "placement": "featured",
-      "kind": "application",
-      "collections": [
-        "user-experiences"
-      ],
-      "capabilities": [
-        "human-in-the-loop",
-        "interrupts",
-        "graphs",
-        "session-management",
-        "user-interface"
-      ],
       "docs": [
         {
           "label": "Interrupts",
@@ -1436,9 +1215,7 @@
       "tags": [],
       "path": "python/07-ux-demos/hvac-data-analytics-agent",
       "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/hvac-data-analytics-agent",
-      "slug": "python/hvac-data-analytics-agent",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/hvac-data-analytics-agent"
     },
     {
       "id": "python/07-ux-demos/slack-assistant",
@@ -1450,9 +1227,7 @@
       "tags": [],
       "path": "python/07-ux-demos/slack-assistant",
       "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/slack-assistant",
-      "slug": "python/slack-assistant",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/slack-assistant"
     },
     {
       "id": "python/07-ux-demos/strands-playground",
@@ -1464,9 +1239,7 @@
       "tags": [],
       "path": "python/07-ux-demos/strands-playground",
       "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/strands-playground",
-      "slug": "python/strands-playground",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/strands-playground"
     },
     {
       "id": "python/07-ux-demos/streamlit-template",
@@ -1478,9 +1251,7 @@
       "tags": [],
       "path": "python/07-ux-demos/streamlit-template",
       "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/streamlit-template",
-      "slug": "python/streamlit-template",
-      "placement": "repo-only",
-      "kind": "workshop"
+      "slug": "python/streamlit-template"
     },
     {
       "id": "python/07-ux-demos/triage-agent",
@@ -1492,9 +1263,7 @@
       "tags": [],
       "path": "python/07-ux-demos/triage-agent",
       "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/triage-agent",
-      "slug": "python/triage-agent",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/triage-agent"
     },
     {
       "id": "python/07-ux-demos/video-games-sales-assistant",
@@ -1506,9 +1275,7 @@
       "tags": [],
       "path": "python/07-ux-demos/video-games-sales-assistant",
       "url": "https://github.com/strands-agents/samples/tree/main/python/07-ux-demos/video-games-sales-assistant",
-      "slug": "python/video-games-sales-assistant",
-      "placement": "repo-only",
-      "kind": "application"
+      "slug": "python/video-games-sales-assistant"
     },
     {
       "id": "python/08-edge/strands-spot-agent",
@@ -1520,9 +1287,7 @@
       "tags": [],
       "path": "python/08-edge/strands-spot-agent",
       "url": "https://github.com/strands-agents/samples/tree/main/python/08-edge/strands-spot-agent",
-      "slug": "python/strands-spot-agent",
-      "placement": "repo-only",
-      "kind": "integration"
+      "slug": "python/strands-spot-agent"
     },
     {
       "id": "python/migration/langgraph",
@@ -1535,26 +1300,12 @@
       "path": "python/migration/langgraph",
       "url": "https://github.com/strands-agents/samples/tree/main/python/migration/langgraph",
       "slug": "python/migration/langgraph",
-      "placement": "reference",
-      "kind": "migration",
-      "collections": [
-        "migrate"
-      ],
       "family": "langgraph-migration",
-      "capabilities": [
-        "migration",
-        "graphs",
-        "session-management"
-      ],
       "docs": [
         {
           "label": "Migrate from LangGraph",
           "url": "https://strandsagents.com/docs/user-guide/migrate/langgraph/"
         }
-      ],
-      "program": "amplifying-ai",
-      "variants": [
-        "typescript/migration/langgraph"
       ]
     },
     {
@@ -1567,9 +1318,7 @@
       "tags": [],
       "path": "typescript/01-learn/01-first-agent",
       "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/01-first-agent",
-      "slug": "typescript/first-agent",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "typescript/first-agent"
     },
     {
       "id": "typescript/01-learn/02-custom-tools",
@@ -1581,9 +1330,7 @@
       "tags": [],
       "path": "typescript/01-learn/02-custom-tools",
       "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/02-custom-tools",
-      "slug": "typescript/custom-tools",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "typescript/custom-tools"
     },
     {
       "id": "typescript/01-learn/03-model-providers",
@@ -1595,9 +1342,7 @@
       "tags": [],
       "path": "typescript/01-learn/03-model-providers",
       "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/03-model-providers",
-      "slug": "typescript/model-providers",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "typescript/model-providers"
     },
     {
       "id": "typescript/01-learn/04-streaming",
@@ -1609,9 +1354,7 @@
       "tags": [],
       "path": "typescript/01-learn/04-streaming",
       "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/04-streaming",
-      "slug": "typescript/streaming",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "typescript/streaming"
     },
     {
       "id": "typescript/01-learn/05-agent-state",
@@ -1623,9 +1366,7 @@
       "tags": [],
       "path": "typescript/01-learn/05-agent-state",
       "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/05-agent-state",
-      "slug": "typescript/agent-state",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "typescript/agent-state"
     },
     {
       "id": "typescript/01-learn/06-browser-agent",
@@ -1637,9 +1378,7 @@
       "tags": [],
       "path": "typescript/01-learn/06-browser-agent",
       "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/06-browser-agent",
-      "slug": "typescript/browser-agent",
-      "placement": "repo-only",
-      "kind": "concept"
+      "slug": "typescript/browser-agent"
     },
     {
       "id": "typescript/01-learn/07-express-chatbot",
@@ -1652,24 +1391,12 @@
       "path": "typescript/01-learn/07-express-chatbot",
       "url": "https://github.com/strands-agents/samples/tree/main/typescript/01-learn/07-express-chatbot",
       "slug": "typescript/express-chatbot",
-      "placement": "reference",
-      "kind": "application",
-      "collections": [
-        "learn"
-      ],
-      "capabilities": [
-        "express",
-        "streaming",
-        "tools",
-        "mcp"
-      ],
       "docs": [
         {
           "label": "TypeScript Agent API",
           "url": "https://strandsagents.com/docs/api/typescript/Agent/"
         }
-      ],
-      "program": "amplifying-ai"
+      ]
     },
     {
       "id": "typescript/02-deploy/01-agentcore",
@@ -1683,9 +1410,7 @@
       ],
       "path": "typescript/02-deploy/01-agentcore",
       "url": "https://github.com/strands-agents/samples/tree/main/typescript/02-deploy/01-agentcore",
-      "slug": "typescript/agentcore",
-      "placement": "repo-only",
-      "kind": "workshop"
+      "slug": "typescript/agentcore"
     },
     {
       "id": "typescript/02-deploy/02-nextjs-vercel-adapter",
@@ -1700,20 +1425,6 @@
       "path": "typescript/02-deploy/02-nextjs-vercel-adapter",
       "url": "https://github.com/strands-agents/samples/tree/main/typescript/02-deploy/02-nextjs-vercel-adapter",
       "slug": "typescript/nextjs-vercel-adapter",
-      "placement": "featured",
-      "kind": "application",
-      "collections": [
-        "deploy"
-      ],
-      "capabilities": [
-        "nextjs",
-        "vercel-ai-sdk",
-        "streaming",
-        "tools",
-        "hooks",
-        "session-management",
-        "agentcore"
-      ],
       "docs": [
         {
           "label": "Strands Agents documentation",
@@ -1723,8 +1434,7 @@
           "label": "VercelModel adapter",
           "url": "https://github.com/strands-agents/harness-sdk/blob/main/strands-ts/src/models/vercel.ts"
         }
-      ],
-      "program": "amplifying-ai"
+      ]
     },
     {
       "id": "typescript/03-ux-demos/dynamic-ui",
@@ -1737,17 +1447,7 @@
       "path": "typescript/03-ux-demos/dynamic-ui",
       "url": "https://github.com/strands-agents/samples/tree/main/typescript/03-ux-demos/dynamic-ui",
       "slug": "typescript/dynamic-ui",
-      "placement": "featured",
-      "kind": "application",
-      "collections": [
-        "user-experiences"
-      ],
       "family": "dynamic-ui",
-      "capabilities": [
-        "custom-tools",
-        "streaming",
-        "dynamic-ui"
-      ],
       "docs": [
         {
           "label": "Custom tools",
@@ -1761,9 +1461,6 @@
           "label": "Session management",
           "url": "https://strandsagents.com/docs/user-guide/sdk/agents/session-management/"
         }
-      ],
-      "variants": [
-        "python/07-ux-demos/dynamic-ui"
       ]
     },
     {
@@ -1777,26 +1474,12 @@
       "path": "typescript/migration/langgraph",
       "url": "https://github.com/strands-agents/samples/tree/main/typescript/migration/langgraph",
       "slug": "typescript/migration/langgraph",
-      "placement": "reference",
-      "kind": "migration",
-      "collections": [
-        "migrate"
-      ],
       "family": "langgraph-migration",
-      "capabilities": [
-        "migration",
-        "graphs",
-        "session-management"
-      ],
       "docs": [
         {
           "label": "Migrate from LangGraph",
           "url": "https://strandsagents.com/docs/user-guide/migrate/langgraph/"
         }
-      ],
-      "program": "amplifying-ai",
-      "variants": [
-        "python/migration/langgraph"
       ]
     }
   ]
