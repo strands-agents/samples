@@ -1,8 +1,9 @@
 // Generates samples.json: a machine-readable index of every sample in this
 // repo so downstream consumers (e.g. the docs site) can render a styled,
 // grouped, filterable catalog without scraping prose. samples-catalog.json is
-// the hand-maintained editorial layer: collections publish samples, while the
-// repositoryOnly list records samples that intentionally stay off the website.
+// the hand-maintained editorial layer: collections explicitly publish and
+// order website samples; every discovered sample omitted from them stays
+// repository-only.
 //
 // A "sample" is the shallowest README- or notebook-bearing directory under
 // a category (nested apps inside a sample are folded into it). Titles come
@@ -250,9 +251,9 @@ function assertNonEmptyString(value, label) {
   if (typeof value !== 'string' || !value.trim()) throw new Error(`${label} must be a non-empty string`)
 }
 
-function validateStringArray(value, label, allowEmpty = false) {
-  if (!Array.isArray(value) || (!allowEmpty && value.length === 0)) {
-    throw new Error(`${label} must be ${allowEmpty ? 'an array' : 'a non-empty array'}`)
+function validateStringArray(value, label) {
+  if (!Array.isArray(value) || value.length === 0) {
+    throw new Error(`${label} must be a non-empty array`)
   }
   const seenValues = new Set()
   for (const item of value) {
@@ -288,7 +289,7 @@ function validateDocs(value, sampleId) {
 
 function readCatalog() {
   if (!existsSync(CATALOG_PATH)) {
-    throw new Error('samples-catalog.json is required; classify every discovered sample')
+    throw new Error('samples-catalog.json is required to define website collections')
   }
 
   let catalog
@@ -298,16 +299,9 @@ function readCatalog() {
     throw new Error(`unable to parse samples-catalog.json: ${error.message}`)
   }
   assertObject(catalog, 'samples-catalog.json')
-  assertOnlyKeys(
-    catalog,
-    new Set(['version', 'collections', 'repositoryOnly', 'samples']),
-    'samples-catalog.json'
-  )
+  assertOnlyKeys(catalog, new Set(['version', 'collections', 'samples']), 'samples-catalog.json')
   if (catalog.version !== 1) throw new Error('samples-catalog.json.version must be 1')
   if (!Array.isArray(catalog.collections)) throw new Error('samples-catalog.json.collections must be an array')
-  if (!Array.isArray(catalog.repositoryOnly)) {
-    throw new Error('samples-catalog.json.repositoryOnly must be an array')
-  }
   assertObject(catalog.samples, 'samples-catalog.json.samples')
   return catalog
 }
@@ -349,26 +343,6 @@ function validateCatalog(catalog, discoveredSamples) {
     }
   })
 
-  const repositoryOnly = validateStringArray(
-    catalog.repositoryOnly,
-    'samples-catalog.json.repositoryOnly',
-    true
-  )
-  for (const sampleId of repositoryOnly) {
-    if (!discoveredIds.has(sampleId)) {
-      throw new Error(`samples-catalog.json.repositoryOnly references unknown sample: ${sampleId}`)
-    }
-    if (membership.has(sampleId)) {
-      throw new Error(`${sampleId} is both repository-only and published in a website collection`)
-    }
-  }
-
-  const classifiedIds = new Set([...repositoryOnly, ...membership.keys()])
-  const unclassifiedIds = [...discoveredIds].filter((sampleId) => !classifiedIds.has(sampleId))
-  if (unclassifiedIds.length > 0) {
-    throw new Error(`samples-catalog.json does not classify: ${unclassifiedIds.join(', ')}`)
-  }
-
   const metadataIds = new Set(Object.keys(catalog.samples))
   const unknownMetadataIds = [...metadataIds].filter((sampleId) => !discoveredIds.has(sampleId))
   if (unknownMetadataIds.length > 0) {
@@ -377,7 +351,7 @@ function validateCatalog(catalog, discoveredSamples) {
   const unpublishedMetadataIds = [...metadataIds].filter((sampleId) => !membership.has(sampleId))
   if (unpublishedMetadataIds.length > 0) {
     throw new Error(
-      `samples-catalog.json defines website metadata for repository-only samples: ${unpublishedMetadataIds.join(', ')}`
+      `samples-catalog.json defines website metadata for unpublished samples: ${unpublishedMetadataIds.join(', ')}`
     )
   }
   const publishedIds = [...membership.keys()]

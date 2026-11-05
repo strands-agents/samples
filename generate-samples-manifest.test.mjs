@@ -10,10 +10,10 @@ const GENERATOR = fileURLToPath(new URL('./generate-samples-manifest.mjs', impor
 const SAMPLE_ID = 'python/01-learn/01-example'
 const DOCS = [{ label: 'Documentation', url: 'https://example.com/docs' }]
 
-async function writeCatalog(root, { samples = {}, collections = [], repositoryOnly = [] }) {
+async function writeCatalog(root, { samples = {}, collections = [] }) {
   await writeFile(
     path.join(root, 'samples-catalog.json'),
-    `${JSON.stringify({ version: 1, collections, repositoryOnly, samples }, null, 2)}\n`
+    `${JSON.stringify({ version: 1, collections, samples }, null, 2)}\n`
   )
 }
 
@@ -25,7 +25,7 @@ async function addSample(root, sampleId, title = 'Variant') {
 
 async function createFixture(
   t,
-  { description, notebooks = [], readme = true, metadata, collections = [], repositoryOnly }
+  { description, notebooks = [], readme = true, metadata, collections = [] }
 ) {
   const root = await mkdtemp(path.join(tmpdir(), 'samples-manifest-'))
   t.after(() => rm(root, { recursive: true, force: true }))
@@ -48,7 +48,6 @@ async function createFixture(
   await writeCatalog(root, {
     samples: metadata ? { [SAMPLE_ID]: metadata } : {},
     collections,
-    repositoryOnly: repositoryOnly ?? (collections.length > 0 ? [] : [SAMPLE_ID]),
   })
 
   return root
@@ -170,28 +169,21 @@ test('merges ordered collections and website metadata', async (t) => {
   )
 })
 
-test('rejects a discovered sample without an explicit classification', async (t) => {
+test('treats samples omitted from collections as unpublished', async (t) => {
   const root = await createFixture(t, { description: 'First sample' })
-  const unclassifiedId = 'python/01-learn/02-unclassified'
-  await addSample(root, unclassifiedId, 'Unclassified')
+  const unpublishedId = 'python/01-learn/02-unpublished'
+  await addSample(root, unpublishedId, 'Unpublished')
 
   const result = runGenerator(root)
-  assert.notEqual(result.status, 0)
-  assert.match(result.stderr, /samples-catalog\.json does not classify/)
-  assert.match(result.stderr, new RegExp(unclassifiedId))
-})
+  assert.equal(result.status, 0, result.stderr)
 
-test('rejects repository-only samples in website collections', async (t) => {
-  const root = await createFixture(t, {
-    description: 'Repository-only source',
-    metadata: { docs: DOCS },
-    collections: [{ id: 'learn', label: 'Learn', samples: [SAMPLE_ID] }],
-    repositoryOnly: [SAMPLE_ID],
-  })
-
-  const result = runGenerator(root)
-  assert.notEqual(result.status, 0)
-  assert.match(result.stderr, /both repository-only and published/)
+  const manifest = JSON.parse(await readFile(path.join(root, 'samples.json'), 'utf8'))
+  assert.deepEqual(manifest.collections, [])
+  assert.deepEqual(
+    manifest.samples.map((sample) => sample.id),
+    [SAMPLE_ID, unpublishedId]
+  )
+  assert.equal('repositoryOnly' in manifest, false)
 })
 
 test('requires published samples to belong to exactly one collection', async (t) => {
@@ -249,21 +241,16 @@ test('rejects catalog references that do not match published samples', async (t)
     {
       catalog: {
         collections: [{ id: 'learn', label: 'Learn', samples: [unknownId] }],
-        repositoryOnly: [SAMPLE_ID],
       },
       message: /collection.*references unknown sample/i,
     },
     {
-      catalog: { repositoryOnly: [SAMPLE_ID, unknownId] },
-      message: /repositoryOnly references unknown sample/,
-    },
-    {
-      catalog: { repositoryOnly: [SAMPLE_ID], samples: { [unknownId]: { docs: DOCS } } },
+      catalog: { samples: { [unknownId]: { docs: DOCS } } },
       message: /references unknown samples/,
     },
     {
-      catalog: { repositoryOnly: [SAMPLE_ID], samples: { [SAMPLE_ID]: { docs: DOCS } } },
-      message: /website metadata for repository-only samples/,
+      catalog: { samples: { [SAMPLE_ID]: { docs: DOCS } } },
+      message: /website metadata for unpublished samples/,
     },
   ]
 
@@ -279,9 +266,6 @@ test('discovers documented migration samples outside numbered categories', async
   const root = await createFixture(t, { description: 'A concept sample' })
   const migrationId = 'python/migration/langgraph'
   await addSample(root, migrationId, 'LangGraph Migration')
-  await writeCatalog(root, {
-    repositoryOnly: [SAMPLE_ID, migrationId],
-  })
 
   const result = runGenerator(root)
   assert.equal(result.status, 0, result.stderr)
