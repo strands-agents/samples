@@ -105,6 +105,195 @@ class KnowledgeBasesForAmazonBedrock:
         self.oss_client = None
         self.data_bucket_name = None
 
+    def create_or_retrieve_managed_knowledge_base(
+        self,
+        kb_name: str,
+        kb_description: str = None,
+        data_bucket_name: str = None,
+    ):
+        """
+        Create or retrieve a MANAGED Knowledge Base (Bedrock handles storage and embeddings).
+
+        Managed KBs do not require OpenSearch Serverless, embedding model selection, or
+        vector index configuration. Bedrock manages all of this automatically.
+
+        Args:
+            kb_name: Knowledge Base Name
+            kb_description: Knowledge Base Description
+            data_bucket_name: Name of S3 Bucket containing Knowledge Base Data
+
+        Returns:
+            kb_id: str - Knowledge base id
+            ds_id: str - Data Source id
+        """
+        kb_id = None
+        ds_id = None
+        kbs_available = self.bedrock_agent_client.list_knowledge_bases(
+            maxResults=100,
+        )
+        for kb in kbs_available["knowledgeBaseSummaries"]:
+            if kb_name == kb["name"]:
+                kb_id = kb["knowledgeBaseId"]
+        if kb_id is not None:
+            ds_available = self.bedrock_agent_client.list_data_sources(
+                knowledgeBaseId=kb_id,
+                maxResults=100,
+            )
+            for ds in ds_available["dataSourceSummaries"]:
+                if kb_id == ds["knowledgeBaseId"]:
+                    ds_id = ds["dataSourceId"]
+                    if not data_bucket_name:
+                        self.data_bucket_name = self._get_knowledge_base_s3_bucket(
+                            kb_id, ds_id
+                        )
+            print(f"Managed Knowledge Base {kb_name} already exists.")
+            print(f"Retrieved Knowledge Base Id: {kb_id}")
+            print(f"Retrieved Data Source Id: {ds_id}")
+        else:
+            print(f"Creating Managed KB {kb_name}")
+            if data_bucket_name is None:
+                kb_name_temp = kb_name.replace("_", "-")
+                data_bucket_name = f"{kb_name_temp}-{self.suffix}"
+                print(
+                    f"KB bucket name not provided, creating a new one called: {data_bucket_name}"
+                )
+
+            # Step 1: Create S3 bucket
+            print("Step 1 - Creating or retrieving S3 bucket")
+            self.create_s3_bucket(data_bucket_name)
+
+            # Step 2: Create execution role (only needs S3 access for managed KBs)
+            kb_execution_role_name = (
+                f"AmazonBedrockExecutionRoleForManagedKB_{self.suffix}"
+            )
+            s3_policy_name = f"AmazonBedrockS3PolicyForManagedKB_{self.suffix}"
+
+            assume_role_policy_document = {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": {"Service": "bedrock.amazonaws.com"},
+                        "Action": "sts:AssumeRole",
+                    }
+                ],
+            }
+
+            s3_policy_document = {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Action": ["s3:GetObject", "s3:ListBucket"],
+                        "Resource": [
+                            f"arn:aws:s3:::{data_bucket_name}",
+                            f"arn:aws:s3:::{data_bucket_name}/*",
+                        ],
+                        "Condition": {
+                            "StringEquals": {
+                                "aws:ResourceAccount": f"{self.account_number}"
+                            }
+                        },
+                    }
+                ],
+            }
+
+            try:
+                s3_policy = self.iam_client.create_policy(
+                    PolicyName=s3_policy_name,
+                    PolicyDocument=json.dumps(s3_policy_document),
+                    Description="Policy for reading documents from S3 for managed KB",
+                )
+            except self.iam_client.exceptions.EntityAlreadyExistsException:
+                print(f"{s3_policy_name} already exists, retrieving it!")
+                s3_policy = self.iam_client.get_policy(
+                    PolicyArn=f"arn:aws:iam::{self.account_number}:policy/{s3_policy_name}"
+                )
+
+            try:
+                bedrock_kb_execution_role = self.iam_client.create_role(
+                    RoleName=kb_execution_role_name,
+                    AssumeRolePolicyDocument=json.dumps(assume_role_policy_document),
+                    Description="Amazon Bedrock Managed Knowledge Base Execution Role",
+                    MaxSessionDuration=3600,
+                )
+            except self.iam_client.exceptions.EntityAlreadyExistsException:
+                print(f"{kb_execution_role_name} already exists, retrieving it!")
+                bedrock_kb_execution_role = self.iam_client.get_role(
+                    RoleName=kb_execution_role_name
+                )
+
+            self.iam_client.attach_role_policy(
+                RoleName=bedrock_kb_execution_role["Role"]["RoleName"],
+                PolicyArn=s3_policy["Policy"]["Arn"],
+            )
+
+            # Wait for role propagation
+            print("Waiting for IAM role propagation...")
+            interactive_sleep(10)
+
+            # Step 3: Create the managed Knowledge Base
+            print(f"Step 3 - Creating Managed Knowledge Base: {kb_name}")
+            try:
+                create_kb_response = self.bedrock_agent_client.create_knowledge_base(
+                    name=kb_name,
+                    description=kb_description or kb_name,
+                    roleArn=bedrock_kb_execution_role["Role"]["Arn"],
+                    knowledgeBaseConfiguration={
+                        "type": "MANAGED",
+                        "managedKnowledgeBaseConfiguration": {
+                            "embeddingModelType": "MANAGED",
+                        },
+                    },
+                    # No storageConfiguration needed for managed KBs
+                )
+                kb = create_kb_response["knowledgeBase"]
+                pp.pprint(kb)
+            except self.bedrock_agent_client.exceptions.ConflictException:
+                kbs = self.bedrock_agent_client.list_knowledge_bases(maxResults=100)
+                kb_id_found = None
+                for existing_kb in kbs["knowledgeBaseSummaries"]:
+                    if existing_kb["name"] == kb_name:
+                        kb_id_found = existing_kb["knowledgeBaseId"]
+                response = self.bedrock_agent_client.get_knowledge_base(
+                    knowledgeBaseId=kb_id_found
+                )
+                kb = response["knowledgeBase"]
+                pp.pprint(kb)
+
+            # Step 4: Create Data Source
+            print(f"Step 4 - Creating S3 Data Source")
+            s3_configuration = {
+                "bucketArn": f"arn:aws:s3:::{data_bucket_name}",
+            }
+            try:
+                create_ds_response = self.bedrock_agent_client.create_data_source(
+                    name=kb_name,
+                    description=kb_description or kb_name,
+                    knowledgeBaseId=kb["knowledgeBaseId"],
+                    dataDeletionPolicy="RETAIN",
+                    dataSourceConfiguration={
+                        "type": "S3",
+                        "s3Configuration": s3_configuration,
+                    },
+                )
+                ds = create_ds_response["dataSource"]
+                pp.pprint(ds)
+            except self.bedrock_agent_client.exceptions.ConflictException:
+                ds_id_found = self.bedrock_agent_client.list_data_sources(
+                    knowledgeBaseId=kb["knowledgeBaseId"], maxResults=100
+                )["dataSourceSummaries"][0]["dataSourceId"]
+                get_ds_response = self.bedrock_agent_client.get_data_source(
+                    dataSourceId=ds_id_found, knowledgeBaseId=kb["knowledgeBaseId"]
+                )
+                ds = get_ds_response["dataSource"]
+                pp.pprint(ds)
+
+            interactive_sleep(30)
+            kb_id = kb["knowledgeBaseId"]
+            ds_id = ds["dataSourceId"]
+        return kb_id, ds_id
+
     def create_or_retrieve_knowledge_base(
         self,
         kb_name: str,
@@ -113,7 +302,8 @@ class KnowledgeBasesForAmazonBedrock:
         embedding_model: str = "amazon.titan-embed-text-v2:0",
     ):
         """
-        Function used to create a new Knowledge Base or retrieve an existent one
+        Function used to create a new Knowledge Base or retrieve an existent one.
+        Creates a VECTOR type KB with OpenSearch Serverless storage.
 
         Args:
             kb_name: Knowledge Base Name
@@ -1049,16 +1239,27 @@ if __name__ == "__main__":
     parser.add_argument(
         "--mode",
         required=True,
-        help="Knowledge Base helper model. One for: create or delete.",
+        help="Knowledge Base helper mode. One of: create or delete.",
+    )
+    parser.add_argument(
+        "--kb-type",
+        choices=["VECTOR", "MANAGED"],
+        default="MANAGED",
+        help="Knowledge Base type: VECTOR (default, uses OpenSearch) or MANAGED (fully managed by Bedrock).",
     )
 
     args = parser.parse_args()
 
     print(data)
     if args.mode == "create":
-        kb_id, ds_id = kb.create_or_retrieve_knowledge_base(
-            data["knowledge_base_name"], data["knowledge_base_description"]
-        )
+        if args.kb_type == "MANAGED":
+            kb_id, ds_id = kb.create_or_retrieve_managed_knowledge_base(
+                data["knowledge_base_name"], data["knowledge_base_description"]
+            )
+        else:
+            kb_id, ds_id = kb.create_or_retrieve_knowledge_base(
+                data["knowledge_base_name"], data["knowledge_base_description"]
+            )
         print(f"Knowledge Base ID: {kb_id}")
         print(f"Data Source ID: {ds_id}")
         kb.upload_directory(
