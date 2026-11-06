@@ -7,7 +7,7 @@ from pydantic import BaseModel
 import uvicorn
 import boto3
 import json
-from uuid import uuid4
+from uuid import UUID, uuid4
 from datetime import datetime, timezone
 import os
 
@@ -256,7 +256,7 @@ class PromptRequest(BaseModel):
         prompt (str): The user's prompt
         prompt_uuid (str, optional): Unique identifier for the prompt
         user_timezone (str, optional): User's timezone
-        session_id (str, optional): Session identifier for conversation context
+        session_id (str, optional): Session identifier (UUID) for conversation context
     """
     bedrock_model_id: str = None  # Optional, will use config default if not provided
     prompt: str  # Required
@@ -361,6 +361,12 @@ async def assistant_streaming(
         session_id = request.session_id
         if not session_id:
             session_id = str(uuid4())
+        else:
+            # Only accept UUIDs, and store them in canonical form
+            try:
+                session_id = str(UUID(session_id))
+            except ValueError:
+                raise HTTPException(status_code=400, detail="session_id must be a UUID")
 
         bedrock_model_id = request.bedrock_model_id or 'us.anthropic.claude-sonnet-4-6'
         
