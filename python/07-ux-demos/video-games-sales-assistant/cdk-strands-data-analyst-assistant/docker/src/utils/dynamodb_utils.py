@@ -70,6 +70,42 @@ def save_raw_query_result(user_message_uuid, user_message, sql_query, sql_query_
         return {"success": False, "error": str(e)}
 
 
+def read_raw_query_results(user_message_uuid: str) -> List[Dict[str, Any]]:
+    """
+    Retrieve the SQL queries and results saved for a user message.
+
+    Args:
+        user_message_uuid: Key the results were saved under by save_raw_query_result
+
+    Returns:
+        List[Dict]: Objects with query, query_results, and query_description,
+        empty if the table is not configured or nothing was saved
+    """
+    raw_query_results_table = config.get("RAW_QUERY_RESULTS_TABLE_NAME")
+
+    if not raw_query_results_table:
+        print(f"\n⚠️ CONFIGURATION WARNING")
+        print("-"*40)
+        print(f"📋 Message: RAW_QUERY_RESULTS_TABLE_NAME not set")
+        print("-"*40)
+        return []
+
+    table = boto3.resource('dynamodb').Table(raw_query_results_table)
+    response = table.query(
+        KeyConditionExpression=Key('id').eq(user_message_uuid),
+        ConsistentRead=True,
+    )
+
+    return [
+        {
+            "query": item["sql_query"],
+            "query_results": json.loads(item["data"]).get("result", []),
+            "query_description": item["sql_query_description"],
+        }
+        for item in response.get('Items', [])
+    ]
+
+
 def read_messages_by_session(session_id: str, last_number_of_messages: int = 20) -> List[Dict[str, Any]]:
     """
     Retrieve conversation history from DynamoDB with pagination and JSON parsing.

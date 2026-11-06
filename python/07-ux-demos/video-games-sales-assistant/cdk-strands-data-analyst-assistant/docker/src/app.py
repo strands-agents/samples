@@ -13,7 +13,7 @@ import os
 
 # Import my tools
 from tools import run_sql_query, get_tables_information
-from utils import load_file_content, save_raw_query_result, read_messages_by_session, save_messages, load_config
+from utils import load_file_content, save_raw_query_result, read_raw_query_results, read_messages_by_session, save_messages, load_config
 from utils import validate_cognito_token_with_config, extract_bearer_token
 
 # Load configuration from SSM Parameter Store
@@ -104,24 +104,113 @@ def health_check():
     return {"status": "healthy"}
 
 
-def conversation_key(session_id: str, user_id: str = None) -> str:
+def user_scoped_key(key: str, user_id: str = None) -> str:
     """
-    Build the ConversationTable key for a conversation.
+    Build a DynamoDB partition key that belongs to the caller.
 
     When the caller is authenticated, the key is prefixed with their Cognito
     user ID (the token's `sub` claim), so a user can only read and write their
-    own conversations even if they know another user's session_id.
+    own conversations and query results even if they know another user's
+    session_id or prompt_uuid.
 
     Args:
-        session_id (str): Client-supplied session identifier
+        key (str): Client-supplied identifier (session_id or prompt_uuid)
         user_id (str, optional): Cognito `sub` claim of the authenticated caller
 
     Returns:
-        str: The partition key to use in ConversationTable
+        str: The partition key to use in DynamoDB
     """
     if user_id:
-        return f"{user_id}#{session_id}"
-    return session_id
+        return f"{user_id}#{key}"
+    return key
+
+
+def canonical_uuid(value: str, field_name: str) -> str:
+    """
+    Validate a client-supplied UUID and return it in canonical form.
+
+    Args:
+        value (str): The value to validate
+        field_name (str): Field name to use in the error message
+
+    Returns:
+        str: The lowercase, hyphenated UUID
+
+    Raises:
+        HTTPException: 400 if the value is not a UUID
+    """
+    try:
+        return str(UUID(value))
+    except (ValueError, TypeError, AttributeError):
+        raise HTTPException(status_code=400, detail=f"{field_name} must be a UUID")
+
+
+def authenticate(authorization: str):
+    """
+    Authenticate the caller with the Cognito token in the Authorization header.
+
+    Args:
+        authorization (str): Authorization header value ("Bearer <jwt-token>")
+
+    Returns:
+        str | None: The caller's Cognito user ID (`sub` claim), or None when
+        Cognito is not configured and unauthenticated access was explicitly allowed
+
+    Raises:
+        HTTPException: 401 if the caller is not authenticated
+    """
+    cognito_user_pool_id = os.environ.get('COGNITO_USER_POOL_ID', 'N/A')
+
+    # Skip authentication if Cognito is not configured (N/A values), but only when
+    # unauthenticated access was explicitly allowed for testing
+    if cognito_user_pool_id == "N/A":
+        allow_unauthenticated = os.environ.get('ALLOW_UNAUTHENTICATED_ACCESS', 'false').lower() == 'true'
+        if not allow_unauthenticated:
+            print(f"\n❌ COGNITO NOT CONFIGURED - REJECTING REQUEST")
+            print("-" * 50)
+            print("🔧 Set CognitoUserPoolId, or AllowUnauthenticatedAccess=true for testing only")
+            print("-" * 50)
+            raise HTTPException(
+                status_code=401,
+                detail="Authentication is not configured. Deploy with CognitoUserPoolId, or with AllowUnauthenticatedAccess=true for testing only."
+            )
+
+        print(f"\n⚠️  COGNITO NOT CONFIGURED - SKIPPING AUTHENTICATION")
+        print("-" * 50)
+        print(f"🔧 COGNITO_USER_POOL_ID: {cognito_user_pool_id}")
+        print("-" * 50)
+        return None
+
+    # Cognito is configured, validate the token
+    try:
+        # Extract token from Authorization header
+        token = extract_bearer_token(authorization)
+        if not token:
+            raise HTTPException(status_code=401, detail="Missing or invalid Authorization header")
+
+        # Validate the token using SSM configuration
+        decoded_token = validate_cognito_token_with_config(token)
+        if not decoded_token:
+            raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+        # Bind data to the caller's stable Cognito user ID
+        user_id = decoded_token.get('sub')
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Token is missing the sub claim")
+    except HTTPException as auth_error:
+        print(f"\n❌ AUTHENTICATION FAILED")
+        print("-" * 40)
+        print(f"🚨 Error: {auth_error.detail}")
+        print("-" * 40)
+        raise
+
+    print(f"\n🔐 AUTHENTICATED USER")
+    print("-" * 40)
+    print(f"👤 Username: {decoded_token.get('username', 'unknown')}")
+    print(f"📧 Email: {decoded_token.get('email', 'unknown')}")
+    print(f"🔑 Token Use: {decoded_token.get('token_use', 'unknown')}")
+    print("-" * 40)
+    return user_id
 
 
 async def run_data_analyst_assistant_with_stream_response(bedrock_model, system_prompt: str, prompt: str, prompt_uuid: str, session_id: str):
@@ -132,8 +221,8 @@ async def run_data_analyst_assistant_with_stream_response(bedrock_model, system_
         bedrock_model: The LLM model to use
         system_prompt (str): The system prompt for the agent
         prompt (str): The user's prompt
-        prompt_uuid (str): Unique identifier for the prompt
-        session_id (str): Session identifier for conversation context
+        prompt_uuid (str): Key for the prompt's saved query results, from user_scoped_key()
+        session_id (str): Key for the conversation history, from user_scoped_key()
 
     Yields:
         str: Chunks of the response as they become available
@@ -254,7 +343,7 @@ class PromptRequest(BaseModel):
     Attributes:
         bedrock_model_id (str): The ID of the Bedrock model to use
         prompt (str): The user's prompt
-        prompt_uuid (str, optional): Unique identifier for the prompt
+        prompt_uuid (str, optional): Unique identifier (UUID) for the prompt
         user_timezone (str, optional): User's timezone
         session_id (str, optional): Session identifier (UUID) for conversation context
     """
@@ -286,60 +375,9 @@ async def assistant_streaming(
         HTTPException: If the request is invalid, authentication fails, or if an error occurs
     """
     try:
-        # Check if Cognito is configured before attempting authentication
-        cognito_user_pool_id = os.environ.get('COGNITO_USER_POOL_ID', 'N/A')
-        # Cognito user ID of the caller; stays None when authentication is skipped
-        user_id = None
-        
-        # Skip authentication if Cognito is not configured (N/A values), but only when
-        # unauthenticated access was explicitly allowed for testing
-        if ( cognito_user_pool_id == "N/A"):
-            allow_unauthenticated = os.environ.get('ALLOW_UNAUTHENTICATED_ACCESS', 'false').lower() == 'true'
-            if not allow_unauthenticated:
-                print(f"\n❌ COGNITO NOT CONFIGURED - REJECTING REQUEST")
-                print("-" * 50)
-                print("🔧 Set CognitoUserPoolId, or AllowUnauthenticatedAccess=true for testing only")
-                print("-" * 50)
-                raise HTTPException(
-                    status_code=401,
-                    detail="Authentication is not configured. Deploy with CognitoUserPoolId, or with AllowUnauthenticatedAccess=true for testing only."
-                )
-            
-            print(f"\n⚠️  COGNITO NOT CONFIGURED - SKIPPING AUTHENTICATION")
-            print("-" * 50)
-            print(f"🔧 COGNITO_USER_POOL_ID: {cognito_user_pool_id}")
-            print("-" * 50)
-        else:
-            # Cognito is configured, validate the token
-            try:
-                # Extract token from Authorization header
-                token = extract_bearer_token(authorization)
-                if not token:
-                    raise HTTPException(status_code=401, detail="Missing or invalid Authorization header")
-                
-                # Validate the token using SSM configuration
-                decoded_token = validate_cognito_token_with_config(token)
-                if not decoded_token:
-                    raise HTTPException(status_code=401, detail="Invalid or expired token")
+        # Cognito user ID of the caller; None when unauthenticated access is allowed
+        user_id = authenticate(authorization)
 
-                # Bind conversation history to the caller's stable Cognito user ID
-                user_id = decoded_token.get('sub')
-                if not user_id:
-                    raise HTTPException(status_code=401, detail="Token is missing the sub claim")
-                
-                print(f"\n🔐 AUTHENTICATED USER")
-                print("-" * 40)
-                print(f"👤 Username: {decoded_token.get('username', 'unknown')}")
-                print(f"📧 Email: {decoded_token.get('email', 'unknown')}")
-                print(f"🔑 Token Use: {decoded_token.get('token_use', 'unknown')}")
-                print("-" * 40)
-                
-            except Exception as cognito_error:
-                print(f"\n❌ AUTHENTICATION FAILED")
-                print("-" * 40)
-                print(f"🚨 Error: {cognito_error}")
-                print("-" * 40)
-                raise HTTPException(status_code=401, detail=str(cognito_error))
         print(f"\n🚀 NEW REQUEST RECEIVED")
         print("=" * 50)
         print(f"📝 Prompt: {request.prompt[:100]}{'...' if len(request.prompt) > 100 else ''}")
@@ -350,9 +388,12 @@ async def assistant_streaming(
         if not prompt:
             raise HTTPException(status_code=400, detail="No prompt provided")
 
+        # Only accept UUIDs, and store them in canonical form
         prompt_uuid = request.prompt_uuid
         if not prompt_uuid:
             prompt_uuid = str(uuid4())
+        else:
+            prompt_uuid = canonical_uuid(prompt_uuid, "prompt_uuid")
 
         user_timezone = request.user_timezone
         if not user_timezone:
@@ -362,11 +403,7 @@ async def assistant_streaming(
         if not session_id:
             session_id = str(uuid4())
         else:
-            # Only accept UUIDs, and store them in canonical form
-            try:
-                session_id = str(UUID(session_id))
-            except ValueError:
-                raise HTTPException(status_code=400, detail="session_id must be a UUID")
+            session_id = canonical_uuid(session_id, "session_id")
 
         bedrock_model_id = request.bedrock_model_id or 'us.anthropic.claude-sonnet-4-6'
         
@@ -387,7 +424,11 @@ async def assistant_streaming(
 
         return StreamingResponse(
             run_data_analyst_assistant_with_stream_response(
-                bedrock_model, system_prompt, prompt, prompt_uuid, conversation_key(session_id, user_id)
+                bedrock_model,
+                system_prompt,
+                prompt,
+                user_scoped_key(prompt_uuid, user_id),
+                user_scoped_key(session_id, user_id),
             ),
             media_type="text/plain"
         )
@@ -396,6 +437,32 @@ async def assistant_streaming(
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get('/query-results/{prompt_uuid}')
+def query_results(
+    prompt_uuid: str,
+    authorization: str = Header(None, description="Bearer token for authentication (format: 'Bearer <token>')")
+):
+    """
+    Return the SQL queries and results the agent ran for one of the caller's prompts.
+
+    Results are read with the same per-user key the agent saved them under, so a
+    caller only gets results for their own prompts.
+
+    Args:
+        prompt_uuid (str): The prompt_uuid sent to /assistant-streaming
+        authorization (str, optional): Authorization header containing the Bearer token
+
+    Returns:
+        list: Objects with query, query_results, and query_description
+
+    Raises:
+        HTTPException: 401 if authentication fails, 400 if prompt_uuid is not a UUID
+    """
+    user_id = authenticate(authorization)
+    prompt_uuid = canonical_uuid(prompt_uuid, "prompt_uuid")
+    return read_raw_query_results(user_scoped_key(prompt_uuid, user_id))
 
 def main():
     """Entry point for the Data Analyst Assistant application."""

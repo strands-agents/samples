@@ -108,19 +108,7 @@ amplify push
 After authentication deployment, you need to grant your authenticated users permission to access AWS services.
 
 1. **Find your AuthRole**: Go to AWS Console → IAM → Roles → Search for amplify-daastrandsagent-dev-*-authRole
-2. **Get the DynamoDB Table ARN**: From your CDK project outputs, get the `QuestionAnswersTableName` value:
-
-``` bash
-# Set the stack name environment variable
-export STACK_NAME=CdkStrandsDataAnalystAssistantStack
-
-# Get the DynamoDB table name and construct the ARN
-export QUESTION_ANSWERS_TABLE_NAME=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs[?OutputKey=='QuestionAnswersTableName'].OutputValue" --output text)
-export QUESTION_ANSWERS_TABLE_ARN="arn:aws:dynamodb:$(aws configure get region):$(aws sts get-caller-identity --query Account --output text):table/$QUESTION_ANSWERS_TABLE_NAME"
-echo "Table ARN: $QUESTION_ANSWERS_TABLE_ARN"
-```
-
-3. **Add this policy** (replace `<account_id>` with your AWS account ID and `<question_answers_table_arn>` with the ARN from step 2):
+2. **Add this policy** (replace `<account_id>` with your AWS account ID):
 
 ``` json
 {
@@ -138,18 +126,13 @@ echo "Table ARN: $QUESTION_ANSWERS_TABLE_ARN"
                 "arn:aws:bedrock:us-east-1::foundation-model/us.anthropic.claude-sonnet-4-6",
                 "arn:aws:bedrock:us-west-2::foundation-model/us.anthropic.claude-sonnet-4-6"
             ]
-        },
-        {
-            "Sid": "DynamoDB",
-            "Effect": "Allow",
-            "Action": [
-                "dynamodb:Query"
-            ],
-            "Resource": "<question_answers_table_arn>"
         }
     ]
 }
 ```
+
+> [!NOTE]
+> The application gets SQL query results from the agent's `/query-results` endpoint, which only returns results for the signed-in user's own questions. Authenticated users don't need direct access to the DynamoDB tables. If you added a `dynamodb:Query` permission to this role for an earlier version of this sample, remove it.
 
 ## Configure Environment Variables
 
@@ -167,19 +150,16 @@ First, get the required values from your CDK project outputs:
 # Set the stack name environment variable
 export STACK_NAME=CdkStrandsDataAnalystAssistantStack
 
-# Get the DynamoDB table name and Agent endpoint from CDK outputs
-export QUESTION_ANSWERS_TABLE_NAME=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs[?OutputKey=='QuestionAnswersTableName'].OutputValue" --output text)
+# Get the Agent endpoint from CDK outputs
 export AGENT_ENDPOINT_URL=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs[?OutputKey=='AgentEndpointURL'].OutputValue" --output text)
 
-echo "Table Name: $QUESTION_ANSWERS_TABLE_NAME"
 echo "Agent Endpoint URL: $AGENT_ENDPOINT_URL"
 ```
 
 ### Update Environment Variables
 
-In your **src/env.js** update the following environment variables:
+In your **src/env.js** update the following environment variable:
 
- - **QUESTION_ANSWERS_TABLE_NAME**: Use the value from the command above
  - **AGENT_ENDPOINT_URL**: Use the format "http://&lt;AgentEndpointURL&gt;/assistant-streaming" with the URL from the command above
 
 ## Test Your Data Analyst Assistant
@@ -296,7 +276,7 @@ Expected response: `{"detail":"Invalid or expired token"}`
 curl -d '{ "prompt": "Hello!" }' -X POST -H 'Content-Type: application/json' http://$AGENT_ENDPOINT_URL/assistant-streaming
 ```
 
-Expected response: `{"detail":"Authorization header missing"}`
+Expected response: `{"detail":"Missing or invalid Authorization header"}`
 
 ## Deploy your Application with Amplify Hosting
 

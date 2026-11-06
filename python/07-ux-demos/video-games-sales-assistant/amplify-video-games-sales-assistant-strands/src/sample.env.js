@@ -3,7 +3,6 @@
 // ================================
 
 // AWS Configuration - UPDATE THESE VALUES
-const QUESTION_ANSWERS_TABLE_NAME = ""; // Your DynamoDB table name
 const AGENT_ENDPOINT_URL = "http://<AgentEndpointURL>/assistant-streaming";
 
 // Application Information - CUSTOMIZE AS NEEDED
@@ -296,7 +295,6 @@ Example Chart Configurations:\n\
 
 export {
   // AWS Configuration
-  QUESTION_ANSWERS_TABLE_NAME,
   AGENT_ENDPOINT_URL,
   
   // Application Information

@@ -78,7 +78,7 @@ The **user interaction workflow** operates as follows:
 - The web application sends user business questions to the agent built with Strands Agents SDK
 - The agent (powered by Claude Sonnet 4.6) processes natural language and determines when to execute database queries
 - The agent's tools execute SQL queries against the Aurora PostgreSQL database and formulate an answer to the question
-- After the agent's response is received by the web application, the raw data query results are retrieved from the DynamoDB table to display both the answer and the corresponding records
+- After the agent's response is received by the web application, the raw data query results are retrieved from the agent's `/query-results` endpoint, which reads them from the DynamoDB table, to display both the answer and the corresponding records
 - For chart generation, the application invokes a model (powered by Claude Sonnet 4.6) to analyze the agent's answer and raw data query results to generate the necessary data to render an appropriate chart visualization
 
 ### Strands Agent Architecture
