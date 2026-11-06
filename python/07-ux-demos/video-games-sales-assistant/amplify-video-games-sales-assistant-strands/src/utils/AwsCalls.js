@@ -1,52 +1,57 @@
+import { DynamoDBClient, QueryCommand } from "@aws-sdk/client-dynamodb";
 import {
   BedrockRuntimeClient,
   InvokeModelCommand,
 } from "@aws-sdk/client-bedrock-runtime";
-import { fetchAuthSession } from "aws-amplify/auth";
 import { createAwsClient } from "./AwsAuth";
 import { extractBetweenTags, removeCharFromStartAndEnd, handleFormatter } from "./Utils.js";
 import {
-  AGENT_ENDPOINT_URL,
+  QUESTION_ANSWERS_TABLE_NAME,
   MODEL_ID_FOR_CHART,
   CHART_PROMPT
 } from "../env.js";
 
 /**
- * Get the SQL queries and results the agent ran for a prompt.
- * The agent only returns results for prompts sent by the signed-in user.
+ * Query data from DynamoDB
  *
- * @param {string} queryUuid - The prompt_uuid sent to the agent
- * @returns {Promise<Array>} - Objects with query, query_results, and query_description
+ * @param {string} id - The ID to query
+ * @returns {Promise<Object>} - The query response
  */
 export const getQueryResults = async (queryUuid = "") => {
+  let queryResults = [];
   try {
-    const headers = {};
-    try {
-      const session = await fetchAuthSession();
-      const authToken = session.tokens?.idToken?.toString();
-      if (authToken) {
-        headers["Authorization"] = `Bearer ${authToken}`;
-      }
-    } catch (authError) {
-      console.warn("Could not get auth token:", authError);
-    }
+    const dynamodb = await createAwsClient(DynamoDBClient);
 
-    const url = new URL(
-      `/query-results/${encodeURIComponent(queryUuid)}`,
-      AGENT_ENDPOINT_URL
-    );
+    const input = {
+      TableName: QUESTION_ANSWERS_TABLE_NAME,
+      KeyConditionExpression: "id = :queryUuid",
+      ExpressionAttributeValues: {
+        ":queryUuid": {
+          S: queryUuid,
+        },
+      },
+      ConsistentRead: true,
+    };
 
     console.log("------- Get Query Results -------");
-    console.log(url.toString());
+    console.log(input);
 
-    const response = await fetch(url, { headers });
-    if (!response.ok) {
-      throw new Error(`Server responded with ${response.status}`);
+    const command = new QueryCommand(input);
+    const response = await dynamodb.send(command);
+
+    if (response.hasOwnProperty("Items")) {
+      for (let i = 0; i < response.Items.length; i++) {
+        queryResults.push({
+          query: response.Items[i].sql_query.S,
+          query_results: JSON.parse(response.Items[i].data.S).result,
+          query_description: response.Items[i].sql_query_description.S,
+        });
+      }
     }
 
-    return await response.json();
+    return queryResults;
   } catch (error) {
-    console.error("Error getting query results:", error);
+    console.error("Error querying DynamoDB:", error);
     throw error;
   }
 };
