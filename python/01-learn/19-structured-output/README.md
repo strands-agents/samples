@@ -86,7 +86,6 @@ pip install -r requirements.txt
 - [Strands Agents Documentation](https://strandsagents.com/)
 - [Structured Output User Guide](https://strandsagents.com/latest/user-guide/concepts/agents/structured-output/)
 - [Pydantic Documentation](https://docs.pydantic.dev/)
-- [Strands Tools Repository](https://github.com/strands-agents/tools)
 
 ## Next Steps
 
