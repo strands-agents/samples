@@ -7,7 +7,7 @@ from pydantic import BaseModel
 import uvicorn
 import boto3
 import json
-from uuid import uuid4
+from uuid import UUID, uuid4
 from datetime import datetime, timezone
 import os
 
@@ -102,6 +102,26 @@ def health_check():
         dict: A status message indicating the service is healthy
     """
     return {"status": "healthy"}
+
+
+def conversation_key(session_id: str, user_id: str = None) -> str:
+    """
+    Build the ConversationTable key for a conversation.
+
+    When the caller is authenticated, the key is prefixed with their Cognito
+    user ID (the token's `sub` claim), so a user can only read and write their
+    own conversations even if they know another user's session_id.
+
+    Args:
+        session_id (str): Client-supplied session identifier
+        user_id (str, optional): Cognito `sub` claim of the authenticated caller
+
+    Returns:
+        str: The partition key to use in ConversationTable
+    """
+    if user_id:
+        return f"{user_id}#{session_id}"
+    return session_id
 
 
 async def run_data_analyst_assistant_with_stream_response(bedrock_model, system_prompt: str, prompt: str, prompt_uuid: str, session_id: str):
@@ -236,7 +256,7 @@ class PromptRequest(BaseModel):
         prompt (str): The user's prompt
         prompt_uuid (str, optional): Unique identifier for the prompt
         user_timezone (str, optional): User's timezone
-        session_id (str, optional): Session identifier for conversation context
+        session_id (str, optional): Session identifier (UUID) for conversation context
     """
     bedrock_model_id: str = None  # Optional, will use config default if not provided
     prompt: str  # Required
@@ -268,9 +288,22 @@ async def assistant_streaming(
     try:
         # Check if Cognito is configured before attempting authentication
         cognito_user_pool_id = os.environ.get('COGNITO_USER_POOL_ID', 'N/A')
+        # Cognito user ID of the caller; stays None when authentication is skipped
+        user_id = None
         
-        # Skip authentication if Cognito is not configured (N/A values)
+        # Skip authentication if Cognito is not configured (N/A values), but only when
+        # unauthenticated access was explicitly allowed for testing
         if ( cognito_user_pool_id == "N/A"):
+            allow_unauthenticated = os.environ.get('ALLOW_UNAUTHENTICATED_ACCESS', 'false').lower() == 'true'
+            if not allow_unauthenticated:
+                print(f"\n❌ COGNITO NOT CONFIGURED - REJECTING REQUEST")
+                print("-" * 50)
+                print("🔧 Set CognitoUserPoolId, or AllowUnauthenticatedAccess=true for testing only")
+                print("-" * 50)
+                raise HTTPException(
+                    status_code=401,
+                    detail="Authentication is not configured. Deploy with CognitoUserPoolId, or with AllowUnauthenticatedAccess=true for testing only."
+                )
             
             print(f"\n⚠️  COGNITO NOT CONFIGURED - SKIPPING AUTHENTICATION")
             print("-" * 50)
@@ -288,6 +321,11 @@ async def assistant_streaming(
                 decoded_token = validate_cognito_token_with_config(token)
                 if not decoded_token:
                     raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+                # Bind conversation history to the caller's stable Cognito user ID
+                user_id = decoded_token.get('sub')
+                if not user_id:
+                    raise HTTPException(status_code=401, detail="Token is missing the sub claim")
                 
                 print(f"\n🔐 AUTHENTICATED USER")
                 print("-" * 40)
@@ -296,6 +334,9 @@ async def assistant_streaming(
                 print(f"🔑 Token Use: {decoded_token.get('token_use', 'unknown')}")
                 print("-" * 40)
                 
+            except HTTPException:
+                # Already a 401 with a clear message; don't wrap it again
+                raise
             except Exception as cognito_error:
                 print(f"\n❌ AUTHENTICATION FAILED")
                 print("-" * 40)
@@ -323,6 +364,12 @@ async def assistant_streaming(
         session_id = request.session_id
         if not session_id:
             session_id = str(uuid4())
+        else:
+            # Only accept UUIDs, and store them in canonical form
+            try:
+                session_id = str(UUID(session_id))
+            except ValueError:
+                raise HTTPException(status_code=400, detail="session_id must be a UUID")
 
         bedrock_model_id = request.bedrock_model_id or 'us.anthropic.claude-sonnet-4-6'
         
@@ -342,9 +389,14 @@ async def assistant_streaming(
         system_prompt = DATA_ANALYST_SYSTEM_PROMPT.replace("{timezone}", user_timezone)
 
         return StreamingResponse(
-            run_data_analyst_assistant_with_stream_response(bedrock_model, system_prompt, prompt, prompt_uuid, session_id),
+            run_data_analyst_assistant_with_stream_response(
+                bedrock_model, system_prompt, prompt, prompt_uuid, conversation_key(session_id, user_id)
+            ),
             media_type="text/plain"
         )
+    except HTTPException:
+        # Keep 4xx responses (for example 401 from authentication) instead of turning them into 500s
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

@@ -192,7 +192,7 @@ npm start
 
 The application will open in your browser at http://localhost:3000.
 
-> **Note**: At this point, your CDK backend still has `COGNITO_USER_POOL_ID` set to "N/A", so the agent will **not validate JWT tokens** from your frontend. The application will work, but authentication is bypassed on the backend. You'll update this configuration later to enable full authentication.
+> **Note**: At this point, your CDK backend still has `CognitoUserPoolId` set to "N/A", so the agent does **not validate JWT tokens** from your frontend. If you deployed the backend with `AllowUnauthenticatedAccess=true`, the application works but authentication is bypassed on the backend. Otherwise the agent rejects requests with a 401 until you complete [Enable Full Authentication](#enable-full-authentication-production-configuration) below.
 
 First-Time access:
 1. **Create Account**: Click "Create Account" and use your email address
@@ -272,10 +272,10 @@ Navigate back to your CDK project directory and update the deployment with your 
 
 ``` bash
 cd ../cdk-strands-data-analyst-assistant
-cdk deploy --parameters CognitoUserPoolId=us-east-1_XXXXXXXXX
+cdk deploy --parameters CognitoUserPoolId=us-east-1_XXXXXXXXX --parameters AllowUnauthenticatedAccess=false
 ```
 
-Replace `us-east-1_XXXXXXXXX` with the actual `aws_user_pools_id` value from your `amplifyconfiguration.json` file.
+Replace `us-east-1_XXXXXXXXX` with the actual `aws_user_pools_id` value from your `amplifyconfiguration.json` file. Setting `AllowUnauthenticatedAccess=false` turns off the testing-only bypass in case you enabled it earlier.
 
 > [!NOTE]
 > **What This Does**: This update configures your Strands Agent to validate JWT tokens against your Cognito User Pool. After this deployment, only authenticated users with valid tokens can access the agent endpoint.
@@ -296,7 +296,7 @@ Expected response: `{"detail":"Invalid or expired token"}`
 curl -d '{ "prompt": "Hello!" }' -X POST -H 'Content-Type: application/json' http://$AGENT_ENDPOINT_URL/assistant-streaming
 ```
 
-Expected response: `{"detail":"Authorization header missing"}`
+Expected response: `{"detail":"Missing or invalid Authorization header"}`
 
 ## Deploy your Application with Amplify Hosting
 
