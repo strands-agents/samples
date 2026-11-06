@@ -334,6 +334,9 @@ async def assistant_streaming(
                 print(f"🔑 Token Use: {decoded_token.get('token_use', 'unknown')}")
                 print("-" * 40)
                 
+            except HTTPException:
+                # Already a 401 with a clear message; don't wrap it again
+                raise
             except Exception as cognito_error:
                 print(f"\n❌ AUTHENTICATION FAILED")
                 print("-" * 40)

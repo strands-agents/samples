@@ -296,7 +296,7 @@ Expected response: `{"detail":"Invalid or expired token"}`
 curl -d '{ "prompt": "Hello!" }' -X POST -H 'Content-Type: application/json' http://$AGENT_ENDPOINT_URL/assistant-streaming
 ```
 
-Expected response: `{"detail":"Authorization header missing"}`
+Expected response: `{"detail":"Missing or invalid Authorization header"}`
 
 ## Deploy your Application with Amplify Hosting
 
