@@ -163,7 +163,7 @@ Since Cognito is not configured, you can use a placeholder token (it won't be va
 export JWT_TOKEN="no-token-required"
 ```
 
-Create a session ID for conversation tracking:
+Create a session ID for conversation tracking. The agent only accepts UUIDs and returns a 400 for any other `session_id` value:
 
 ```bash
 export SESSION_ID=$(uuidgen)
