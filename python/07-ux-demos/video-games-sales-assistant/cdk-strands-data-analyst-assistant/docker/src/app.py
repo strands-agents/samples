@@ -104,6 +104,26 @@ def health_check():
     return {"status": "healthy"}
 
 
+def conversation_key(session_id: str, user_id: str = None) -> str:
+    """
+    Build the ConversationTable key for a conversation.
+
+    When the caller is authenticated, the key is prefixed with their Cognito
+    user ID (the token's `sub` claim), so a user can only read and write their
+    own conversations even if they know another user's session_id.
+
+    Args:
+        session_id (str): Client-supplied session identifier
+        user_id (str, optional): Cognito `sub` claim of the authenticated caller
+
+    Returns:
+        str: The partition key to use in ConversationTable
+    """
+    if user_id:
+        return f"{user_id}#{session_id}"
+    return session_id
+
+
 async def run_data_analyst_assistant_with_stream_response(bedrock_model, system_prompt: str, prompt: str, prompt_uuid: str, session_id: str):
     """
     Run the data analyst assistant and stream the response.
@@ -268,6 +288,8 @@ async def assistant_streaming(
     try:
         # Check if Cognito is configured before attempting authentication
         cognito_user_pool_id = os.environ.get('COGNITO_USER_POOL_ID', 'N/A')
+        # Cognito user ID of the caller; stays None when authentication is skipped
+        user_id = None
         
         # Skip authentication if Cognito is not configured (N/A values)
         if ( cognito_user_pool_id == "N/A"):
@@ -288,6 +310,11 @@ async def assistant_streaming(
                 decoded_token = validate_cognito_token_with_config(token)
                 if not decoded_token:
                     raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+                # Bind conversation history to the caller's stable Cognito user ID
+                user_id = decoded_token.get('sub')
+                if not user_id:
+                    raise HTTPException(status_code=401, detail="Token is missing the sub claim")
                 
                 print(f"\n🔐 AUTHENTICATED USER")
                 print("-" * 40)
@@ -342,9 +369,14 @@ async def assistant_streaming(
         system_prompt = DATA_ANALYST_SYSTEM_PROMPT.replace("{timezone}", user_timezone)
 
         return StreamingResponse(
-            run_data_analyst_assistant_with_stream_response(bedrock_model, system_prompt, prompt, prompt_uuid, session_id),
+            run_data_analyst_assistant_with_stream_response(
+                bedrock_model, system_prompt, prompt, prompt_uuid, conversation_key(session_id, user_id)
+            ),
             media_type="text/plain"
         )
+    except HTTPException:
+        # Keep 4xx responses (for example 401 from authentication) instead of turning them into 500s
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
