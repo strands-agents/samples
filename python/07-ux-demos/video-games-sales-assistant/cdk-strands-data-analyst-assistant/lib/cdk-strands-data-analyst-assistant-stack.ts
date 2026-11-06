@@ -90,6 +90,14 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
       default: "N/A",
     });
 
+    // Allows requests without authentication while CognitoUserPoolId is "N/A". For testing only.
+    const allowUnauthenticatedAccess = new cdk.CfnParameter(this, "AllowUnauthenticatedAccess", {
+      type: "String",
+      description: "Set to true to accept unauthenticated requests while CognitoUserPoolId is N/A (testing only)",
+      allowedValues: ["true", "false"],
+      default: "false",
+    });
+
     // DynamoDB tables
     const rawQueryResultsTable = new dynamodb.Table(this, "rawQueryResultsTableTable", {
       partitionKey: {
@@ -418,6 +426,7 @@ export class CdkStrandsDataAnalystAssistantStack extends cdk.Stack {
       environment: {
         PROJECT_ID: projectId.valueAsString,
         COGNITO_USER_POOL_ID: cognitoUserPoolId.valueAsString,
+        ALLOW_UNAUTHENTICATED_ACCESS: allowUnauthenticatedAccess.valueAsString,
         WEB_APPLICATION_URL: webApplicationUrl.valueAsString,
       },
       portMappings: [

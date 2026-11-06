@@ -291,8 +291,19 @@ async def assistant_streaming(
         # Cognito user ID of the caller; stays None when authentication is skipped
         user_id = None
         
-        # Skip authentication if Cognito is not configured (N/A values)
+        # Skip authentication if Cognito is not configured (N/A values), but only when
+        # unauthenticated access was explicitly allowed for testing
         if ( cognito_user_pool_id == "N/A"):
+            allow_unauthenticated = os.environ.get('ALLOW_UNAUTHENTICATED_ACCESS', 'false').lower() == 'true'
+            if not allow_unauthenticated:
+                print(f"\n❌ COGNITO NOT CONFIGURED - REJECTING REQUEST")
+                print("-" * 50)
+                print("🔧 Set CognitoUserPoolId, or AllowUnauthenticatedAccess=true for testing only")
+                print("-" * 50)
+                raise HTTPException(
+                    status_code=401,
+                    detail="Authentication is not configured. Deploy with CognitoUserPoolId, or with AllowUnauthenticatedAccess=true for testing only."
+                )
             
             print(f"\n⚠️  COGNITO NOT CONFIGURED - SKIPPING AUTHENTICATION")
             print("-" * 50)

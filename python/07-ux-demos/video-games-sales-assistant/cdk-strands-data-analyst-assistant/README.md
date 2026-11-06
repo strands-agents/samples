@@ -71,6 +71,7 @@ It will use the following default value parameters:
 - **LastNumberOfMessages**: 20 - Number of last messages to retrieve from chat history
 - **WebApplicationUrl**: "http://localhost:3000" - URL of the web application frontend for local testing
 - **CognitoUserPoolId**: "N/A" - Cognito User Pool ID for frontend authentication
+- **AllowUnauthenticatedAccess**: "false" - Set to "true" to accept unauthenticated requests while CognitoUserPoolId is "N/A". For testing only. With the default, the agent rejects every request until you configure Cognito
 
 After deployment completes, the following resources will be created:
 
@@ -135,17 +136,23 @@ The script uses the **[video_games_sales_no_headers.csv](./resources/database/vi
 
 ## Testing the Deployed Agent
 
-### Default Configuration (No Authentication Required)
+### Testing Without Authentication
 
-By default, the stack deploys with Cognito authentication **disabled** (COGNITO_USER_POOL_ID parameter set to "N/A"). This configuration is designed for **development and testing purposes** and provides the following behavior:
+By default, the stack deploys without a Cognito User Pool (CognitoUserPoolId set to "N/A") and with AllowUnauthenticatedAccess set to "false", so the agent **rejects every request with a 401** until you configure authentication. To test the agent with `curl` before you set up Cognito, allow unauthenticated access explicitly:
+
+``` bash
+cdk deploy --parameters AllowUnauthenticatedAccess=true
+```
+
+You can also pass this parameter on your first `cdk deploy`. With unauthenticated access allowed, the agent behaves as follows:
 
 - **No JWT token validation** - The Authorization header is still required in API requests for consistency, but the actual token value is not validated against any identity provider
-- **Open access** - Any client can make requests to the agent endpoint without proper authentication
+- **Open access** - Anyone who can reach the load balancer can make requests to the agent endpoint and read any conversation whose `session_id` they know
 - **Session tracking enabled** - Each request can include a `session_id` parameter for conversation continuity across multiple interactions
 - **Conversation memory** - The agent maintains context and remembers previous questions within the same session, stored in DynamoDB
 
 > [!WARNING]
-> **Security Notice**: This default configuration bypasses authentication and should **NOT be used in production environments**. For production deployments, configure a valid Cognito User Pool ID to enable proper JWT token validation and user authentication. The Cognito setup and configuration process is covered in detail in the **[Front-End Implementation tutorial](../amplify-video-games-sales-assistant-strands/)**.
+> **Security Notice**: AllowUnauthenticatedAccess=true makes the agent endpoint open to anyone on the internet and should **NOT be used in production environments**. For production deployments, configure a valid Cognito User Pool ID to enable proper JWT token validation and user authentication. The Cognito setup and configuration process is covered in detail in the **[Front-End Implementation tutorial](../amplify-video-games-sales-assistant-strands/)**.
 
 ### Setting Up Test Environment
 
@@ -221,9 +228,9 @@ The agent responds as "Gus," a video game sales data analyst assistant who:
 - **Provides data insights** from the video_games_sales_units database (64,016 game titles from 1971-2024)
 - **Analyzes developer review scores** and sales performance
 - **Session Continuity**: Use the same `SESSION_ID` for all related questions to maintain conversation context
-- **Authentication Bypass**: When COGNITO_USER_POOL_ID is set to "N/A", the Authorization header is still required but the JWT token is not validated
+- **Authentication Bypass**: When CognitoUserPoolId is "N/A" and AllowUnauthenticatedAccess is "true", the Authorization header is still required but the JWT token is not validated
 
-> **Note**: The system still expects the `Authorization: Bearer <token>` header in all requests, but when Cognito is not configured (COGNITO_USER_POOL_ID="N/A"), any token value will be accepted without validation.
+> **Note**: The system still expects the `Authorization: Bearer <token>` header in all requests, but when Cognito is not configured and unauthenticated access is allowed, any token value will be accepted without validation. If you didn't deploy with AllowUnauthenticatedAccess=true, these requests return `{"detail":"Authentication is not configured. ..."}` with status 401.
 
 You can now proceed to the **[Front-End Implementation - Integrating Strands Agent with a Ready-to-Use Data Analyst Assistant Application](../amplify-video-games-sales-assistant-strands/)**.
 
