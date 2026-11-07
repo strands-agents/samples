@@ -6,13 +6,20 @@ A terminal calendar assistant built from custom tools and a local SQLite databas
 
 The assistant uses the Strands Agents `tool()` function to manage appointments turn by turn in your terminal. It is the TypeScript counterpart of the calendar assistant in the Python [`personal-assistant`](../../../../python/04-industry-use-cases/productivity/personal-assistant/) sample.
 
-![Custom Tools Architecture](images/agent_with_custom_tools.png)
+![Architecture Diagram](images/agent_with_custom_tools.png)
 
-| Feature | Description |
-|---------|-------------|
-| Custom tools created | create_appointment, list_appointments, update_appointment, delete_appointment, check_availability |
-| Agent Structure | Single agent architecture |
-| Interaction | Guided demo, then turn-by-turn chat |
+### Sample Details
+
+| Information            | Details                                                                                           |
+|------------------------|---------------------------------------------------------------------------------------------------|
+| **Agent Architecture** | Single-agent                                                                                      |
+| **Native Tools**       | None                                                                                              |
+| **Custom Tools**       | `create_appointment`, `list_appointments`, `update_appointment`, `delete_appointment`, `check_availability` |
+| **MCP Servers**        | None                                                                                              |
+| **Use Case Vertical**  | Productivity                                                                                      |
+| **Complexity**         | Intermediate                                                                                      |
+| **Model Provider**     | Amazon Bedrock                                                                                    |
+| **SDK Used**           | Strands Agents SDK (TypeScript)                                                                   |
 
 ## What the assistant does
 
@@ -222,3 +229,13 @@ The agent streams its replies, and the tools it calls, to the terminal as they h
 ## Additional Resources
 
 - [Strands Agents Documentation](https://strandsagents.com/latest/)
+
+## Disclaimer
+
+This sample is provided for educational and demonstration purposes only. It is not intended for production use without further development, testing, and hardening.
+
+For production deployments, consider:
+- Implementing appropriate content filtering and safety measures
+- Following security best practices for your deployment environment
+- Conducting thorough testing and validation
+- Reviewing and adjusting configurations for your specific requirements
