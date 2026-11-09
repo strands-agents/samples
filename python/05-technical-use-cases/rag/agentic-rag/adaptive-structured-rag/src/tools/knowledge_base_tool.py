@@ -1,14 +1,21 @@
 """
 Knowledge Base Tool for retrieving schema information.
+
+Supports both VECTOR and MANAGED knowledge base types.
+Set KNOWLEDGE_BASE_TYPE environment variable to "MANAGED" to use managed search configuration.
 """
 from strands import tool
 import boto3
+from botocore.config import Config
 import logging
 import os
 import json
 from typing import Optional, Dict, Any, List
 
 logger = logging.getLogger(__name__)
+
+# Knowledge Base type: "VECTOR" (default) or "MANAGED"
+KNOWLEDGE_BASE_TYPE = os.environ.get('KNOWLEDGE_BASE_TYPE', 'MANAGED').upper()
 
 # Store the schema information for fallback
 WEALTH_MANAGEMENT_SCHEMA = [
@@ -183,24 +190,74 @@ def get_schema(flag: bool = False, table_name: str = None) -> str:
             return _format_schema_from_data(WEALTH_MANAGEMENT_SCHEMA, table_name)
         
         # Create Bedrock client
-        logger.debug(f"Connecting to knowledge base: {knowledge_base_id}")
-        bedrock_client = boto3.client('bedrock-agent-runtime', region_name=config['aws_region'])
-        
+        logger.debug(f"Connecting to knowledge base: {knowledge_base_id} (type: {KNOWLEDGE_BASE_TYPE})")
+        bedrock_client = boto3.client(
+            'bedrock-agent-runtime',
+            region_name=config['aws_region'],
+            config=Config(user_agent_extra='strands-samples/bedrock-kb'),
+        )
+
         # Prepare the query
         query = f"Describe the schema for {table_name} table" if table_name else "Describe all tables and their schemas"
         logger.debug(f"Querying knowledge base with: {query}")
-        
+
+        # Build retrieval configuration based on KB type
+        if KNOWLEDGE_BASE_TYPE == "MANAGED":
+            # Toggle: USE_AGENTIC_RETRIEVAL=false to disable, GENERATE_RESPONSE=true for answer generation
+            generate_response = os.environ.get('GENERATE_RESPONSE', 'false').lower() == 'true'
+            use_agentic = os.environ.get('USE_AGENTIC_RETRIEVAL', 'true').lower() == 'true'
+            # Primary: AgenticRetrieveStream (query decomposition + managed reranking)
+            if use_agentic:
+              try:
+                response = bedrock_client.agentic_retrieve_stream(
+                    messages=[{"content": {"text": query}, "role": "user"}],
+                    retrievers=[{
+                        "configuration": {
+                            "knowledgeBase": {
+                                "knowledgeBaseId": knowledge_base_id,
+                                "retrievalOverrides": {"maxNumberOfResults": 5},
+                            }
+                        }
+                    }],
+                    agenticRetrieveConfiguration={
+                        "foundationModelType": "MANAGED",
+                        "rerankingModelType": "MANAGED",
+                    },
+                    generateResponse=generate_response,
+                )
+                schema_info = ""
+                for event in response.get("stream", []):
+                    if "result" in event:
+                        for result in event["result"].get("results", []):
+                            if 'content' in result and 'text' in result['content']:
+                                schema_info += result['content']['text'] + "\n\n"
+                if schema_info:
+                    logger.info("Successfully retrieved schema via AgenticRetrieveStream")
+                    return schema_info
+              except Exception as e:
+                logger.warning(f"AgenticRetrieveStream unavailable ({e}), falling back to Retrieve")
+
+            # Fallback: Retrieve with managedSearchConfiguration
+            retrieval_configuration = {
+                'managedSearchConfiguration': {
+                    'numberOfResults': 5
+                }
+            }
+        else:
+            # Vector KBs use vectorSearchConfiguration (default)
+            retrieval_configuration = {
+                'vectorSearchConfiguration': {
+                    'numberOfResults': 5
+                }
+            }
+
         # Query the knowledge base
         response = bedrock_client.retrieve(
             knowledgeBaseId=knowledge_base_id,
             retrievalQuery={
                 'text': query
             },
-            retrievalConfiguration={
-                'vectorSearchConfiguration': {
-                    'numberOfResults': 5
-                }
-            }
+            retrievalConfiguration=retrieval_configuration
         )
         
         # Process and format the response
