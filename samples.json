@@ -64,6 +64,11 @@
     },
     {
       "language": "typescript",
+      "id": "industry-use-cases",
+      "label": "Industry Use Cases"
+    },
+    {
+      "language": "typescript",
       "id": "migration",
       "label": "Migration"
     }
@@ -92,7 +97,8 @@
       "label": "Industry use cases",
       "description": "Apply Strands to real operational and business workflows.",
       "samples": [
-        "python/04-industry-use-cases/software-engineering/lambda-error-analysis-agent"
+        "python/04-industry-use-cases/software-engineering/lambda-error-analysis-agent",
+        "typescript/04-industry-use-cases/productivity/calendar-assistant"
       ]
     },
     {
@@ -1455,6 +1461,24 @@
         {
           "label": "Session management",
           "url": "https://strandsagents.com/docs/user-guide/sdk/agents/session-management/"
+        }
+      ]
+    },
+    {
+      "id": "typescript/04-industry-use-cases/productivity/calendar-assistant",
+      "language": "typescript",
+      "category": "industry-use-cases",
+      "categoryLabel": "Industry Use Cases",
+      "title": "Calendar Assistant with Custom Tools",
+      "description": "Terminal calendar assistant with custom tools, a SQLite calendar, clash handling and configurable settings",
+      "tags": [],
+      "path": "typescript/04-industry-use-cases/productivity/calendar-assistant",
+      "url": "https://github.com/strands-agents/samples/tree/main/typescript/04-industry-use-cases/productivity/calendar-assistant",
+      "slug": "typescript/productivity/calendar-assistant",
+      "docs": [
+        {
+          "label": "Custom tools",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/tools/custom-tools/"
         }
       ]
     },
