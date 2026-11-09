@@ -1,0 +1,4 @@
+strands-agents
+mcp
+boto3
+python-dotenv
