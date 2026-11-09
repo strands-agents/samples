@@ -101,7 +101,8 @@ aws cloudformation deploy \
     InstanceType=t3.large \
     VolumeSize=20 \
     AssetsBucketName=$ASSETS_BUCKET \
-    AssetsPackageName=$PACKAGE_NAME
+    AssetsPackageName=$PACKAGE_NAME \
+    AllowUnauthenticatedAccess=${ALLOW_UNAUTHENTICATED_ACCESS:-false}
 
 # Get outputs
 echo "📋 Getting stack outputs..."
@@ -158,6 +159,10 @@ cd ../deploy
 rm -rf "$TEMP_DIR" "$PACKAGE_NAME"
 
 echo "✅ Deployment complete!"
+if [ "${ALLOW_UNAUTHENTICATED_ACCESS:-false}" != "true" ]; then
+    echo "🔒 The backend rejects requests through CloudFront (401) because it has no user authentication."
+    echo "   For testing only, redeploy with: ALLOW_UNAUTHENTICATED_ACCESS=true ./deploy.sh"
+fi
 echo "🌐 Application URL: $CLOUDFRONT_URL"
 echo "🔗 API URL: $CLOUDFRONT_URL/api"
 echo "🪣 Assets Bucket: $ASSETS_BUCKET"

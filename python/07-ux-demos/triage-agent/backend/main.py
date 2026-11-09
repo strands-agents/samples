@@ -27,7 +27,7 @@ from typing import Dict, List, Any, Optional
 from datetime import datetime
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel
 from dataclasses import dataclass, asdict, field
 import re
@@ -573,6 +573,50 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+LOOPBACK_HOSTS = {"127.0.0.1", "::1", "localhost"}
+
+
+@app.middleware("http")
+async def require_local_or_opt_in(request: Request, call_next):
+    """
+    Reject requests that do not come from this machine.
+
+    The backend has no user authentication, so anyone who can reach it can read
+    and delete any session it holds. Remote callers (for example through the
+    CloudFront deployment) are only served when ALLOW_UNAUTHENTICATED_ACCESS=true
+    was set explicitly, for testing only. /health stays open for health checks.
+    """
+    allow_unauthenticated = os.environ.get("ALLOW_UNAUTHENTICATED_ACCESS", "false").lower() == "true"
+    client_host = request.client.host if request.client else None
+    if allow_unauthenticated or client_host in LOOPBACK_HOSTS or request.url.path == "/health":
+        return await call_next(request)
+    return JSONResponse(
+        status_code=401,
+        content={
+            "detail": "This backend has no user authentication and only serves requests from localhost. "
+            "Deploy with AllowUnauthenticatedAccess=true for testing only."
+        },
+    )
+
+
+def canonical_session_id(session_id: Optional[str]) -> str:
+    """
+    Return the session_id in canonical UUID form, or a new UUID if none was sent.
+
+    A session_id is the only thing that ties a caller to a conversation, so it must
+    be a random UUID rather than a value another caller could guess.
+
+    Raises:
+        HTTPException: 400 if session_id is not a UUID
+    """
+    if not session_id:
+        return str(uuid.uuid4())
+    try:
+        return str(uuid.UUID(session_id))
+    except ValueError:
+        raise HTTPException(status_code=400, detail="session_id must be a UUID")
+
+
 # Pydantic models
 class ImageData(BaseModel):
     data: str  # base64 encoded image data
@@ -583,7 +627,7 @@ class ChatMessage(BaseModel):
     
     message: str
     model_id: Optional[str] = "us.anthropic.claude-sonnet-4-6"
-    session_id: Optional[str] = "default"
+    session_id: Optional[str] = None  # UUID; a new one is generated when omitted
     images: Optional[List[ImageData]] = None
     history: Optional[List[Dict[str, Any]]] = None
 
@@ -1017,6 +1061,7 @@ async def refresh_agents_endpoint():
 async def clear_session(session_id: str):
     """Clear a specific session's agent and triage session"""
     global session_agents, decision_tree
+    session_id = canonical_session_id(session_id)
     
     # Remove all agents for this session
     keys_to_remove = [key for key in session_agents.keys() if key.startswith(f"{session_id}:")]
@@ -1031,22 +1076,11 @@ async def clear_session(session_id: str):
     add_server_log("system", f"Cleared session: {session_id}")
     return {"message": f"Session {session_id} cleared", "status": "success"}
 
-@app.get("/sessions")
-async def get_sessions():
-    """Get all active sessions"""
-    sessions = {}
-    for agent_key in session_agents.keys():
-        session_id, model_id = agent_key.split(":", 1)
-        if session_id not in sessions:
-            sessions[session_id] = []
-        sessions[session_id].append(model_id)
-    
-    return {"sessions": sessions, "count": len(sessions)}
-
 @app.get("/sessions/{session_id}/history")
 async def get_session_history(session_id: str, model_id: str = "us.anthropic.claude-sonnet-4-6"):
     """Get message history for a specific session"""
-    
+    session_id = canonical_session_id(session_id)
+
     # Check if the session exists in our in-memory store
     try:
         # Get messages from the actual agent
@@ -1072,6 +1106,7 @@ async def get_session_history(session_id: str, model_id: str = "us.anthropic.cla
 @app.post("/chat")
 async def chat_endpoint(chat_message: ChatMessage, request: Request):
     """Chat endpoint using Strands Agent with streaming"""
+    chat_message.session_id = canonical_session_id(chat_message.session_id)
     try:
         # Check if model is available
         model_ids = [model["id"] for model in AVAILABLE_MODELS]
@@ -1122,6 +1157,9 @@ async def chat_endpoint(chat_message: ChatMessage, request: Request):
                 }
             )
         
+    except HTTPException:
+        # Keep 4xx responses (for example an unavailable model) instead of turning them into 500s
+        raise
     except Exception as e:
         logger.error(f"Chat endpoint error: {str(e)}")
         add_server_log("system", f"Chat error: {str(e)[:50]}...")
@@ -1162,6 +1200,7 @@ async def get_decision_tree():
 @app.get("/api/triage/session/{session_id}")
 async def get_triage_session_state(session_id: str):
     """Get the current state of a triage session"""
+    session_id = canonical_session_id(session_id)
     try:
         global decision_tree
         add_server_log("triage", f"Session state requested: {session_id}", level="info")
@@ -1307,4 +1346,5 @@ if __name__ == "__main__":
     print("🔧 MCP servers will initialize automatically (stdio transport)")
     print(f"🌍 AWS Region: {os.environ.get('AWS_REGION', 'us-east-1')}")
     
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # Loopback by default; the AWS deployment sets HOST and PORT explicitly.
+    uvicorn.run(app, host=os.environ.get("HOST", "127.0.0.1"), port=int(os.environ.get("PORT", "8000")))

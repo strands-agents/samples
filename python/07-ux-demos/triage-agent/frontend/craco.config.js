@@ -7,7 +7,7 @@ const paths = require('react-scripts/config/paths');
 module.exports = {
   devServer: (devServerConfig, { env, paths }) => {
     // Completely override the devServer config to be compatible with webpack-dev-server 5.x
-    const host = process.env.HOST || '0.0.0.0';
+    const host = process.env.HOST || '127.0.0.1';
     const sockHost = process.env.WDS_SOCKET_HOST;
     const sockPath = process.env.WDS_SOCKET_PATH;
     const sockPort = process.env.WDS_SOCKET_PORT;

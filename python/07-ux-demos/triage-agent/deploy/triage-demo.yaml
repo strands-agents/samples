@@ -23,6 +23,16 @@ Parameters:
     Description: Application package filename
     Type: String
     Default: 'triage-ui-package.zip'
+  AllowUnauthenticatedAccess:
+    Description: >-
+      The backend has no user authentication. When false (the default), it rejects every
+      request that reaches it through CloudFront with a 401. Set to true for testing only:
+      anyone with the CloudFront URL can then chat, and read or delete any session.
+    Type: String
+    Default: 'false'
+    AllowedValues:
+      - 'true'
+      - 'false'
 
 Conditions:
   HasAssetsBucket:
@@ -113,22 +123,69 @@ Resources:
       RouteTableId: !Ref PublicRouteTable
       SubnetId: !Ref PublicSubnet
 
+  # Looks up the CloudFront origin-facing managed prefix list so only CloudFront can reach the backend
+  PrefixListLookupRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: DescribePrefixLists
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: ec2:DescribeManagedPrefixLists
+                Resource: '*'
+
+  PrefixListLookupFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      Timeout: 30
+      Role: !GetAtt PrefixListLookupRole.Arn
+      Code:
+        ZipFile: |
+          import boto3
+          import cfnresponse
+
+          def handler(event, context):
+              try:
+                  prefix_list_id = None
+                  if event["RequestType"] != "Delete":
+                      response = boto3.client("ec2").describe_managed_prefix_lists(
+                          Filters=[{"Name": "prefix-list-name", "Values": ["com.amazonaws.global.cloudfront.origin-facing"]}]
+                      )
+                      prefix_list_id = response["PrefixLists"][0]["PrefixListId"]
+                  cfnresponse.send(event, context, cfnresponse.SUCCESS, {"PrefixListId": prefix_list_id}, prefix_list_id)
+              except Exception as error:
+                  cfnresponse.send(event, context, cfnresponse.FAILED, {"Error": str(error)})
+
+  CloudFrontPrefixList:
+    Type: Custom::CloudFrontPrefixList
+    Properties:
+      ServiceToken: !GetAtt PrefixListLookupFunction.Arn
+
   # Security Group
   BackendSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Security group for backend instance
       SecurityGroupIngress:
-        - Description: HTTP from anywhere
+        # No SSH ingress: connect with SSM Session Manager (the instance role allows it)
+        - Description: HTTP from CloudFront only
           IpProtocol: tcp
           FromPort: 80
           ToPort: 80
-          CidrIp: 0.0.0.0/0
-        - Description: SSH
-          IpProtocol: tcp
-          FromPort: 22
-          ToPort: 22
-          CidrIp: 0.0.0.0/0
+          SourcePrefixListId: !GetAtt CloudFrontPrefixList.PrefixListId
       SecurityGroupEgress:
         - Description: All outbound traffic
           IpProtocol: -1
@@ -148,15 +205,26 @@ Resources:
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
-        - arn:aws:iam::aws:policy/AmazonBedrockFullAccess
       Policies:
-        - PolicyName: S3FullAccess
+        - PolicyName: BedrockInvoke
           PolicyDocument:
             Version: 2012-10-17
             Statement:
               - Effect: Allow
-                Action: s3:*
+                Action:
+                  - bedrock:InvokeModel
+                  - bedrock:InvokeModelWithResponseStream
                 Resource: '*'
+        - !If
+          - HasAssetsBucket
+          - PolicyName: ReadAppPackage
+            PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                - Effect: Allow
+                  Action: s3:GetObject
+                  Resource: !Sub arn:${AWS::Partition}:s3:::${AssetsBucketName}/${AssetsPackageName}
+          - !Ref AWS::NoValue
 
   BackendInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -204,10 +272,6 @@ Resources:
           source venv/bin/activate
           pip install -r requirements.txt
 
-          # Modify main.py to run on port 80
-          cd ../backend
-          sed -i 's/port=8000/port=80/' main.py
-
           # Create systemd service
           cat > /etc/systemd/system/triage-backend.service << EOF
           [Unit]
@@ -220,6 +284,10 @@ Resources:
           WorkingDirectory=/home/ubuntu/triage-agents/backend
           Environment=PATH=/home/ubuntu/triage-agents/backend/venv/bin
           Environment=AWS_REGION=${AWS::Region}
+          # Port 80 is reachable only from CloudFront (see BackendSecurityGroup)
+          Environment=HOST=0.0.0.0
+          Environment=PORT=80
+          Environment=ALLOW_UNAUTHENTICATED_ACCESS=${AllowUnauthenticatedAccess}
           ExecStart=/home/ubuntu/triage-agents/backend/venv/bin/python main.py
           Restart=always
 
