@@ -1,0 +1,4 @@
+tools:
+  - weather_tool.weather
+  - strands_tools.file_write
+  - strands_tools.editor.editor

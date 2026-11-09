@@ -1,0 +1,121 @@
+
+agent:
+  model: "us.amazon.nova-pro-v1:0"
+  system_prompt: |
+    You are a document processing coordinator that can handle complex document workflows.
+    When you receive a document processing request, use the document processor graph to analyze 
+    and process the content through a structured workflow.
+    
+    The document processing workflow includes:
+    - Validation: Checks document format and content
+    - Analysis: Extracts key information and themes
+    - Processing: Applies specific processing based on document type
+    - Synthesis: Combines results into final output
+    
+    Use the document processor for any complex document analysis tasks that require 
+    structured processing and quality assurance.
+
+  tools:
+    - name: "document_processor"
+      description: "A structured workflow for processing and analyzing documents of various types"
+      graph:
+        nodes:
+          - node_id: "validator"
+            type: "agent"
+            config:
+              model: "us.amazon.nova-pro-v1:0"
+              system_prompt: |
+                You are a document validator. Your role is to:
+                1. Check if the document is properly formatted and readable
+                2. Identify the document type (article, report, specification, etc.)
+                3. Assess the document quality and completeness
+                4. Flag any issues that might affect processing
+                
+                Provide a validation status and document type classification.
+              temperature: 0.1
+              
+          - node_id: "analyzer"
+            type: "agent"
+            config:
+              model: "us.amazon.nova-pro-v1:0"
+              system_prompt: |
+                You are a document analyzer. Your role is to:
+                1. Extract key themes, topics, and main points from the document
+                2. Identify important entities, dates, and factual information
+                3. Analyze document structure and organization
+                4. Summarize the core content and purpose
+                
+                Provide detailed analysis of document content and structure.
+              temperature: 0.2
+              
+          - node_id: "processor"
+            type: "agent"
+            config:
+              model: "us.amazon.nova-pro-v1:0"
+              system_prompt: |
+                You are a document processor. Your role is to:
+                1. Apply specific processing based on document type and requirements
+                2. Extract or transform content according to the requested output format
+                3. Perform specialized analysis (technical, business, academic, etc.)
+                4. Prepare content for final synthesis
+                
+                Adapt your processing approach based on document type and output requirements.
+              temperature: 0.3
+              
+          - node_id: "synthesizer"
+            type: "agent"
+            config:
+              model: "us.amazon.nova-pro-v1:0"
+              system_prompt: |
+                You are a document synthesizer. Your role is to:
+                1. Combine validation, analysis, and processing results
+                2. Create the final output in the requested format
+                3. Ensure consistency and coherence across all findings
+                4. Provide actionable insights and recommendations when appropriate
+                
+                Generate comprehensive, well-structured final outputs.
+              temperature: 0.4
+              
+        edges:
+          - from_node: "validator"
+            to_node: "analyzer"
+            condition:
+              type: "expression"
+              expression: "state.results.get('validator', {}).get('status') == 'valid'"
+              description: "Proceed to analysis only if document validation passes"
+              
+          - from_node: "analyzer"
+            to_node: "processor"
+            condition:
+              type: "always"
+              description: "Always proceed to processing after analysis"
+              
+          - from_node: "processor"
+            to_node: "synthesizer"
+            condition:
+              type: "always"
+              description: "Always proceed to synthesis after processing"
+              
+        entry_points: ["validator"]
+        
+      input_schema:
+        type: "object"
+        properties:
+          document:
+            type: "string"
+            description: "The document content to process and analyze"
+          output_format:
+            type: "string"
+            enum: ["summary", "analysis", "report", "insights", "recommendations"]
+            default: "analysis"
+            description: "Desired format for the final output"
+          processing_type:
+            type: "string"
+            enum: ["general", "technical", "business", "academic", "legal"]
+            default: "general"
+            description: "Type of specialized processing to apply"
+          include_metadata:
+            type: "boolean"
+            default: false
+            description: "Whether to include document metadata in the output"
+        required: ["document"]

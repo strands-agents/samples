@@ -1,0 +1,75 @@
+# Parallel Graph Configuration - Parallel Processing
+# Based on the parallel processing example from the graph tutorial
+# samples/01-tutorials/02-multi-agent-systems/03-graph-agent/graph.ipynb
+
+graph:
+  graph_id: "parallel_assessment_workflow"
+  name: "Parallel Assessment Workflow"
+  description: "Parallel processing with multiple experts feeding into a final risk analyst"
+
+  # Graph execution configuration
+  max_node_executions: null
+  execution_timeout: null
+  node_timeout: null
+  reset_on_revisit: false
+
+  # Nodes (agents)
+  nodes:
+    - node_id: "finance_expert"
+      type: "agent"
+      config:
+        name: "financial_advisor"
+        model: "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+        system_prompt: "You are a financial advisor focused on cost-benefit analysis, budget implications, and ROI calculations. Engage with other experts to build comprehensive financial perspectives."
+        tools: []
+
+    - node_id: "tech_expert"
+      type: "agent"
+      config:
+        name: "technical_architect"
+        model: "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+        system_prompt: "You are a technical architect who evaluates feasibility, implementation challenges, and technical risks. Collaborate with other experts to ensure technical viability."
+        tools: []
+
+    - node_id: "market_expert"
+      type: "agent"
+      config:
+        name: "market_researcher"
+        model: "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+        system_prompt: "You are a market researcher who analyzes market conditions, user needs, and competitive landscape. Work with other experts to validate market opportunities."
+        tools: []
+
+    - node_id: "risk_analyst"
+      type: "agent"
+      config:
+        name: "risk_analyst"
+        model: "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+        system_prompt: "You are a risk analyst who identifies potential risks, mitigation strategies, and compliance issues. Collaborate with other experts to ensure comprehensive risk assessment."
+        tools: []
+
+  # Edges (dependencies) - Creates parallel processing pattern
+  edges:
+    - from_node: "finance_expert"
+      to_node: "tech_expert"
+      condition: null
+
+    - from_node: "finance_expert"
+      to_node: "market_expert"
+      condition: null
+
+    - from_node: "tech_expert"
+      to_node: "risk_analyst"
+      condition: null
+
+    - from_node: "market_expert"
+      to_node: "risk_analyst"
+      condition: null
+
+  # Entry points
+  entry_points:
+    - "finance_expert"
+
+  metadata:
+    version: "1.0.0"
+    created_from: "graph tutorial parallel processing example"
+    tags: ["parallel", "assessment", "financial", "technical", "market", "risk"]
