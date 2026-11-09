@@ -27,7 +27,7 @@ from typing import Dict, List, Any, Optional
 from datetime import datetime
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from dataclasses import dataclass, asdict, field
 import re
@@ -572,32 +572,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-LOOPBACK_HOSTS = {"127.0.0.1", "::1", "localhost"}
-
-
-@app.middleware("http")
-async def require_local_or_opt_in(request: Request, call_next):
-    """
-    Reject requests that do not come from this machine.
-
-    The backend has no user authentication, so anyone who can reach it can read
-    and delete any session it holds. Remote callers (for example through the
-    CloudFront deployment) are only served when ALLOW_UNAUTHENTICATED_ACCESS=true
-    was set explicitly, for testing only. /health stays open for health checks.
-    """
-    allow_unauthenticated = os.environ.get("ALLOW_UNAUTHENTICATED_ACCESS", "false").lower() == "true"
-    client_host = request.client.host if request.client else None
-    if allow_unauthenticated or client_host in LOOPBACK_HOSTS or request.url.path == "/health":
-        return await call_next(request)
-    return JSONResponse(
-        status_code=401,
-        content={
-            "detail": "This backend has no user authentication and only serves requests from localhost. "
-            "Deploy with AllowUnauthenticatedAccess=true for testing only."
-        },
-    )
-
 
 def canonical_session_id(session_id: Optional[str]) -> str:
     """

@@ -23,16 +23,6 @@ Parameters:
     Description: Application package filename
     Type: String
     Default: 'triage-ui-package.zip'
-  AllowUnauthenticatedAccess:
-    Description: >-
-      The backend has no user authentication. When false (the default), it rejects every
-      request that reaches it through CloudFront with a 401. Set to true for testing only:
-      anyone with the CloudFront URL can then chat, and read or delete any session.
-    Type: String
-    Default: 'false'
-    AllowedValues:
-      - 'true'
-      - 'false'
 
 Conditions:
   HasAssetsBucket:
@@ -287,7 +277,6 @@ Resources:
           # Port 80 is reachable only from CloudFront (see BackendSecurityGroup)
           Environment=HOST=0.0.0.0
           Environment=PORT=80
-          Environment=ALLOW_UNAUTHENTICATED_ACCESS=${AllowUnauthenticatedAccess}
           ExecStart=/home/ubuntu/triage-agents/backend/venv/bin/python main.py
           Restart=always
 
