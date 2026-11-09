@@ -65,7 +65,7 @@ The solution deploys the following AWS services through AWS CDK:
     - For chart generation, the application directly invokes the Claude Sonnet 4.6 model
 
 > [!NOTE]
-> This solution includes **Amazon Cognito authentication** for secure user access. The backend validates JWT tokens from authenticated users, ensuring only authorized users can interact with the Data Analyst Assistant. The solution supports both development (authentication disabled) and production (authentication enabled) configurations.
+> This solution includes **Amazon Cognito authentication** for secure user access. When authentication is enabled, the backend validates JWT tokens from authenticated users, so only signed-in users can interact with the Data Analyst Assistant, and stores each user's conversation history under their Cognito user ID so users can't read each other's conversations. The solution supports both development (authentication disabled) and production (authentication enabled) configurations.
 
 > [!TIP]
 > You can also change the data source to connect to your preferred database engine by adapting the Agent's instructions and tool implementations.
