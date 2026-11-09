@@ -149,12 +149,14 @@ Resources:
 
           def handler(event, context):
               try:
-                  prefix_list_id = None
-                  if event["RequestType"] != "Delete":
-                      response = boto3.client("ec2").describe_managed_prefix_lists(
-                          Filters=[{"Name": "prefix-list-name", "Values": ["com.amazonaws.global.cloudfront.origin-facing"]}]
-                      )
-                      prefix_list_id = response["PrefixLists"][0]["PrefixListId"]
+                  if event["RequestType"] == "Delete":
+                      # Nothing to clean up; keep the physical ID so CloudFormation sees the same resource
+                      cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, event["PhysicalResourceId"])
+                      return
+                  response = boto3.client("ec2").describe_managed_prefix_lists(
+                      Filters=[{"Name": "prefix-list-name", "Values": ["com.amazonaws.global.cloudfront.origin-facing"]}]
+                  )
+                  prefix_list_id = response["PrefixLists"][0]["PrefixListId"]
                   cfnresponse.send(event, context, cfnresponse.SUCCESS, {"PrefixListId": prefix_list_id}, prefix_list_id)
               except Exception as error:
                   cfnresponse.send(event, context, cfnresponse.FAILED, {"Error": str(error)})
