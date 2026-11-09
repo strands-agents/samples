@@ -48,9 +48,32 @@ server_logs: Dict[str, List[str]] = {}
 mcp_servers = {}  # Initialize early to avoid loading issues
 mcp_clients = {}  # Store MCP client instances
 
+SESSION_ID_PATTERN = re.compile(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
+# Detail keys that would reveal a session ID or what a user typed
+PRIVATE_LOG_KEYS = {"session_id", "message_preview"}
+
+
+def redact_session_ids(value):
+    """Shorten every session ID in a log value to its first 8 characters."""
+    if isinstance(value, str):
+        return SESSION_ID_PATTERN.sub(lambda match: match.group()[:8] + "…", value)
+    if isinstance(value, dict):
+        return {key: redact_session_ids(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [redact_session_ids(item) for item in value]
+    return value
+
+
 def add_server_log(server_name: str, message: str, level: str = "info", details: Dict = None):
-    """Add a structured log entry for a server"""
+    """
+    Add a structured log entry for a server.
+
+    GET /mcp/logs returns these entries to any caller, and a session ID is the only
+    key to a conversation, so session IDs are shortened and user text is never logged.
+    """
     timestamp = datetime.now().isoformat()
+    message = redact_session_ids(message)
+    details = redact_session_ids({key: value for key, value in (details or {}).items() if key not in PRIVATE_LOG_KEYS})
     
     # Create structured log entry
     log_entry = {
@@ -58,7 +81,7 @@ def add_server_log(server_name: str, message: str, level: str = "info", details:
         "server": server_name,
         "level": level,
         "message": message,
-        "details": details or {}
+        "details": details
     }
     
     if server_name not in server_logs:
@@ -643,7 +666,7 @@ async def stream_ai_response_with_images(message: str, model_id: str, session_id
     global decision_tree
     
     try:
-        add_server_log("system", f"Processing [{session_id}]: {message[:30]}...")
+        add_server_log("system", f"Processing [{session_id}]")
         
         # Ensure session exists
         if session_id not in decision_tree.conversations:
@@ -874,7 +897,7 @@ Respond with guidance followed by EXACTLY this XML format:
 
 async def stream_plain_response(message: str, model_id: str):
     """A very simple streaming response for basic checks"""
-    add_server_log("system", f"Starting plain text streaming for: {message[:50]}...")
+    add_server_log("system", "Starting plain text streaming")
     
     try:
         # Create simple Strands agent
@@ -1006,24 +1029,6 @@ async def get_mcp_tools_endpoint():
     except Exception as e:
         logger.error(f"Error retrieving MCP tools: {str(e)}")
         return {"error": "Failed to retrieve MCP tools", "tools": [], "count": 0}
-
-@app.get("/agents/status")
-async def get_agents_status():
-    """Get cached session agents status"""
-    agents_info = {}
-    for agent_key, agent in session_agents.items():
-        session_id, model_id = agent_key.split(":", 1)
-        agents_info[agent_key] = {
-            "session_id": session_id,
-            "model_id": model_id,
-            "created": True,
-            "tools_count": len(agent.tools) if hasattr(agent, 'tools') and agent.tools else 0
-        }
-    
-    return {
-        "session_agents": agents_info,
-        "count": len(session_agents)
-    }
 
 @app.post("/agents/refresh")
 async def refresh_agents_endpoint():
