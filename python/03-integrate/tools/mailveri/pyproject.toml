@@ -1,0 +1,26 @@
+[project]
+name = "strands-mailveri-verified-outreach"
+version = "0.1.0"
+description = "Strands agent that verifies prospects with MailVeri before drafting outreach"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "strands-agents>=1.0.0,<2.0.0",
+    "httpx>=0.27.0",
+    "python-dotenv>=1.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "respx>=0.21.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 120
