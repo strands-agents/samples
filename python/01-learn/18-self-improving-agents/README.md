@@ -141,7 +141,7 @@ Each step was recorded live against the real Strands runtime + Claude. The anima
 ## Additional Resources
 
 - [Strands Agents SDK](https://github.com/strands-agents/sdk-python)
-- [Strands Agents Tools](https://github.com/strands-agents/tools)
+- [Custom tools](https://strandsagents.com/docs/user-guide/sdk/tools/custom-tools/)
 - [Strands Documentation](https://strandsagents.com)
 - [Amazon Bedrock AgentCore](https://aws.amazon.com/bedrock/agentcore/)
 - [`@aws/agentcore` CLI](https://github.com/aws/agentcore-cli)
