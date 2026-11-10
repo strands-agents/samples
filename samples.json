@@ -649,6 +649,18 @@
       "slug": "python/tools/exa"
     },
     {
+      "id": "python/03-integrate/tools/mailveri",
+      "language": "python",
+      "category": "integrate",
+      "categoryLabel": "Integrate",
+      "title": "MailVeri",
+      "description": "A Strands agent that verifies every prospect email with MailVeri before it drafts outreach, so drafts only go to addresses that can receive mail and risky addresses are held for a human.",
+      "tags": [],
+      "path": "python/03-integrate/tools/mailveri",
+      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/tools/mailveri",
+      "slug": "python/tools/mailveri"
+    },
+    {
       "id": "python/03-integrate/tools/nova-act",
       "language": "python",
       "category": "integrate",

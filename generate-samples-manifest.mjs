@@ -39,6 +39,7 @@ const TITLE_WORDS = new Map(
     hvac: 'HVAC',
     langgraph: 'LangGraph',
     llm: 'LLM',
+    mailveri: 'MailVeri',
     mcp: 'MCP',
     nextjs: 'Next.js',
     nvidia: 'NVIDIA',
