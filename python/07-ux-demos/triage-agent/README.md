@@ -114,6 +114,11 @@ cd deploy
 ./deploy.sh
 ```
 
+> [!WARNING]
+> This sample is a demo and has no user authentication. Once deployed, anyone with the CloudFront URL can chat with the agent, and those Bedrock calls are billed to your account. Sessions are kept apart only by their random `session_id`, so do not use the sample with real users or real health data. Before that, add authentication (for example Amazon Cognito) and tie each session to the signed-in user. Under the [shared responsibility model](https://aws.amazon.com/compliance/shared-responsibility-model/), securing your deployment is your responsibility.
+
+The backend's port 80 accepts traffic only from CloudFront, and the instance has no SSH ingress; connect with [SSM Session Manager](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html) if you need a shell.
+
 ### AWS Resources
 
 | Service        | Purpose          | Configuration                  |

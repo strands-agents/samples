@@ -18,6 +18,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import './ChatInterface.css';
 
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 const ChatInterface = ({ 
   messages, 
   setMessages, 
@@ -44,15 +46,11 @@ const ChatInterface = ({
   const [isFirstInteraction, setIsFirstInteraction] = useState(true);
   const [decisionTreeOptions, setDecisionTreeOptions] = useState([]);
   
-  // Generate or get session ID using crypto.getRandomValues for security
+  // Reuse the stored session ID, or create a random UUID (the backend only accepts UUIDs)
   const [sessionId] = useState(() => {
     let id = localStorage.getItem('chat_session_id');
-    if (!id) {
-      // Use crypto.getRandomValues for cryptographically secure random generation
-      const array = new Uint8Array(16);
-      crypto.getRandomValues(array);
-      const randomString = Array.from(array, byte => byte.toString(36)).join('').substr(0, 9);
-      id = `session_${Date.now()}_${randomString}`;
+    if (!id || !UUID_PATTERN.test(id)) {
+      id = crypto.randomUUID();
       localStorage.setItem('chat_session_id', id);
     }
     return id;
@@ -609,11 +607,8 @@ const ChatInterface = ({
     setTotalTokens({ input: 0, output: 0, total: 0 });
     setTokenCount(0);
     
-    // Generate new session ID using crypto.getRandomValues for security
-    const array = new Uint8Array(16);
-    crypto.getRandomValues(array);
-    const randomString = Array.from(array, byte => byte.toString(36)).join('').substr(0, 9);
-    const newId = `session_${Date.now()}_${randomString}`;
+    // Generate a new random session ID
+    const newId = crypto.randomUUID();
     localStorage.setItem('chat_session_id', newId);
     
     // Force re-render with new session (would need to lift state up to parent)
