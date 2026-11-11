@@ -1,3 +1,4 @@
+import sys
 from mcp.server import FastMCP
 from strands import Agent
 from strands_tools import http_request
@@ -23,7 +24,7 @@ def real_estate_agent(query: str) -> str:
     formatted_query = f"Answer the following question: {query}"
     
     try:
-        print("Routed to Real Estate Expert")
+        print("Routed to Real Estate Expert", file=sys.stderr)
         real_estate_agent = Agent(
             model="us.amazon.nova-pro-v1:0",
             system_prompt=REAL_ESTATE_SYSTEM_PROMPT,
