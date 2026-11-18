@@ -128,16 +128,28 @@ export class InfraStack extends cdk.Stack {
       healthCheckGracePeriod: Duration.seconds(60),
     });
 
+    // The API has no authentication, so the load balancer is internal unless the deployer
+    // names the IPv4 ranges that may reach it: cdk deploy -c allowedCidrs=203.0.113.4/32
+    const allowedCidrs = String(this.node.tryGetContext("allowedCidrs") ?? "")
+      .split(",")
+      .map((cidr) => cidr.trim())
+      .filter(Boolean);
+
     // Create an Application Load Balancer
     const lb = new elbv2.ApplicationLoadBalancer(this, "AgentLB", {
       vpc,
-      internetFacing: true,
+      internetFacing: allowedCidrs.length > 0,
     });
 
     // Create a listener
     const listener = lb.addListener("AgentListener", {
       port: 80,
+      open: false,
     });
+    const sources = allowedCidrs.length > 0 ? allowedCidrs : [vpc.vpcCidrBlock];
+    for (const cidr of sources) {
+      listener.connections.allowDefaultPortFrom(ec2.Peer.ipv4(cidr));
+    }
 
     // Add target group to the listener
     listener.addTargets("AgentTargets", {

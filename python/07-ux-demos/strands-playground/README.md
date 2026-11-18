@@ -127,7 +127,10 @@ strands-playground/
 
 ### Option 3: Full CDK Deployment to AWS
 
-Deploy a complete production-ready environment to AWS using CDK:
+Deploy the playground to AWS using CDK:
+
+> [!WARNING]
+> The playground is a demo and has no user authentication. Anyone who can reach the load balancer can change the system prompt, turn on any of the tools, and run the agent. Those tools can read files and environment variables in the container, make HTTP requests from it, and call AWS with the task's IAM role, and the Bedrock calls are billed to your account. The stack therefore creates an internal load balancer unless you choose otherwise in step 4, and it serves plain HTTP. Before you open it up further or use it with real users, add authentication (for example an Amazon Cognito or OIDC action on the load balancer listener) and HTTPS. Under the [shared responsibility model](https://aws.amazon.com/compliance/shared-responsibility-model/), securing your deployment is your responsibility.
 
 1. Ensure Docker is running on your machine (required for CDK deployment)
 
@@ -146,6 +149,11 @@ Deploy a complete production-ready environment to AWS using CDK:
    ```bash
    npx cdk deploy
    ```
+   By default the load balancer is internal, so the playground is reachable only from inside the stack's VPC. To use it from your own machine, pass the IPv4 ranges that may connect. The load balancer is then internet-facing but accepts only those ranges:
+   ```bash
+   npx cdk deploy -c allowedCidrs=$(curl -s https://checkip.amazonaws.com)/32
+   ```
+   Separate several ranges with commas. `0.0.0.0/0` opens the playground to the whole internet; don't use it without adding authentication first.
 
 The CDK deployment creates the following AWS resources:
 
@@ -153,11 +161,11 @@ The CDK deployment creates the following AWS resources:
 - **ECS Cluster**: To host the containerized application
 - **DynamoDB Table**: For persistent session storage
 - **Fargate Service**: Running 2 instances of the application for high availability
-- **Application Load Balancer**: For distributing traffic to the Fargate instances
+- **Application Load Balancer**: For distributing traffic to the Fargate instances (internal unless `allowedCidrs` is set)
 - **IAM Roles**: With permissions for Bedrock API access
 - **CloudWatch Logs**: For application logging
 
-After deployment, the application will be accessible via the load balancer's DNS name, which is provided as an output from the CDK stack.
+After deployment, the application is served over HTTP at the load balancer's DNS name, which is provided as an output from the CDK stack, to the networks allowed above.
 
 #### Architecture
 
@@ -256,7 +264,7 @@ If Docker build fails:
 When deploying this application, consider the following security best practices:
 
 1. **IAM Permissions**: Use the principle of least privilege when configuring IAM roles
-2. **API Access**: Implement proper authentication for the API in production environments
+2. **API Access**: The API has no authentication. Add it before exposing the playground beyond a network you trust
 3. **Environment Variables**: Never hardcode sensitive information; use environment variables or AWS Secrets Manager
 4. **CORS Settings**: Restrict CORS settings to specific origins in production
 5. **Network Security**: Deploy within a VPC with appropriate security groups and network ACLs
