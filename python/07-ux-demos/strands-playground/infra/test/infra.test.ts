@@ -13,8 +13,8 @@ function albIngress(template: Template): any[] {
   return template.findResources('AWS::EC2::SecurityGroup')[groupId].Properties.SecurityGroupIngress;
 }
 
-test('load balancer is internal by default and only reachable from the VPC', () => {
-  const template = synth();
+test.each([undefined, { allowedCidrs: ' ' }])('load balancer is internal and only reachable from the VPC with context %j', (context) => {
+  const template = synth(context);
 
   template.hasResourceProperties('AWS::ElasticLoadBalancingV2::LoadBalancer', { Scheme: 'internal' });
   const ingress = albIngress(template);
@@ -31,5 +31,16 @@ test('allowedCidrs makes the load balancer internet-facing for those ranges only
 });
 
 test('rejects an allowedCidrs value that is not a CIDR', () => {
-  expect(() => synth({ allowedCidrs: 'true' })).toThrow();
+  expect(() => synth({ allowedCidrs: 'true' })).toThrow(/Invalid IPv4 CIDR/);
+});
+
+test('switching modes does not reuse the load balancer or its target group', () => {
+  const ids = (template: Template) => [
+    ...Object.keys(template.findResources('AWS::ElasticLoadBalancingV2::LoadBalancer')),
+    ...Object.keys(template.findResources('AWS::ElasticLoadBalancingV2::TargetGroup')),
+  ];
+  const internal = ids(synth());
+
+  expect(internal).toHaveLength(2);
+  expect(ids(synth({ allowedCidrs: '203.0.113.4/32' })).filter((id) => internal.includes(id))).toEqual([]);
 });

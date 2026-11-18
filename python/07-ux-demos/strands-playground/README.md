@@ -153,7 +153,7 @@ Deploy the playground to AWS using CDK:
    ```bash
    npx cdk deploy -c allowedCidrs=$(curl -s https://checkip.amazonaws.com)/32
    ```
-   Separate several ranges with commas. `0.0.0.0/0` opens the playground to the whole internet; don't use it without adding authentication first.
+   Separate several ranges with commas. `0.0.0.0/0` opens the playground to the whole internet; don't use it without adding authentication first. The option is not remembered between deploys: pass it every time, or set `allowedCidrs` under `context` in `infra/cdk.json`. A later deploy without it replaces the load balancer with an internal one.
 
 The CDK deployment creates the following AWS resources:
 
@@ -170,6 +170,8 @@ After deployment, the application is served over HTTP at the load balancer's DNS
 #### Architecture
 
 ![Architecture diagram](./images/strands_playground_arch.png)
+
+The diagram shows a deployment with `allowedCidrs` set. By default the load balancer is internal and sits in the private subnets.
 
 The Strands Playground follows a modern web application architecture:
 

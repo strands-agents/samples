@@ -135,10 +135,12 @@ export class InfraStack extends cdk.Stack {
       .map((cidr) => cidr.trim())
       .filter(Boolean);
 
-    // Create an Application Load Balancer
-    const lb = new elbv2.ApplicationLoadBalancer(this, "AgentLB", {
+    // Create an Application Load Balancer. The two modes use different IDs so that switching
+    // creates a new load balancer and target group instead of replacing them in place.
+    const internetFacing = allowedCidrs.length > 0;
+    const lb = new elbv2.ApplicationLoadBalancer(this, internetFacing ? "AgentLB" : "AgentInternalLB", {
       vpc,
-      internetFacing: allowedCidrs.length > 0,
+      internetFacing,
     });
 
     // Create a listener
@@ -146,7 +148,7 @@ export class InfraStack extends cdk.Stack {
       port: 80,
       open: false,
     });
-    const sources = allowedCidrs.length > 0 ? allowedCidrs : [vpc.vpcCidrBlock];
+    const sources = internetFacing ? allowedCidrs : [vpc.vpcCidrBlock];
     for (const cidr of sources) {
       listener.connections.allowDefaultPortFrom(ec2.Peer.ipv4(cidr));
     }
