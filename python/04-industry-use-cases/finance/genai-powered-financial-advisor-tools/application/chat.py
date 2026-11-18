@@ -25,8 +25,9 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 from strands import Agent, tool
-from strands_tools import retrieve
+from strands.memory import MemoryManager
 from strands.models import BedrockModel
+from strands.vended_memory_stores.bedrock_knowledge_base import BedrockKnowledgeBaseStore
 from strands.multiagent import GraphBuilder
 from strands.tools.mcp import MCPClient
 
@@ -281,10 +282,25 @@ def client_meeting_analysis(query: str) -> str:
         logger.info(f"📋 Using KB ID: {kb_id} (source: {kb_source})")
 
         os.environ.update({
-            "BYPASS_TOOL_CONSENT": "true", 
-            "KNOWLEDGE_BASE_ID": kb_id
+            "BYPASS_TOOL_CONSENT": "true",
         })
-        
+
+        # Read-only knowledge base access via MemoryManager (replaces the
+        # deprecated strands_tools `retrieve` tool). injection=False keeps
+        # retrieval agent-driven through the search tool, as before, and the
+        # search tool keeps the name `retrieve` so the existing system
+        # prompt's instructions stay accurate.
+        kb_store = BedrockKnowledgeBaseStore(
+            config={"knowledge_base_id": kb_id},
+            name="meeting_notes",
+            writable=False,
+        )
+        memory_manager = MemoryManager(
+            stores=[kb_store],
+            search_tool_config={"name": "retrieve"},
+            injection=False,
+        )
+
         model = get_model()
         if not model:
             return "Error: Meeting analysis model unavailable."
@@ -292,7 +308,7 @@ def client_meeting_analysis(query: str) -> str:
         meeting_agent = Agent(
             model=model,
             system_prompt=prompt.customer_meeting_analysis_agent_prompt,
-            tools=[retrieve]
+            memory_manager=memory_manager
         )
         
         logger.info(f"🚀 Executing meeting analysis with KB: {kb_id}")
