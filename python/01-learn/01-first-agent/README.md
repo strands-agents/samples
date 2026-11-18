@@ -83,4 +83,4 @@ This tutorial does not create any persistent AWS resources. The agent calls Amaz
 - [Session Management](https://strandsagents.com/docs/user-guide/concepts/agents/session-management/)
 - [Agent Loop](https://strandsagents.com/docs/user-guide/concepts/agents/agent-loop/)
 - [Context Management](https://strandsagents.com/docs/user-guide/concepts/context-management/)
-- [strands-agents-tools](https://github.com/strands-agents/tools) repository for pre-implemented tools
+- [SDK-vended tools](https://strandsagents.com/docs/user-guide/sdk/tools/vended-tools/) for prebuilt tools maintained with the SDK
