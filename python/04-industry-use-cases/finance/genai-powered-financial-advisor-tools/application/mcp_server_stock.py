@@ -402,7 +402,7 @@ async def create_comparison_chart(tickers: str, period: Optional[str] = None) ->
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"comparison_{'_'.join(ticker_list)}_{period or '1y'}_{timestamp}.png"
         filepath = os.path.join("outputs/charts/", filename)
-        print(f"\nfilepath: {filepath}")
+        print(f"\nfilepath: {filepath}", file=sys.stderr)
         
         plt.savefig(filepath, dpi=300, bbox_inches='tight')
         plt.close()

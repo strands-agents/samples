@@ -5,7 +5,7 @@
 import logging
 import os
 import sys
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 from pathlib import Path
 import yaml
 
@@ -51,7 +51,7 @@ except Exception as e:
     logger.error(f"{err_msg}")
 
 @mcp.tool()
-async def knowledge_base_list(region_name: str = None) -> List[Dict[str, Any]]:
+async def knowledge_base_list(region_name: Optional[str] = None) -> List[Dict[str, Any]]:
     """Extract the list of Knowledge Bases on Amazon Bedrock
 
     Args:
