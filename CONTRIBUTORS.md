@@ -16,3 +16,4 @@
 - [Neelam Koshiya](https://github.com/neelamkoshiya)
 - [Asif Mithawala](https://github.com/asifma)
 - [Madhu Nunna](https://github.com/madhununna)
+- [Shashank Chinchli](https://github.com/schinchli)

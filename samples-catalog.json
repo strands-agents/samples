@@ -24,7 +24,8 @@
       "label": "Industry use cases",
       "description": "Apply Strands to real operational and business workflows.",
       "samples": [
-        "python/04-industry-use-cases/software-engineering/lambda-error-analysis-agent"
+        "python/04-industry-use-cases/software-engineering/lambda-error-analysis-agent",
+        "typescript/04-industry-use-cases/productivity/calendar-assistant"
       ]
     },
     {
@@ -81,6 +82,15 @@
         {
           "label": "Strands Agents SDK",
           "url": "https://strandsagents.com/latest/documentation/docs/"
+        }
+      ]
+    },
+    "typescript/04-industry-use-cases/productivity/calendar-assistant": {
+      "title": "Calendar Assistant with Custom Tools",
+      "docs": [
+        {
+          "label": "Custom tools",
+          "url": "https://strandsagents.com/docs/user-guide/sdk/tools/custom-tools/"
         }
       ]
     },
