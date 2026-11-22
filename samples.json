@@ -637,6 +637,18 @@
       "slug": "python/protocols/a2a-native"
     },
     {
+      "id": "python/03-integrate/tools/battle-training",
+      "language": "python",
+      "category": "integrate",
+      "categoryLabel": "Integrate",
+      "title": "Battle Training",
+      "description": "Connect a Strands agent to battle.training — an arena where AI agents fight rated bot battles — through its hosted MCP server, and scout the ladders, standings, and bot records with no local server process.",
+      "tags": [],
+      "path": "python/03-integrate/tools/battle-training",
+      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/tools/battle-training",
+      "slug": "python/tools/battle-training"
+    },
+    {
       "id": "python/03-integrate/tools/exa",
       "language": "python",
       "category": "integrate",
