@@ -588,6 +588,18 @@
       "slug": "python/guardrails/nvidia-nemo"
     },
     {
+      "id": "python/03-integrate/guardrails/phm-physics-guard",
+      "language": "python",
+      "category": "integrate",
+      "categoryLabel": "Integrate",
+      "title": "Phm Physics Guard",
+      "description": "Example for integrating Strands Agent with PHM Physics Guard (strands-phm-guard on PyPI), a deterministic physics/bounds intervention handler.",
+      "tags": [],
+      "path": "python/03-integrate/guardrails/phm-physics-guard",
+      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/guardrails/phm-physics-guard",
+      "slug": "python/guardrails/phm-physics-guard"
+    },
+    {
       "id": "python/03-integrate/memory/zep-ai",
       "language": "python",
       "category": "integrate",
