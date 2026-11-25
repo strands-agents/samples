@@ -23,7 +23,7 @@ A Strands agent normally keeps its progress in memory. If the process stops half
 
 ![A Strands agent running as a durable Dapr workflow](./images/architecture.svg)
 
-The agent runs in your Python process next to a Dapr sidecar. The sidecar's workflow engine drives the agent loop: it schedules a "call model" activity, then a "run tool" activity for each tool the model asks for, and so on until the model gives its answer. The sidecar stores the workflow's progress in Redis.
+The agent loop runs in your Python process as workflow code, next to a Dapr sidecar. Each turn of the loop is a "call model" activity, followed by a "run tool" activity for each tool the model asks for, until the model gives its answer. The sidecar schedules the workflow and its activities and stores their progress in Redis.
 
 ### Key Features
 
@@ -74,7 +74,7 @@ dapr run --app-id simple-agent --resources-path ./resources -- uv run python sim
 Among the Dapr logs you'll see:
 
 ```text
-Workflow started: strands-simple-agent-demo-c2419a9c
+Workflow started: strands-simple-agent-f6111216-b91ce207
 Status: RUNNING
 Status: COMPLETED
 
@@ -144,7 +144,7 @@ agent = Agent(model=build_model(), tools=[get_weather, convert_temperature])
 runner = DaprWorkflowAgentRunner(agent=agent, name="simple-agent")
 
 runner.start()
-async for event in runner.run_async(task="...", session_id="simple-agent-demo"):
+async for event in runner.run_async(task="...", session_id=new_session_id()):
     ...
 runner.shutdown()
 ```
@@ -152,7 +152,7 @@ runner.shutdown()
 - `runner.start()` registers a workflow and two activities with the Dapr sidecar: one that calls the model, and one that runs a tool.
 - `run_async` starts a workflow instance for the task and yields events as it progresses.
 - Dapr writes the result of every activity to the state store in `resources/statestore.yaml`. When a process with the same app ID starts again, Dapr replays that history and continues with the first activity that has no result.
-- `resources/agent-memory.yaml` gives the agent's conversation history a durable home as well.
+- `resources/agent-memory.yaml` keeps the agent's conversation history in Redis too, per session. Both scripts start a new session for every new run, so a run doesn't see the conversation from an earlier one.
 
 ## Cleanup
 
@@ -168,9 +168,10 @@ To remove the local Dapr containers and binaries, run `dapr uninstall --all`.
 
 | Symptom | Likely cause | Fix |
 |---------|-------------|-----|
-| `No Dapr sidecar found. Start this script with dapr run ...` | The script was started with `uv run python` on its own | Start it with the `dapr run` command shown above |
-| The answer is `Error: ... Access to Bedrock models is not allowed for this account` or `AccessDeniedException` | Your AWS account or role has no access to the model | Enable model access in the Bedrock console, or set `MODEL_PROVIDER=openai` |
-| `The tool log and the workflow store disagree` | Redis was flushed, or the workflow was removed, after a crash run | Run the script with `--reset` |
+| `No Dapr sidecar found. ...` | The script was started with `uv run python` on its own | Start it with the `dapr run --app-id ...` command shown above |
+| `No AWS credentials found. ...` | `MODEL_PROVIDER` is `bedrock` and no AWS credentials are configured | Configure AWS credentials, or set `MODEL_PROVIDER=openai` |
+| `simple_agent.py` answers `Error: ... Access to Bedrock models is not allowed ...`, or `crash_recovery.py` prints `The model call failed: ...` | Your AWS account or role has no access to the model | Enable model access in the Bedrock console, or set `MODEL_PROVIDER=openai`. Then run `crash_recovery.py --reset` |
+| `The tool log and the workflow store disagree` | Redis was flushed, the workflow was removed, or the second run used a different `--app-id` | Run the script with `--reset`, and use the same `--app-id` every time |
 | `FAIL: the tool calls do not match a single crash and resume` | The demo ran more than once without a reset in between | Run the script with `--reset`, then start again |
 
 ## Usage analytics and licensing

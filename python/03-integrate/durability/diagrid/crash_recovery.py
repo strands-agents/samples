@@ -19,6 +19,7 @@ import os
 import shutil
 import tempfile
 import time
+import uuid
 from collections import Counter
 from pathlib import Path
 from typing import Optional
@@ -76,6 +77,22 @@ def verdict(entries: list[dict]) -> bool:
         and _count(entries, "step_three", "start") == 1
         and _count(entries, "step_three", "done") == 1
     )
+
+
+def model_error(result: str) -> Optional[str]:
+    """The model's error message when the run ended on a failed model call."""
+    # The runner completes the workflow with an "Error: ..." result when the
+    # model call fails, for example when the model provider denies access.
+    if result.startswith("Error:"):
+        return result[len("Error:"):].strip()
+    return None
+
+
+def new_session_id() -> str:
+    # A new session for every new run, so the agent does not see the
+    # conversation from an earlier run (kept in Redis by agent-memory) and
+    # decide the order was already processed. A resumed run keeps its session.
+    return f"crash-recovery-{uuid.uuid4().hex[:8]}"
 
 
 def next_action(status: Optional[str], log_exists: bool) -> str:
@@ -200,10 +217,15 @@ async def main(reset_requested: bool) -> int:
         if action == "start":
             log(f"Starting workflow {WORKFLOW_ID}")
             async for event in runner.run_async(
-                task=TASK, session_id="crash-recovery-demo", workflow_id=WORKFLOW_ID
+                task=TASK, session_id=new_session_id(), workflow_id=WORKFLOW_ID
             ):
                 if event["type"] == "workflow_completed":
                     status = "COMPLETED"
+                    error = model_error(event.get("result", ""))
+                    if error:
+                        log(f"\nThe model call failed: {error}")
+                        log("Check your model provider settings, then run with --reset.")
+                        return 1
                 elif event["type"] in ("workflow_failed", "workflow_error"):
                     status = "FAILED"
                     log(f"Workflow did not complete: {event.get('error')}")

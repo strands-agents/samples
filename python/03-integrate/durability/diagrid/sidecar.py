@@ -11,6 +11,6 @@ def require_sidecar() -> None:
     """
     if not os.getenv("DAPR_GRPC_PORT"):
         raise SystemExit(
-            "No Dapr sidecar found. Start this script with "
-            "`dapr run --resources-path ./resources -- uv run python <script>.py`."
+            "No Dapr sidecar found. Start this script with the `dapr run --app-id ...` "
+            "command from the README, and keep the same --app-id between runs."
         )

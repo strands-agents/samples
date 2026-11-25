@@ -17,6 +17,12 @@ def _require(name: str) -> str:
     return value
 
 
+def _has_aws_credentials() -> bool:
+    import boto3
+
+    return boto3.Session().get_credentials() is not None
+
+
 def build_model() -> Model:
     """Return a Bedrock or OpenAI model, depending on MODEL_PROVIDER."""
     load_dotenv()
@@ -25,6 +31,11 @@ def build_model() -> Model:
     if provider == "bedrock":
         from strands.models.bedrock import BedrockModel
 
+        if not _has_aws_credentials():
+            raise SystemExit(
+                "No AWS credentials found. Configure them (for example with "
+                "`aws configure`), or set MODEL_PROVIDER=openai."
+            )
         return BedrockModel(
             model_id=os.getenv("BEDROCK_MODEL_ID", "us.amazon.nova-pro-v1:0"),
             region_name=os.getenv("AWS_REGION") or "us-east-1",

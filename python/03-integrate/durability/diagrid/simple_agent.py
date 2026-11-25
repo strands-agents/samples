@@ -8,6 +8,7 @@ Run with:
 """
 
 import asyncio
+import uuid
 
 from diagrid.agent.strands import DaprWorkflowAgentRunner
 from strands import Agent, tool
@@ -37,6 +38,12 @@ def convert_temperature(celsius: float) -> str:
     return f"{celsius} degrees Celsius is {fahrenheit:.1f} degrees Fahrenheit."
 
 
+def new_session_id() -> str:
+    # A new session per run, so the agent starts without the previous run's
+    # conversation history (the agent-memory component keeps it in Redis).
+    return f"simple-agent-{uuid.uuid4().hex[:8]}"
+
+
 async def main() -> None:
     require_sidecar()
     agent = Agent(
@@ -50,7 +57,7 @@ async def main() -> None:
     try:
         async for event in runner.run_async(
             task="What's the weather in Amsterdam, and what is that in Fahrenheit?",
-            session_id="simple-agent-demo",
+            session_id=new_session_id(),
         ):
             kind = event["type"]
             if kind == "workflow_started":
