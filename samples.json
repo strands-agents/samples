@@ -552,6 +552,18 @@
       "slug": "python/databases/supabase"
     },
     {
+      "id": "python/03-integrate/durability/diagrid",
+      "language": "python",
+      "category": "integrate",
+      "categoryLabel": "Integrate",
+      "title": "Diagrid",
+      "description": "Make a Strands agent durable with Dapr Workflow and the diagrid package, so a run that crashes resumes from its last completed step instead of starting over.",
+      "tags": [],
+      "path": "python/03-integrate/durability/diagrid",
+      "url": "https://github.com/strands-agents/samples/tree/main/python/03-integrate/durability/diagrid",
+      "slug": "python/durability/diagrid"
+    },
+    {
       "id": "python/03-integrate/guardrails/alice-wonderfence",
       "language": "python",
       "category": "integrate",

@@ -1,0 +1,11 @@
+[project]
+name = "strands-diagrid-durability"
+version = "0.1.0"
+description = "Durable Strands agents with Dapr Workflow and the diagrid package"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "diagrid[strands]>=0.5.4",
+    "strands-agents",
+    "python-dotenv",
+]
