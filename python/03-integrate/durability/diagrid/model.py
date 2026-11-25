@@ -27,7 +27,7 @@ def build_model() -> Model:
 
         return BedrockModel(
             model_id=os.getenv("BEDROCK_MODEL_ID", "us.amazon.nova-pro-v1:0"),
-            region_name=_require("AWS_REGION"),
+            region_name=os.getenv("AWS_REGION") or "us-east-1",
         )
 
     if provider == "openai":
