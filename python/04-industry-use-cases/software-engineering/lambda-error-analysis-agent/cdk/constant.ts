@@ -12,10 +12,14 @@ const s3BucketProps = {
 
 type envNameType = "sagemaker" | "local";
 
+// Knowledge Base type: "VECTOR" (default, uses OpenSearch) or "MANAGED" (fully managed by Bedrock)
+type knowledgeBaseType = "VECTOR" | "MANAGED";
+
 export {
   projectName,
   s3BucketProps,
   ssmParamKnowledgeBaseId,
   ssmParamDynamoDb,
   envNameType,
+  knowledgeBaseType,
 };
