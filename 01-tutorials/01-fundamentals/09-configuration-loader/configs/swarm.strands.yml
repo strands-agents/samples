@@ -1,0 +1,72 @@
+# Swarm Configuration based on the swarm tutorial
+# This configuration recreates the blog writing swarm from the tutorial
+# samples/01-tutorials/02-multi-agent-systems/02-swarm-agent/swarm.ipynb
+
+swarm:
+  # Core swarm parameters (matching the tutorial configuration)
+  max_handoffs: 20                    # Maximum handoffs to agents and users
+  max_iterations: 20                  # Maximum node executions within the swarm
+  execution_timeout: 900.0            # Total execution timeout in seconds (15 minutes)
+  node_timeout: 300.0                 # Individual node timeout in seconds (5 minutes)
+  repetitive_handoff_detection_window: 8  # Number of recent nodes to check for repetitive handoffs
+  repetitive_handoff_min_unique_agents: 3 # Minimum unique agents required in recent sequence
+  
+  # Specialized agents for blog writing collaboration (using original tutorial prompts)
+  agents:
+    - name: "research_agent"
+      description: "Research Agent specializing in gathering and analyzing information"
+      model: "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+      system_prompt: |
+        You are a Research Agent specializing in gathering and analyzing information.
+        Your role in the swarm is to provide factual information and research insights on the topic.
+        You should focus on providing accurate data and identifying key aspects of the problem.
+        When receiving input from other agents, evaluate if their information aligns with your research.
+        
+        When you need help from other specialists or have completed your research, use the available tools to coordinate with other agents.
+      tools: []
+      handoff_conditions:
+        - condition: "research_complete"
+          target_agent: "creative_agent"
+      
+    - name: "creative_agent" 
+      description: "Creative Agent specializing in generating innovative solutions"
+      model: "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+      system_prompt: |
+        You are a Creative Agent specializing in generating innovative solutions.
+        Your role in the swarm is to think outside the box and propose creative approaches.
+        You should build upon information from other agents while adding your unique creative perspective.
+        Focus on novel approaches that others might not have considered.
+      tools: []
+      handoff_conditions:
+        - condition: "creative_ideas_generated"
+          target_agent: "critical_agent"
+          
+    - name: "critical_agent"
+      description: "Critical Agent specializing in analyzing proposals and finding flaws"
+      model: "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+      system_prompt: |
+        You are a Critical Agent specializing in analyzing proposals and finding flaws.
+        Your role in the swarm is to evaluate solutions proposed by other agents and identify potential issues.
+        You should carefully examine proposed solutions, find weaknesses or oversights, and suggest improvements.
+        Be constructive in your criticism while ensuring the final solution is robust.
+      tools: []
+      handoff_conditions:
+        - condition: "analysis_complete"
+          target_agent: "summarizer_agent"
+        - condition: "needs_more_research"
+          target_agent: "research_agent"
+        - condition: "needs_creative_input"
+          target_agent: "creative_agent"
+      
+    - name: "summarizer_agent"
+      description: "Summarizer Agent specializing in synthesizing information"
+      model: "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+      system_prompt: |
+        You are a Summarizer Agent specializing in synthesizing information.
+        Your role in the swarm is to gather insights from all agents and create a cohesive final solution.
+        You should combine the best ideas and address the criticisms to create a comprehensive response.
+        Focus on creating a clear, actionable summary that addresses the original query effectively.
+      tools: []
+      handoff_conditions:
+        - condition: "needs_refinement"
+          target_agent: "critical_agent"
